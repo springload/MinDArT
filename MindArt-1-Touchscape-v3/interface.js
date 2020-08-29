@@ -73,6 +73,7 @@ function addFS(){
 
 function fs(){
   fullscreen(1);
+  fsButton.remove();
 }
 
 function rake(version) {

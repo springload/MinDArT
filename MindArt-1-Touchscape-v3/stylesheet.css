@@ -41,9 +41,13 @@ body{
   margin: 0;
 position: absolute;
 top: 50%;
-left: 50%;
+left: 55%;
 -ms-transform: translate(-50%, -50%);
 transform: translate(-50%, -50%);
+}
+
+.loadImage{
+  width: 70%;
 }
 
 .select {
@@ -102,12 +106,10 @@ transform: translate(-50%, -50%);
   text-align: center;
   background-color: white;
   color: #469ede;
-  border-color: white;
-  border-width: 3px;
-
-  border-style: solid;
+;
   /* border-radius: 3vmax; */
-  padding: 0.5vmax;
+
+  width: 70%;
 
 
 }
