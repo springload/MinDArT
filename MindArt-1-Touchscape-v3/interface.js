@@ -20,11 +20,16 @@ $(".select").remove();
   for (let i = 0; i < 4; i++) {
     buttons[i] = createImg('assets/icon' + (1 + i) + '.png');
     buttons[i].class("interface");
+    buttons[i].id("interface"+i);
     buttons[i].style('width', '13vMax');
-    buttons[i].mousePressed(function() {
+    // buttons[i].mousePressed(function() {
+    //   rake(i);
+    //   return false;
+    // });
+    $('#interface'+i).on("click", function(event){
       rake(i);
-      return false;
-    });
+      event.preventDefault();
+    })
     buttons[i].position(vMax * (11 * i), windowHeight - vMax * 13);
   }
 
