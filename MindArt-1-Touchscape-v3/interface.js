@@ -64,6 +64,13 @@ $(".select").remove();
 
 }
 
+function addFS(){
+  fsButton = createImg('assets/enterFS.png');
+  fsButton.style('height', '4.5vMax');
+  fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
+  fsButton.mousePressed(fs);
+}
+
 function rake(version) {
 
   currentRake = version;

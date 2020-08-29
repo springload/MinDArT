@@ -275,7 +275,7 @@ function windowResized() {
 
 function checkFS(){
   if (!fullscreen){
-    fullscreen(1);
+  addFS();
   }
 }
 
