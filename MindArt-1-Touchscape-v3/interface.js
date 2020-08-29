@@ -35,6 +35,8 @@ $(".select").remove();
       event.preventDefault();
     })
 
+    // important - removes save image, open in new tab etc. Needs to be attached to the buttons.
+    // note this is not an issue on actual button UI.
       $('#interface'+i).on('contextmenu', event => event.preventDefault());
 
     buttons[i].position(vMax * (11 * i), windowHeight - vMax * 13);
