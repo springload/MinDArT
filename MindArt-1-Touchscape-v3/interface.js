@@ -23,6 +23,7 @@ $(".select").remove();
     buttons[i].style('width', '13vMax');
     buttons[i].mousePressed(function() {
       rake(i);
+      return false;
     });
     buttons[i].position(vMax * (11 * i), windowHeight - vMax * 13);
   }
