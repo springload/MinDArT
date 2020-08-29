@@ -71,6 +71,10 @@ function addFS(){
   fsButton.mousePressed(fs);
 }
 
+function fs(){
+  fullscreen(1);
+}
+
 function rake(version) {
 
   currentRake = version;

@@ -274,7 +274,7 @@ function windowResized() {
 }
 
 function checkFS(){
-  if (!fullscreen){
+  if (!window.fullscreen){
   addFS();
   }
 }
