@@ -30,7 +30,7 @@ $(".select").remove();
 
   //  $( "#interface"+i).wrap( "<div class='imgButton' id='imgButton"+i+"'></div>" );
 
-    $('#interface'+i).on("click", function(event){
+    $('#interface'+i).on("mousedown", function(event){
       rake(i);
       event.preventDefault();
     })
