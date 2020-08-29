@@ -270,6 +270,13 @@ function windowResized() {
   // removeElements();
   writeTextUI();
   display();
+  checkFS();
+}
+
+function checkFS(){
+  if (!fullscreen){
+    fullscreen(1);
+  }
 }
 
 
