@@ -1,0 +1,42 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 0.5rem;
+}
+.grid > div {
+  background: #EEEEEE ;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+body {
+  margin: 1rem;
+  text-align: center;
+  font-size: 1vmax;
+  font-family: "AvenirNext";
+  letter-spacing: 1px;
+  font-weight: 900;
+}
+
+.session{
+  background: white;
+  width:70%;
+  padding: 5% 5%;
+}
+
+
+.grid-Active{
+
+}
+
+.grid-Dormant{
+    opacity: 20%
+}
+
+.main{
+  width:40%;
+}
+
+p{
+  margin: 0.25rem 0;
+  color: dark-grey;
+}
