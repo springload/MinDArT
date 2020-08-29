@@ -35,6 +35,10 @@ $(".select").remove();
       rake(i);
       event.preventDefault();
     })
+    $('#interface'+i).on("click", function(event){
+      rake(i);
+      event.preventDefault();
+    })
 
     // important - removes save image, open in new tab etc. Needs to be attached to the buttons.
     // note this is not an issue on actual button UI.
