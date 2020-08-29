@@ -1,5 +1,6 @@
 let resetButton, saveButton, fsButton;
 let buttons = [];
+let currentRake = 1;
 
 function calcDimensions() {
   if (width > height) {
@@ -64,6 +65,8 @@ $(".select").remove();
 }
 
 function rake(version) {
+
+  currentRake = version;
 
   if (version == 0) {
     change(1, 200, 1);
