@@ -2,10 +2,10 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-gap: 0.5rem;
-  border-radius: 2rem;
+
   border-width: medium;
     border-color: black;
-    background: black;
+    background: lightgrey
 
 
 }
@@ -19,8 +19,11 @@ body {
   text-align: center;
   font-size: 1vmax;
   font-family: "AvenirNext";
+
   letter-spacing: 1px;
   font-weight: 900;
+
+
 }
 
 .session{
@@ -39,10 +42,11 @@ body {
 }
 
 .main{
-  width:40%;
+  width:25%;
 }
 
-p{
+p, p:visited, p:link{
   margin: 0.25rem 0;
-  color: dark-grey;
+  color: darkgrey;
+  text-decoration: none!important;
 }
