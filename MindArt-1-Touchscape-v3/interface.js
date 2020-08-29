@@ -26,10 +26,15 @@ $(".select").remove();
     //   rake(i);
     //   return false;
     // });
-    $('#interface'+i).on("click", function(event){
+
+
+    $( "#interface"+i).wrap( "<div class='imgButton' id='imgButton"+i+"'></div>" );
+
+    $('#imgButton'+i).on("click", function(event){
       rake(i);
       event.preventDefault();
     })
+
     buttons[i].position(vMax * (11 * i), windowHeight - vMax * 13);
   }
 
