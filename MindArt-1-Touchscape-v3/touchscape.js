@@ -75,9 +75,10 @@ function setup() {
 
   var stbtn = $("<div />").appendTo("body");
   stbtn.addClass('startBtn');
-  $('<p>Touch Here</p>').appendTo(stbtn);
+  $('<p>Touch here to begin</p>').appendTo(stbtn);
   stbtn.mousedown(start);
   stbtn.mousemove(start);
+
 
 
 
