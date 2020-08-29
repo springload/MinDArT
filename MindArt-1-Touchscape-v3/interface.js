@@ -28,9 +28,9 @@ $(".select").remove();
     // });
 
 
-    $( "#interface"+i).wrap( "<div class='imgButton' id='imgButton"+i+"'></div>" );
+  //  $( "#interface"+i).wrap( "<div class='imgButton' id='imgButton"+i+"'></div>" );
 
-    $('#imgButton'+i).on("click", function(event){
+    $('#interface'+i).on("click", function(event){
       rake(i);
       event.preventDefault();
     })
