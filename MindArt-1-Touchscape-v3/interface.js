@@ -35,6 +35,8 @@ $(".select").remove();
       event.preventDefault();
     })
 
+      $('#interface'+i).on('contextmenu', event => event.preventDefault());
+
     buttons[i].position(vMax * (11 * i), windowHeight - vMax * 13);
   }
 
