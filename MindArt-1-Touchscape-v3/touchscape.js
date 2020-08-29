@@ -101,7 +101,7 @@ function start() {
   introComplete = 1;
   sizeWindow();
   writeTextUI();
-  rake(1);
+  rake(currentRake);
   reset();
   counter = 0;
 
