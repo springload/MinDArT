@@ -58,7 +58,7 @@ function setup() {
   // NOTE: UInsure if these should be in setup, or declared globally an put into restart
   fg = createGraphics(width, height);
   pLayer = createGraphics(width, height);
-  textLayer = createGraphics(width, height);
+  textLayer = createGraphics(width, height); // BUG: what is text layer doing?
   introLayer = createGraphics(width, height);
 
   fg.strokeWeight(strokeW);
@@ -78,11 +78,6 @@ function setup() {
   $('<p>Touch here to begin</p>').appendTo(stbtn);
   stbtn.mousedown(start);
   stbtn.mousemove(start);
-
-
-
-
-
 }
 
 function start() {
@@ -95,8 +90,8 @@ function start() {
   }
   change();
 
-  calcDimensions();
-  sizeWindow();
+  calcDimensions(); // BUG: remove?
+  sizeWindow(); // BUG: remove?
 
   textLayer.clear();
   introComplete = 1;
@@ -107,7 +102,7 @@ function start() {
   counter = 0;
 
 
-  // all event listeners
+  // all event listeners //// BUG: should these be in setup?
   canvas.addEventListener('touchmove', moved);
   canvas.addEventListener('mousemove', moved);
   canvas.addEventListener('touchstart', touchdown);
@@ -277,7 +272,7 @@ function checkFS(){
   console.log("checking");
   if (!fullscreen()){
   addFS();
-} 
+}
 }
 
 
