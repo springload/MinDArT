@@ -13,31 +13,31 @@ var restart;
 var sel = 0;
 
 var colours = [
-  ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'],
-  ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'],
-  ['#345573', '#223240', '#F2913D', '#F24B0F'],
-  ['#3981BF', '#1F628C', '#590808', '#D92929'],
-  ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
-  ['#D97398','#A65398','#263F73','#5679A6'],
-  ['#3C5E73','#F2BBBB','#F24968','#F24444'],
-  ['#A60321','#D9043D','#F29F05','#D8BA7A'],
-  ['#D9C6B0','#BF9C88','#8C2336','#D99B96'],
-  ['#3FA663','#2D7345','#3391A6','#262626'],
-  ['#F27ECA','#9726A6','#8F49F2','#6C2EF2'],
-  ['#F27983','#A66F79','#F2C5BB','#F2B9B3'],
-  ['#080926','#162040','#364C59','#8DA69F'],
-  ['#F27999','#8C327D','#5AB5BF','#82D9B0'],
-  ['#5F6D73','#EBF2F1','#BFA688','#8C6F5E'],
-  ['#3C2D73','#131A40','#D97E6A','#BF7396'],
-  ['#172D40','#7BA1A6','#F2B279','#D97B59'],
-  ['#312F73','#0D0D0D','#F2C6A0','#E2DBD4'],
-  ['#314035','#5E7348','#A4BF69','#E0F2A0'],
-  ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'],
-  ['#233059','#76A6A1','#e6b3b3','#BF3F3F'],
- ['#a4fba6','#4ae54a', '#0f9200', '#006203'], //  https://www.color-hex.com/color-palette/2540
- ['#192819','#2c4928','#719b25','#cbe368'],
- ['#2d3157','#34c1bb','#badccc','#ffda4d'],
- ['#81edf7','#00a4c0','#f70110','#6e0516']
+  ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'], // 4
+  ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'], // 5
+  ['#345573', '#223240', '#F2913D', '#F24B0F'], // 4
+  // ['#3981BF', '#1F628C', '#590808', '#D92929'], // 1
+  ['#172426', '#455559', '#D9C3B0', '#F2DFCE'], // 5
+  // ['#D97398','#A65398','#263F73','#5679A6'], // 0
+  ['#3C5E73','#F2BBBB','#F24968','#F24444'], // 4
+  ['#A60321','#D9043D','#F29F05','#D8BA7A'], // 5
+  // ['#D9C6B0','#BF9C88','#8C2336','#D99B96'], // 3
+  ['#3FA663','#2D7345','#3391A6','#262626'], // 5
+  ['#F27ECA','#9726A6','#8F49F2','#6C2EF2'], // 4
+  // ['#F27983','#A66F79','#F2C5BB','#F2B9B3'], // 0
+  ['#080926','#162040','#364C59','#8DA69F'], // 4
+  ['#F27999','#8C327D','#5AB5BF','#82D9B0'], // PINK
+  // ['#5F6D73','#EBF2F1','#BFA688','#8C6F5E'], // 1
+  ['#3C2D73','#131A40','#D97E6A','#BF7396'], // 4
+  // ['#172D40','#7BA1A6','#F2B279','#D97B59'], // 0
+  // ['#312F73','#0D0D0D','#F2C6A0','#E2DBD4'], // 3
+  ['#314035','#5E7348','#A4BF69','#E0F2A0'], // 4
+  // ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'], // 0
+  // ['#233059','#76A6A1','#e6b3b3','#BF3F3F'], // 1
+ ['#a4fba6','#4ae54a', '#0f9200', '#006203'], // 4
+ ['#192819','#2c4928','#719b25','#cbe368'], // 5
+ ['#2d3157','#34c1bb','#badccc','#ffda4d'], // 4
+ ['#81edf7','#00a4c0','#f70110','#6e0516'] // 5
 ];
 
 var numPattern = [1, 2, 4, 8, 16, 32, 64, 128];
@@ -203,44 +203,23 @@ function touchMoved() {
       from = color(c3);
       to = color(c4);
 
-      if (mouseY >= touchDownY) {
-        for (var j = touchDownY; j < mouseY; j++) {
-          fg.stroke(lerpColor(to, from, j / mouseY));
-
-
-          //  fg.line(sel * colWidth, j, (sel * colWidth) + colWidth / div, j);
-          fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
-        }
-      } else {
-        // CURRENTLY WORKING ON THIS!
-        for (var j = touchDownY; j > mouseY; j--) {
-          fg.stroke(lerpColor(from, to, mouseY / j));
-
-          // fg.line(sel * colWidth, j, (sel * colWidth) + colWidth / div, j);
-          fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
-        }
-      }
     } else {
       from = color(c1);
       to = color(c2);
+    }
 
       if (mouseY >= touchDownY) {
         for (var j = touchDownY; j < mouseY; j++) {
           fg.stroke(lerpColor(to, from, j / mouseY));
-          // fg.line(sel * colWidth, j, (sel * colWidth) + colWidth / div, j);
           fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
-
         }
       } else {
-        for (var j = touchDownY; j > mouseY; j--) {
-          fg.stroke(lerpColor(from, to, mouseY / j));
-          // fg.line(sel * colWidth, j, (sel * colWidth) + colWidth / div, j);
+          for (var j = touchDownY; j > mouseY; j--) {
+          fg.stroke(lerpColor(to, from, mouseY / j));
           fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
-
-
         }
       }
-    }
+
   }
 
 
