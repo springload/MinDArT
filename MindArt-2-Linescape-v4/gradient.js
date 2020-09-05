@@ -41,7 +41,7 @@ var touchDownY;
 var currentOrientation, storedOrientation, storedOrientationDegrees, rotateDirection;
 
 function preload() {
-  // paper = loadImage('assets/paper1.jpg');
+  paper = loadImage('assets/paper1.jpg');
   audio = loadSound('assets/audio.mp3');
   click = loadSound('assets/click.mp3');
 }
@@ -191,17 +191,17 @@ function touchMoved() {
   //         fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
   //       }
   //     }
-  render();
-  fg.fill(255);
-  fg.ellipse(mouseX, mouseY, 100, 100);
+  // render();
+  fill(255);
+  ellipse(mouseX, mouseY, 100, 100);
 }
 
 
 function render() {
   intermedia.image(fg, 0, 0, width, height);
   blendMode(BLEND);
-  // image(paper, 0, 0, width, height);
-  // blendMode(MULTIPLY);
+  image(paper, 0, 0, width, height);
+  blendMode(MULTIPLY);
   image(intermedia, 0, 0, width, height);
   // fill(255);
   // blendMode(DIFFERENCE);
