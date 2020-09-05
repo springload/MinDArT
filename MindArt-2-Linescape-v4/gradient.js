@@ -199,9 +199,9 @@ function touchMoved() {
 
 function render() {
   intermedia.image(fg, 0, 0, width, height);
-  blendMode(BLEND);
-  image(paper, 0, 0, width, height);
-  blendMode(MULTIPLY);
+  // blendMode(BLEND);
+  // image(paper, 0, 0, width, height);
+  // blendMode(MULTIPLY);
   image(intermedia, 0, 0, width, height);
   // fill(255);
   // blendMode(DIFFERENCE);
@@ -227,18 +227,18 @@ function checkFS(){
 }
 
 
-// function windowResized() {
-//   resizeCanvas(windowWidth, windowHeight);
-//   sizeWindow();
-//
-//   // removeElements();
-//   writeTextUI();
-//   render();
-//   checkFS();
-//
-//     fg.strokeWeight(10);
-//     fg.strokeCap(SQUARE);
-// }
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  sizeWindow();
+
+  // removeElements();
+  writeTextUI();
+  render();
+  checkFS();
+
+    fg.strokeWeight(10);
+    fg.strokeCap(SQUARE);
+}
 
 
 
