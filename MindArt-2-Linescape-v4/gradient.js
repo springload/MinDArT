@@ -163,7 +163,7 @@ function touchStarted() {
   touchDownY = mouseY;
 }
 
-function touchMoved() {
+function draw() {
 
   // colQty = numPattern[lineVersion];
   // colWidth = width / colQty;
