@@ -75,10 +75,10 @@ function start() {
   fullscreen(1);
 
 
-  //todo, consider pausing audio context
-  if (audio.isPlaying()) {} else {
-    audio.loop(1);
-  }
+  // //todo, consider pausing audio context
+  // if (audio.isPlaying()) {} else {
+  //   audio.loop(1);
+  // }
 
   sizeWindow();
   writeTextUI();
@@ -184,12 +184,12 @@ function touchMoved() {
     }
       if (mouseY >= touchDownY) {
         for (var j = touchDownY; j < mouseY; j+=10) {
-          // fg.stroke(lerpColor(to, from, j / mouseY));
+          fg.stroke(lerpColor(to, from, j / mouseY));
           fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
         }
       } else {
           for (var j = touchDownY; j > mouseY; j-=10) {
-          // fg.stroke(lerpColor(to, from, mouseY / j));
+          fg.stroke(lerpColor(to, from, mouseY / j));
           fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
         }
       }
