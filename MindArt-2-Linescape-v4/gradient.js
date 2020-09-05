@@ -70,7 +70,7 @@ function setup() {
 
 function start() {
   $(".startBtn").remove();
-  // fullscreen(1);
+  fullscreen(1);
 
 
   //todo, consider pausing audio context
@@ -213,6 +213,7 @@ function render() {
 function touchEnded() {
   drawActive = false;
 }
+
 
 
 function checkFS(){
