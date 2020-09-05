@@ -14,7 +14,6 @@ var sel = 0;
 
 var colours = [
   ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'], // 4
-
   ['#345573', '#223240', '#F2913D', '#F24B0F'], // 4
   ['#172426', '#455559', '#D9C3B0', '#F2DFCE'], // 5
   ['#3C5E73','#F2BBBB','#F24968','#F24444'], // 4
@@ -27,7 +26,7 @@ var colours = [
   ['#a4fba6','#4ae54a', '#0f9200', '#006203'], // 4
   ['#2d3157','#34c1bb','#badccc','#ffda4d'], // 4
   ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'], // 5
-  ['#F2F2F2','#E6E6E6','#CCCCCC','#B3B3B3']
+  ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6']
 ];
 
 var numPattern = [1, 2, 4, 8, 16, 32, 64, 128];
@@ -163,41 +162,21 @@ function touchStarted() {
 }
 
 function touchMoved() {
-
-
-  // colQty = numPattern[slider1.value()];
   colQty = numPattern[lineVersion];
-
   colWidth = width / colQty;
-
-
 
   var tempSel = floor(mouseX / colWidth);
   if (sel != tempSel) {
     sel = floor(mouseX / colWidth)
-    // OPTIONAL, essentially records mouseY again each time we move ot a new column.
-    // touchDownY = mouseY;
   }
-
-  drawActive = true;
-
-  if (drawActive) {
-
     colYtrack[sel] = mouseY;
-
-    from = color(c3);
-    to = color(c4);
-
     if (toggle) {
-
       from = color(c3);
       to = color(c4);
-
     } else {
       from = color(c1);
       to = color(c2);
     }
-
       if (mouseY >= touchDownY) {
         for (var j = touchDownY; j < mouseY; j++) {
           fg.stroke(lerpColor(to, from, j / mouseY));
@@ -209,12 +188,7 @@ function touchMoved() {
           fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
         }
       }
-
-  }
-
-
   render();
-
 }
 
 
@@ -224,10 +198,10 @@ function render() {
   image(paper, 0, 0, width, height);
   blendMode(MULTIPLY);
   image(intermedia, 0, 0, width, height);
-  fill(255);
-  blendMode(DIFFERENCE);
-  textSize(width / 50);
-  text(colours[cc][0], width - width / 5, height / 10);
+  // fill(255);
+  // blendMode(DIFFERENCE);
+  // textSize(width / 50);
+  // text(colours[cc][0], width - width / 5, height / 10);
 
 }
 
