@@ -225,7 +225,6 @@ function checkFS(){
 
 
 function windowResized() {
-  start();
   resizeCanvas(windowWidth, windowHeight);
   sizeWindow();
 
