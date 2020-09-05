@@ -40,18 +40,25 @@ var touchDownY;
 
 var currentOrientation, storedOrientation, storedOrientationDegrees, rotateDirection;
 
-function preload() {
-  paper = loadImage('assets/paper1.jpg');
-  audio = loadSound('assets/audio.mp3');
-  click = loadSound('assets/click.mp3');
-}
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  paper = loadImage('assets/paper1.jpg');
+  audio = loadSound('assets/audio.mp3');
+  click = loadSound('assets/click.mp3');
   fg = createGraphics(windowWidth, windowHeight);
   intermedia = createGraphics(windowWidth, windowHeight);
   fg.noFill();
+  var stbtn = $("<div />").appendTo("body");
+  stbtn.addClass('startBtn');
+  $('<p>Touch here to begin</p>').appendTo(stbtn);
+  stbtn.mousedown(start);
+  stbtn.mousemove(start);
+}
 
+function start() {
+  $(".startBtn").remove();
   fullscreen(1);
   // todo, consider pausing audio context
   if (audio.isPlaying()) {} else {
@@ -60,10 +67,6 @@ function setup() {
   sizeWindow();
   writeTextUI();
   restart();
-}
-
-function start() {
-
 }
 //
 // function windowResized() {
