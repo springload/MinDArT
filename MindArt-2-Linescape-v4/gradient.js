@@ -1,44 +1,44 @@
-var colQty = 1;
-var colWidth;
-var colYtrack = [];
-var drawActive = false;
-
-var lineVersion = 0;
-var vMax;
-var div = 1;
-
-var c1, c2, c3, c4;
-
-var fg;
-
-var restart;
-var sel = 0;
-
-var colours = [
-  ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'],
-  ['#345573', '#223240', '#F2913D', '#F24B0F'],
-  ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
-  ['#3C5E73','#F2BBBB','#F24968','#F24444'],
-  ['#3FA663','#2D7345','#3391A6','#262626'],
-  ['#A60321','#D9043D','#F29F05','#D8BA7A'],
-  ['#3C2D73','#131A40','#D97E6A','#BF7396'],
-  ['#81edf7','#00a4c0','#f70110','#6e0516'],
-  ['#192819','#2c4928','#719b25','#cbe368'],
-  ['#314035','#5E7348','#A4BF69','#E0F2A0'],
-  ['#a4fba6','#4ae54a', '#0f9200', '#006203'],
-  ['#2d3157','#34c1bb','#badccc','#ffda4d'],
-  ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'],
-  ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6']
-];
-
-var numPattern = [1, 2, 4, 8, 16, 32, 64, 128];
-
-var cc = 0; // currentColour
-var toggle = 1;
-
-var touchDownY;
-
-var currentOrientation, storedOrientation, storedOrientationDegrees, rotateDirection;
+// var colQty = 1;
+// var colWidth;
+// var colYtrack = [];
+// var drawActive = false;
+//
+// var lineVersion = 0;
+// var vMax;
+// var div = 1;
+//
+// var c1, c2, c3, c4;
+//
+// var fg;
+//
+// var restart;
+// var sel = 0;
+//
+// var colours = [
+//   ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'],
+//   ['#345573', '#223240', '#F2913D', '#F24B0F'],
+//   ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
+//   ['#3C5E73','#F2BBBB','#F24968','#F24444'],
+//   ['#3FA663','#2D7345','#3391A6','#262626'],
+//   ['#A60321','#D9043D','#F29F05','#D8BA7A'],
+//   ['#3C2D73','#131A40','#D97E6A','#BF7396'],
+//   ['#81edf7','#00a4c0','#f70110','#6e0516'],
+//   ['#192819','#2c4928','#719b25','#cbe368'],
+//   ['#314035','#5E7348','#A4BF69','#E0F2A0'],
+//   ['#a4fba6','#4ae54a', '#0f9200', '#006203'],
+//   ['#2d3157','#34c1bb','#badccc','#ffda4d'],
+//   ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'],
+//   ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6']
+// ];
+//
+// var numPattern = [1, 2, 4, 8, 16, 32, 64, 128];
+//
+// var cc = 0; // currentColour
+// var toggle = 1;
+//
+// var touchDownY;
+//
+// var currentOrientation, storedOrientation, storedOrientationDegrees, rotateDirection;
 
 function preload() {
   // paper = loadImage('assets/paper1.jpg');
@@ -47,7 +47,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(window.innerWidth, window.innerHeight);
     //
     // // TODO: Instigate resizes for both of these
     // fg = createGraphics(windowWidth, windowHeight);
