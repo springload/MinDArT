@@ -54,8 +54,8 @@ function setup() {
 
 
     // TODO: Instigate resizes for both of these
-    fg = createGraphics(width, height);
-    intermedia = createGraphics(width, height);
+    fg = createGraphics(windowWidth, windowHeight);
+    intermedia = createGraphics(windowWidth, windowHeight);
 
 
     fg.noFill();
@@ -85,21 +85,21 @@ function start() {
   restart();
 
 }
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-
-  calcDimensions();
-
-
-  writeTextUI();
-
-
-
-  // cc = floor(random(0, colours.length));
-  restart();
-  lineVersion = 0
-}
+//
+// function windowResized() {
+//   resizeCanvas(windowWidth, windowHeight);
+//
+//   calcDimensions();
+//
+//
+//   writeTextUI();
+//
+//
+//
+//   // cc = floor(random(0, colours.length));
+//   restart();
+//   lineVersion = 0
+// }
 
 
 function toggleIt() {
@@ -290,11 +290,13 @@ function stretchWindow() {
   newfg.image(fg, 0, 0, windowWidth, windowHeight);
   fg.resizeCanvas(windowWidth, windowHeight);
   fg = newfg;
+  newfg.remove();
 
   var newintermedia = createGraphics(windowWidth, windowHeight);
   newintermedia.image(intermedia, 0, 0, windowWidth, windowHeight);
   intermedia.resizeCanvas(windowWidth, windowHeight);
   intermedia = newintermedia;
+  newintermedia.remove();
 
 
 }
@@ -309,6 +311,7 @@ function rotateWindow(direction) {
   newfg.pop()
   fg.resizeCanvas(windowWidth, windowHeight);
   fg = newfg;
+  newfg.remove();
 
   var newintermedia = createGraphics(windowWidth, windowHeight);
   newintermedia.push();
@@ -319,6 +322,7 @@ function rotateWindow(direction) {
   newintermedia.pop()
   intermedia.resizeCanvas(windowWidth, windowHeight);
   intermedia = newintermedia;
+  newintermedia.remove();
 
 
 
