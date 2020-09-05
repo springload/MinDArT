@@ -42,8 +42,8 @@ var currentOrientation, storedOrientation, storedOrientationDegrees, rotateDirec
 
 function preload() {
   paper = loadImage('assets/paper1.jpg');
-  audio = loadSound('assets/audio.mp3');
-  click = loadSound('assets/click.mp3');
+  // audio = loadSound('assets/audio.mp3');
+  // click = loadSound('assets/click.mp3');
 }
 
 function setup() {
@@ -74,9 +74,9 @@ function start() {
 
 
   //todo, consider pausing audio context
-  if (audio.isPlaying()) {} else {
-    audio.loop(1);
-  }
+  // if (audio.isPlaying()) {} else {
+  //   audio.loop(1);
+  // }
 
   sizeWindow();
   writeTextUI();
