@@ -51,15 +51,7 @@ function setup() {
   fg = createGraphics(windowWidth, windowHeight);
   intermedia = createGraphics(windowWidth, windowHeight);
   fg.noFill();
-  var stbtn = $("<div />").appendTo("body");
-  stbtn.addClass('startBtn');
-  $('<p>Touch here to begin</p>').appendTo(stbtn);
-  stbtn.mousedown(start);
-  stbtn.mousemove(start);
-}
 
-function start() {
-  $(".startBtn").remove();
   fullscreen(1);
   // todo, consider pausing audio context
   if (audio.isPlaying()) {} else {
@@ -68,6 +60,10 @@ function start() {
   sizeWindow();
   writeTextUI();
   restart();
+}
+
+function start() {
+
 }
 //
 // function windowResized() {
@@ -100,35 +96,35 @@ function toggleIt() {
 }
 
 function restart() {
-  // cc++;
-  // if (cc >= colours.length) {
-  //   cc = 0;
-  // }
-  // lineVersion++;
-  //
-  // if (lineVersion >= numPattern.length) {
-  //   lineVersion = 0;
-  // }
-  // // clear both layers
-  // fg.clear();
-  // intermedia.clear();
-  // colQty = floor(random(1, 10));
-  //
-  // c1 = colours[cc][0];
-  // c2 = colours[cc][1];
-  // c3 = colours[cc][2];
-  // c4 = colours[cc][3];
-  //
-  // // make solid gradient, add smaller gradients
-  // from = color(c1);
-  // to = color(c2);
-  //
-  // for (var j = 0; j < height; j++) {
-  //   intermedia.stroke(lerpColor(from, to, j / height));
-  //   intermedia.line(0, j, width, j);
-  // }
-  // render();
-  // createSwatch();
+  cc++;
+  if (cc >= colours.length) {
+    cc = 0;
+  }
+  lineVersion++;
+
+  if (lineVersion >= numPattern.length) {
+    lineVersion = 0;
+  }
+  // clear both layers
+  fg.clear();
+  intermedia.clear();
+  colQty = floor(random(1, 10));
+
+  c1 = colours[cc][0];
+  c2 = colours[cc][1];
+  c3 = colours[cc][2];
+  c4 = colours[cc][3];
+
+  // make solid gradient, add smaller gradients
+  from = color(c1);
+  to = color(c2);
+
+  for (var j = 0; j < height; j++) {
+    intermedia.stroke(lerpColor(from, to, j / height));
+    intermedia.line(0, j, width, j);
+  }
+  render();
+  createSwatch();
 
 }
 
