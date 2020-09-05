@@ -11,27 +11,28 @@ function calcDimensions() {
 function writeTextUI() {
 
   // TODO: REMOVE ELEMENTS
-//
-// $(".interface").remove();
-// $(".select").remove();
-//
-//
-//
-//   resetButton = createButton('New');
-//   resetButton.position(windowWidth - (10 * vMax) - (vMax * 5), windowHeight - vMax * 6);
-//   resetButton.class("select");
-//   resetButton.style('font-size', '1.7vmax');
-//   resetButton.style('height', '5vmax');
-//   resetButton.position(width - (16 * vMax), height - (7 * vMax));
-//   resetButton.mousePressed(restart);
-//
-//   saveButton = createButton("Save")
-//   saveButton.class("select");
-//   saveButton.style('font-size', '1.7vmax');
-//   saveButton.style('height', '5vmax');
-//   saveButton.position(width - (16 * vMax), height - (13 * vMax));
-//   saveButton.mousePressed(saveImg);
-// createSwatch();
+
+$(".interface").remove();
+$(".select").remove();
+
+
+
+  resetButton = createButton('New');
+  resetButton.position(windowWidth - (10 * vMax) - (vMax * 5), windowHeight - vMax * 6);
+  resetButton.class("select");
+  resetButton.style('font-size', '1.7vmax');
+  resetButton.style('height', '5vmax');
+  resetButton.position(width - (16 * vMax), height - (7 * vMax));
+  resetButton.mousePressed(restart);
+
+  saveButton = createButton("Save")
+  saveButton.class("select");
+  saveButton.style('font-size', '1.7vmax');
+  saveButton.style('height', '5vmax');
+  saveButton.position(width - (16 * vMax), height - (13 * vMax));
+  saveButton.mousePressed(saveImg);
+
+createSwatch();
 }
 
 function createSwatch() {
@@ -70,12 +71,12 @@ function createSwatch() {
 }
 
 function addFS(){
-  // $('.fsButton').remove();
-  // fsButton = createImg('assets/enterFS.png', "FULLSCREEN");
-  // fsButton.style('height', '4.5vMax');
-  // fsButton.class("fsButton");
-  // fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
-  // fsButton.mousePressed(fs);
+  $('.fsButton').remove();
+  fsButton = createImg('assets/enterFS.png', "FULLSCREEN");
+  fsButton.style('height', '4.5vMax');
+  fsButton.class("fsButton");
+  fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
+  fsButton.mousePressed(fs);
 }
 
 function fs(){
