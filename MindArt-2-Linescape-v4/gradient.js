@@ -227,18 +227,18 @@ function checkFS(){
 }
 
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  sizeWindow();
-
-  // removeElements();
-  writeTextUI();
-  render();
-  checkFS();
-
-    fg.strokeWeight(10);
-    fg.strokeCap(SQUARE);
-}
+// function windowResized() {
+//   resizeCanvas(windowWidth, windowHeight);
+//   sizeWindow();
+//
+//   // removeElements();
+//   writeTextUI();
+//   render();
+//   checkFS();
+//
+//     fg.strokeWeight(10);
+//     fg.strokeCap(SQUARE);
+// }
 
 
 
