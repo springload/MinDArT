@@ -18,17 +18,17 @@ var colours = [
   ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'],
   ['#345573', '#223240', '#F2913D', '#F24B0F'],
   ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
-  ['#3C5E73','#F2BBBB','#F24968','#F24444'],
-  ['#3FA663','#2D7345','#3391A6','#262626'],
-  ['#A60321','#D9043D','#F29F05','#D8BA7A'],
-  ['#3C2D73','#131A40','#D97E6A','#BF7396'],
-  ['#81edf7','#00a4c0','#f70110','#6e0516'],
-  ['#192819','#2c4928','#719b25','#cbe368'],
-  ['#314035','#5E7348','#A4BF69','#E0F2A0'],
-  ['#a4fba6','#4ae54a', '#0f9200', '#006203'],
-  ['#2d3157','#34c1bb','#badccc','#ffda4d'],
+  ['#3C5E73', '#F2BBBB', '#F24968', '#F24444'],
+  ['#3FA663', '#2D7345', '#3391A6', '#262626'],
+  ['#A60321', '#D9043D', '#F29F05', '#D8BA7A'],
+  ['#3C2D73', '#131A40', '#D97E6A', '#BF7396'],
+  ['#81edf7', '#00a4c0', '#f70110', '#6e0516'],
+  ['#192819', '#2c4928', '#719b25', '#cbe368'],
+  ['#314035', '#5E7348', '#A4BF69', '#E0F2A0'],
+  ['#a4fba6', '#4ae54a', '#0f9200', '#006203'],
+  ['#2d3157', '#34c1bb', '#badccc', '#ffda4d'],
   ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'],
-  ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6']
+  ['#CCCCCC', '#F2F2F2', '#B3B3B3', '#E6E6E6']
 ];
 
 var numPattern = [1, 2, 4, 8, 16, 32, 64, 128];
@@ -42,46 +42,32 @@ var currentOrientation, storedOrientation, storedOrientationDegrees, rotateDirec
 
 function preload() {
   paper = loadImage('assets/paper1.jpg');
-  // audio = loadSound('assets/audio.mp3');
-  // click = loadSound('assets/click.mp3');
+  audio = loadSound('assets/audio.mp3');
+  click = loadSound('assets/click.mp3');
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
-
-
-    // TODO: Instigate resizes for both of these
-    fg = createGraphics(windowWidth, windowHeight);
-    intermedia = createGraphics(windowWidth, windowHeight);
-
-
-    fg.noFill();
-    pixelDensity(1);
-
-    var stbtn = $("<div />").appendTo("body");
-    stbtn.addClass('startBtn');
-    $('<p>Touch here to begin</p>').appendTo(stbtn);
-    stbtn.mousedown(start);
-    stbtn.mousemove(start);
-
-    // TODO: Add event listeners? Replace p5.js ones?
+  fg = createGraphics(windowWidth, windowHeight);
+  intermedia = createGraphics(windowWidth, windowHeight);
+  fg.noFill();
+  var stbtn = $("<div />").appendTo("body");
+  stbtn.addClass('startBtn');
+  $('<p>Touch here to begin</p>').appendTo(stbtn);
+  stbtn.mousedown(start);
+  stbtn.mousemove(start);
 }
 
 function start() {
   $(".startBtn").remove();
   fullscreen(1);
-
-
-  //todo, consider pausing audio context
-  // if (audio.isPlaying()) {} else {
-  //   audio.loop(1);
-  // }
-
+  // todo, consider pausing audio context
+  if (audio.isPlaying()) {} else {
+    audio.loop(1);
+  }
   sizeWindow();
   writeTextUI();
   restart();
-
 }
 //
 // function windowResized() {
@@ -99,63 +85,50 @@ function start() {
 //   lineVersion = 0
 // }
 
-
 function toggleIt() {
-
   toggle = !toggle;
-
   for (let i = 0; i < 2; i++) {
-        swatch[i].position(((i * 9)+3) * vMax, height - (9 * vMax));
-        swatch[i].size(9 * vMax, 6 * vMax);
+    swatch[i].position(((i * 9) + 3) * vMax, height - (9 * vMax));
+    swatch[i].size(9 * vMax, 6 * vMax);
   }
-
-var n = 0;
-
-if (toggle){
-  n = 1;
-}
-
-  swatch[n].position(((toggle * 9)+3) * vMax, height - (15.5 * vMax));
+  var n = 0;
+  if (toggle) {
+    n = 1;
+  }
+  swatch[n].position(((toggle * 9) + 3) * vMax, height - (15.5 * vMax));
   swatch[n].size(9 * vMax, 12.5 * vMax);
 }
 
-
-
-
 function restart() {
-  cc++;
-  if (cc >= colours.length) {
-    cc = 0;
-  }
-  lineVersion++;
-
-  if (lineVersion >= numPattern.length) {
-    lineVersion = 0;
-  }
-
-  // clear both layers
-  fg.clear();
-  intermedia.clear();
-
-  colQty = floor(random(1, 10));
-
-
-
-  c1 = colours[cc][0];
-  c2 = colours[cc][1];
-  c3 = colours[cc][2];
-  c4 = colours[cc][3];
-
-  // make solid gradient, add smaller gradients
-  from = color(c1);
-  to = color(c2);
-
-  for (var j = 0; j < height; j++) {
-    intermedia.stroke(lerpColor(from, to, j / height));
-    intermedia.line(0, j, width, j);
-  }
-  render();
-  createSwatch();
+  // cc++;
+  // if (cc >= colours.length) {
+  //   cc = 0;
+  // }
+  // lineVersion++;
+  //
+  // if (lineVersion >= numPattern.length) {
+  //   lineVersion = 0;
+  // }
+  // // clear both layers
+  // fg.clear();
+  // intermedia.clear();
+  // colQty = floor(random(1, 10));
+  //
+  // c1 = colours[cc][0];
+  // c2 = colours[cc][1];
+  // c3 = colours[cc][2];
+  // c4 = colours[cc][3];
+  //
+  // // make solid gradient, add smaller gradients
+  // from = color(c1);
+  // to = color(c2);
+  //
+  // for (var j = 0; j < height; j++) {
+  //   intermedia.stroke(lerpColor(from, to, j / height));
+  //   intermedia.line(0, j, width, j);
+  // }
+  // render();
+  // createSwatch();
 
 }
 
@@ -216,11 +189,11 @@ function touchEnded() {
 
 
 
-function checkFS(){
+function checkFS() {
 
-  if (!fullscreen()){
-  addFS();
-}
+  if (!fullscreen()) {
+    addFS();
+  }
 }
 
 
@@ -233,8 +206,8 @@ function windowResized() {
   render();
   checkFS();
 
-    fg.strokeWeight(11);
-    fg.strokeCap(SQUARE);
+  fg.strokeWeight(11);
+  fg.strokeCap(SQUARE);
 }
 
 
@@ -259,7 +232,7 @@ function sizeWindow() {
       direction = -1;
     }
 
-    if (abs(window.orientation - storedOrientationDegrees) == 270){
+    if (abs(window.orientation - storedOrientationDegrees) == 270) {
       direction = -direction;
     }
 
