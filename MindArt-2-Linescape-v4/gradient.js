@@ -75,10 +75,10 @@ function start() {
   fullscreen(1);
 
 
-  // //todo, consider pausing audio context
-  // if (audio.isPlaying()) {} else {
-  //   audio.loop(1);
-  // }
+  //todo, consider pausing audio context
+  if (audio.isPlaying()) {} else {
+    audio.loop(1);
+  }
 
   sizeWindow();
   writeTextUI();
@@ -220,7 +220,7 @@ function colorAlpha(aColor, alpha) {
 }
 
 function checkFS(){
-  console.log("checking");
+
   if (!fullscreen()){
   addFS();
 }
