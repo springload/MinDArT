@@ -70,7 +70,7 @@ function setup() {
 
 function start() {
   $(".startBtn").remove();
-  fullscreen(1);
+  // fullscreen(1);
 
 
   //todo, consider pausing audio context
@@ -214,10 +214,6 @@ function touchEnded() {
   drawActive = false;
 }
 
-function colorAlpha(aColor, alpha) {
-  var c = color(aColor);
-  return color('rgba(' + [red(c), green(c), blue(c), alpha].join(',') + ')');
-}
 
 function checkFS(){
 
