@@ -33,8 +33,6 @@ var colours = [
 
 var numPattern = [1, 2, 4, 8, 16, 32, 64, 128];
 
-var sliderWords = ["none", "small", "medium", "large"]
-
 var cc = 0; // currentColour
 var toggle = 1;
 
@@ -167,33 +165,35 @@ function touchStarted() {
 
 function touchMoved() {
 
-  colQty = numPattern[lineVersion];
-  colWidth = width / colQty;
-
-  var tempSel = floor(mouseX / colWidth);
-  if (sel != tempSel) {
-    sel = floor(mouseX / colWidth)
-  }
-    colYtrack[sel] = mouseY;
-    if (toggle) {
-      from = color(c3);
-      to = color(c4);
-    } else {
-      from = color(c1);
-      to = color(c2);
-    }
-      if (mouseY >= touchDownY) {
-        for (var j = touchDownY; j < mouseY; j+=10) {
-          fg.stroke(lerpColor(to, from, j / mouseY));
-          fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
-        }
-      } else {
-          for (var j = touchDownY; j > mouseY; j-=10) {
-          fg.stroke(lerpColor(to, from, mouseY / j));
-          fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
-        }
-      }
+  // colQty = numPattern[lineVersion];
+  // colWidth = width / colQty;
+  //
+  // var tempSel = floor(mouseX / colWidth);
+  // if (sel != tempSel) {
+  //   sel = floor(mouseX / colWidth)
+  // }
+  //   colYtrack[sel] = mouseY;
+  //   if (toggle) {
+  //     from = color(c3);
+  //     to = color(c4);
+  //   } else {
+  //     from = color(c1);
+  //     to = color(c2);
+  //   }
+  //     if (mouseY >= touchDownY) {
+  //       for (var j = touchDownY; j < mouseY; j+=10) {
+  //         fg.stroke(lerpColor(to, from, j / mouseY));
+  //         fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
+  //       }
+  //     } else {``
+  //         for (var j = touchDownY; j > mouseY; j-=10) {
+  //         fg.stroke(lerpColor(to, from, mouseY / j));
+  //         fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
+  //       }
+  //     }
   render();
+  fg.fill(255);
+  fg.ellipse(mouseX, mouseY, 100, 100);
 }
 
 
@@ -236,7 +236,7 @@ function windowResized() {
   render();
   checkFS();
 
-    fg.strokeWeight(10);
+    fg.strokeWeight(11);
     fg.strokeCap(SQUARE);
 }
 
