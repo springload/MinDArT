@@ -9,28 +9,29 @@ var div = 1;
 
 var c1, c2, c3, c4;
 
+var fg;
+
 var restart;
 var sel = 0;
 
 var colours = [
-  ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'], // 4
-  ['#345573', '#223240', '#F2913D', '#F24B0F'], // 4
-  ['#172426', '#455559', '#D9C3B0', '#F2DFCE'], // 5
-  ['#3C5E73','#F2BBBB','#F24968','#F24444'], // 4
-  ['#3FA663','#2D7345','#3391A6','#262626'], // 5
-  ['#A60321','#D9043D','#F29F05','#D8BA7A'], // 5
-  ['#3C2D73','#131A40','#D97E6A','#BF7396'], // 4 // gET RID
-  ['#81edf7','#00a4c0','#f70110','#6e0516'], // 5
-  ['#192819','#2c4928','#719b25','#cbe368'], // 5
-  ['#314035','#5E7348','#A4BF69','#E0F2A0'], // 4
-  ['#a4fba6','#4ae54a', '#0f9200', '#006203'], // 4
-  ['#2d3157','#34c1bb','#badccc','#ffda4d'], // 4
-  ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'], // 5
+  ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'],
+  ['#345573', '#223240', '#F2913D', '#F24B0F'],
+  ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
+  ['#3C5E73','#F2BBBB','#F24968','#F24444'],
+  ['#3FA663','#2D7345','#3391A6','#262626'],
+  ['#A60321','#D9043D','#F29F05','#D8BA7A'],
+  ['#3C2D73','#131A40','#D97E6A','#BF7396'],
+  ['#81edf7','#00a4c0','#f70110','#6e0516'],
+  ['#192819','#2c4928','#719b25','#cbe368'],
+  ['#314035','#5E7348','#A4BF69','#E0F2A0'],
+  ['#a4fba6','#4ae54a', '#0f9200', '#006203'],
+  ['#2d3157','#34c1bb','#badccc','#ffda4d'],
+  ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'],
   ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6']
 ];
 
 var numPattern = [1, 2, 4, 8, 16, 32, 64, 128];
-var numPattern2 = [1, 2, 3, 5, 8, 13, 21];
 
 var sliderWords = ["none", "small", "medium", "large"]
 
@@ -55,7 +56,8 @@ function setup() {
     // TODO: Instigate resizes for both of these
     fg = createGraphics(width, height);
     intermedia = createGraphics(width, height);
-    fg.strokeWeight(1);
+
+
     fg.noFill();
     pixelDensity(1);
 
@@ -94,7 +96,7 @@ function windowResized() {
 
 
 
-  cc = floor(random(0, colours.length));
+  // cc = floor(random(0, colours.length));
   restart();
   lineVersion = 0
 }
@@ -128,6 +130,7 @@ function restart() {
     cc = 0;
   }
   lineVersion++;
+
   if (lineVersion >= numPattern.length) {
     lineVersion = 0;
   }
@@ -155,6 +158,7 @@ function restart() {
   }
   render();
   createSwatch();
+
 }
 
 function touchStarted() {
@@ -162,6 +166,7 @@ function touchStarted() {
 }
 
 function touchMoved() {
+
   colQty = numPattern[lineVersion];
   colWidth = width / colQty;
 
@@ -178,12 +183,12 @@ function touchMoved() {
       to = color(c2);
     }
       if (mouseY >= touchDownY) {
-        for (var j = touchDownY; j < mouseY; j++) {
+        for (var j = touchDownY; j < mouseY; j+=10) {
           fg.stroke(lerpColor(to, from, j / mouseY));
           fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
         }
       } else {
-          for (var j = touchDownY; j > mouseY; j--) {
+          for (var j = touchDownY; j > mouseY; j-=10) {
           fg.stroke(lerpColor(to, from, mouseY / j));
           fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
         }
@@ -230,6 +235,9 @@ function windowResized() {
   writeTextUI();
   render();
   checkFS();
+
+    fg.strokeWeight(10);
+    fg.strokeCap(SQUARE);
 }
 
 
