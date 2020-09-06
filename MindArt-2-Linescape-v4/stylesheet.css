@@ -16,9 +16,9 @@ body{
 
 }
 
-.sketch {
+.p5Canvas {
   height: 100%;
-//  overscroll-behavior: none;
+ overscroll-behavior: none;
   position: fixed;
 }
 
