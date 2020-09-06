@@ -99,8 +99,8 @@ function start() {
 function toggleIt() {
   toggle = !toggle;
   for (let i = 0; i < 2; i++) {
-        swatch[i].position(((i * 9)+3) * vMax, height - (9 * vMax));
-        swatch[i].size(9 * vMax, 6 * vMax);
+        swatch[i].position(((i * 9)+3) * vMax, height - (11 * vMax));
+        swatch[i].size(9 * vMax, 8 * vMax);
   }
 var n = 0;
 if (toggle){
