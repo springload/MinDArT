@@ -165,12 +165,12 @@ function touchMoved() {
       to = color(c2);
     }
       if (mouseY >= touchDownY) {
-        for (var j = touchDownY; j < mouseY; j+=10) {
+        for (var j = touchDownY; j < mouseY; j++) {
           fg.stroke(lerpColor(to, from, j / mouseY));
           fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
         }
       } else {``
-          for (var j = touchDownY; j > mouseY; j-=10) {
+          for (var j = touchDownY; j > mouseY; j--) {
           fg.stroke(lerpColor(to, from, mouseY / j));
           fg.line((sel * colWidth), j, (sel * colWidth) + colWidth, j);
         }
@@ -220,7 +220,7 @@ function windowResized() {
   render();
   checkFS();
 
-    fg.strokeWeight(11);
+    fg.strokeWeight(2);
     fg.strokeCap(SQUARE);
 }
 
