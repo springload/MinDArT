@@ -12,7 +12,6 @@ assets\7.jpg
 assets\8.jpg
 assets\AvenirNextLTPro-Regular.otf
 css\styles.css
-
 MindArt-1-Touchscape-v3\libraries\font-awesome\css\font-awesome.css
 MindArt-1-Touchscape-v3\libraries\font-awesome\fonts\FontAwesome.otf
 MindArt-1-Touchscape-v3\libraries\font-awesome\fonts\fontawesome-webfont.eot
@@ -21,9 +20,6 @@ MindArt-1-Touchscape-v3\libraries\font-awesome\fonts\fontawesome-webfont.ttf
 MindArt-1-Touchscape-v3\libraries\font-awesome\fonts\fontawesome-webfont.woff
 MindArt-1-Touchscape-v3\libraries\font-awesome\fonts\fontawesome-webfont.woff2
 MindArt-1-Touchscape-v3\libraries\font-awesome\css\font-awesome.min.css
-
-
-
 MindArt-1-Touchscape-v3\AvenirNextLTPro-Regular.otf
 MindArt-1-Touchscape-v3\brushPrototypes3.js
 MindArt-1-Touchscape-v3\favicon.ico
@@ -34,7 +30,6 @@ MindArt-1-Touchscape-v3\jquery-3.4.1.min.js
 MindArt-1-Touchscape-v3\offline.manifest
 MindArt-1-Touchscape-v3\stylesheet.css
 MindArt-1-Touchscape-v3\touchscape.js
-
 MindArt-1-Touchscape-v3\assets\audio.mp3
 MindArt-1-Touchscape-v3\assets\audio_01.mp3
 MindArt-1-Touchscape-v3\assets\AvenirNextLTPro-Regular.otf
@@ -67,13 +62,16 @@ MindArt-1-Touchscape-v3\assets\wpebble5.png
 MindArt-1-Touchscape-v3\assets\wpebble6.png
 MindArt-1-Touchscape-v3\assets\wpebble7.png
 MindArt-1-Touchscape-v3\assets\wpebble8.png
-
+MindArt-2-Linescape-v4\index.html
+MindArt-2-Linescape-v4\index2.html
+MindArt-2-Linescape-v4\test.js
+MindArt-2-Linescape-v4\stylesheet.css
+MindArt-2-Linescape-v4\gradient.js
+MindArt-2-Linescape-v4\interface.js
 MindArt-2-Linescape-v4\assets\p5.min.js
 MindArt-2-Linescape-v4\assets\p5.sound.js
 MindArt-2-Linescape-v4\assets\p5.sound.min.js
 MindArt-2-Linescape-v4\assets\paper1.jpg
-MindArt-2-Linescape-v4\stylesheet.css
-MindArt-2-Linescape-v4\test.js
 MindArt-2-Linescape-v4\assets\texture.png
 MindArt-2-Linescape-v4\assets
 MindArt-2-Linescape-v4\assets\audio.mp3
@@ -91,10 +89,6 @@ MindArt-2-Linescape-v4\assets\font-awesome\fonts\fontawesome-webfont.ttf
 MindArt-2-Linescape-v4\assets\font-awesome\fonts\fontawesome-webfont.woff
 MindArt-2-Linescape-v4\assets\font-awesome\fonts\fontawesome-webfont.woff2
 MindArt-2-Linescape-v4\assets\font-awesome\fonts
-MindArt-2-Linescape-v4\gradient.js
-MindArt-2-Linescape-v4\index.html
-MindArt-2-Linescape-v4\index2.html
-MindArt-2-Linescape-v4\interface.js
 MindArt-2-Linescape-v4\assets\jquery-3.4.1.min.js
 MindArt-2-Linescape-v4\assets\logo.jpg
 MindArt-2-Linescape-v4\assets\p5.dom.js
