@@ -96,7 +96,7 @@ function windowResized(){
   calcDimensions();
 
   writeTextUI();
-  // changeCol(0);
+
 
 
   temp = createGraphics(windowWidth, windowHeight);
@@ -211,6 +211,27 @@ function scatterPoints() {
 
 function touchStarted() {
 
+  // determine which brush selected, load charactertistics
+  if (currentC == 0) {
+    temp.stroke(colSel);
+    temp.noFill();
+    lineQty = 20;
+    vertRand = 5;
+    angRand = 10;
+  } else if (currentC ==1) {
+    temp.stroke(colSel);
+    temp.noFill();
+    lineQty = 250;
+    vertRand = 40;
+    angRand = 15;
+  } else {
+    lineQty = 10;
+    temp.noStroke();
+    temp.fill(colSel);
+    vertRand = 5;
+    angRand = 3;
+  }
+
   // SUSPECT OBSOLETE
   // w = 0;
   // h = 0;
@@ -238,6 +259,7 @@ function touchStarted() {
   // w = abs(centerW - mouseX) + 100;
   // h = abs(centerY - mouseY) + 100;
 
+  // store starting mouse position
   mX = mouseX;
   mY = mouseY;
 
@@ -254,30 +276,12 @@ return false;
 }
 
 function render(){
-  if (currentC == 0) {
-    temp.stroke(colSel);
-    temp.noFill();
-    lineQty = 20;
-    vertRand = 5;
-    angRand = 10;
-  } else if (currentC ==1) {
-    temp.stroke(colSel);
-    temp.noFill();
-    lineQty = 250;
-    vertRand = 40;
-    angRand = 15;
-  } else {
-    lineQty = 10;
-    temp.noStroke();
-    temp.fill(colSel);
-    vertRand = 5;
-    angRand = 3;
-  }
 
-  // set background
+
+
+  // set background and paper textures
   blendMode(BLEND);
-    background(colours[colVersion][3]);
-
+  background(colours[colVersion][3]);
   blendMode(MULTIPLY);
   image(paper, 0, 0, width, height);
   blendMode(BLEND);
@@ -287,8 +291,6 @@ function render(){
   for (let i = 0; i < vectors.length; i++) {
     ellipse(vectors[i].x, vectors[i].y, vMax*2, vMax*2);
   }
-
-
 
   image(temp, 0, 0, windowWidth, windowHeight);
   image(perm, 0, 0, windowWidth, windowHeight);
@@ -301,28 +303,51 @@ function render(){
   a = atan2(mouseY - centerY, mouseX - centerW);
   a2 = atan2(mY - centerY, mX - centerW);
 
-  var diff = a2 - a;
+  var diff = (a2 - a);
 
+  if (diff > PI){
+    diff = diff - (2*PI);
+  }
 
+  if (diff < -PI){
+    diff = diff + (2*PI);
+  }
 
-  if (abs(diff) > 1) {
-    diff = diff*-0.001;
-
+  var chooser = 0;
+  if (diff < 0){
+    chooser = 1;
   }
 
     console.log(diff);
+  //
+  // if (abs(diff) > 0.5){
+  //
+  //   return;
+  //
+  //
+  // }
+
+
+
+  //
+  // if (abs(diff) > 1) {
+  //   diff = diff*-0.001;
+  //
+  // }
+
+
 
       if (currentC == 0) {temp.strokeWeight(constrain(50*abs(diff),2,4));}
     if (currentC == 1) {temp.strokeWeight(constrain(10*abs(diff),1,1000));}
 
   for (var i = 0; i < lineQty; i++) {
     var nR = randomGaussian(-angRand, angRand);
-    a2 = atan2(nR + mY - centerY, nR + mX - centerW);
-    a = atan2(nR + mouseY - centerY, nR + mouseX - centerW);
+    // a2 = atan2(nR + mY - centerY, nR + mX - centerW);
+    // a = atan2(nR + mouseY - centerY, nR + mouseX - centerW);
 
     var n = random(-vertRand, vertRand);
 
-    if (diff <= 0) {
+    if (chooser) {
       temp.arc(centerW, centerY, r + n, r + n, a2, a);
       counter++;
     } else {
