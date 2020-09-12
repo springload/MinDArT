@@ -43,7 +43,7 @@ var colours = [
   ['#a4fba6','#4ae54a', '#0f9200', '#006203'],
   ['#2d3157','#34c1bb','#badccc','#ffda4d'],
   ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'],
-  ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6']
+  ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6'],
   ['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream
   ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D', '#404040'], // Unchained
   ['#A6886D', '#F2E0D0', '#402E27', '#F29D52', '#221F26'], // the Planets
@@ -54,6 +54,8 @@ var colours = [
   ['#F27EA9', '#05AFF2', '#F2B705', '#F29F05', '#F2541B'] // Lettering-Series-XXII-1
   // new colours
 ];
+
+var storedOrientation, storedOrientationDegrees, rotateDirection;
 
 function preload() {
   paper = loadImage('assets/texture.jpg');
@@ -71,13 +73,28 @@ function start() {
     audio.loop(1);
   }
 
+  sizeWindow();
+  writeTextUI();
+  reset();
+
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
   colVersion = floor(random(0, colours.length));
-  console.log(colVersion);
+  temp = createGraphics(windowWidth, windowHeight);
+  gridLay = createGraphics(windowWidth, windowHeight);
+
+  background(245);
+  fill(0);
+  strokeCap(SQUARE);
+
+
+
+
+  //colVersion = colours.length; // set to max, as this will cause reset to 0;
+  levelVersion = levelMax;
 
   pixelDensity(1);
 
@@ -89,39 +106,6 @@ function setup() {
 
 }
 
-function windowResized(){
-
-
-  resizeCanvas(windowWidth, windowHeight);
-  calcDimensions();
-
-  writeTextUI();
-
-
-
-  temp = createGraphics(windowWidth, windowHeight);
-  perm = createGraphics(windowWidth, windowHeight);
-  background(245);
-  fill(0);
-  strokeCap(SQUARE);
-  temp.strokeCap(SQUARE);
-  perm.strokeCap(SQUARE);
-
-  perm.stroke(80, 24, 200, 100);
-  perm.strokeWeight(25);
-  perm.noFill();
-  temp.stroke(80, 24, 200, 100);
-  temp.strokeWeight(2);
-  temp.noFill();
-
-
-  //colVersion = colours.length; // set to max, as this will cause reset to 0;
-  levelVersion = levelMax;
-
-
-  reset();
-
-}
 
 
 function changeCol(cc){
@@ -130,7 +114,6 @@ function changeCol(cc){
   if (cc <= 1){toggle = 0;} else {toggle = 1;}
   currentC = cc;
   c = colours[colVersion][cc];
-  colSel = colorAlpha(c, 0.1);
 
   for (let i = 0; i < 3; i++) {
         swatch[i].position((((i) * 7)+3) * vMax, height - (9 * vMax));
@@ -167,7 +150,7 @@ function reset(){
   createSwatch();
 
   clear();
-  perm.clear();
+  gridLay.clear();
       temp.clear();
   render();
     temp.clear();
@@ -179,14 +162,13 @@ function makeGrid() {
   let xQty = gridLevels[levelVersion][0];
   let yQty = gridLevels[levelVersion][1];
 
-
   for (let i = 0; i < xQty; i++) {
     for (let j = 0; j < yQty; j++) {
-      noStroke();
-      fill(0, 100);
+      gridLay.noStroke();
+      gridLay.fill(0, 100);
       // vectors.push(createVector(random(0,width), random(0, height)));
       vectors.push(createVector((width / (xQty + 1)) * (i + 1), (height / (yQty + 1)) * (j + 1)));
-      ellipse(vectors[vectors.length - 1].x, vectors[vectors.length - 1].y, width / 50, width / 50);
+      gridLay.ellipse(vectors[vectors.length - 1].x, vectors[vectors.length - 1].y, width / 50, width / 50);
     }
   }
 }
@@ -202,9 +184,9 @@ function scatterPoints() {
     vectors.push(createVector(randomGaussian(width / 2, width / 4), randomGaussian(height / 2, height / 4)));
 
     // make dots (consider delete)
-    noStroke();
-    fill(0, 100);
-    ellipse(vectors[vectors.length - 1].x, vectors[vectors.length - 1].y, width / 50, width / 50);
+    gridLay.noStroke();
+    gridLay.fill(0, 100);
+    gridLay.ellipse(vectors[vectors.length - 1].x, vectors[vectors.length - 1].y, width / 50, width / 50);
 
   }
 }
@@ -213,28 +195,33 @@ function touchStarted() {
 
   // determine which brush selected, load charactertistics
   if (currentC == 0) {
+        colSel = colorAlpha(c, 0.4);
     temp.stroke(colSel);
     temp.noFill();
-    lineQty = 20;
-    vertRand = 5;
-    angRand = 10;
+    lineQty = 10;
+    vertRand =3;
+    angRand = 8;
+
+
   } else if (currentC ==1) {
+        colSel = colorAlpha(c, .1);
     temp.stroke(colSel);
     temp.noFill();
     lineQty = 250;
     vertRand = 40;
     angRand = 15;
+
+
   } else {
     lineQty = 10;
     temp.noStroke();
-    temp.fill(colSel);
+    colSel = colorAlpha(c, 0.1);
+    temp.fill(colSel, 255);
     vertRand = 5;
-    angRand = 3;
-  }
+    angRand = 10;
 
-  // SUSPECT OBSOLETE
-  // w = 0;
-  // h = 0;
+
+  }
 
   let tempHigh = 1000;
   selectedVertice = 0;
@@ -268,9 +255,52 @@ function touchStarted() {
 function touchMoved() {
 render();
 
+//
+a = atan2(mouseY - centerY, mouseX - centerW);
+a2 = atan2(mY - centerY, mX - centerW);
+
+var diff = (a2 - a);
+
+if (diff > PI){
+  diff = diff - (2*PI);
+}
+
+if (diff < -PI){
+  diff = diff + (2*PI);
+}
+
+var chooser = 0;
+if (diff < 0){
+  chooser = 1;
+}
+
+    if (currentC == 0) {temp.strokeWeight(constrain(1*abs(diff),0.5,4));}
+  if (currentC == 1) {temp.strokeWeight(constrain(10*abs(diff),1,1000));}
+
+for (var i = 0; i < lineQty; i++) {
+  var nR = randomGaussian(-angRand, angRand);
+  a2 = atan2(nR + mY - centerY, nR + mX - centerW);
+  a = atan2(nR + mouseY - centerY, nR + mouseX - centerW);
+
+  var n = random(-vertRand, vertRand);
+
+  if (chooser) {
+    temp.arc(centerW, centerY, r + n, r + n, a2, a);
+    counter++;
+  } else {
+    temp.arc(centerW, centerY, r + n, r + n, a, a2);
+    counter--;
+  }
+}
+
+mX = mouseX;
+mY = mouseY;
+
 // draw the current selectedVertice bigger;
 fill(colours[colVersion][1]);
 ellipse(vectors[selectedVertice].x, vectors[selectedVertice].y, vMax*4, vMax*4);
+
+
 
 return false;
 }
@@ -293,71 +323,14 @@ function render(){
   }
 
   image(temp, 0, 0, windowWidth, windowHeight);
-  image(perm, 0, 0, windowWidth, windowHeight);
+  image(gridLay, 0, 0, windowWidth, windowHeight);
   fill(255);
   blendMode(DIFFERENCE);
   textSize(width / 50);
   text("colour set " + colVersion, width - (width / 5), height / 10);
   blendMode(BLEND);
 
-  a = atan2(mouseY - centerY, mouseX - centerW);
-  a2 = atan2(mY - centerY, mX - centerW);
 
-  var diff = (a2 - a);
-
-  if (diff > PI){
-    diff = diff - (2*PI);
-  }
-
-  if (diff < -PI){
-    diff = diff + (2*PI);
-  }
-
-  var chooser = 0;
-  if (diff < 0){
-    chooser = 1;
-  }
-
-    console.log(diff);
-  //
-  // if (abs(diff) > 0.5){
-  //
-  //   return;
-  //
-  //
-  // }
-
-
-
-  //
-  // if (abs(diff) > 1) {
-  //   diff = diff*-0.001;
-  //
-  // }
-
-
-
-      if (currentC == 0) {temp.strokeWeight(constrain(50*abs(diff),2,4));}
-    if (currentC == 1) {temp.strokeWeight(constrain(10*abs(diff),1,1000));}
-
-  for (var i = 0; i < lineQty; i++) {
-    var nR = randomGaussian(-angRand, angRand);
-    // a2 = atan2(nR + mY - centerY, nR + mX - centerW);
-    // a = atan2(nR + mouseY - centerY, nR + mouseX - centerW);
-
-    var n = random(-vertRand, vertRand);
-
-    if (chooser) {
-      temp.arc(centerW, centerY, r + n, r + n, a2, a);
-      counter++;
-    } else {
-      temp.arc(centerW, centerY, r + n, r + n, a, a2);
-      counter--;
-    }
-  }
-
-  mX = mouseX;
-  mY = mouseY;
 }
 
 function touchEnded() {
@@ -385,3 +358,116 @@ function dimensionCalc() {
     circleRad = shortEdge * 0.45;
   }
 }
+
+
+function checkFS(){
+  if (!fullscreen()){
+  addFS();
+}
+}
+
+function windowResized(){
+
+
+  resizeCanvas(windowWidth, windowHeight);
+  sizeWindow();
+
+  writeTextUI();
+
+  checkFS();
+
+  temp.strokeCap(SQUARE);
+  temp.noFill();
+  render();
+
+
+}
+
+
+function sizeWindow() {
+  if (width < height) {
+    currentOrientation = "portrait";
+  } else {
+    currentOrientation = "landscape";
+  }
+  if (currentOrientation === storedOrientation) {
+    stretchWindow();
+  } else {
+    if (window.orientation < storedOrientationDegrees) {
+      direction = 1;
+    } else {
+      direction = -1;
+    }
+
+    if (abs(window.orientation - storedOrientationDegrees) == 270){
+      direction = -direction;
+    }
+    rotateWindow(direction);
+    storedOrientationDegrees = window.orientation;
+  }
+  storedOrientation = currentOrientation;
+  calcDimensions();
+}
+
+function stretchWindow() {
+  var newtemp = createGraphics(windowWidth, windowHeight);
+  newtemp.image(temp, 0, 0, windowWidth, windowHeight);
+  temp.resizeCanvas(windowWidth, windowHeight);
+  temp = newtemp;
+  newtemp.remove();
+
+  var newgridLay = createGraphics(windowWidth, windowHeight);
+  newgridLay.image(gridLay, 0, 0, windowWidth, windowHeight);
+  gridLay.resizeCanvas(windowWidth, windowHeight);
+  gridLay = newgridLay;
+  newgridLay.remove();
+
+
+}
+
+function rotateWindow(direction) {
+  var newtemp = createGraphics(windowWidth, windowHeight);
+  newtemp.push();
+  newtemp.translate(width / 2, height / 2);
+  newtemp.rotate((PI / 2) * direction);
+  newtemp.translate(-height / 2, -width / 2);
+  newtemp.image(temp, 0, 0, windowHeight, windowWidth);
+  newtemp.pop()
+  temp.resizeCanvas(windowWidth, windowHeight);
+  temp = newtemp;
+  newtemp.remove();
+
+  var newgridLay = createGraphics(windowWidth, windowHeight);
+  newgridLay.push();
+  newgridLay.translate(width / 2, height / 2);
+  newgridLay.rotate((PI / 2) * direction);
+  newgridLay.translate(-height / 2, -width / 2);
+  newgridLay.image(gridLay, 0, 0, windowHeight, windowWidth);
+  newgridLay.pop()
+  gridLay.resizeCanvas(windowWidth, windowHeight);
+  gridLay = newgridLay;
+  newgridLay.remove();
+
+  // switch the grid around )
+  for (var i = 0; i < vectors.length; i++){
+    var y_ = vectors[i].y;
+    var x_ = vectors[i].x;
+    vectors[i].y = x_;
+    vectors[i].x = y_;
+
+  }
+
+  // TODO: properly detect the orientation
+  rotateDirection = rotateDirection * -1;
+}
+
+//startSimulation and pauseSimulation defined elsewhere
+function handleVisibilityChange() {
+  if (document.hidden) {
+    audio.stop();
+  } else {
+    audio.loop(1);
+  }
+}
+
+document.addEventListener("visibilitychange", handleVisibilityChange, false);
