@@ -57,6 +57,8 @@ var colours = [
 
 function preload() {
   paper = loadImage('assets/texture.jpg');
+  audio = loadSound('assets/audio.mp3');
+  click = loadSound('assets/click.mp3');
 }
 
 
@@ -64,10 +66,18 @@ function start() {
   $(".startBtn").remove();
   fullscreen(1);
   // note currently everything resets on windowResized. Unsure if this is logical yet
+
+  if (audio.isPlaying()) {} else {
+    audio.loop(1);
+  }
+
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+
+  colVersion = floor(random(0, colours.length));
+  console.log(colVersion);
 
   pixelDensity(1);
 
@@ -86,6 +96,7 @@ function windowResized(){
   calcDimensions();
 
   writeTextUI();
+  // changeCol(0);
 
 
   temp = createGraphics(windowWidth, windowHeight);
@@ -104,7 +115,7 @@ function windowResized(){
   temp.noFill();
 
 
-  colVersion = colours.length; // set to max, as this will cause reset to 0;
+  //colVersion = colours.length; // set to max, as this will cause reset to 0;
   levelVersion = levelMax;
 
 

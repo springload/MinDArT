@@ -52,8 +52,9 @@ function createSwatch() {
      changeCol(i);
     });
   }
+  changeCol(currentC);
 
-   changeCol(0);
+
 
   toggleBut = createButton('Change Colours');
   toggleBut.mouseClicked(function() {
