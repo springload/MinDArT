@@ -235,6 +235,8 @@ render();
 // draw the current selectedVertice bigger;
 fill(colours[colVersion][1]);
 ellipse(vectors[selectedVertice].x, vectors[selectedVertice].y, vMax*4, vMax*4);
+
+return false;
 }
 
 function render(){
