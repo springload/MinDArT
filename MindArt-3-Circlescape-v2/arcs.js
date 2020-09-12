@@ -2,7 +2,6 @@ var a2, w, h;
 
 var mX = 0;
 var mY = 0;
-var tX, tY;
 var counter = 0;
 var r, a;
 var c;
@@ -156,10 +155,12 @@ function reset(){
   $(".box").remove();
   createSwatch();
 
-  temp.clear();
-  perm.clear();
   clear();
+  perm.clear();
+      temp.clear();
   render();
+    temp.clear();
+
 }
 
 function makeGrid() {
@@ -199,8 +200,9 @@ function scatterPoints() {
 
 function touchStarted() {
 
-  w = 0;
-  h = 0;
+  // SUSPECT OBSOLETE
+  // w = 0;
+  // h = 0;
 
   let tempHigh = 1000;
   selectedVertice = 0;
@@ -214,21 +216,20 @@ function touchStarted() {
     }
   }
 
+  // extract that points center
   centerW = vectors[selectedVertice].x;
   centerY = vectors[selectedVertice].y;
-
-  // select Radius
+  // calculate Radius
   r = 2 * dist(mouseX, mouseY, centerW, centerY);
-
+  // set currnet colour (place elsewhere?)
   temp.stroke(colSel);
-
-  w = abs(centerW - mouseX) + 100;
-  h = abs(centerY - mouseY) + 100;
+  // SUSPECT OBSOLETE
+  // w = abs(centerW - mouseX) + 100;
+  // h = abs(centerY - mouseY) + 100;
 
   mX = mouseX;
   mY = mouseY;
-  tX = mouseX; // currently obsolete
-  tY = mouseY; // currently obsolete
+
 }
 
 function touchMoved() {
@@ -245,15 +246,15 @@ function render(){
   if (currentC == 0) {
     temp.stroke(colSel);
     temp.noFill();
-    lineQty = 10;
-    vertRand = 2;
-    angRand = 1;
+    lineQty = 20;
+    vertRand = 5;
+    angRand = 2;
   } else if (currentC ==1) {
     temp.stroke(colSel);
     temp.noFill();
-    lineQty = 100;
-    vertRand = 10;
-    angRand = 4;
+    lineQty = 250;
+    vertRand = 40;
+    angRand = 2;
   } else {
     lineQty = 10;
     temp.noStroke();
@@ -291,11 +292,17 @@ function render(){
 
   var diff = a2 - a;
 
-  if (abs(diff) > 5) {
-    diff = a - a2
+
+
+  if (abs(diff) > 1) {
+    diff = diff*-0.001;
+
   }
 
-    if (currentC != 2) {temp.strokeWeight(constrain(10*abs(diff),1,1000));}
+    console.log(diff);
+
+      if (currentC == 0) {temp.strokeWeight(constrain(100*abs(diff),20,40));}
+    if (currentC == 1) {temp.strokeWeight(constrain(10*abs(diff),1,1000));}
 
   for (var i = 0; i < lineQty; i++) {
     var nR = randomGaussian(-angRand, angRand);
@@ -319,6 +326,8 @@ function render(){
 
 function touchEnded() {
   counter = 0;
+  a = 0;
+  a2 = 0;
 }
 
 function colorAlpha(aColor, alpha) {
