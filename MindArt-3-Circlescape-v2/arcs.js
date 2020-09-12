@@ -248,13 +248,13 @@ function render(){
     temp.noFill();
     lineQty = 20;
     vertRand = 5;
-    angRand = 2;
+    angRand = 10;
   } else if (currentC ==1) {
     temp.stroke(colSel);
     temp.noFill();
     lineQty = 250;
     vertRand = 40;
-    angRand = 2;
+    angRand = 15;
   } else {
     lineQty = 10;
     temp.noStroke();
@@ -301,7 +301,7 @@ function render(){
 
     console.log(diff);
 
-      if (currentC == 0) {temp.strokeWeight(constrain(100*abs(diff),20,40));}
+      if (currentC == 0) {temp.strokeWeight(constrain(50*abs(diff),2,4));}
     if (currentC == 1) {temp.strokeWeight(constrain(10*abs(diff),1,1000));}
 
   for (var i = 0; i < lineQty; i++) {
@@ -309,7 +309,7 @@ function render(){
     a2 = atan2(nR + mY - centerY, nR + mX - centerW);
     a = atan2(nR + mouseY - centerY, nR + mouseX - centerW);
 
-    var n = randomGaussian(-vertRand, vertRand);
+    var n = random(-vertRand, vertRand);
 
     if (diff <= 0) {
       temp.arc(centerW, centerY, r + n, r + n, a2, a);
