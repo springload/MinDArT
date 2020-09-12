@@ -57,7 +57,7 @@ var colours = [
 ];
 
 function preload() {
-  paper = loadImage('assets/paper1.jpg');
+  paper = loadImage('assets/texture.jpg');
 }
 
 
@@ -145,9 +145,7 @@ function reset(){
       levelVersion = 0;
     }
 
-    temp.clear();
-    perm.clear();
-    clear();
+
     vectors = [];
 
     if (levelVersion < gridLevels.length) {
@@ -157,6 +155,10 @@ function reset(){
     }
   $(".box").remove();
   createSwatch();
+
+  temp.clear();
+  perm.clear();
+  clear();
   render();
 }
 
@@ -261,7 +263,12 @@ function render(){
   }
 
   // set background
-  background(colours[colVersion][3]);
+  blendMode(BLEND);
+    background(colours[colVersion][3]);
+
+  blendMode(MULTIPLY);
+  image(paper, 0, 0, width, height);
+  blendMode(BLEND);
 
   // draw ellipses for each point using the vertices
   fill(colours[colVersion][0]);
@@ -303,8 +310,6 @@ function render(){
       counter--;
     }
   }
-
-
 
   mX = mouseX;
   mY = mouseY;
