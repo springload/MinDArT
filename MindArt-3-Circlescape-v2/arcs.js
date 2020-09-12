@@ -258,8 +258,8 @@ function render(){
     lineQty = 10;
     temp.noStroke();
     temp.fill(colSel);
-    vertRand = 2;
-    angRand = 4;
+    vertRand = 5;
+    angRand = 3;
   }
 
   // set background
@@ -294,6 +294,8 @@ function render(){
   if (abs(diff) > 5) {
     diff = a - a2
   }
+
+    if (currentC != 2) {temp.strokeWeight(constrain(10*abs(diff),1,1000));}
 
   for (var i = 0; i < lineQty; i++) {
     var nR = randomGaussian(-angRand, angRand);
