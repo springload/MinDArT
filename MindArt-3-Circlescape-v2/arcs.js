@@ -23,8 +23,8 @@ let gridLevels = [
   [2, 1],
   [3, 1],
   [2, 2],
-  [3, 4]
 ];
+let radialLevels = [3, 5];
 var selectedVertice = 0;
 
 var colSel = 0;
@@ -143,6 +143,8 @@ function reset(){
 
     if (levelVersion < gridLevels.length) {
       makeGrid();
+    } else if (levelVersion >= gridLevels.length && levelVersion < (gridLevels.length+radialLevels.length)){
+      makeRadial();
     } else {
       scatterPoints();
     }
@@ -173,15 +175,37 @@ function makeGrid() {
   }
 }
 
+function makeRadial(){
+
+// update the level version to start from 0 (after gridLevels)
+var level = levelVersion - (gridLevels.length);
+
+// radius of the circular array
+let tran = vMin*40;
+
+
+for (let i = 0; i < radialLevels[level]; i++){
+  gridLay.noStroke();
+  gridLay.fill(0, 100);
+  rotateVal = (360/radialLevels[level])*i;
+
+  let tempX = (tran * cos(radians(rotateVal))) + width / 2;
+  let tempY = (tran * sin(radians(rotateVal))) + height / 2;
+
+  vectors.push(createVector(tempX, tempY));
+  gridLay.ellipse(tempX, tempY, width / 50, width / 50);
+}
+}
+
 function scatterPoints() {
 
-  let n = levelVersion - gridLevels.length;
+  let n = levelVersion - gridLevels.length - radialLevels.length;
   let qty = 1 + (n * n);
 
   for (let i = 0; i < qty; i++) {
 
     let m = height / 10; // margin
-    vectors.push(createVector(randomGaussian(width / 2, width / 4), randomGaussian(height / 2, height / 4)));
+    vectors.push(createVector(random(width*0.1, width*0.9), random(height*.1, height*0.9)));
 
     // make dots (consider delete)
     gridLay.noStroke();

@@ -1,10 +1,12 @@
-let resetButton, saveButton, fsButton, toggleBut;
+let resetButton, saveButton, fsButton, toggleBut, vMin;
 
 function calcDimensions() {
   if (width > height) {
     vMax = width / 100;
+        vMin = height / 100;
   } else {
     vMax = height / 100;
+    vMin = width / 100;
   }
 }
 
