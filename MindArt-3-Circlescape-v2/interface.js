@@ -23,14 +23,14 @@ $(".select").remove();
   resetButton.style('font-size', '1.7vmax');
   resetButton.style('height', '5vmax');
   resetButton.position(width - (16 * vMax), height - (7 * vMax));
-  resetButton.mouseClicked(reset);
+  resetButton.mousePressed(reset);
 
   saveButton = createButton("Save")
   saveButton.class("select");
   saveButton.style('font-size', '1.7vmax');
   saveButton.style('height', '5vmax');
   saveButton.position(width - (16 * vMax), height - (13 * vMax));
-  saveButton.mouseClicked(saveImg);
+  saveButton.mousePressed(saveImg);
 
 createSwatch();
 }
@@ -59,7 +59,7 @@ function createSwatch() {
 
 
   toggleBut = createButton('Change Colours');
-  toggleBut.mouseClicked(function() {
+  toggleBut.mousePressed(function() {
    changeCol(currentC+1);
   });
   toggleBut.class("toggle");

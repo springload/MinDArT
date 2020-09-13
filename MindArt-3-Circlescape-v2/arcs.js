@@ -364,7 +364,7 @@ function render(){
   fill(255);
   blendMode(DIFFERENCE);
   textSize(width / 50);
-  text("colour set " + colVersion, width - (width / 5), height / 10);
+  text(colours[colVersion][0], width - (width / 5), height / 10);
   blendMode(BLEND);
 
 
