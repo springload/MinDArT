@@ -169,7 +169,7 @@ function makeGrid() {
       gridLay.noStroke();
       gridLay.fill(0, 100);
       // vectors.push(createVector(random(0,width), random(0, height)));
-      vectors.push(createVector((width / (xQty + 1)) * (i + 1), (height / (yQty + 1)) * (j + 1)));
+      vectors.push(createVector((((width*1.4) / (xQty + 1)) * (i + 1))-width*0.2, (((height*1.4) / (yQty + 1)) * (j + 1))-height*0.2));
       gridLay.ellipse(vectors[vectors.length - 1].x, vectors[vectors.length - 1].y, width / 50, width / 50);
     }
   }
