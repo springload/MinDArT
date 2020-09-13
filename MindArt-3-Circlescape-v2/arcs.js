@@ -200,17 +200,30 @@ for (let i = 0; i < radialLevels[level]; i++){
 function scatterPoints() {
 
   let n = levelVersion - gridLevels.length - radialLevels.length;
-  let qty = 1 + (n * n);
+  // let qty = 5 + (n * n);
 
-  for (let i = 0; i < qty; i++) {
+  for (let i = 0; i < 50; i++) {
 
     let m = height / 10; // margin
-    vectors.push(createVector(random(width*0.1, width*0.9), random(height*.1, height*0.9)));
+    let v = createVector(random(width*0.1, width*0.9), random(height*.1, height*0.8));
+    var bool = 1;
 
-    // make dots (consider delete)
-    gridLay.noStroke();
-    gridLay.fill(0, 100);
-    gridLay.ellipse(vectors[vectors.length - 1].x, vectors[vectors.length - 1].y, width / 50, width / 50);
+    for (let j = 0; j < vectors.length; j++){
+      if (v.dist(vectors[j]) < vMax*20){
+        bool = 0;
+      }
+    }
+
+    if (bool){
+      vectors.push(v);
+
+        // make dots (consider delete)
+      gridLay.noStroke();
+      gridLay.fill(0, 100);
+      gridLay.ellipse(vectors[vectors.length - 1].x, vectors[vectors.length - 1].y, width / 50, width / 50);
+
+    }
+
 
   }
 }
