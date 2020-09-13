@@ -33,11 +33,11 @@ var colours = [
   ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'],
   ['#345573', '#223240', '#F2913D', '#F24B0F'],
   ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
-  ['#3C5E73','#F2BBBB','#F24968','#F24444'],
+  ['#3C5E73','#F2BBBB','#444444','#F24444'],
   ['#3FA663','#2D7345','#3391A6','#262626'],
   ['#A60321','#D9043D','#F29F05','#D8BA7A'],
-  ['#3C2D73','#131A40','#D97E6A','#BF7396'],
-  ['#81edf7','#00a4c0','#f70110','#6e0516'],
+  ['#3C2D73','#131A40','#BF7396','#D97E6A'],
+  ['#81edf7','#00a4c0','#6e0516','#f70110'],
   ['#192819','#2c4928','#719b25','#cbe368'],
   ['#314035','#5E7348','#A4BF69','#E0F2A0'],
   ['#a4fba6','#4ae54a', '#0f9200', '#006203'],
@@ -47,11 +47,11 @@ var colours = [
   ['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream
   ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D', '#404040'], // Unchained
   ['#A6886D', '#F2E0D0', '#402E27', '#F29D52', '#221F26'], // the Planets
-  ['#BF4B8B', '#3981BF', '#1F628C', '#590808', '#D92929'], // adidas-Telstar-50-anniversary
+  ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'], // adidas-Telstar-50-anniversary
   ['#A64456', '#422A59', '#F2B366', '#D9BBA0', '#D96D55'], // Lettering-Love
   ['#F24452', '#5CE3F2', '#F2E205', '#F2CB05', '#F29D35'], // People-of-The-Internet
-  ['#D9A74A', '#BF6E3F', '#A67563', '#BFA095', '#BF4141'], // Sparkling-Botanicals-1'
-  ['#F27EA9', '#05AFF2', '#F2B705', '#F29F05', '#F2541B'] // Lettering-Series-XXII-1
+  ['#D9A74A', '#BF6E3F', '#BFA095', '#BF4141'], // Sparkling-Botanicals-1'
+  ['#F2B705','#F27EA9', '#05AFF2', '#F29F05', '#F2541B'] // Lettering-Series-XXII-1
   // new colours
 ];
 
