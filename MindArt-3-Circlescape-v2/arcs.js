@@ -37,7 +37,6 @@ var colours = [
   ['#3FA663','#2D7345','#3391A6','#262626'],
   ['#A60321','#D9043D','#F29F05','#D8BA7A'],
   ['#3C2D73','#131A40','#BF7396','#D97E6A'],
-  ['#81edf7','#00a4c0','#6e0516','#f70110'],
   ['#192819','#2c4928','#719b25','#cbe368'],
   ['#314035','#5E7348','#A4BF69','#E0F2A0'],
   ['#a4fba6','#4ae54a', '#0f9200', '#006203'],
@@ -235,8 +234,8 @@ function touchStarted() {
         colSel = colorAlpha(c, 0.4);
     temp.stroke(colSel);
     temp.noFill();
-    lineQty = 10;
-    vertRand =3;
+    lineQty = 20;
+    vertRand =6;
     angRand = 8;
 
 
