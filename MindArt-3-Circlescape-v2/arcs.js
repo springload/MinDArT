@@ -21,6 +21,7 @@ let levelMax = 9;
 let gridLevels = [
   [1, 1],
   [2, 1],
+  [1, 2],
   [3, 1],
   [2, 2],
 ];
@@ -245,7 +246,7 @@ function touchStarted() {
         colSel = colorAlpha(c, 0.4);
     temp.stroke(colSel);
     temp.noFill();
-    lineQty = 40;
+    lineQty = 60;
     vertRand =16;
     angRand = 8;
 
@@ -254,7 +255,7 @@ function touchStarted() {
         colSel = colorAlpha(c, .1);
     temp.stroke(colSel);
     temp.noFill();
-    lineQty = 350;
+    lineQty = 450;
     vertRand = 80;
     angRand = 15;
 
