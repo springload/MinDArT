@@ -245,8 +245,8 @@ function touchStarted() {
         colSel = colorAlpha(c, 0.4);
     temp.stroke(colSel);
     temp.noFill();
-    lineQty = 20;
-    vertRand =6;
+    lineQty = 40;
+    vertRand =16;
     angRand = 8;
 
 
@@ -254,8 +254,8 @@ function touchStarted() {
         colSel = colorAlpha(c, .1);
     temp.stroke(colSel);
     temp.noFill();
-    lineQty = 250;
-    vertRand = 40;
+    lineQty = 350;
+    vertRand = 80;
     angRand = 15;
 
 
