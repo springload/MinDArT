@@ -58,16 +58,16 @@ function createSwatch() {
 
 
 
-  toggleBut = createButton('Change Colours');
-  toggleBut.mousePressed(function() {
-   changeCol(currentC+1);
-  });
-  toggleBut.class("toggle");
-  toggleBut.id("ui4");
-  toggleBut.position(3*vMax, height - (6 * vMax));
-  toggleBut.style('width', '21vmax')
-  toggleBut.style('font-size', '1.5vmax');
-  toggleBut.style('height', '4vmax');
+  // toggleBut = createButton('Change Colours');
+  // toggleBut.mousePressed(function() {
+  //  changeCol(currentC+1);
+  // });
+  // toggleBut.class("toggle");
+  // toggleBut.id("ui4");
+  // toggleBut.position(3*vMax, height - (6 * vMax));
+  // toggleBut.style('width', '21vmax')
+  // toggleBut.style('font-size', '1.5vmax');
+  // toggleBut.style('height', '4vmax');
 
       // toggleIt();
 

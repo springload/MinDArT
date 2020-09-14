@@ -15,6 +15,8 @@ var centerY;
 var vectors = [];
 let aC = 0;
 
+let filterRecorder = [0, 0, 0];
+
 let colVersion = 0;
 let levelVersion = 0;
 let levelMax = 9;
@@ -22,7 +24,6 @@ let gridLevels = [
   [1, 1],
   [2, 1],
   [1, 2],
-  [3, 1],
   [2, 2],
 ];
 let radialLevels = [3, 5];
@@ -31,38 +32,24 @@ var selectedVertice = 0;
 var colSel = 0;
 var currentC = 0;
 var colours = [
-  ['#D97398','#A65398','#263F73','#5679A6'],
-  ['#D9C6B0','#BF9C88','#8C2336','#D99B96'],
-  ['#F27ECA','#9726A6','#8F49F2','#6C2EF2'],
-  ['#F27983','#A66F79','#F2C5BB','#F2B9B3'],
-  ['#080926','#162040','#364C59','#8DA69F'],
-  ['#F27999','#8C327D','#5AB5BF','#82D9B0'],
-  ['#5F6D73','#EBF2F1','#BFA688','#8C6F5E'],
-  ['#172D40','#7BA1A6','#F2B279','#D97B59'],
-  ['#312F73','#0D0D0D','#F2C6A0','#E2DBD4'],
-  ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'],
-  ['#233059','#76A6A1','#e6b3b3','#BF3F3F'],
-  ['#0D0A07', '#D9D0C7', '#F20C1F', '#BF1515'],
-  ['#345573', '#223240', '#F2913D', '#F24B0F'],
-  ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
-  ['#3C5E73','#F2BBBB','#444444','#F24444'],
-  ['#3FA663','#2D7345','#3391A6','#262626'],
-  ['#A60321','#D9043D','#F29F05','#D8BA7A'],
-  ['#3C2D73','#131A40','#BF7396','#D97E6A'],
-  ['#192819','#2c4928','#719b25','#cbe368'],
-  ['#314035','#5E7348','#A4BF69','#E0F2A0'],
-  ['#a4fba6','#4ae54a', '#0f9200', '#006203'],
-  ['#2d3157','#34c1bb','#badccc','#ffda4d'],
-  ['#030A8C', '#4ED98A', '#F2B705', '#D93E30'],
-  ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6'],
-  ['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream
-  ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D', '#404040'], // Unchained
-  ['#A6886D', '#F2E0D0', '#402E27', '#F29D52', '#221F26'], // the Planets
-  ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'], // adidas-Telstar-50-anniversary
-  ['#A64456', '#422A59', '#F2B366', '#D9BBA0', '#D96D55'], // Lettering-Love
-  ['#F24452', '#5CE3F2', '#F2E205', '#F2CB05', '#F29D35'], // People-of-The-Internet
-  ['#D9A74A', '#BF6E3F', '#BFA095', '#BF4141'], // Sparkling-Botanicals-1'
-  ['#F2B705','#F27EA9', '#05AFF2', '#F29F05', '#F2541B'] // Lettering-Series-XXII-1
+  ['#D97398','#A65398','#263F73','#5679A6'], // 5
+  ['#F27ECA','#9726A6','#8F49F2','#6C2EF2'], // 5
+  ['#080926','#162040','#364C59','#8DA69F'], // 5
+  ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'], // 4
+  ['#345573', '#223240', '#F2913D', '#F24B0F'], // 5
+  ['#172426', '#455559', '#D9C3B0', '#F2DFCE'], // 5
+  ['#3C5E73','#F2BBBB','#444444','#F24444'], // 4
+  ['#3FA663','#2D7345','#3391A6','#262626'], // 5
+  ['#A60321','#D9043D','#F29F05','#D8BA7A'], // 4
+  ['#192819','#2c4928','#719b25','#cbe368'], // 5
+  ['#a4fba6','#4ae54a', '#0f9200', '#006203'], // 5
+  ['#2d3157','#34c1bb','#badccc','#ffda4d'], // 4
+  ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6'], // 5
+  ['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream // 4
+  ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D', '#404040'], // Unchained// 5
+  ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'], // adidas-Telstar-50-anniversary // 4
+  ['#F24452', '#5CE3F2', '#F2E205', '#F2CB05', '#F29D35'], // People-of-The-Internet // 5
+  ['#F2B705','#F27EA9', '#05AFF2', '#F29F05', '#F2541B'] // Lettering-Series-XXII-1 // 5
   // new colours
 ];
 
@@ -127,12 +114,12 @@ function changeCol(cc){
   c = colours[colVersion][cc];
 
   for (let i = 0; i < 3; i++) {
-        swatch[i].position((((i) * 7)+3) * vMax, height - (9 * vMax));
-        swatch[i].size(7 * vMax, 6 * vMax);
+        swatch[i].position((((i) * 7)+3) * vMax, height - (10 * vMax));
+        swatch[i].size(7 * vMax, 8 * vMax);
   }
 
-  swatch[cc].position((((cc) * 7)+3) * vMax, height - (13.5 * vMax));
-      swatch[cc].size(7 * vMax, 10.5 * vMax);
+  swatch[cc].position((((cc) * 7)+3) * vMax, height - (15 * vMax));
+      swatch[cc].size(7 * vMax, 13 * vMax);
 }
 
 function reset(){
@@ -263,7 +250,7 @@ function touchStarted() {
   } else {
     lineQty = 10;
     temp.noStroke();
-    colSel = colorAlpha(c, 0.1);
+    colSel = colorAlpha(c, 0.05);
     temp.fill(colSel, 255);
     vertRand = 5;
     angRand = 10;
@@ -309,20 +296,30 @@ a2 = atan2(mY - centerY, mX - centerW);
 
 var diff = (a2 - a);
 
-if (diff > PI){
-  diff = diff - (2*PI);
-}
+console.log(diff);
 
-if (diff < -PI){
-  diff = diff + (2*PI);
-}
+// if (diff > PI){
+//   diff = diff - (2*PI);
+// }
+// if (diff < -PI){
+//   diff = diff + (2*PI);
+// }
+//
+//
 
+
+// filter out any big ones
+if (!((abs(diff) > 0.3) || (abs(diff) < 0.01))){
+
+// determine if left or right.
 var chooser = 0;
 if (diff < 0){
   chooser = 1;
 }
 
-    if (currentC == 0) {temp.strokeWeight(constrain(1*abs(diff),0.5,4));}
+
+
+  if (currentC == 0) {temp.strokeWeight(constrain(1*abs(diff),0.5,4));}
   if (currentC == 1) {temp.strokeWeight(constrain(10*abs(diff),1,1000));}
 
 for (var i = 0; i < lineQty; i++) {
@@ -340,6 +337,10 @@ for (var i = 0; i < lineQty; i++) {
     counter--;
   }
 }
+
+
+}
+
 
 mX = mouseX;
 mY = mouseY;
