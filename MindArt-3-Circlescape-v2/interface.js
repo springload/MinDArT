@@ -88,6 +88,7 @@ function fs(){
 }
 
 function saveImg() {
-  // click.play();
+
+render();
   save('touchscape' + month() + day() + hour() + second() + '.jpg');
 }

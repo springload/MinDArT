@@ -288,7 +288,16 @@ function touchStarted() {
 }
 
 function touchMoved() {
+
+  // draw ellipses for each point using the vertices
+  gridLay.fill(colours[colVersion][0]);
+  for (let i = 0; i < vectors.length; i++) {
+    gridLay.ellipse(vectors[i].x, vectors[i].y, vMax*2, vMax*2);
+  }
+
+
 render();
+  image(gridLay, 0, 0, windowWidth, windowHeight);
 
 //
 a = atan2(mouseY - centerY, mouseX - centerW);
@@ -296,19 +305,10 @@ a2 = atan2(mY - centerY, mX - centerW);
 
 var diff = (a2 - a);
 
-console.log(diff);
-
-// if (diff > PI){
-//   diff = diff - (2*PI);
-// }
-// if (diff < -PI){
-//   diff = diff + (2*PI);
-// }
-//
-//
 
 
-// filter out any big ones
+
+// filter out any big ones & small ones
 if (!((abs(diff) > 0.3) || (abs(diff) < 0.01))){
 
 // determine if left or right.
@@ -346,6 +346,7 @@ mX = mouseX;
 mY = mouseY;
 
 // draw the current selectedVertice bigger;
+noStroke();
 fill(colours[colVersion][1]);
 ellipse(vectors[selectedVertice].x, vectors[selectedVertice].y, vMax*4, vMax*4);
 
@@ -364,20 +365,9 @@ function render(){
   blendMode(MULTIPLY);
   image(paper, 0, 0, width, height);
   blendMode(BLEND);
-
-  // draw ellipses for each point using the vertices
-  fill(colours[colVersion][0]);
-  for (let i = 0; i < vectors.length; i++) {
-    ellipse(vectors[i].x, vectors[i].y, vMax*2, vMax*2);
-  }
-
   image(temp, 0, 0, windowWidth, windowHeight);
-  image(gridLay, 0, 0, windowWidth, windowHeight);
-  fill(255);
-  blendMode(DIFFERENCE);
-  textSize(width / 50);
-  text(colours[colVersion][0], width - (width / 5), height / 10);
-  blendMode(BLEND);
+
+
 
 
 }
