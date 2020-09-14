@@ -89,6 +89,6 @@ function fs(){
 
 function saveImg() {
 
-render();
+
   save('touchscape' + month() + day() + hour() + second() + '.jpg');
 }

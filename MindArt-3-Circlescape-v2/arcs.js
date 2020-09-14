@@ -33,23 +33,23 @@ var colSel = 0;
 var currentC = 0;
 var colours = [
   ['#D97398','#A65398','#263F73','#5679A6'], // 5
-  ['#F27ECA','#9726A6','#8F49F2','#6C2EF2'], // 5
-  ['#080926','#162040','#364C59','#8DA69F'], // 5
-  ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'], // 4
+  ['#192819','#2c4928','#719b25','#cbe368'], // 5
   ['#345573', '#223240', '#F2913D', '#F24B0F'], // 5
+  ['#080926','#162040','#364C59','#8DA69F'], // 5
+  ['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream // 4
+  ['#a4fba6','#4ae54a', '#0f9200', '#006203'], // 5
+  ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'], // 4
   ['#172426', '#455559', '#D9C3B0', '#F2DFCE'], // 5
   ['#3C5E73','#F2BBBB','#444444','#F24444'], // 4
-  ['#3FA663','#2D7345','#3391A6','#262626'], // 5
+  ['#F27ECA','#9726A6','#8F49F2','#6C2EF2'], // 5
+  ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'], // adidas-Telstar-50-anniversary // 4
+  ['#F2B705','#F27EA9', '#05AFF2', '#F29F05', '#F2541B'], // Lettering-Series-XXII-1 // 5
   ['#A60321','#D9043D','#F29F05','#D8BA7A'], // 4
-  ['#192819','#2c4928','#719b25','#cbe368'], // 5
-  ['#a4fba6','#4ae54a', '#0f9200', '#006203'], // 5
+  ['#F24452', '#5CE3F2', '#F2E205', '#F2CB05', '#F29D35'], // People-of-The-Internet // 5
   ['#2d3157','#34c1bb','#badccc','#ffda4d'], // 4
   ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6'], // 5
-  ['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream // 4
-  ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D', '#404040'], // Unchained// 5
-  ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'], // adidas-Telstar-50-anniversary // 4
-  ['#F24452', '#5CE3F2', '#F2E205', '#F2CB05', '#F29D35'], // People-of-The-Internet // 5
-  ['#F2B705','#F27EA9', '#05AFF2', '#F29F05', '#F2541B'] // Lettering-Series-XXII-1 // 5
+  ['#3FA663','#2D7345','#3391A6','#262626'], // 5
+  ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D', '#404040'] // Unchained// 5
   // new colours
 ];
 
@@ -288,16 +288,7 @@ function touchStarted() {
 }
 
 function touchMoved() {
-
-  // draw ellipses for each point using the vertices
-  gridLay.fill(colours[colVersion][0]);
-  for (let i = 0; i < vectors.length; i++) {
-    gridLay.ellipse(vectors[i].x, vectors[i].y, vMax*2, vMax*2);
-  }
-
-
 render();
-  image(gridLay, 0, 0, windowWidth, windowHeight);
 
 //
 a = atan2(mouseY - centerY, mouseX - centerW);
@@ -365,8 +356,15 @@ function render(){
   blendMode(MULTIPLY);
   image(paper, 0, 0, width, height);
   blendMode(BLEND);
-  image(temp, 0, 0, windowWidth, windowHeight);
 
+  // draw ellipses for each point using the vertices
+  fill(colours[colVersion][0]);
+  for (let i = 0; i < vectors.length; i++) {
+    ellipse(vectors[i].x, vectors[i].y, vMax*2, vMax*2);
+  }
+
+  image(temp, 0, 0, windowWidth, windowHeight);
+  image(gridLay, 0, 0, windowWidth, windowHeight);
 
 
 
