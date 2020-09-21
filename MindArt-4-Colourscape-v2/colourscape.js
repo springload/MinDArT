@@ -170,6 +170,12 @@
         eraseDrawing();
       }
 
+      render();
+
+    return false;
+  }
+
+  function render(){
     blendMode(BLEND);
     backdrop();
     blendMode(DARKEST);
@@ -177,7 +183,6 @@
     blendMode(LIGHTEST);
     image(traceLayer, width / 2, height / 2);
 
-    return false;
   }
 
   function autoDraw() {
@@ -229,12 +234,11 @@
 
   function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
-
     sizeWindow();
-        setLayerProperties();
+    setLayerProperties();
     writeTextUI();
     checkFS();
-    // render(); todo
+     render(); todo
 
 
 

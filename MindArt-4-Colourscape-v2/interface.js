@@ -21,7 +21,7 @@
 
   function writeTextUI() {
 
-    removeElements(); 
+    removeElements();
 
     fill(0);
     noStroke();
@@ -49,14 +49,14 @@
     button3.position(36.5 * vMax, height - (14 * vMax));
     button3.mousePressed(eraser);
 
-    saveButton = createButton("Sauvegardez");
+    saveButton = createButton("Save");
     saveButton.class("select");
     saveButton.style('font-size', '1.7vmax');
     saveButton.style('height', '5vmax');
     saveButton.position(width - (16 * vMax), height - (12.5 * vMax));
     saveButton.mousePressed(saveImage);
 
-    resetButton = createButton("Suivant");
+    resetButton = createButton("Restart");
     resetButton.class("select");
     resetButton.style('font-size', '1.7vmax');
     resetButton.style('height', '5vmax');
