@@ -129,6 +129,7 @@
         paintLayer.clear();
     traceLayer.clear();
     if (!bool) invertTracing();
+    render();
   }
 
   function backdrop() {
