@@ -39,7 +39,7 @@
     button3.remove();
     button3 = createImg("assets/icon3.0.png");
 
-    button1.style('width', '22.5vmax'); // 28 is 1.75 * 16.
+    button1.style('width', '22vmax'); // 28 is 1.75 * 16.
     button1.position(0, height - (12.6* vMax));
     button1.mousePressed(switchToPaint);
     button2.style('width', '12.6vmax');
@@ -79,7 +79,7 @@
     button2.mousePressed(switchToTrace);
     button1.remove();
     button1 = createImg("assets/icon1.0.png");
-    button1.style('width', '22.5vmax'); // 28 is 1.75 * 16.
+    button1.style('width', '22vmax'); // 28 is 1.75 * 16.
     button1.position(0, height - (12.6* vMax));
     button1.mousePressed(switchToPaint);
   }
@@ -95,13 +95,13 @@
     if (!colourBool) {
       button1.remove();
       button1 = createImg("assets/icon1.1.png");
-      button1.style('width', '22.5vmax'); // 28 is 1.75 * 16.
+      button1.style('width', '22vmax'); // 28 is 1.75 * 16.
       button1.position(0, height - (12.6* vMax));
       button1.mousePressed(switchToPaint);
     } else {
       button1.remove();
       button1 = createImg("assets/icon1.2.png");
-      button1.style('width', '22.5vmax'); // 28 is 1.75 * 16.
+      button1.style('width', '22vmax'); // 28 is 1.75 * 16.
       button1.position(0, height - (12.6* vMax));
       button1.mousePressed(switchToPaint);
     }
