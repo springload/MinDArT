@@ -39,21 +39,21 @@
     button3.remove();
     button3 = createImg("assets/icon3.0.png");
 
-    button1.style('width', '24.5vmax'); // 28 is 1.75 * 16.
-    button1.position(0, height - (14 * vMax));
+    button1.style('width', '22.5vmax'); // 28 is 1.75 * 16.
+    button1.position(0, height - (12.6* vMax));
     button1.mousePressed(switchToPaint);
-    button2.style('width', '14vmax');
-    button2.position(20.5 * vMax, height - (14 * vMax));
+    button2.style('width', '12.6vmax');
+    button2.position(20.5 * vMax, height - (12.6* vMax));
     button2.mousePressed(switchToTrace);
-    button3.style('width', '21vmax');
-    button3.position(30.5 * vMax, height - (14 * vMax));
+    button3.style('width', '18.95vmax');
+    button3.position(30.5 * vMax, height - (12.6* vMax));
     button3.mousePressed(eraser);
 
     saveButton = createButton("Save");
     saveButton.class("select");
     saveButton.style('font-size', '1.7vmax');
     saveButton.style('height', '5vmax');
-    saveButton.position(width - (16 * vMax), height - (12.5 * vMax));
+    saveButton.position(width - (16 * vMax), height - (12.6 * vMax));
     saveButton.mousePressed(saveImage);
 
     resetButton = createButton("Restart");
@@ -69,18 +69,18 @@
     //reset all buttons// would be nice to replace this at some point
     button3.remove();
     button3 = createImg("assets/icon3.0.png");
-    button3.style('width', '21vmax');
-    button3.position(30.5 * vMax, height - (14 * vMax));
+    button3.style('width', '18.95vmax');
+    button3.position(30.5 * vMax, height - (12.6* vMax));
     button3.mousePressed(eraser);
     button2.remove();
     button2 = createImg("assets/icon2.0.png");
-    button2.style('width', '14vmax');
-    button2.position(20.5 * vMax, height - (14 * vMax));
+    button2.style('width', '12.6vmax');
+    button2.position(20.5 * vMax, height - (12.6* vMax));
     button2.mousePressed(switchToTrace);
     button1.remove();
     button1 = createImg("assets/icon1.0.png");
-    button1.style('width', '24.5vmax'); // 28 is 1.75 * 16.
-    button1.position(0, height - (14 * vMax));
+    button1.style('width', '22.5vmax'); // 28 is 1.75 * 16.
+    button1.position(0, height - (12.6* vMax));
     button1.mousePressed(switchToPaint);
   }
 
@@ -95,14 +95,14 @@
     if (!colourBool) {
       button1.remove();
       button1 = createImg("assets/icon1.1.png");
-      button1.style('width', '24.5vmax'); // 28 is 1.75 * 16.
-      button1.position(0, height - (14 * vMax));
+      button1.style('width', '22.5vmax'); // 28 is 1.75 * 16.
+      button1.position(0, height - (12.6* vMax));
       button1.mousePressed(switchToPaint);
     } else {
       button1.remove();
       button1 = createImg("assets/icon1.2.png");
-      button1.style('width', '24.5vmax'); // 28 is 1.75 * 16.
-      button1.position(0, height - (14 * vMax));
+      button1.style('width', '22.5vmax'); // 28 is 1.75 * 16.
+      button1.position(0, height - (12.6* vMax));
       button1.mousePressed(switchToPaint);
     }
     bool = 1;
@@ -116,8 +116,8 @@
     resetButtons();
     button2.remove();
     button2 = createImg("assets/icon2.1.png");
-    button2.style('width', '14vmax');
-    button2.position(20.5 * vMax, height - (14 * vMax));
+    button2.style('width', '12.6vmax');
+    button2.position(20.5 * vMax, height - (12.6* vMax));
     button2.mousePressed(switchToTrace);
   }
 
@@ -132,14 +132,14 @@
     if (eraserVersion) {
       button3.remove();
       button3 = createImg("assets/icon3.1.png");
-      button3.style('width', '21vmax');
-      button3.position(30.5 * vMax, height - (14 * vMax));
+      button3.style('width', '18.95vmax');
+      button3.position(30.5 * vMax, height - (12.6* vMax));
       button3.mousePressed(eraser);
     } else {
       button3.remove();
       button3 = createImg("assets/icon3.2.png");
-      button3.style('width', '21vmax');
-      button3.position(30.5 * vMax, height - (14 * vMax));
+      button3.style('width', '18.95vmax');
+      button3.position(30.5 * vMax, height - (12.6* vMax));
       button3.mousePressed(eraser);
     }
   }
