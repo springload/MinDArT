@@ -119,11 +119,9 @@ function touchStarted() {
         }
       }
     }
-    // if (!drawActive && x.length < 7 && multiselectable) {
-    //   initialiseLine(x.length); // init new line, new array
-    // }
+
   }
-  return false;
+  //return false;
 
 }
 
