@@ -119,7 +119,7 @@ function switcher(){
     button2.position(19 * vMax, height - (10 * vMax));
     button2.mousePressed(switcher);
 
-      segLength = 18;
+      segLength = 8;
 
   //trim more than one branch
   x.length = 1;
@@ -144,7 +144,7 @@ function switcher(){
     button2.position(19 * vMax, height - (10 * vMax));
     button2.mousePressed(switcher);
 
-      segLength = 18;
+      segLength = 8;
 
   }
 
