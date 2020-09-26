@@ -214,7 +214,7 @@ if (dotsActive){
     var d = p5.Vector.dist(v1, vt[k]);
     if (d < 75){
       // todo, replace gravitational
-      let gravity = map(vtCount[k], 1,  50, 0.100, 0);
+      let gravity = map(vtCount[k], 1,  200, 0.100, 0);
         let v3 = p5.Vector.lerp(v1, vt[k], gravity);
       x[i][j] = v3.x;
       y[i][j] = v3.y;
