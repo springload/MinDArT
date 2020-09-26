@@ -70,11 +70,9 @@ function start() {
   if (audio.isPlaying()) {} else {
     audio.loop(1);
   }
-
   sizeWindow();
   writeTextUI();
   reset();
-
 }
 
 function setup() {
