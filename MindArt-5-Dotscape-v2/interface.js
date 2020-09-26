@@ -2,7 +2,7 @@ function writeTextUI() {
 
   $(".interface").remove();
   $(".select").remove();
-  
+
   textSize(vMax*2);
   fill(0);
   noStroke
@@ -18,10 +18,7 @@ function writeTextUI() {
   saveButton.mousePressed(saveImg);
 
 
-    fsButton = createImg('assets/enterFS.png');
-    fsButton.style('height', '4.5vMax');
-    fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
-    fsButton.mousePressed(fs);
+
 }
 
 function writeRestartUI() {
