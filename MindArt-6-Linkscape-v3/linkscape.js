@@ -1,7 +1,7 @@
 let x = [],
   y = [],
   segNum = 300,
-  segLength = 8;
+  segLength = 10;
 
 let selectedArray = [];
 let lineCanv, // lineLayer
@@ -34,6 +34,7 @@ function preload() {
   texture = loadImage('assets/texture.png');
   audio = loadSound('assets/audio.mp3');
   click = loadSound('assets/click.mp3');
+  pin = loadImage('assets/pin.png')
 }
 
 function setup() {
@@ -228,6 +229,9 @@ function render() {
   let colours = ['#025373', '#F2C063', '#F29472', '#04ADBF', '#66CDD9'];
   // let colours = ['#1a1a1a'];
   lineCanv.clear();
+
+
+
   for (let i = 0; i < x.length; i++) {
     //let colour = colors[floor(random(0,colors.length))];
     // lineCanv.stroke(colours[i % colours.length]);
@@ -235,22 +239,34 @@ function render() {
       lineCanv.line(x[i][j], y[i][j], x[i][j + 1], y[i][j + 1])
     }
 
+}
+
+if (dotsActive){
+  for (var i = 0; i < vt.length; i++) {
+    // lineCanv.fill(255);
+    // lineCanv.ellipse(vt[i].x, vt[i].y, 40, 40);
+    // lineCanv.noFill();
+lineCanv.image(pin, vt[i].x-50, vt[i].y-50, 100, 80);
+  }}
 
     background(0);
     for (let i = 5; i > 0; i--) {
       image(lineCanv, 0, i * 10, width, height);
       image(texture, 0, 0, width, height);
     }
+
+
+
     image(lineCanv, 0, 0, width, height);
 
-  }
+    if (dotsActive){
+      for (var i = 0; i < vt.length; i++) {
+        // lineCanv.fill(255);
+        // lineCanv.ellipse(vt[i].x, vt[i].y, 40, 40);
+        // lineCanv.noFill();
+      image(pin, vt[i].x-50, vt[i].y-50, 100, 100);
+      }}
 
-if (dotsActive){
-  for (var i = 0; i < vt.length; i++) {
-    fill(100);
-    ellipse(vt[i].x, vt[i].y, 50, 50);
-    noFill();
-  }}
 
 
 }

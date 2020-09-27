@@ -58,15 +58,15 @@ function saveNext(){
   button1 = createImg('assets/icon1.0.png');
   button1.remove();
   button1 = createImg('assets/icon1.1.png');
-  button1.style('width', '16vmax');
-  button1.position(3 * vMax, height - (10 * vMax));
+  button1.style('width', '13.5vmax');
+  button1.position(1 * vMax, height - (12 * vMax));
   button1.mousePressed(switcher);
 
   button2 = createImg('assets/icon2.1.png');
   button2.remove();
   button2 = createImg('assets/icon2.0.png');
-  button2.style('width', '16vmax');
-  button2.position(19 * vMax, height - (10 * vMax));
+  button2.style('width', '13.5vmax');
+  button2.position(12 * vMax, height - (12 * vMax));
   button2.mousePressed(switcher);
 
 
@@ -75,10 +75,11 @@ function saveNext(){
 
 function addBut(){
   addButton = createButton("Add")
-  addButton.class("add");
+  addButton.class("select");
+  addButton.id("add");
   addButton.style('font-size', '1.7vmax');
   addButton.style('height', '5vmax');
-  addButton.position(width - (48 * vMax), height - (7 * vMax));
+  addButton.position(30 * vMax, height - (7 * vMax));
   addButton.mousePressed(addLine);
 }
 
@@ -90,7 +91,7 @@ function dotsToggle(){
 function addLine(){
 initialiseLine(x.length); // init new line, new array
 if (x.length > 3){
-  $(".add").remove();
+  $("#add").remove();
 }
 render();
 }
@@ -99,7 +100,7 @@ function switcher(){
   click.play();
   multiselectable = !multiselectable;
 
-  $(".add").remove();
+  $("#add").remove();
 
 
 
@@ -108,18 +109,18 @@ function switcher(){
 
     button1.remove();
     button1 = createImg('assets/icon1.1.png');
-    button1.style('width', '16vmax');
-    button1.position(3 * vMax, height - (10 * vMax));
+    button1.style('width', '13.5vmax');
+    button1.position(1 * vMax, height - (12 * vMax));
     button1.mousePressed(switcher);
 
 
     button2.remove();
     button2 = createImg('assets/icon2.0.png');
-    button2.style('width', '16vmax');
-    button2.position(19 * vMax, height - (10 * vMax));
+    button2.style('width', '13.5vmax');
+    button2.position(12 * vMax, height - (12 * vMax));
     button2.mousePressed(switcher);
 
-      segLength = 8;
+      segLength = 10;
 
   //trim more than one branch
   x.length = 1;
@@ -133,18 +134,18 @@ function switcher(){
 
     button1.remove();
     button1 = createImg('assets/icon1.0.png');
-    button1.style('width', '16vmax');
-    button1.position(3 * vMax, height - (10 * vMax));
+    button1.style('width', '13.5vmax');
+    button1.position(1 * vMax, height - (12 * vMax));
     button1.mousePressed(switcher);
 
 
     button2.remove();
     button2 = createImg('assets/icon2.1.png');
-    button2.style('width', '16vmax');
-    button2.position(19 * vMax, height - (10 * vMax));
+    button2.style('width', '13.5vmax');
+    button2.position(12 * vMax, height - (12 * vMax));
     button2.mousePressed(switcher);
 
-      segLength = 8;
+      segLength = 10;
 
   }
 
