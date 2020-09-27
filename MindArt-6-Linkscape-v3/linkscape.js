@@ -215,7 +215,7 @@ if (dotsActive){
     var d = p5.Vector.dist(v1, vt[k]);
     if (d < 75){
       // todo, replace gravitational
-      let gravity = map(vtCount[k], 1,  200, 0.100, 0);
+      let gravity = map(vtCount[k], 1,  300, 0.100, 0);
         let v3 = p5.Vector.lerp(v1, vt[k], gravity);
       x[i][j] = v3.x;
       y[i][j] = v3.y;
@@ -248,7 +248,7 @@ if (dotsActive){
     // lineCanv.fill(255);
     // lineCanv.ellipse(vt[i].x, vt[i].y, 40, 40);
     // lineCanv.noFill();
-      lineCanv.image(pin, vt[i].x-(s/2), vt[i].y-(s/2), s, s)
+      lineCanv.image(pin, vt[i].x-(s/2), vt[i].y-(s/2), s, s*.65)
   }}
 
     background(0);
@@ -268,7 +268,7 @@ if (dotsActive){
         // lineCanv.ellipse(vt[i].x, vt[i].y, 40, 40);
         // lineCanv.noFill();
 
-      image(pin, vt[i].x-(s/2), vt[i].y-(s/2), s, s);
+      image(pin, vt[i].x-(s/2), vt[i].y-(s/2), s, s*.65);
       }}
 
 
