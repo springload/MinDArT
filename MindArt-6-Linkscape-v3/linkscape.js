@@ -241,7 +241,7 @@ function render() {
 
 }
 
-  let s = vMax*3.5;
+  let s = vMax*5.2;
 
 if (dotsActive){
   for (var i = 0; i < vt.length; i++) {
