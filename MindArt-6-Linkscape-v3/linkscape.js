@@ -241,12 +241,14 @@ function render() {
 
 }
 
+  let s = vMax*3.5;
+
 if (dotsActive){
   for (var i = 0; i < vt.length; i++) {
     // lineCanv.fill(255);
     // lineCanv.ellipse(vt[i].x, vt[i].y, 40, 40);
     // lineCanv.noFill();
-lineCanv.image(pin, vt[i].x-50, vt[i].y-50, 100, 80);
+      lineCanv.image(pin, vt[i].x-(s/2), vt[i].y-(s/2), s, s)
   }}
 
     background(0);
@@ -260,11 +262,13 @@ lineCanv.image(pin, vt[i].x-50, vt[i].y-50, 100, 80);
     image(lineCanv, 0, 0, width, height);
 
     if (dotsActive){
+
       for (var i = 0; i < vt.length; i++) {
         // lineCanv.fill(255);
         // lineCanv.ellipse(vt[i].x, vt[i].y, 40, 40);
         // lineCanv.noFill();
-      image(pin, vt[i].x-50, vt[i].y-50, 100, 100);
+
+      image(pin, vt[i].x-(s/2), vt[i].y-(s/2), s, s);
       }}
 
 
