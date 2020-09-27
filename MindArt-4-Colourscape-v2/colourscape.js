@@ -61,7 +61,7 @@
     pautoX = 0,
     pautoY = 0; // automated drawing mouse states
   let paintLayer, traceLayer;
-
+  let started = 0;
   let storedOrientation, storedOrientationDegrees, rotateDirection;
 
   function preload() {
@@ -76,6 +76,7 @@
 
   function start() {
     $(".startBtn").remove();
+    started = 1;
     fullscreen(1);
     // note currently everything resets on windowResized. Unsure if this is logical yet
 
@@ -139,6 +140,9 @@
   }
 
   function touchStarted() {
+    if (!started){
+      start();
+    }
       setProperties(winMouseX, winMouseY);
   }
 
