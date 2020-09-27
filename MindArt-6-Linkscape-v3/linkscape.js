@@ -44,7 +44,7 @@ function setup() {
 
   lineCanv = createGraphics(windowWidth, windowHeight);
   lineCanv.strokeWeight(30);
-  lineCanv.stroke(20, 20, 50);
+  lineCanv.stroke(55, 55, 65);
 
   calcDimensions();
   reset();
