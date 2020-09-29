@@ -60,9 +60,7 @@ function start() {
   if (audio.isPlaying()) {} else {
     audio.loop(1);
   }
-  sizeWindow();
   writeTextUI();
-  reset();
 }
 
 function setup() {
@@ -84,6 +82,8 @@ function setup() {
   $('<p>Touch here to begin</p>').appendTo(stbtn);
   stbtn.mousedown(start);
   stbtn.mousemove(start);
+
+
 
 }
 
