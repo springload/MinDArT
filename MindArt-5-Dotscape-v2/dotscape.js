@@ -321,7 +321,7 @@ class Dot {
 function nextDrawing() {
   throughDotCount = 0;
   dotsCount = 0;
-  click.play();
+  // click.play();
   permaLine.clear();
   lineLayer.clear();
   if (stage < 3) {
