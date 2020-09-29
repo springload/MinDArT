@@ -161,6 +161,7 @@ function touchstop() {
   isMousedown = 0;
   lineLayer.clear();
   throughDotCount = 0;
+  render();
 }
 
 function moved(ev) {
@@ -197,6 +198,7 @@ function moved(ev) {
 
   return false;
 }
+
 
 function render() {
 
