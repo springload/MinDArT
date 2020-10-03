@@ -2,7 +2,7 @@ let x = [],
   y = [],
   segNum = 300,
   segLength = 10,
-  distGravity = 100;
+  distGravity = 40;
 
 let selectedArray = [];
 let lineCanv, // lineLayer
