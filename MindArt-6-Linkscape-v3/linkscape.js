@@ -45,6 +45,7 @@ function setup() {
 
   lineCanv = createGraphics(windowWidth, windowHeight);
   lineCanv.stroke(55, 55, 65);
+//  lineCanv.strokeCap(PROJECT);
 
 
 
@@ -227,7 +228,7 @@ function render() {
 
 
   for (let i = 0; i < x.length; i++) {
-    lineCanv.stroke(colours[i % colours.length]);
+    lineCanv.stroke(colours[i % colours.length], 80);
     for (let j = 0; j < x[i].length - 1 - cutSeg; j++) {
       lineCanv.line(x[i][j], y[i][j], x[i][j + 1], y[i][j + 1])
     }
@@ -236,17 +237,10 @@ function render() {
 
   let s = vMax*8;
 
-if (dotsActive){
-  for (var i = 0; i < vt.length; i++) {
-    // lineCanv.fill(255);
-    // lineCanv.ellipse(vt[i].x, vt[i].y, 40, 40);
-    // lineCanv.noFill();
-      lineCanv.image(pin, vt[i].x-(s/2), vt[i].y-(s/1.8), s, s)
-  }}
 
     background(0);
     for (let i = 5; i > 0; i--) {
-      image(lineCanv, 0, i * 10, width, height);
+      image(lineCanv,4 + (i * i), 4 + (i * i), width, height);
       image(texture, 0, 0, width, height);
     }
 
@@ -257,9 +251,6 @@ if (dotsActive){
     if (dotsActive){
 
       for (var i = 0; i < vt.length; i++) {
-        // lineCanv.fill(255);
-        // lineCanv.ellipse(vt[i].x, vt[i].y, 40, 40);
-        // lineCanv.noFill();
 
       image(pin, vt[i].x-(s/2), vt[i].y-(s/1.8), s, s);
       }}
