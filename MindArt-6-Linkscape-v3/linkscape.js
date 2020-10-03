@@ -184,7 +184,7 @@ function dragSegment(_sel, xin, yin) {
 if (dotsActive){
   for (var k = 0; k < vt.length; k++) {
 
-    if (vtCount[k] < 5){
+    if (vtCount[k] < 20){
 
     // creat a vector for currently referenced dot
     let v1 = createVector(x[i][j], y[i][j]);
@@ -193,8 +193,8 @@ if (dotsActive){
     if (d < distGravity){
       // this is effectively a smoother
       let v3 = p5.Vector.lerp(v1, vt[k], 0.5);
-      x[i][j] = vt[k].x;
-      y[i][j] = vt[k].y;
+      x[i][j] = v3.x;
+      y[i][j] = v3.y;
         vtCount[k]++;
     }
 
