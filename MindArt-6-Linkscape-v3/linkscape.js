@@ -184,18 +184,17 @@ function dragSegment(_sel, xin, yin) {
 if (dotsActive){
   for (var k = 0; k < vt.length; k++) {
 
-    if (vtCount[k] < 18){
+    if (vtCount[k] < 10){
 
     // creat a vector for currently referenced dot
     let v1 = createVector(x[i][j], y[i][j]);
 
     var d = p5.Vector.dist(v1, vt[k]);
     if (d < distGravity){
-      // todo, replace gravitational
-      // let gravity = map(vtCount[k], 1,  5, 0.26, 0, 1);
-      let v3 = p5.Vector.lerp(v1, vt[k], 1);
-      x[i][j] = v3.x;
-      y[i][j] = v3.y;
+      // this is effectively a smoother
+      let v3 = p5.Vector.lerp(v1, vt[k], 0.5);
+      x[i][j] = vt[k].x;
+      y[i][j] = vt[k].y;
         vtCount[k]++;
     }
 
