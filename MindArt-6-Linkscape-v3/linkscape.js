@@ -226,15 +226,14 @@ if (dotsActive){
 }
 
 function render() {
-  let colours = ['#025373', '#F2C063', '#F29472', '#04ADBF', '#66CDD9'];
+  let colours = [0, 70, 140, 210, 200, 250];
   // let colours = ['#1a1a1a'];
   lineCanv.clear();
 
 
 
   for (let i = 0; i < x.length; i++) {
-    //let colour = colors[floor(random(0,colors.length))];
-    // lineCanv.stroke(colours[i % colours.length]);
+    lineCanv.stroke(colours[i % colours.length]);
     for (let j = 0; j < x[i].length - 1 - cutSeg; j++) {
       lineCanv.line(x[i][j], y[i][j], x[i][j + 1], y[i][j + 1])
     }

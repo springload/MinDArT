@@ -4,7 +4,7 @@ let appBg = '#1f2b45';
 let button1, button2;
 
 let vW, vMax, vMin;
-let multiselectable = 0;
+let multiselectable = 1;
 
 let dotsActive = 0;
 
@@ -38,11 +38,11 @@ function saveNext(){
   saveButton.position(width - (16 * vMax), height - (13 * vMax));
   saveButton.mousePressed(saveImg);
 
-  pinButton = createButton("Pins")
+  pinButton = createButton("Pin")
   pinButton.class("select");
   pinButton.style('font-size', '1.7vmax');
   pinButton.style('height', '5vmax');
-  pinButton.position(width - (32 * vMax), height - (7 * vMax));
+  pinButton.position((3 * vMax), height - (7 * vMax));
   pinButton.mousePressed(dotsToggle);
 
 
@@ -55,33 +55,20 @@ function saveNext(){
   fsButton.position(width-(7.5 * vMax), 1.5 * vMax);
   fsButton.mousePressed(fs);
 
-  button1 = createImg('assets/icon1.0.png');
-  button1.remove();
-  button1 = createImg('assets/icon1.1.png');
-  button1.style('width', '13.5vmax');
-  button1.position(1 * vMax, height - (12 * vMax));
-  button1.mousePressed(switcher);
 
-  button2 = createImg('assets/icon2.1.png');
-  button2.remove();
-  button2 = createImg('assets/icon2.0.png');
-  button2.style('width', '13.5vmax');
-  button2.position(12 * vMax, height - (12 * vMax));
-  button2.mousePressed(switcher);
-
-
-
-}
-
-function addBut(){
-  addButton = createButton("Add")
+  addButton = createButton("Add one more string")
   addButton.class("select");
   addButton.id("add");
   addButton.style('font-size', '1.7vmax');
   addButton.style('height', '5vmax');
-  addButton.position(30 * vMax, height - (7 * vMax));
+  addButton.position(18 * vMax, height - (7 * vMax));
   addButton.mousePressed(addLine);
+
+
+
 }
+
+
 
 function dotsToggle(){
   dotsActive = !dotsActive;
@@ -96,63 +83,7 @@ if (x.length > 3){
 render();
 }
 
-function switcher(){
-  click.play();
-  multiselectable = !multiselectable;
 
-  $("#add").remove();
-
-
-
-
-  if (!multiselectable){
-
-    button1.remove();
-    button1 = createImg('assets/icon1.1.png');
-    button1.style('width', '13.5vmax');
-    button1.position(1 * vMax, height - (12 * vMax));
-    button1.mousePressed(switcher);
-
-
-    button2.remove();
-    button2 = createImg('assets/icon2.0.png');
-    button2.style('width', '13.5vmax');
-    button2.position(12 * vMax, height - (12 * vMax));
-    button2.mousePressed(switcher);
-
-      segLength = 10;
-
-  //trim more than one branch
-  x.length = 1;
-  y.length = 1;
-
-  }
-
-  else {
-
-    addBut();
-
-    button1.remove();
-    button1 = createImg('assets/icon1.0.png');
-    button1.style('width', '13.5vmax');
-    button1.position(1 * vMax, height - (12 * vMax));
-    button1.mousePressed(switcher);
-
-
-    button2.remove();
-    button2 = createImg('assets/icon2.1.png');
-    button2.style('width', '13.5vmax');
-    button2.position(12 * vMax, height - (12 * vMax));
-    button2.mousePressed(switcher);
-
-      segLength = 10;
-
-  }
-
-render();
-
-
-}
 
 function fs(){
   click.play();
