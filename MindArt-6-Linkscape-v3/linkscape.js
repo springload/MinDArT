@@ -184,7 +184,7 @@ function dragSegment(_sel, xin, yin) {
 if (dotsActive){
   for (var k = 0; k < vt.length; k++) {
 
-    if (vtCount[k] < 20){
+    if (vtCount[k] < 10){
 
     // creat a vector for currently referenced dot
     let v1 = createVector(x[i][j], y[i][j]);
