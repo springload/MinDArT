@@ -44,14 +44,34 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   lineCanv = createGraphics(windowWidth, windowHeight);
-
   lineCanv.stroke(55, 55, 65);
 
-  calcDimensions();
-  lineCanv.strokeWeight(2.2*vMax);
-  reset();
-  saveNext();
+
+
+  var stbtn = $("<div />").appendTo("body");
+  stbtn.addClass('startBtn');
+  $('<p>Touch here to begin</p>').appendTo(stbtn);
+  stbtn.mousedown(start);
+  stbtn.mousemove(start);
+
 }
+
+function start(){
+
+  $(".startBtn").remove();
+  fullscreen(1);
+
+  // note currently everything resets on windowResized. Unsure if this is logical yet
+
+  if (audio.isPlaying()) {} else {
+    audio.loop(1);
+  }
+
+  reset();
+  sizeWindow();
+    lineCanv.strokeWeight(2.2*vMax);
+}
+
 
 function reset(){
 click.play();
@@ -101,12 +121,6 @@ function touchEnded() {
 }
 
 function touchStarted() {
-
-
-
-  if (audio.isPlaying()) {} else {
-    audio.loop(5);
-  }
 
 
 
@@ -255,15 +269,7 @@ if (dotsActive){
 }
 
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  lineCanv.resizeCanvas(windowWidth, windowHeight);
-  touchMoved();
-  calcDimensions();
-  removeElements();
-  saveNext();
 
-}
 
 
 function makeGrid() {
@@ -325,4 +331,19 @@ function scatterPoints() {
 
 
   }
+}
+
+
+function windowResized() {
+  sizeWindow();
+}
+
+function sizeWindow() {
+  resizeCanvas(windowWidth, windowHeight);
+  lineCanv.resizeCanvas(windowWidth, windowHeight);
+  calcDimensions();
+  removeElements();
+  writeTextUI();
+  checkFS();
+  touchMoved();
 }
