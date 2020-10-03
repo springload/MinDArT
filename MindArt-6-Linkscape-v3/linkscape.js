@@ -48,7 +48,7 @@ function setup() {
   lineCanv.stroke(55, 55, 65);
 
   calcDimensions();
-  lineCanv.strokeWeight(1.6*vMax);
+  lineCanv.strokeWeight(2.4*vMax);
   reset();
   saveNext();
 }
