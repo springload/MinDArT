@@ -1,7 +1,7 @@
 let x = [],
   y = [],
-  segNum = 300,
-  segLength = 10,
+  segNum = 500,
+  segLength = 4,
   distGravity = 40;
 
 let selectedArray = [];
@@ -44,10 +44,11 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   lineCanv = createGraphics(windowWidth, windowHeight);
-  lineCanv.strokeWeight(30);
+
   lineCanv.stroke(55, 55, 65);
 
   calcDimensions();
+  lineCanv.strokeWeight(1*vMax);
   reset();
   saveNext();
 }
