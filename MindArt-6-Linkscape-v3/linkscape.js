@@ -1,7 +1,7 @@
 let x = [],
   y = [],
   segNum = 500,
-  segLength = 4,
+  segLength = 6,
   distGravity = 40;
 
 let selectedArray = [];
@@ -48,7 +48,7 @@ function setup() {
   lineCanv.stroke(55, 55, 65);
 
   calcDimensions();
-  lineCanv.strokeWeight(1*vMax);
+  lineCanv.strokeWeight(1.6*vMax);
   reset();
   saveNext();
 }
