@@ -31,6 +31,8 @@ let gridLevels = [
 ];
 let radialLevels = [3, 5];
 
+let storedOrientation, rotateDirection, storedOrientationDegrees;
+
 function preload() {
   texture = loadImage('assets/texture.png');
   audio = loadSound('assets/audio.mp3');
@@ -45,7 +47,6 @@ function setup() {
 
   lineCanv = createGraphics(windowWidth, windowHeight);
   lineCanv.stroke(55, 55, 65);
-//  lineCanv.strokeCap(PROJECT);
 
 
 
@@ -69,7 +70,7 @@ function start(){
   }
 
   reset();
-  sizeWindow();
+
     lineCanv.strokeWeight(2.2*vMax);
 }
 
@@ -228,7 +229,7 @@ function render() {
 
 
   for (let i = 0; i < x.length; i++) {
-    lineCanv.stroke(colours[i % colours.length], 80);
+    lineCanv.stroke(colours[i % colours.length]);
     for (let j = 0; j < x[i].length - 1 - cutSeg; j++) {
       lineCanv.line(x[i][j], y[i][j], x[i][j + 1], y[i][j + 1])
     }
@@ -326,15 +327,81 @@ function scatterPoints() {
 
 
 function windowResized() {
-  sizeWindow();
-}
 
-function sizeWindow() {
+
   resizeCanvas(windowWidth, windowHeight);
-  lineCanv.resizeCanvas(windowWidth, windowHeight);
+  sizeWindow();
   calcDimensions();
   removeElements();
   writeTextUI();
   checkFS();
   touchMoved();
 }
+
+
+function sizeWindow() {
+  if (width < height) {
+    currentOrientation = "portrait";
+  } else {
+    currentOrientation = "landscape";
+  }
+  if (currentOrientation === storedOrientation) {
+    stretchWindow();
+  } else {
+    if (window.orientation < storedOrientationDegrees) {
+      direction = 1;
+    } else {
+      direction = -1;
+    }
+
+    if (abs(window.orientation - storedOrientationDegrees) == 270){
+      direction = -direction;
+    }
+    rotateWindow(direction);
+    storedOrientationDegrees = window.orientation;
+  }
+  storedOrientation = currentOrientation;
+}
+
+function stretchWindow() {
+  var newlineCanv = createGraphics(windowWidth, windowHeight);
+  newlineCanv.image(lineCanv, 0, 0, windowWidth, windowHeight);
+  lineCanv.resizeCanvas(windowWidth, windowHeight);
+  lineCanv = newlineCanv;
+  newlineCanv.remove();
+}
+
+function rotateWindow(direction) {
+  var newlineCanv = createGraphics(windowWidth, windowHeight);
+  newlineCanv.push();
+  newlineCanv.translate(width / 2, height / 2);
+  newlineCanv.rotate((PI / 2) * direction);
+  newlineCanv.translate(-height / 2, -width / 2);
+  newlineCanv.image(lineCanv, 0, 0, windowHeight, windowWidth);
+  newlineCanv.pop()
+  lineCanv.resizeCanvas(windowWidth, windowHeight);
+  lineCanv = newlineCanv;
+  newlineCanv.remove();
+
+  // switch the grid around )
+  for (var i = 0; i < vt.length; i++){
+    var y_ = vt[i].y;
+    var x_ = vt[i].x;
+    vt[i].y = x_;
+    vt[i].x = y_;
+  }
+
+  // TODO: properly detect the orientation
+  rotateDirection = rotateDirection * -1;
+}
+
+//startSimulation and pauseSimulation defined elsewhere
+function handleVisibilityChange() {
+  if (document.hidden) {
+    audio.stop();
+  } else {
+    audio.loop(1);
+  }
+}
+
+document.addEventListener("visibilitychange", handleVisibilityChange, false);

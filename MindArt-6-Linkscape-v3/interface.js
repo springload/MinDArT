@@ -20,6 +20,8 @@ function calcDimensions() {
     vMax = height / 100;
     vMin = width / 100;
   }
+
+      lineCanv.strokeWeight(2.2*vMax);
 }
 
 
