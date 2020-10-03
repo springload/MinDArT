@@ -1,7 +1,8 @@
 let x = [],
   y = [],
   segNum = 300,
-  segLength = 10;
+  segLength = 10,
+  distGravity = 100;
 
 let selectedArray = [];
 let lineCanv, // lineLayer
@@ -100,6 +101,8 @@ function touchEnded() {
 
 function touchStarted() {
 
+
+
   if (audio.isPlaying()) {} else {
     audio.loop(5);
   }
@@ -129,10 +132,12 @@ function touchStarted() {
 function touchMoved() {
 
   if (dotsActive){
-      gravityCalc();
+    for (let i = 0; i < vt.length; i++){
+    vtCount[i] = 0;
+  }
     }
 
-  if (multiselectable) {
+
     if (drawActive) {
       // do we really need these Layers? // or do we need double the calculation of Lines
       if (beginning) {
@@ -142,18 +147,6 @@ function touchMoved() {
         dragCalc(selected, winMouseX, winMouseY);
       }
     }
-  } else {
-
-    if (beginning) {
-      dragCalc(selected, width / 2, height / 2);
-      beginning = 0;
-    } else {
-      let t = [0, 0]
-
-      dragCalc(t, winMouseX, winMouseY);
-
-    }
-  }
 
 
   render();
@@ -162,24 +155,7 @@ function touchMoved() {
 }
 
 
-function gravityCalc() {
-  // for each vertice of a dot
-  for (var k = 0; k < vt.length; k++) {
-    // start a counter at that dot for each line // todo, add array
-    vtCount[k] = 1;
-    // for each segment (currently of line 1 only)
-    for (let i = 0; i < segNum; i++) {
-      // crreate a vector for that segment
-      let vct = createVector(x[0][i], y[0][i]);
-      // calculate distance between segment and dot
-      var d = p5.Vector.dist(vct, vt[k]);
-      // if d is less than 75pixels, increment the counter for that dot
-      if (d < 75) {
-        vtCount[k]++;
-      }
-    }
-  }
-}
+
 
 function dragCalc(_sel, _mouseX, _mouseY) {
   dragSegment(_sel, _mouseX, _mouseY);
@@ -208,19 +184,23 @@ function dragSegment(_sel, xin, yin) {
 if (dotsActive){
   for (var k = 0; k < vt.length; k++) {
 
+    if (vtCount[k] < 18){
+
     // creat a vector for currently referenced dot
     let v1 = createVector(x[i][j], y[i][j]);
-    let v2 = createVector(x[i][j], y[i][j]);
 
     var d = p5.Vector.dist(v1, vt[k]);
-    if (d < 75){
+    if (d < distGravity){
       // todo, replace gravitational
-      let gravity = map(vtCount[k], 1,  300, 0.100, 0);
-        let v3 = p5.Vector.lerp(v1, vt[k], gravity);
+      // let gravity = map(vtCount[k], 1,  5, 0.26, 0, 1);
+      let v3 = p5.Vector.lerp(v1, vt[k], 1);
       x[i][j] = v3.x;
       y[i][j] = v3.y;
+        vtCount[k]++;
     }
+
   }
+}
 }
 
 }
