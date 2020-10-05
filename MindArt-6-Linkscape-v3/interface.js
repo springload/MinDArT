@@ -28,6 +28,7 @@ function calcDimensions() {
 function writeTextUI(){
 
   $(".select").remove();
+    $(".select2").remove();
 
   newButton = createButton("New")
   newButton.class("select");

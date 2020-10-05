@@ -98,6 +98,7 @@ if (levelVersion < gridLevels.length) {
 
 initialiseLine(0);
 drawActive = 1;
+writeTextUI();
 render();
 }
 
@@ -129,18 +130,38 @@ function touchStarted() {
 
   if (!drawActive) {
 
-    // for initial touch state, detect if a position is crossed.
+    // for initial touch state, detect if a position is crossed. Then save that
+    // position as currently selected
     for (let i = 0; i < x.length; i++) {
+
+      // if
+      if (dist(winMouseX, winMouseY, x[i][0], y[i][0]) < 45){
+        selected[0] = i;
+        selected[1] = 0;
+        drawActive = true;
+      } else if (dist(winMouseX, winMouseY, x[i][segNum-1], y[i][segNum-1]) < 45){
+        selected[0] = i;
+        selected[1] = segNum-1;
+        drawActive = true;
+      } else { // otherwise find nearest point
       for (let j = 0; j < x[i].length; j++) {
         if (dist(winMouseX, winMouseY, x[i][j], y[i][j]) < 45) {
           selected[0] = i;
+          if (j < 30){
+            selected[1] = 1
+          } else if (j > x[i].length - 30){
+            selected[1] = 499;
+          } else {
           selected[1] = j;
+        }
           drawActive = true;
           break;
         }
       }
-    }
+      }
 
+
+    }
   }
   //return false;
 
@@ -222,17 +243,22 @@ if (dotsActive){
 }
 
 function render() {
-  let colours = [0, 70, 140, 210, 200, 250];
+  let colours = [0, 125, 180, 220, 200, 250];
   // let colours = ['#1a1a1a'];
   lineCanv.clear();
 
 
 
   for (let i = 0; i < x.length; i++) {
-    lineCanv.stroke(colours[i % colours.length]);
+    lineCanv.strokeWeight(1.9*vMax);
+    lineCanv.stroke(colours[i % colours.length], 100);
     for (let j = 0; j < x[i].length - 1 - cutSeg; j++) {
       lineCanv.line(x[i][j], y[i][j], x[i][j + 1], y[i][j + 1])
     }
+    lineCanv.strokeWeight(1.4*vMax);
+      lineCanv.stroke(colours[(i+4) % colours.length], 80);
+      lineCanv.point(x[i][0], y[i][0]);
+      lineCanv.point(x[i][segNum-1], y[i][segNum-1]);
 
 }
 
