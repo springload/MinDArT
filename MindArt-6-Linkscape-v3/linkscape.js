@@ -241,7 +241,7 @@ if (dotsActive){
     let gate = 1;
 
     for (elt of vtStored[k]){
-      if (abs(elt - j) < 20 && abs(elt - j) > 5){
+      if (abs(elt - j) < 20 && abs(elt - j) > 10){
         gate = 0;
       }
     }
@@ -257,7 +257,7 @@ if (dotsActive){
       vtStored[k].push(j);
       // this is effectively a smoother
 
-      let v3 = p5.Vector.lerp(v1, vt[k], 0.9);
+      let v3 = p5.Vector.lerp(v1, vt[k], 0.6);
  x[i][j] = v3.x;
  y[i][j] = v3.y;
 
