@@ -1,8 +1,8 @@
 let x = [],
   y = [],
-  segNum = 500,
+  segNum = 650,
   segLength = 6,
-  distGravity = 70;
+  distGravity = 40;
 
 let selectedArray = [];
 let lineCanv, // lineLayer
@@ -151,7 +151,7 @@ function touchStarted() {
           if (j < 30){
             selected[1] = 1
           } else if (j > x[i].length - 30){
-            selected[1] = 499;
+            selected[1] = segNum-1;
           } else {
           selected[1] = j;
         }
@@ -235,7 +235,7 @@ if (dotsActive){
     let gate = 1;
 
     for (elt of vtStored[k]){
-      if (abs(elt - j) < 50 && abs(elt - j) > 5){
+      if (abs(elt - j) < 20 && abs(elt - j) > 3){
         gate = 0;
       }
     }
