@@ -2,7 +2,7 @@ let x = [],
   y = [],
   segNum = 500,
   segLength = 6,
-  distGravity = 40;
+  distGravity = 70;
 
 let selectedArray = [];
 let lineCanv, // lineLayer
@@ -20,6 +20,7 @@ let cutSeg = 0;
 // constraint paramaters
 let vt = [];
 let vtCount = [];
+let vtStored = [];
 
 let levelVersion = 0;
 let levelMax = 9;
@@ -169,9 +170,12 @@ function touchStarted() {
 
 function touchMoved() {
 
+  vtStored = [];
+
   if (dotsActive){
     for (let i = 0; i < vt.length; i++){
     vtCount[i] = 0;
+    vtStored[i] = [];
   }
     }
 
@@ -210,6 +214,8 @@ function dragCalc(_sel, _mouseX, _mouseY) {
 }
 
 function dragSegment(_sel, xin, yin) {
+
+
   i = _sel[0];
   j = _sel[1];
   const dx = xin - x[i][j];
@@ -222,28 +228,41 @@ function dragSegment(_sel, xin, yin) {
 if (dotsActive){
   for (var k = 0; k < vt.length; k++) {
 
-    if (vtCount[k] < 10){
 
-    // creat a vector for currently referenced dot
+        // creat a vector for currently referenced dot
     let v1 = createVector(x[i][j], y[i][j]);
+
+    let gate = 1;
+
+    for (elt of vtStored[k]){
+      if (abs(elt - j) < 50 && abs(elt - j) > 5){
+        gate = 0;
+      }
+    }
+
+    if (gate){
+
+
+
+
 
     var d = p5.Vector.dist(v1, vt[k]);
     if (d < distGravity){
+      vtStored[k].push(j);
       // this is effectively a smoother
-      let v3 = p5.Vector.lerp(v1, vt[k], 0.5);
-      x[i][j] = v3.x;
-      y[i][j] = v3.y;
+
+      x[i][j] = vt[k].x;
+      y[i][j] = vt[k].y;
         vtCount[k]++;
     }
 
   }
 }
 }
-
 }
 
 function render() {
-  let colours = [0, 125, 180, 220, 200, 250];
+  let colours = [0, 90, 150, 200, 200, 250];
   // let colours = ['#1a1a1a'];
   lineCanv.clear();
 
@@ -251,12 +270,12 @@ function render() {
 
   for (let i = 0; i < x.length; i++) {
     lineCanv.strokeWeight(1.9*vMax);
-    lineCanv.stroke(colours[i % colours.length], 100);
+    lineCanv.stroke(colours[i % colours.length], 200);
     for (let j = 0; j < x[i].length - 1 - cutSeg; j++) {
       lineCanv.line(x[i][j], y[i][j], x[i][j + 1], y[i][j + 1])
     }
     lineCanv.strokeWeight(1.4*vMax);
-      lineCanv.stroke(colours[(i+4) % colours.length], 80);
+      lineCanv.stroke(colours[(i+4) % colours.length], 190);
       lineCanv.point(x[i][0], y[i][0]);
       lineCanv.point(x[i][segNum-1], y[i][segNum-1]);
 
