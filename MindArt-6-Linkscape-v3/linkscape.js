@@ -1,8 +1,8 @@
 let x = [],
   y = [],
   segNum = 650,
-  segLength = 6,
-  distGravity = 40;
+  segLength = 4,
+  distGravity = 30;
 
 let selectedArray = [];
 let lineCanv, // lineLayer
@@ -96,7 +96,6 @@ if (levelVersion < gridLevels.length) {
     } else {
       scatterPoints();
     }
-
 initialiseLine(0);
 drawActive = 1;
 writeTextUI();
@@ -115,7 +114,14 @@ function initialiseLine(l) {
   }
 
   selected = [l, 0];
-  dragCalc(selected, width / 2, height / 2);
+  if (dotsActive){
+      dotsActive = 0;
+      dragCalc(selected, width / 2, height / 2);
+      dotsActive = 1;
+  } else {
+      dragCalc(selected, width / 2, height / 2);
+  }
+
   beginning = 1;
 }
 
@@ -235,7 +241,7 @@ if (dotsActive){
     let gate = 1;
 
     for (elt of vtStored[k]){
-      if (abs(elt - j) < 20 && abs(elt - j) > 3){
+      if (abs(elt - j) < 20 && abs(elt - j) > 5){
         gate = 0;
       }
     }
@@ -251,8 +257,10 @@ if (dotsActive){
       vtStored[k].push(j);
       // this is effectively a smoother
 
-      x[i][j] = vt[k].x;
-      y[i][j] = vt[k].y;
+      let v3 = p5.Vector.lerp(v1, vt[k], 0.9);
+ x[i][j] = v3.x;
+ y[i][j] = v3.y;
+
         vtCount[k]++;
     }
 
