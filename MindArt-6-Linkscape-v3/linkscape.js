@@ -2,7 +2,7 @@ let x = [],
   y = [],
   segNum = 650,
   segLength = 4,
-  distGravity = 30;
+  distGravity = 50;
 
 let selectedArray = [];
 let lineCanv, // lineLayer
@@ -241,7 +241,7 @@ if (dotsActive){
     let gate = 1;
 
     for (elt of vtStored[k]){
-      if (abs(elt - j) < 20 && abs(elt - j) > 10){
+      if (abs(elt - j) < 20 && abs(elt - j) > 6){
         gate = 0;
       }
     }
@@ -257,9 +257,9 @@ if (dotsActive){
       vtStored[k].push(j);
       // this is effectively a smoother
 
-      let v3 = p5.Vector.lerp(v1, vt[k], 0.6);
- x[i][j] = v3.x;
- y[i][j] = v3.y;
+
+ x[i][j] = vt[k].x;
+ y[i][j] = vt[k].y;
 
         vtCount[k]++;
     }
