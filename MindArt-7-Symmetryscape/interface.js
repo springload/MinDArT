@@ -31,13 +31,13 @@ function writeTextUI() {
   button = createImg('assets/eraseOn.png');
   button.remove();
   button = createImg('assets/eraseOff.png');
-  button.position(0.8 * vMax, height - (14 * vMax));
-  button.size(14 * vMax, 14 * vMax);
+  button.position(1.5 * vMax, height - (12 * vMax));
+  button.size(12 * vMax, 12 * vMax);
   button.mousePressed(eraser);
 
     swatch1 = createButton("");
-    swatch1.position(13 * vMax, height - (13 * vMax));
-    swatch1.size(7 * vMax, 10.5 * vMax);
+    swatch1.position(12 * vMax, height - (13 * vMax));
+    swatch1.size(6 * vMax, 10.5 * vMax);
     swatch1.style("background-color", colArray[0]);
     swatch1.class("box");
     swatch1.mousePressed(function() {
@@ -45,8 +45,8 @@ function writeTextUI() {
     });
 
     swatch2 = createButton("");
-    swatch2.position(20 * vMax, height - (13 * vMax));
-    swatch2.size(7 * vMax, 10.5 * vMax);
+    swatch2.position(18 * vMax, height - (13 * vMax));
+    swatch2.size(6 * vMax, 10.5 * vMax);
     swatch2.style("background-color", colArray[1]);
     swatch2.class("box");
     swatch2.mousePressed(function() {
@@ -54,8 +54,8 @@ function writeTextUI() {
     });
 
     swatch3 = createButton("");
-    swatch3.position(27 * vMax, height - (13 * vMax));
-    swatch3.size(7 * vMax, 10.5 * vMax);
+    swatch3.position(24 * vMax, height - (13 * vMax));
+    swatch3.size(6 * vMax, 10.5 * vMax);
     swatch3.style('background-color', colArray[2]);
     swatch3.class("box");
     swatch3.mousePressed(function() {
@@ -63,8 +63,8 @@ function writeTextUI() {
     });
 
     swatch4 = createButton("");
-    swatch4.position(34 * vMax, height - (13 * vMax));
-    swatch4.size(7 * vMax, 10.5 * vMax);
+    swatch4.position(30 * vMax, height - (13 * vMax));
+    swatch4.size(6 * vMax, 10.5 * vMax);
     swatch4.style("background-color", colArray[3]);
     swatch4.class("box");
     swatch4.mousePressed(function() {
@@ -72,8 +72,8 @@ function writeTextUI() {
     });
 
     swatch5 = createButton("");
-    swatch5.position(41 * vMax, height - (13 * vMax));
-    swatch5.size(7 * vMax, 10.5 * vMax);
+    swatch5.position(36 * vMax, height - (13 * vMax));
+    swatch5.size(6 * vMax, 10.5 * vMax);
     swatch5.style("background-color", colArray[4]);
     swatch5.class("box");
     swatch5.mousePressed(function() {
@@ -81,8 +81,8 @@ function writeTextUI() {
     });
 
     swatch6 = createButton("");
-    swatch6.position(48 * vMax, height - (13 * vMax));
-    swatch6.size(7 * vMax, 10.5 * vMax);
+    swatch6.position(42 * vMax, height - (13 * vMax));
+    swatch6.size(6 * vMax, 10.5 * vMax);
     swatch6.style("background-color", colArray[5]);
     swatch6.class("box");
     swatch6.mousePressed(function() {
@@ -90,8 +90,8 @@ function writeTextUI() {
     });
 
     selColour = createImg('assets/colSelected.png');
-    selColour.position(13 * vMax, height - (16 * vMax));
-    selColour.size(7 * vMax, 16 * vMax);
+    selColour.position(12 * vMax, height - (16 * vMax));
+    selColour.size(6 * vMax, 16 * vMax);
     selColour.mousePressed();
 
 
@@ -104,8 +104,8 @@ function eraser(){
 brushSelected = 6;
 button.remove();
 button = createImg('assets/eraseOn.png');
-button.position(0.8 * vMax, height - (14 * vMax));
-button.size(14 * vMax, 14 * vMax);
+button.position(1.5 * vMax, height - (12 * vMax));
+button.size(12 * vMax, 12 * vMax);
 button.mousePressed(eraser);
 selColour.remove();
 
@@ -116,16 +116,16 @@ selColour.remove();
     click.play();
     button.remove();
     button = createImg('assets/eraseOff.png');
-    button.position(0.8 * vMax, height - (14 * vMax));
-    button.size(14 * vMax, 14 * vMax);
+    button.position(1.5 * vMax, height - (12 * vMax));
+    button.size(12 * vMax, 12 * vMax);
     button.mousePressed(eraser);
 
     brushSelected = brushSel-1;
 
     selColour.remove();
     selColour = createImg('assets/colSelected.png');
-    selColour.position((13 + ((brushSel-1) * 7)) * vMax, height - (16 * vMax));
-    selColour.size(7 * vMax, 16 * vMax);
+    selColour.position((12 + ((brushSel-1) * 6)) * vMax, height - (16 * vMax));
+    selColour.size(6 * vMax, 16 * vMax);
     selColour.mousePressed();
 
   }
