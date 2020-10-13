@@ -183,7 +183,6 @@ function render() {
 }
 
 function windowResized() {
-
   resizeCanvas(windowWidth, windowHeight);
   sizeWindow();
   drawLayer.strokeCap(PROJECT);
