@@ -176,6 +176,8 @@ function restart() {
   drawLayer.clear();
   writeTextUI();
 
+  changeBrush(1);
+
 render();
 
 }
