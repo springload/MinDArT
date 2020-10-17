@@ -126,13 +126,13 @@ selColour.remove();
     }
 
     if (brushSelected === 2) {
-      drawLayer.strokeWeight(1); // for line work
-      drawLayer.stroke(colorAlpha(colArray[swatchSel][2],0.5));
+      drawLayer.strokeWeight(2); // for line work
+      drawLayer.stroke(colorAlpha(colArray[swatchSel][2],0.6));
     }
 
     else if (brushSelected === 3) {
       drawLayer.strokeWeight(10);
-        drawLayer.stroke(colorAlpha(colArray[swatchSel][3], 0.1));
+        drawLayer.stroke(colorAlpha(colArray[swatchSel][3], 0.4));
 
     } else if (brushSelected === 4) {
       drawLayer.stroke(colorAlpha(colArray[swatchSel][4], 0.5))
