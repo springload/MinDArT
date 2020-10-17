@@ -13,6 +13,8 @@ let storedOrientation, storedOrientationDegrees, rotateDirection;
 let centeringActive = 0
 let centerX, centerY;
 
+let swatchSel = 0;
+
 function preload() {
   bg = loadImage('assets/paper.jpg');
   audio = loadSound('assets/audio.mp3');
@@ -39,6 +41,8 @@ function setup() {
 }
 
 function start() {
+
+  counter = rotArray.length;
 
   $('.startBtn').remove();
   fullscreen(1);
@@ -106,7 +110,7 @@ function makeDrawing(_x, _y, pX, pY) {
   drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 1, 2)); // for line work
   drawLayer.stroke(0);
 
-    qtyRot = 3+(counter*counter);
+    qtyRot = rotArray[counter];
 
 
     for (let i = 0; i < qtyRot; i++){
@@ -120,37 +124,15 @@ function makeDrawing(_x, _y, pX, pY) {
 }
 
 function brushIt(_x, _y, pX, pY) {
-  if (brushSelected === 3) {
-    drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 2, 3)); // for line work
-    drawLayer.stroke(100, 100, 100, 50);
-    for (i = 0; i < 10; i++) {
-      let randX = randomGaussian(-6, 6);
-      let randY = randomGaussian(-6, 6);
-      drawLayer.line(_x + randX, _y + randY, pX + randX, pY + randY);
-    }
-  }
-  if (brushSelected === 1) {
-    drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 3, 5)); // for line work
-    drawLayer.stroke(10, 10, 10, 60);
-    drawLayer.line(_x, _y, pX, pY);
-  }
+
   if (brushSelected === 0) {
-    drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 14, 15)); // for line work
-    drawLayer.stroke(20, 20, 20, 50);
-    drawLayer.line(_x, _y, pX, pY);
-  } else if (brushSelected === 4) {
-    drawLayer.strokeWeight(abs(random(0, 4)));
-    for (i = 0; i < 60; i++) {
-      let tempCol = abs(random(200, 255));
-      drawLayer.stroke(tempCol, tempCol, tempCol, 100);
-      drawLayer.point(_x + randomGaussian(-10, 10), _y + randomGaussian(-10, 10));
-    }
-  } else if (brushSelected === 5) {
-    drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 30, 40)); // for line work
-    drawLayer.stroke(255, 255, 255, 35);
-    drawLayer.line(_x, _y, pX, pY);
-  } else if (brushSelected === 2) {
-    drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 50, 60)); // for line work
+  drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 3, 4)); // for line work
+  drawLayer.stroke(colorAlpha(colArray[swatchSel][0], 0.9));
+  drawLayer.line(_x, _y, pX, pY);
+}
+
+  else if (brushSelected === 1) {
+    drawLayer.strokeWeight(20); // for line work
     if (faderStart <= 0) {
       brushBool = 0;
     }
@@ -158,13 +140,38 @@ function brushIt(_x, _y, pX, pY) {
       brushBool = 1;
     }
     if (brushBool === 0) {
-      drawLayer.stroke(100, 100, 100, (faderStart += 20) / 50);
+      faderStart += 20;
     }
     if (brushBool === 1) {
-      drawLayer.stroke(100, 100, 100, (faderStart -= 20) / 50);
+    faderStart -= 20;
     }
+    drawLayer.stroke(colorAlpha(colArray[swatchSel][1], faderStart/2000));
+
     drawLayer.line(_x, _y, pX, pY);
-  } else if (brushSelected === 6) {
+  }
+
+  if (brushSelected === 2) {
+    drawLayer.strokeWeight(1); // for line work
+    drawLayer.stroke(colorAlpha(colArray[swatchSel][2], 0.5));
+    for (i = 0; i < 10; i++) {
+      let randX = randomGaussian(-6, 6);
+      let randY = randomGaussian(-6, 6);
+      drawLayer.line(_x + randX, _y + randY, pX + randX, pY + randY);
+    }
+  }
+
+  else if (brushSelected === 3) {
+    drawLayer.strokeWeight(abs(randomGaussian(1, 5)));
+    for (i = 0; i < 5; i++) {
+      drawLayer.stroke(colorAlpha(colArray[swatchSel][3], random(0.1, 2)));
+      drawLayer.point(_x + randomGaussian(-3, 3), _y + randomGaussian(-3, 3));
+    }
+  } else if (brushSelected === 4) {
+    drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 30, 40)); // for line work
+    drawLayer.stroke(colorAlpha(colArray[swatchSel][4], 0.5))
+    drawLayer.line(_x, _y, pX, pY);
+
+  }  else if (brushSelected === 5) {
     drawLayer.blendMode(REMOVE);
 
     drawLayer.image(eraseAlpha, _x - 50, _y - 50, 100, 100);
@@ -198,9 +205,8 @@ function render() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   sizeWindow();
-  drawLayer.strokeCap(PROJECT);
+  drawLayer.strokeCap(SQUARE);
   dimensionCalc();
-  removeElements(); // todo, incorp into writeTextUI
   writeTextUI();
   checkFS();
   render();
