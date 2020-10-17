@@ -107,8 +107,7 @@ function touchMoved() {
 }
 
 function makeDrawing(_x, _y, pX, pY) {
-  drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 1, 2)); // for line work
-  drawLayer.stroke(0);
+///  drawLayer.stroke(0);
 
     qtyRot = rotArray[counter];
 
@@ -127,12 +126,10 @@ function brushIt(_x, _y, pX, pY) {
 
   if (brushSelected === 0) {
   drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 3, 4)); // for line work
-  drawLayer.stroke(colorAlpha(colArray[swatchSel][0], 0.9));
   drawLayer.line(_x, _y, pX, pY);
 }
 
   else if (brushSelected === 1) {
-    drawLayer.strokeWeight(20); // for line work
     if (faderStart <= 0) {
       brushBool = 0;
     }
@@ -145,14 +142,12 @@ function brushIt(_x, _y, pX, pY) {
     if (brushBool === 1) {
     faderStart -= 20;
     }
-    drawLayer.stroke(colorAlpha(colArray[swatchSel][1], faderStart/2000));
+    drawLayer.stroke(colorAlpha(colArray[swatchSel][1], .25+(faderStart/2000)));
 
     drawLayer.line(_x, _y, pX, pY);
   }
 
   if (brushSelected === 2) {
-    drawLayer.strokeWeight(1); // for line work
-    drawLayer.stroke(colorAlpha(colArray[swatchSel][2], 0.5));
     for (i = 0; i < 10; i++) {
       let randX = randomGaussian(-6, 6);
       let randY = randomGaussian(-6, 6);
@@ -161,19 +156,15 @@ function brushIt(_x, _y, pX, pY) {
   }
 
   else if (brushSelected === 3) {
-    drawLayer.strokeWeight(abs(randomGaussian(1, 5)));
-    for (i = 0; i < 5; i++) {
-      drawLayer.stroke(colorAlpha(colArray[swatchSel][3], random(0.1, 2)));
-      drawLayer.point(_x + randomGaussian(-3, 3), _y + randomGaussian(-3, 3));
+    for (i = 0; i < 20; i++) {
+      drawLayer.point(_x + randomGaussian(-6, 6), _y + randomGaussian(-6, 6));
     }
   } else if (brushSelected === 4) {
     drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 30, 40)); // for line work
-    drawLayer.stroke(colorAlpha(colArray[swatchSel][4], 0.5))
     drawLayer.line(_x, _y, pX, pY);
 
   }  else if (brushSelected === 5) {
     drawLayer.blendMode(REMOVE);
-
     drawLayer.image(eraseAlpha, _x - 50, _y - 50, 100, 100);
     drawLayer.blendMode(BLEND);
 

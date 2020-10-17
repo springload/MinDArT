@@ -111,7 +111,35 @@ selColour.remove();
     selColour.size(6 * vMax, 16 * vMax);
     selColour.mousePressed();
 
+    strokeAssign();
 
+  }
+
+  function strokeAssign(){
+
+    if (brushSelected === 0) {
+    drawLayer.stroke(colArray[swatchSel][0]);
+  }
+
+    else if (brushSelected === 1) {
+      drawLayer.strokeWeight(20); // for line work
+    }
+
+    if (brushSelected === 2) {
+      drawLayer.strokeWeight(1); // for line work
+      drawLayer.stroke(colorAlpha(colArray[swatchSel][2],1));
+    }
+
+    else if (brushSelected === 3) {
+      drawLayer.strokeWeight(10);
+        drawLayer.stroke(colorAlpha(colArray[swatchSel][3], 0.1));
+
+    } else if (brushSelected === 4) {
+      drawLayer.stroke(colorAlpha(colArray[swatchSel][4], 0.5))
+    }  else if (brushSelected === 5) {
+      // nothing
+
+    }
 
   }
 
