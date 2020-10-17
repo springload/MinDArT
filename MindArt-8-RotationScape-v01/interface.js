@@ -6,7 +6,7 @@ let rectWidth;
 let counter = 4; // so that when the restart happens, resets to 0 via the restart function.
 let uiInterrupt = 0;
 
-let rotArray = [3, 4, 5, 6, 8, 12, 20, 50];
+let rotArray = [6, 7, 8, 10, 12, 20, 50];
 let colArray = [
 ['#D97398','#A65398','#263F73','#5679A6'], // 5
 ['#192819','#2c4928','#719b25','#cbe368'], // 5

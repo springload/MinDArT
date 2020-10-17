@@ -111,7 +111,7 @@ function makeDrawing(_x, _y, pX, pY) {
 
     qtyRot = rotArray[counter];
 
-
+    if (brushSelected < 6){
     for (let i = 0; i < qtyRot; i++){
     drawLayer.push();
     drawLayer.translate(centerX, centerY);
@@ -119,6 +119,9 @@ function makeDrawing(_x, _y, pX, pY) {
     drawLayer.translate(-centerX, -centerY);
     brushIt(_x, _y, pX, pY);
     drawLayer.pop();
+  }} else {
+    brushIt(_x, _y, pX, pY);
+
   }
 }
 
@@ -163,7 +166,7 @@ function brushIt(_x, _y, pX, pY) {
     drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 30, 40)); // for line work
     drawLayer.line(_x, _y, pX, pY);
 
-  }  else if (brushSelected === 5) {
+  }  else if (brushSelected === 6) {
     drawLayer.blendMode(REMOVE);
     drawLayer.image(eraseAlpha, _x - 50, _y - 50, 100, 100);
     drawLayer.blendMode(BLEND);
