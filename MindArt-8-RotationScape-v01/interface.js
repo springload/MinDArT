@@ -118,7 +118,7 @@ selColour.remove();
   function strokeAssign(){
 
     if (brushSelected === 0) {
-    drawLayer.stroke(colorAlpha(colArray[swatchSel][0]), 0.2);
+    drawLayer.stroke(colorAlpha(colArray[swatchSel][0]), 0.4);
   }
 
     else if (brushSelected === 1) {
