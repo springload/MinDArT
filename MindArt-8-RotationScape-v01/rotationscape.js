@@ -156,7 +156,7 @@ function brushIt(_x, _y, pX, pY) {
   }
 
   else if (brushSelected === 3) {
-    for (i = 0; i < 20; i++) {
+    for (i = 0; i < 8; i++) {
       drawLayer.point(_x + randomGaussian(-4, 4), _y + randomGaussian(-4, 4));
     }
   } else if (brushSelected === 4) {
