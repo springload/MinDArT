@@ -131,8 +131,8 @@ selColour.remove();
     }
 
     else if (brushSelected === 3) {
-      drawLayer.strokeWeight(10);
-        drawLayer.stroke(colorAlpha(colArray[swatchSel][3], 0.4));
+      drawLayer.strokeWeight(8);
+        drawLayer.stroke(colorAlpha(colArray[swatchSel][3], 0.55));
 
     } else if (brushSelected === 4) {
       drawLayer.stroke(colorAlpha(colArray[swatchSel][4], 0.5))
