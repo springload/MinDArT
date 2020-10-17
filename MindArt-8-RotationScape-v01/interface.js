@@ -122,7 +122,7 @@ selColour.remove();
   }
 
     else if (brushSelected === 1) {
-      drawLayer.strokeWeight(20); // for line work
+      drawLayer.strokeWeight(12); // for line work
     }
 
     if (brushSelected === 2) {

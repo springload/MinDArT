@@ -149,15 +149,15 @@ function brushIt(_x, _y, pX, pY) {
 
   if (brushSelected === 2) {
     for (i = 0; i < 10; i++) {
-      let randX = randomGaussian(-6, 6);
-      let randY = randomGaussian(-6, 6);
+      let randX = randomGaussian(-5, 5);
+      let randY = randomGaussian(-5, 5);
       drawLayer.line(_x + randX, _y + randY, pX + randX, pY + randY);
     }
   }
 
   else if (brushSelected === 3) {
     for (i = 0; i < 20; i++) {
-      drawLayer.point(_x + randomGaussian(-6, 6), _y + randomGaussian(-6, 6));
+      drawLayer.point(_x + randomGaussian(-4, 4), _y + randomGaussian(-4, 4));
     }
   } else if (brushSelected === 4) {
     drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 30, 40)); // for line work
