@@ -1,3 +1,4 @@
+// pick new center resolve
 
 let saveButton, newButton, button3, button, fsButton, centerButton;
 let fsBool = 0;
@@ -9,14 +10,14 @@ let uiInterrupt = 0;
 let rotArray = [6, 7, 8, 10, 12, 20, 50];
 let colArray = [
 ['#D97398','#A65398','#263F73','#5679A6'], // 5
-['#192819','#2c4928','#719b25','#cbe368'], // 5
+// ['#192819','#2c4928','#719b25','#cbe368'], // 5
 ['#345573', '#223240', '#F2913D', '#F24B0F'], // 5
 ['#080926','#162040','#364C59','#8DA69F'], // 5
 ['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream // 4
 ['#a4fba6','#4ae54a', '#0f9200', '#006203'], // 5
 ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'], // 4
 ['#172426', '#455559', '#D9C3B0', '#F2DFCE'], // 5
-['#3C5E73','#F2BBBB','#444444','#F24444'], // 4
+['#3C5E73','#F2BBBB','#FFFFFF','#F24444'], // 4
 ['#F27ECA','#9726A6','#8F49F2','#6C2EF2'], // 5
 ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'], // adidas-Telstar-50-anniversary // 4
 ['#F2B705','#F27EA9', '#05AFF2', '#F29F05', '#F2541B'], // Lettering-Series-XXII-1 // 5
@@ -49,7 +50,7 @@ function writeTextUI() {
   centerButton.style('font-size', '1.2vmax');
   centerButton.style('height', '4.5vmax');
   centerButton.position(2.5*vMax, 2.5 * vMax);
-  centerButton.mousePressed(reCenter);
+  centerButton.mousePressed(reCenterTimeout);
 
   saveButton = createButton("Save")
   saveButton.class("select");

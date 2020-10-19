@@ -12,6 +12,7 @@ let eraseAlpha;
 let storedOrientation, storedOrientationDegrees, rotateDirection;
 let centeringActive = 0
 let centerX, centerY;
+let ellipseAnimated = 0;
 
 let swatchSel = 0;
 
@@ -82,11 +83,13 @@ function dimensionCalc() {
 
 function mousePressed() {
   faderStart = 600;
-  return false;
+
 
   if (centeringActive){
     center();
   }
+
+    return false;
 }
 
 
@@ -174,11 +177,16 @@ function brushIt(_x, _y, pX, pY) {
   }
 }
 
+function reCenterTimeout(){
+  setTimeout(reCenter, 100);
+}
+
 function reCenter(){
   centeringActive = true;
   $("#centerButton").removeClass("select");
   $("#centerButton").addClass("selectActive")
   centerButton.class("selectActive");
+  return false;
 }
 
 function center(){
@@ -187,13 +195,26 @@ function center(){
   $("#centerButton").addClass("select");
   centerX = mouseX;
   centerY = mouseY;
+  ellipseAnimated = 255;
 }
 
+function draw(){
+
+  if (ellipseAnimated > 0){
+  render();
+  ellipseAnimated -=7;
+  fill(255, ellipseAnimated);
+  ellipse(centerX, centerY, (255-ellipseAnimated)/4, (255-ellipseAnimated)/4);
+}
+}
 
 function render() {
   image(bg, 0, 0, width, height);
   image(drawLayer, 0, 0, width, height);
   image(uiLayer, 0, 0, width, height);
+  textSize(10);
+  fill(244);
+  text(swatchSel, 10, 10);
 }
 
 function windowResized() {
