@@ -212,9 +212,6 @@ function render() {
   image(bg, 0, 0, width, height);
   image(drawLayer, 0, 0, width, height);
   image(uiLayer, 0, 0, width, height);
-  textSize(10);
-  fill(244);
-  text(swatchSel, 10, 10);
 }
 
 function windowResized() {
