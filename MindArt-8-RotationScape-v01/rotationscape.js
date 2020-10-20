@@ -202,7 +202,7 @@ function draw(){
 
   if (ellipseAnimated > 0){
   render();
-  ellipseAnimated -=7;
+  ellipseAnimated -=5;
   fill(255, ellipseAnimated);
   ellipse(centerX, centerY, (255-ellipseAnimated)/4, (255-ellipseAnimated)/4);
 }
