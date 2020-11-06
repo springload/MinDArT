@@ -44,7 +44,7 @@
   ];
   const hueDrift = 3;
   const satDrift = 3;
-  const rotateDrift = 0.2;
+  const rotateDrift = 0.6;
   let bool = 1;
   let brushTemp = 0;
   let buttonText1state = 0;
@@ -66,8 +66,8 @@
 
   function preload() {
     bg = loadImage('assets/paper.jpg'); // background paper
-    for (let i = 1; i < 21; i++) {
-      brush[i] = loadImage('assets/br-' + i + '.png') // brush loader
+    for (let i = 0; i < 15; i++) {
+      brush[i] = loadImage('assets/Cloud' + i + '.png') // brush loader
     }
     audio = loadSound('assets/audio.mp3');
     click = loadSound('assets/click.mp3');
@@ -149,7 +149,8 @@
   function setProperties(_x, _y) {
     tempwinMouseX = ((windowWidth / 2) - _x); // record position on downpress
     tempwinMouseY = ((windowHeight / 2) - _y); // record position on downpress
-    brushTemp = int(random(1, 20));
+    brushTemp = int(random(0, brush.length-1));
+    console.log(brushTemp);
     if (bool) {
       //image(bg, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
       let swatchTemp = int(random(0, 5));
@@ -230,7 +231,7 @@
     paintLayer.translate(rakeX + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))), rakeY + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))));
     paintLayer.scale(scalar);
     paintLayer.rotate(a);
-    paintLayer.image(rake, 0, 0, 0, 0);
+    paintLayer.image(rake, 0, 0, 300, 300);
     paintLayer.imageMode(CORNER); // centers loaded brushes
     paintLayer.pop();
   }
@@ -243,7 +244,7 @@
     setLayerProperties();
     writeTextUI();
     checkFS();
-     render(); todo
+     render();
 
 
 
