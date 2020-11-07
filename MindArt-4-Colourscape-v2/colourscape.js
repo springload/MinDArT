@@ -86,8 +86,7 @@
     if (audio.isPlaying()) {} else {
       audio.loop(1);
     }
-    //
-    sizeWindow();
+    
 
     reset();
 
