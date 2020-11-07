@@ -170,6 +170,8 @@
 
   function touchMoved() {
 
+    if (started){
+
       if (eraseState === 0) {
         makeDrawing(winMouseX, winMouseY, pwinMouseX, pwinMouseY);
       } else {
@@ -177,6 +179,7 @@
       }
 
       render();
+    }
 
     return false;
   }
