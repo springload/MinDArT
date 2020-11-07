@@ -84,6 +84,7 @@
     }
 
     reset();
+    started = 1;
   }
 
   function setup() {
