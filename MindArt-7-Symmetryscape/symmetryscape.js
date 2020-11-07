@@ -10,6 +10,7 @@ let brushBool = 0;
 let intX, intY;
 let eraseAlpha;
 let storedOrientation, storedOrientationDegrees, rotateDirection;
+let appStarted = 0;
 
 function preload() {
   bg = loadImage('assets/paper.jpg');
@@ -40,22 +41,13 @@ function start() {
 
   $('.startBtn').remove();
   fullscreen(1);
+  appStarted = 1;
 
   if (audio.isPlaying()) {} else {
     audio.loop(1);
   }
 
-  // all event listeners //// BUG: should these be in setup?
-  canvas.addEventListener('touchmove', moved);
-  canvas.addEventListener('mousemove', moved);
-  canvas.addEventListener('touchstart', touchdown);
-  canvas.addEventListener('mousedown', touchdown);
-  canvas.addEventListener('touchend', touchstop);
-  canvas.addEventListener('touchleave', touchstop);
-  canvas.addEventListener('mouseup', touchstop);
-
-
-
+  restart();
 
 
 
@@ -81,7 +73,7 @@ function dimensionCalc() {
   }
 }
 
-function touchdown() {
+function mousePressed() {
   faderStart = 600;
 
   return false;
@@ -91,14 +83,12 @@ function touchdown() {
 
 
 
-function moved() {
+function touchMoved() {
+  if (appStarted){
   makeDrawing(winMouseX, winMouseY, pwinMouseX, pwinMouseY);
     render();
+  }
   return false;
-}
-
-function touchstop(){
-  // nothing for now
 }
 
 function makeDrawing(_x, _y, pX, pY) {
