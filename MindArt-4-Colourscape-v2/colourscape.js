@@ -87,6 +87,7 @@
     // sizeWindow();
 
     reset();
+        fullscreen(1);
   }
 
   function setup() {
