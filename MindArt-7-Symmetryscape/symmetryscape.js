@@ -95,10 +95,10 @@ function touchdown() {
 
 
 function moved() {
-  if (mouseIsDown){
+  // if (mouseIsDown){
   makeDrawing(winMouseX, winMouseY, pwinMouseX, pwinMouseY);
     render();
-  }
+  // }
   return false;
 }
 
