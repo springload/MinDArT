@@ -134,14 +134,14 @@ function brushIt(_x, _y, pX, pY) {
       drawLayer.line(_x + randX, _y + randY, pX + randX, pY + randY);
     }
   }
-  if (brushSelected === 1) {
+  if (brushSelected === 0) {
     drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 3, 5)); // for line work
-    drawLayer.stroke(10, 10, 10, 60);
+    drawLayer.stroke(10, 10, 10, 120);
     drawLayer.line(_x, _y, pX, pY);
   }
-  if (brushSelected === 0) {
+  if (brushSelected === 1) {
     drawLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), 14, 15)); // for line work
-    drawLayer.stroke(20, 20, 20, 50);
+    drawLayer.stroke(20, 20, 20, 80);
     drawLayer.line(_x, _y, pX, pY);
   } else if (brushSelected === 4) {
     drawLayer.strokeWeight(abs(random(0, 4)));
