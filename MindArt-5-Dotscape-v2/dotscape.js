@@ -98,7 +98,7 @@ function reset() {
 
   // add all event listeners to the canvas
   canvas.addEventListener('touchmove', moved);
-  canvas.addEventListener('mousemove', moved);
+  // canvas.addEventListener('mousemove', moved);
   canvas.addEventListener('touchstart', touchdown);
   // canvas.addEventListener('mousedown', touchdown);
   canvas.addEventListener('touchend', touchstop);
