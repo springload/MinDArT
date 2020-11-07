@@ -76,8 +76,10 @@
 
   function start() {
     $(".startBtn").remove();
-    started = 1;
+
           fullscreen(1);
+
+              started = 1;
 
     // note currently everything resets on windowResized. Unsure if this is logical yet
 
