@@ -151,7 +151,7 @@
     tempwinMouseX = ((windowWidth / 2) - _x); // record position on downpress
     tempwinMouseY = ((windowHeight / 2) - _y); // record position on downpress
     brushTemp = int(random(0, brush.length-1));
-    console.log(brushTemp);
+
     if (bool) {
       //image(bg, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
       let swatchTemp = int(random(0, 5));
