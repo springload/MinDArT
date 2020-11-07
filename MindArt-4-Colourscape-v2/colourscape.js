@@ -77,7 +77,7 @@
   function start() {
     $(".startBtn").remove();
     started = 1;
-    fullscreen(1);
+
     // note currently everything resets on windowResized. Unsure if this is logical yet
 
     if (audio.isPlaying()) {} else {
@@ -87,6 +87,7 @@
     // sizeWindow();
 
     reset();
+      fullscreen(1);
   }
 
   function setup() {
