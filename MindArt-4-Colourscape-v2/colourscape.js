@@ -232,7 +232,7 @@
     paintLayer.translate(rakeX + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))), rakeY + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))));
     paintLayer.scale(scalar);
     paintLayer.rotate(a);
-    paintLayer.image(rake, 0, 0, 300, 300);
+    paintLayer.image(rake, 0, 0, 200, 200);
     paintLayer.imageMode(CORNER); // centers loaded brushes
     paintLayer.pop();
   }
