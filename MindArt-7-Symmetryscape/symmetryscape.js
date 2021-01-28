@@ -191,7 +191,6 @@ function windowResized() {
   sizeWindow();
   drawLayer.strokeCap(PROJECT);
   dimensionCalc();
-  removeElements(); // todo, incorp into writeTextUI
   writeTextUI();
   checkFS();
   render();
