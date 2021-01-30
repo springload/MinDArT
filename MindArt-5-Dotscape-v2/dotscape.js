@@ -147,11 +147,12 @@ function sizeWindow(){
 function touchdown(ev) {
   isMousedown = 1;
 
+  let _x = winMouseX;
+  let _y = winMouseY;
   for (let i = 0; i < dotsCount; i++) {
-    let _x = winMouseX;
-    let _y = winMouseY;
+
     dots[i].getCol(_x, _y);
-    dots[i].clicked(_y, _y);
+//    dots[i].clicked(_y, _y); //todo/// BUG: , cause of double line issues?
   }
 
   return false;
@@ -234,7 +235,7 @@ function copyLine() {
     let y1 = tempwinMouseY;
     let x2 = tempwinMouseX2;
     let y2 = tempwinMouseY2;
-    permaLine.line(x1, y1, x2, y2);
+  permaLine.line(x1, y1, x2, y2);
     //DATA
     lineStore.push({
       line: {
