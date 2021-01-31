@@ -64,6 +64,11 @@
   let started = 0;
   let storedOrientation, storedOrientationDegrees, rotateDirection;
 
+  // distance vector calculator
+  let smoothDist = [0, 0, 0, 0, 0];
+  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  let velocity = 0;
+
   function preload() {
     bg = loadImage('assets/paper.jpg'); // background paper
     for (let i = 0; i < 15; i++) {
@@ -109,7 +114,7 @@
     stbtn.mousemove(start);
   }
 
-  function setLayerProperties(){
+  function setLayerProperties() {
     imageMode(CENTER); // centers loaded brushes
     blendMode(BLEND); // consider overlay and multiply
     traceLayer.blendMode(LIGHTEST); // consider overlay and multiply
@@ -118,14 +123,13 @@
     traceLayer.colorMode(HSB, 360, 100, 100, 1);
   }
 
-  function reset(){
+  function reset() {
     calcDimensions();
     writeTextUI();
-
     backdrop();
     segLength = windowWidth / 40; // length of delay between touch and paint or line // 15 is a good value
     setProperties(0, 0);
-        paintLayer.clear();
+    paintLayer.clear();
     traceLayer.clear();
     if (!bool) invertTracing();
     render();
@@ -138,16 +142,17 @@
   }
 
   function touchStarted() {
-    if (!started){
+    paintLayer.tint(0, 255); // Display at half opacity
+    if (!started) {
       start();
     }
-      setProperties(winMouseX, winMouseY);
+    setProperties(winMouseX, winMouseY);
   }
 
   function setProperties(_x, _y) {
     tempwinMouseX = ((windowWidth / 2) - _x); // record position on downpress
     tempwinMouseY = ((windowHeight / 2) - _y); // record position on downpress
-    brushTemp = int(random(0, brush.length-1));
+    brushTemp = int(random(0, brush.length - 1));
 
     if (bool) {
       //image(bg, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
@@ -164,32 +169,25 @@
     }
   }
 
-
-
   function touchMoved() {
-
-    if (started){
-
+    if (started) {
       if (eraseState === 0) {
         makeDrawing(winMouseX, winMouseY, pwinMouseX, pwinMouseY);
       } else {
         eraseDrawing();
       }
-
       render();
     }
-
     return false;
   }
 
-  function render(){
+  function render() {
     blendMode(BLEND);
     backdrop();
     blendMode(DARKEST);
     image(paintLayer, width / 2, height / 2);
     blendMode(LIGHTEST);
     image(traceLayer, width / 2, height / 2);
-
   }
 
   function autoDraw() {
@@ -201,21 +199,29 @@
   }
 
   function makeDrawing(_x, _y, pX, pY) {
-    milliCounter = millis();
     if (bool) {
-      if (milliCounter > milliTrack + milliComp) {
-        if (colSat < 10) {
-          colSat += 30
-        }
-        dx = _x - tempX;
-        dy = _y - tempY;
-        angle1 = atan2(dy, dx) + (random(-rotateDrift, rotateDrift)); // https://p5js.org/reference/#/p5/atan2
-        tempX = _x - (cos(angle1) * segLength / 2); // https://p5js.org/examples/interaction-follow-1.html
-        tempY = _y - (sin(angle1) * segLength / 2);
-        scalar = constrain(70 * (random(3, abs(_x - pX)) / windowWidth), 0.2, 1.2);
-        segment(tempX, tempY, angle1, brush[brushTemp], scalar)
-        milliTrack = milliCounter;
+      if (colSat < 10) {
+        colSat += 30
       }
+      dx = _x - tempX;
+      dy = _y - tempY;
+      angle1 = atan2(dy, dx); // https://p5js.org/reference/#/p5/atan2
+      tempX = _x - (cos(angle1) * segLength / 2); // https://p5js.org/examples/interaction-follow-1.html
+      tempY = _y - (sin(angle1) * segLength / 2);
+
+      let sizeJitter = 0.5; // float between 0 and 1.0 (Max);
+      let scatter = 0.5;
+      let density = 0.45;
+      let angleJitter = 0.6;
+      d = 1+(dist(mouseX, mouseY, pmouseX, pmouseY));
+
+      // velocity calc for size, smoothed over an array (average)
+      smoothDist.shift();
+      smoothDist.push(d);
+      velocity = smoothDist.reduce(reducer) / smoothDist.length;
+      scalar = constrain(velocity / 25, 0.05, 5);
+      segment(mouseX, mouseY, pmouseX, pmouseY, angle1, angleJitter, scalar, sizeJitter, scatter, density, d, brush[brushTemp]);
+
     } else {
       for (let i = 0; i < 5; i++) {
         traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
@@ -225,19 +231,34 @@
     }
   }
 
-  function segment(rakeX, rakeY, a, rake, scalar) {
-    paintLayer.tint((colHue += random(-hueDrift, hueDrift)), (colSat += random(-satDrift, satDrift)), colBri, colOpacity); // Display at half opacity
-    paintLayer.push();
-    paintLayer.imageMode(CENTER); // centers loaded brushes
-    paintLayer.translate(rakeX + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))), rakeY + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))));
-    paintLayer.scale(scalar);
-    paintLayer.rotate(a);
-    paintLayer.image(rake, 0, 0, 200, 200);
-    paintLayer.imageMode(CORNER); // centers loaded brushes
-    paintLayer.pop();
+
+  function segment(_x, _y, x2, y2, a, aJ, s, sJ, sC, dens, dist, rake) {
+    dist = dist * dens;
+    let v1 = createVector(_x, _y);
+    let v2 = createVector(x2, y2);
+
+        paintLayer.tint((colHue += random(-hueDrift, hueDrift)), (colSat += random(-satDrift, satDrift)), colBri, colOpacity); // Display at half opacity
+
+    dist = constrain(dist, 1, 10); // so not to create
+
+    for (let i = 1; i < int(dist); i++) {
+
+      let v3 = p5.Vector.lerp(v1, v2, i / (int(dist)));
+      let _s = s * (1 - (randomGaussian(sJ))) * 80;
+      let _a = a + (2 * PI * random(aJ));
+      let sCx = random(-sC, sC) * s;
+      let sCy = random(-sC, sC) * s;
+      v3.x = v3.x + sCx;
+      v3.y = v3.y + sCy;
+
+      paintLayer.push();
+      paintLayer.translate(v3.x, v3.y);
+      paintLayer.rotate(_a);
+      paintLayer.translate(-v3.x, -v3.y);
+      paintLayer.image(rake, v3.x - (_s / 2), v3.y - (_s / 2), _s, _s);
+      paintLayer.pop();
+    }
   }
-
-
 
   function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
@@ -245,10 +266,7 @@
     setLayerProperties();
     writeTextUI();
     checkFS();
-     render();
-
-
-
+    render();
   }
 
 
@@ -267,7 +285,7 @@
         direction = -1;
       }
 
-      if (abs(window.orientation - storedOrientationDegrees) == 270){
+      if (abs(window.orientation - storedOrientationDegrees) == 270) {
         direction = -direction;
       }
       rotateWindow(direction);
@@ -324,10 +342,10 @@
 
 
 
-  function checkFS(){
-    if (!fullscreen()){
-    addFS();
-  }
+  function checkFS() {
+    if (!fullscreen()) {
+      addFS();
+    }
   }
 
   //startSimulation and pauseSimulation defined elsewhere
