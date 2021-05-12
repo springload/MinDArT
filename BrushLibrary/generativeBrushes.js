@@ -39,10 +39,10 @@ function touchMoved() {
 
   calcDynamics();
   //brush_scatter1(mouseX, mouseY, 100, velocity/30, 12, 0); // mouseX, mouseY, qty, spread, particleSize, colourRandom
-  //  brush_lineScatter(mouseX, mouseY, pmouseX, pmouseY, 100, velocity, (0.5*velocity)+4, 0); // mouseX, mouseY, qty, spread, particleSize, colorRandom
-  brush_rake(x, y, x2, y2, angle1, 50, 100, 100, velocity/100); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
-  // brush_pencil(mouseX, mouseY, pmouseX, pmouseY, 50, velocity);
-//  brush_pencil2(mouseX, mouseY, pmouseX, pmouseY, 50, velocity*3);
+    brush_lineScatter(mouseX, mouseY, pmouseX, pmouseY, 100, velocity, (0.5*velocity)+4, 0); // mouseX, mouseY, qty, spread, particleSize, colorRandom
+//  brush_rake(x, y, x2, y2, angle1, 50, 100, 100, velocity/100); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+   // brush_pencil(mouseX, mouseY, pmouseX, pmouseY, 50, velocity);
+  // brush_pencil2(mouseX, mouseY, pmouseX, pmouseY, 50, velocity*3);
 
 
 

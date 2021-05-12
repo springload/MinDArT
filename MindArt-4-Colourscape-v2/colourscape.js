@@ -141,7 +141,7 @@
     if (!started){
       start();
     }
-      setProperties(winMouseX, winMouseY);
+      setProperties(winMouseX, winMouseY); 
   }
 
   function setProperties(_x, _y) {
