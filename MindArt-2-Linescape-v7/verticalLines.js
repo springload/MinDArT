@@ -90,18 +90,22 @@ function invert() {
 }
 
 function next() {
-  yCount = int(yCount *= 1.6);
-  strokeBaseline *= 0.85;
-  strokeMulti *= 0.4;
-  counter++;
-  console.log(yCount);
-  if (counter > 6) {
-    setupDefaults();
-  }
-  setupArrays();
+setTimeout(next2, 150);
+}
+function next2(){
+yCount = int(yCount *= 1.6);
+strokeBaseline *= 0.85;
+strokeMulti *= 0.4;
+counter++;
+console.log(yCount);
+if (counter > 6) {
+  setupDefaults();
+}
+setupArrays();
 
 
 }
+
 
 function touchMoved() {
   store = [];
