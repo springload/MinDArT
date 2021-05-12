@@ -6,6 +6,8 @@
     -ms-user-select:none;
     user-select:none;
     -webkit-tap-highlight-color:rgba(0,0,0,0);
+    background-color: #7cce6c;
+    overflow: hidden;
     }
 
 .arcs4 {
