@@ -77,7 +77,7 @@ function touchMoved() {
   calcDynamics();
 
 blendMode(DIFFERENCE);
-   brush_rake(x, y, x2, y2, angle1, 260, 500, 100, 0.1); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+   brush_rake(x, y, x2, y2, angle1, 50, 500, 100, 0.1); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
 
 
 
