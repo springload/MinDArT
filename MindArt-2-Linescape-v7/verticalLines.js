@@ -130,7 +130,7 @@ function touchMoved() {
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, bool * (1 / _d));
   }
 
-// //  redrawNoise
+// //  redrawNoise 
 //   for (let i = 0; i < store.length; i++) {
 //     let _x = store[i][1];
 //     let _y = store[i][2];
