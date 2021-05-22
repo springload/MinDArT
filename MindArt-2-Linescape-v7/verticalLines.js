@@ -42,7 +42,7 @@ function setup() {
   fromCol= color(0, 0, 0);
   toCol = color(100, 100, 100);
   noFill()
-  strokeWeight(10);
+  stroke(255, 80);
   let marginX = 0;
   let marginY = 0;
 
@@ -63,9 +63,10 @@ function dimensionCalc() {
 
 
 function setupDefaults() {
-  strokeBaseline = 1;
+  strokeBaseline = 1.4;
+  strokeWeight(strokeBaseline*10); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 15;
-  xCount =25;
+  xCount =35;
   counter = 0;
   strokeMulti = 2;
 }
@@ -74,7 +75,10 @@ function setupArrays() {
   for (let x = 0; x < xCount; x++) {
     arr[x] = [];
     for (let y = 0; y < yCount; y++) {
-      arr[x][y] = createVector(((width / xCount) * x), (height / yCount) * y);
+      let _x = (width / xCount) * x;
+      _x = map(_x, 0, width, -200, width+200); // ensures beyond margin
+      let _y = (height / yCount) * y;
+      arr[x][y] = createVector(_x, _y);
     }
   }
   redrawIt();
@@ -88,8 +92,9 @@ function next() {
 setTimeout(next2, 150);
 }
 function next2(){
-yCount = int(yCount *= 1.6);
-strokeBaseline *= 0.85;
+yCount = int(yCount *= 1.3);
+strokeBaseline *= 0.75;
+strokeWeight(strokeBaseline*10); // set a baseline in case strokeWeight within touchMoved is disabled
 strokeMulti *= 0.4;
 counter++;
 if (counter > 6) {
@@ -120,23 +125,23 @@ function touchMoved() {
     let _x = store[i][1];
     let _y = store[i][2];
     let temp = createVector(mouseX, mouseY);
-    _d = _d / 1.5;
-    _d = random(_d / 2, _d);
+    _d = _d / 2;
+    // _d = random(_d / 2, _d);
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, bool * (1 / _d));
   }
 
-  // redrawNoise
-  // for (let i = 0; i < store.length; i++) {
-  //   let _x = store[i][1];
-  //   let _y = store[i][2];
-  //   let xRand = random(-2,2);
-  //   let yRand =  random(-2,2);
-  //   arr[_x][_y].x =   arr[_x][_y].x + xRand;
-  //   arr[_x][_y].y =   arr[_x][_y].y + yRand;
-  // }
+// //  redrawNoise
+//   for (let i = 0; i < store.length; i++) {
+//     let _x = store[i][1];
+//     let _y = store[i][2];
+//     let xRand = random(-2,2);
+//     let yRand =  random(-2,2);
+//     arr[_x][_y].x =   arr[_x][_y].x + xRand;
+//     arr[_x][_y].y =   arr[_x][_y].y + yRand;
+//   }
 
   redrawIt();
-  stroke(200, 40);
+
   ellipse(mouseX, mouseY, brushSize * 2, brushSize * 2);
 }
 
@@ -161,7 +166,7 @@ function touchEnded(){
 
 function redrawIt() {
   // blendMode(BLEND);
-  background(30);
+  background(50);
   // blendMode(ADD); // ADD 4, ex 3 // mult dark... but noice
   for (let y = 0; y < yCount; y++) {
 
