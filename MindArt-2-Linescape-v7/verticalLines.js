@@ -1,29 +1,31 @@
-let arr = [];
-let xCount = 0;
-let yCount = 0;
-let counter = 0;
-let overlay;
+// counters
+let xCount = 0, yCount = 0, counter = 0;
 let fromCol, toCol;
 let store = [];
-let newTextureButton;
+let arr = [];
+
+// dimensions
+let vMax, hMax, wMax;
 bool = 1;
 let brushSize = 120;
 
-let slider1, slider2, slider3;
-
-let vMax, hMax, wMax;
-
+// strokes
 let strokeBaseline = 0;
 let strokeMulti = 0;
 
+//UI elements
+let newTextureButton;
+let slider1, slider2, slider3;
 
 function setup() {
+
+  // setup Basics
   createCanvas(windowWidth, windowHeight);
   background(255);
-  overlay = loadImage('sunset.jpg');
   dimensionCalc();
   // blendMode(DIFFERENCE);
 
+  // UI elements
   newTextureButton = createButton('Next');
   newTextureButton.position(width - (8 * vMax), height - (10 * vH));
   newTextureButton.class("select");
@@ -31,57 +33,50 @@ function setup() {
   newTextureButton.style('height', '3vmax');
   newTextureButton.style('width', '6vmax');
   newTextureButton.mousePressed(next);
-
   slider1 = createSlider(1, 300, 50); // density
-
   slider1.input(updateSize);
-
-  slider1.position(10, 150);
-
+  slider1.position(10, -150);
   slider1.style('width', '300px');
 
-
-
-
+  // display baselines
   fromCol= color(0, 0, 0);
   toCol = color(100, 100, 100);
-
   noFill()
   strokeWeight(10);
-
   let marginX = 0;
   let marginY = 0;
-  // let marginX = width / 8;
-  // let marginY = height / 40;
 
+  // run setup functions
   setupDefaults();
   setupArrays();
-
-
 }
 
-function setupDefaults() {
+function dimensionCalc() {
+  if (width > height) {
+    vMax = width / 100;
+  } else {
+    vMax = height / 100;
+  }
+  vW = width / 100;
+  vH = height / 100;
+}
 
+
+function setupDefaults() {
   strokeBaseline = 1;
   yCount = 15;
-  xCount = 30;
+  xCount =25;
   counter = 0;
   strokeMulti = 2;
 }
 
-
 function setupArrays() {
-
-
-
   for (let x = 0; x < xCount; x++) {
     arr[x] = [];
     for (let y = 0; y < yCount; y++) {
       arr[x][y] = createVector(((width / xCount) * x), (height / yCount) * y);
     }
   }
-
-
   redrawIt();
 }
 
@@ -97,13 +92,10 @@ yCount = int(yCount *= 1.6);
 strokeBaseline *= 0.85;
 strokeMulti *= 0.4;
 counter++;
-console.log(yCount);
 if (counter > 6) {
   setupDefaults();
 }
 setupArrays();
-
-
 }
 
 
@@ -144,10 +136,8 @@ function touchMoved() {
   // }
 
   redrawIt();
-
-
-
-
+  stroke(200, 40);
+  ellipse(mouseX, mouseY, brushSize * 2, brushSize * 2);
 }
 
 function updateSize() {
@@ -164,35 +154,26 @@ function sortFunction(a, b) {
   }
 }
 
+function touchEnded(){
+  // this will effectively redraw the frame sans cursor
+  redrawIt();
+}
 
 function redrawIt() {
-  blendMode(BLEND);
+  // blendMode(BLEND);
   background(30);
-  blendMode(ADD); // ADD 4, ex 3 // mult dark... but noice
+  // blendMode(ADD); // ADD 4, ex 3 // mult dark... but noice
   for (let y = 0; y < yCount; y++) {
 
-    strokeWeight(strokeBaseline + (y * strokeMulti));
+    // strokeWeight(strokeBaseline + (y * strokeMulti));
 
-    stroke(lerpColor(fromCol, toCol, y / yCount));
+    // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
     beginShape();
-
     for (let x = 0; x < xCount; x++) {
       curveVertex(arr[x][y].x, arr[x][y].y)
     }
     endShape();
   }
 
-  stroke(200, 40);
-  ellipse(mouseX, mouseY, brushSize * 2, brushSize * 2);
-}
 
-function dimensionCalc() {
-
-  if (width > height) {
-    vMax = width / 100;
-  } else {
-    vMax = height / 100;
-  }
-  vW = width / 100;
-  vH = height / 100;
 }

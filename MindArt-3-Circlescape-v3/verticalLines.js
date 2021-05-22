@@ -1,5 +1,5 @@
 // distance vector calculator
-let smoothDist = [0, 0, 0, 0, 0];
+let smoothDist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 let velocity = 0;
 
@@ -77,7 +77,7 @@ function touchMoved() {
   calcDynamics();
 
 blendMode(DIFFERENCE);
-   brush_rake(x, y, x2, y2, angle1, 50, 500, 100, 0.1); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+   brush_rake(x, y, x2, y2, angle1, 100, 200+(velocity*3), 100, 0.01); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
 
 
 
@@ -135,11 +135,11 @@ function brush_rake(x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise)
     d = p5.Vector.lerp(a, c, (i / (qtyOfLines + 1)) + randomGaussian(0, (1 / qtyOfLines) * noise));
 
 
-    if (i === 0 || i === vec.length - 1 || (i % 3) === 2) { // if first line, last line or every 3rd line, then thin, else fat
-      strokeWeight(strokeW / 2);
-    } else {
-      strokeWeight(strokeW);
-    }
+    // if (i === 0 || i === vec.length - 1 || (i % 3) === 2) { // if first line, last line or every 3rd line, then thin, else fat
+    //   strokeWeight(strokeW / 2);
+    // } else {
+    //   strokeWeight(strokeW);
+    // }
 
     var n = vec[i];
 
