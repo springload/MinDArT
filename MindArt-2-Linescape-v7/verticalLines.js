@@ -117,7 +117,7 @@ function next2() {
 function touchMoved() {
   store = [];
   // calcDynamics();
-  brushSize = brushSizeBaseline * 1; // change 1 for velocity if desired.
+  // brushSize = brushSizeBaseline * 1; // change 1 for velocity if desired.
   // calculate all points within a distance, then sort...
   for (let x = 0; x < xCount; x++) {
     for (let y = 0; y < yCount; y++) {
