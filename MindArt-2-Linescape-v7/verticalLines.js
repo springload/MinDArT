@@ -121,6 +121,7 @@ function touchMoved() {
 
   if (bool){
   store = [];
+
   // calculate all points within a distance, then sort...
   for (let x = 0; x < xCount; x++) {
     for (let y = 0; y < yCount; y++) {
@@ -131,18 +132,16 @@ function touchMoved() {
     }
   }
 
-  // // sort by size
+  // sort by size
   store.sort(sortFunction);
-  store.reverse();
 
   // // redrawOrganic
-  for (let i = 0; i < store.length/2; i++) {
+  for (let i = 0; i < store.length; i++) {
     let _d = store[i][0];
     let _x = store[i][1];
     let _y = store[i][2];
     let temp = createVector(mouseX, mouseY);
-    _d = _d / 4;
-    // let lerpVal = bool * (1 / _d);
+    _d = _d / 3;
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
   }
 
@@ -167,23 +166,16 @@ function sortFunction(a, b) {
   }
 }
 
-// function touchEnded() {
-//   // this will effectively redraw the frame sans cursor
-//   redrawIt();
-// }
 
 function redrawIt() {
-
   background(50);
-
-
   for (let y = 0; y < yCount; y++) {
     // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
     fill(255-((255/yCount)*y));
     beginShape();
     vertex(0, height);
     for (let x = 0; x < xCount; x++) {
-      curveVertex(arr[x][y].x, arr[x][y].y)
+      vertex(arr[x][y].x, arr[x][y].y)
     }
     vertex(width, height);
     endShape(CLOSE);
