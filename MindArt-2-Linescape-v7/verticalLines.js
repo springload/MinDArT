@@ -84,9 +84,9 @@ function setupArrays() {
     arr[x] = [];
     for (let y = 0; y < yCount; y++) {
       let _x = (width / xCount) * x;
-      _x = map(_x, 0, width, -200, width + 200); // ensures beyond margin
+      _x = map(_x, 0, width, -vW*10, width + vW*10); // ensures beyond margin
       let _y = (height / yCount) * y;
-      _y = map(_y, 0, height, -200, height + 200); // ensures beyond margin
+      _y = map(_y, 0, height, -vH*10, height + vH*10); // ensures beyond margin
       arr[x][y] = createVector(_x, _y);
     }
   }
