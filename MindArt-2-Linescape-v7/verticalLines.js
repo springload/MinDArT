@@ -7,7 +7,7 @@ let arr = [];
 // dimensions
 let vMax, hMax, wMax;
 bool = 1;
-let brushSizeBaseline = 80;
+let brushSizeBaseline = 20;
 
 // strokes
 let strokeBaseline = 0;
