@@ -104,7 +104,6 @@ function next() {
 function next2() {
   yCount = int(yCount *= 1.3);
   strokeBaseline *= 0.75;
-  strokeWeight(strokeBaseline * 10); // set a baseline in case strokeWeight within touchMoved is disabled
   strokeWeight(strokeBaseline * 1); //
   strokeMulti *= 0.4;
   counter++;
