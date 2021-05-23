@@ -9,7 +9,7 @@ let arr = [];
 // dimensions
 let vMax, hMax, wMax;
 bool = 1;
-let brushSizeBaseline = 120;
+let brushSizeBaseline = 80;
 
 // strokes
 let strokeBaseline = 0;
@@ -77,7 +77,6 @@ function setupDefaults() {
   xCount = 25;
   counter = 0;
   strokeMulti = 2;
-
   strokeWeight(1);
   stroke(255, 50);
 }
@@ -108,6 +107,7 @@ function next2() {
   yCount = int(yCount *= 1.3);
   strokeBaseline *= 0.75;
   strokeWeight(strokeBaseline * 10); // set a baseline in case strokeWeight within touchMoved is disabled
+  strokeWeight(strokeBaseline * 1); //
   strokeMulti *= 0.4;
   counter++;
   if (counter > 6) {
