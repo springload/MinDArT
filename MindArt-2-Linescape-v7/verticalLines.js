@@ -81,8 +81,8 @@ function dimensionCalc() {
 function setupDefaults() {
   strokeBaseline = 2;
   strokeWeight(strokeBaseline * 10); // set a baseline in case strokeWeight within touchMoved is disabled
-  yCount = 30;
-  xCount = 20;
+  yCount = 50;
+  xCount = 25;
   counter = 0;
   strokeMulti = 2;
   strokeWeight(1);
@@ -113,7 +113,6 @@ function next() {
 
 function next2() {
   yCount = int(yCount *= 1.3);
-  xCount = int(xCount *= 0.85);
   strokeBaseline *= 0.75;
   strokeWeight(strokeBaseline * 1); //
   strokeMulti *= 0.4;
