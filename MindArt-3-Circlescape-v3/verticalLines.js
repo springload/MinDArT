@@ -116,8 +116,8 @@ function touchMoved() {
   calcDynamics();
 
 blendMode(DIFFERENCE);
-strokeCap(PROJECT);
-brush_rake(x, y, x2, y2, angle1, 50, 200+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+strokeCap(SQUARE);
+brush_rake(x, y, x2, y2, angle1, 40, 200+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
 render();
 }
 
