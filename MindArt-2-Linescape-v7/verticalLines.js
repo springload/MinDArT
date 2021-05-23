@@ -11,7 +11,7 @@ let brushSizeBaseline = 140;
 
 // strokes
 let strokeBaseline = 0;
-let strokeMulti = 0;
+
 
 //UI elements
 let newTextureButton;
@@ -79,13 +79,10 @@ function dimensionCalc() {
 
 
 function setupDefaults() {
-  strokeBaseline = 2;
-  strokeWeight(strokeBaseline * 10); // set a baseline in case strokeWeight within touchMoved is disabled
+  strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 10;
   xCount = 25;
   counter = 0;
-  strokeMulti = 2;
-  strokeWeight(1);
   stroke(255, 50);
 }
 
@@ -108,15 +105,10 @@ function invert() {
 }
 
 function next() {
-  setTimeout(next2, 150);
-}
-
-function next2() {
   yCount = int(yCount *= 1.3);
-  strokeBaseline *= 0.75;
-  strokeWeight(strokeBaseline * 1); //
-  strokeMulti *= 0.4;
+
   counter++;
+
   if (counter > 6) {
     setupDefaults();
   }
@@ -191,6 +183,7 @@ function redrawIt() {
     vertex(0, height);
     for (let x = 0; x < xCount; x++) {
       curveVertex(arr[x][y].x, arr[x][y].y)
+      ellipse(arr[x][y].x, arr[x][y].y, 20, 20)
     }
     vertex(width, height);
     endShape(CLOSE);

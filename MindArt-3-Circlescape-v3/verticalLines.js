@@ -15,6 +15,29 @@ let dragTracker = 0;
 
 let poleArr = [];
 
+let colArray = [
+['#D97398','#A65398','#263F73','#5679A6'],
+['#345573', '#223240', '#F2913D', '#F24B0F'],
+['#080926','#162040','#364C59','#8DA69F'],
+['#345573', '#F2913D', '#223240', '#F24B0F'],
+['#a4fba6','#4ae54a', '#0f9200', '#006203'],
+['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'],
+['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
+['#3C5E73','#F2BBBB','#FFFFFF','#F24444'],
+['#F27ECA','#9726A6','#8F49F2','#6C2EF2'],
+['#BF4B8B', '#3981BF', '#1F628C', '#D92929'],
+['#F2B705','#F27EA9', '#05AFF2', '#F29F05'],
+['#A60321','#D9043D','#F29F05','#D8BA7A'],
+['#F24452', '#5CE3F2', '#F2E205', '#F2CB05'],
+['#2d3157','#34c1bb','#badccc','#ffda4d'],
+['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6'],
+['#3FA663','#2D7345','#3391A6','#262626'],
+['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D']
+];
+let colChoice = 0;
+let arrayChoice = 0;
+
+
 function preload() {
 
 
@@ -23,6 +46,14 @@ function preload() {
 function setup() {
 
   createCanvas(window.innerWidth, window.innerHeight);
+    dimensionCalc();
+
+  newButton = createButton("Next")
+  newButton.class("select");
+  newButton.position(width - (15 * vMax), height - (12.5 * vMax));
+  newButton.style('font-size', '2.6vmax');
+  newButton.style('height', '4.5vmax');
+  newButton.mousePressed(restart);
 
 
   // vector array used to store points, this will max out at 100
@@ -39,17 +70,23 @@ function setup() {
     poleArr.push(tmp);
   }
 
-  // beginShape();
-  // for (let i = 0; i < poleArr.length; i++){
-  // vertex(poleArr[i].x, poleArr[i].y);
-  // }
-  // endShape();
-
 }
 
 function touchEnded() {
   resetVectorStore();
+
 }
+
+function dimensionCalc() {
+  if (width > height) {
+    vMax = width / 100;
+  } else {
+    vMax = height / 100;
+  }
+  vW = width / 100;
+  vH = height / 100;
+}
+
 
 function resetVectorStore() {
   for (let i = 0; i < 1000; i++) {
@@ -59,9 +96,11 @@ function resetVectorStore() {
 
 function touchStarted(){
   dragTracker = 0;
-  stroke(random(0,255), random(0,255), random(0,255));
   axis = createVector(mouseX, mouseY);
+  colChoice = (colChoice + 1)%4;
+  stroke(colArray[arrayChoice][colChoice]);
 }
+
 
 function touchMoved() {
   // background(255);
@@ -77,11 +116,9 @@ function touchMoved() {
   calcDynamics();
 
 blendMode(DIFFERENCE);
-   brush_rake(x, y, x2, y2, angle1, 100, 200+(velocity*3), 100, 0.01); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
-
-
-
-  render();
+strokeCap(PROJECT);
+brush_rake(x, y, x2, y2, angle1, 100, 200+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+render();
 }
 
 function render() {
@@ -96,7 +133,6 @@ function calcDynamics() {
   smoothDist.shift();
   smoothDist.push(d);
   velocity = smoothDist.reduce(reducer) / smoothDist.length;
-
 
   // calculate mouseDirection
   let dx = mouseX - x;
@@ -117,10 +153,10 @@ function calcDynamics() {
 
 
 
-function brush_rake(x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise) {
+function brush_rake(x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, ns) {
 
   strokeW = ceil(brushWidth / qtyOfLines);
-  strokeWeight(strokeW);
+  strokeWeight(2);
 
   var a = createVector(x, y);
   var b = createVector(0, brushWidth / 2);
@@ -129,26 +165,26 @@ function brush_rake(x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise)
   a.sub(b);
 
   for (var i = 0; i < qtyOfLines; i++) {
-    // cool
-    // d = p5.Vector.lerp(a, c, (i/qtyOfLines)*random(0,1));
 
-    d = p5.Vector.lerp(a, c, (i / (qtyOfLines + 1)) + randomGaussian(0, (1 / qtyOfLines) * noise));
+    d = p5.Vector.lerp(a, c, (i / (qtyOfLines + 1)));
 
+    // // randomise
+    // vec[i].x = vec[i].x + random(-ns, ns);
+    //   vec[i].y = vec[i].y + random(-ns, ns);
 
-    // if (i === 0 || i === vec.length - 1 || (i % 3) === 2) { // if first line, last line or every 3rd line, then thin, else fat
-    //   strokeWeight(strokeW / 2);
-    // } else {
-    //   strokeWeight(strokeW);
-    // }
-
-    var n = vec[i];
-
-
-
-
+    // strokeWeight(noise(d.x, d.y)*3)
 
     line(vec[i].x, vec[i].y, d.x, d.y);
-    vec[i] = d;
+
+
+  vec[i] = d;
   }
-  // display();
+}
+
+function restart(){
+  arrayChoice++;
+  arrayChoice = arrayChoice%colArray.length;
+  blendMode(BLEND);
+  background(colArray[arrayChoice][0]);
+  // blend(DIFFERENCE);
 }
