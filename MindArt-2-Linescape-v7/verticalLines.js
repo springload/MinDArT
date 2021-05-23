@@ -165,19 +165,19 @@ function sortFunction(a, b) {
 // }
 
 function redrawIt() {
-  // blendMode(BLEND);
+
   background(50);
-  // blendMode(DARKEST); // ADD 4, ex 3 // mult dark... but noice
+
 
   for (let y = 0; y < yCount; y++) {
     // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
-    // fill
+    fill(255-((255/yCount)*y));
     beginShape();
     vertex(0, height);
     for (let x = 0; x < xCount; x++) {
       curveVertex(arr[x][y].x, arr[x][y].y)
     }
     vertex(width, height);
-    endShape();
+    endShape(CLOSE);
   }
 }
