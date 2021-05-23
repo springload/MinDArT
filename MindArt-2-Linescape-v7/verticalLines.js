@@ -1,7 +1,5 @@
 // counters
-let xCount = 0,
-  yCount = 0,
-  counter = 0;
+let xCount = 0, yCount = 0, counter = 0;
 let fromCol, toCol;
 let store = [];
 let arr = [];
@@ -180,6 +178,6 @@ function redrawIt() {
       curveVertex(arr[x][y].x, arr[x][y].y)
     }
     vertex(width, height);
-    endShape(CLOSE);
+    endShape();
   }
 }
