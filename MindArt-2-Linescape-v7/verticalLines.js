@@ -174,11 +174,11 @@ function redrawIt() {
     // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
     fill(255-((255/yCount)*y));
     beginShape();
-    vertex(0, height);
+    curveVertex(0, height);
     for (let x = 0; x < xCount; x++) {
-      vertex(arr[x][y].x, arr[x][y].y)
+      curveVertex(arr[x][y].x, arr[x][y].y)
     }
-    vertex(width, height);
+    curveVertex(width, height);
     endShape(CLOSE);
   }
 }
