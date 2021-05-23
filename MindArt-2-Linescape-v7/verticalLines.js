@@ -197,7 +197,7 @@ function redrawIt() {
   // blendMode(DARKEST); // ADD 4, ex 3 // mult dark... but noice
 
     for (let y = 0; y < yCount; y++) {
-  fill((180-(180 / yCount) * y));
+  // fill((180-(180 / yCount) * y));
   //  strokeWeight(noise(y) * (strokeBaseline + (y * strokeMulti)));
   // strokeWeight(noise(y)*strokeBaseline*10)
   // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
