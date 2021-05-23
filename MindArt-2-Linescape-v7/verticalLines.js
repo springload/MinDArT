@@ -122,7 +122,7 @@ function touchMoved() {
   for (let x = 0; x < xCount; x++) {
     for (let y = 0; y < yCount; y++) {
       let d = (dist(mouseX, mouseY, arr[x][y].x, arr[x][y].y));
-      if (d < brushSize) {
+      if (d < brushSizeBaseline) {
         store.push([d, x, y]);
       }
     }
