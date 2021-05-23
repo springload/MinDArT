@@ -39,6 +39,16 @@ function setup() {
   newTextureButton.style('height', '3vmax');
   newTextureButton.style('width', '6vmax');
   newTextureButton.mousePressed(next);
+
+  //invert
+  newTextureButton = createButton('Swap');
+  newTextureButton.position(2 * vMax, height - (10 * vH));
+  newTextureButton.class("select");
+  newTextureButton.style('font-size', '1.3vmax');
+  newTextureButton.style('height', '3vmax');
+  newTextureButton.style('width', '6vmax');
+  newTextureButton.mousePressed(invert);
+
   slider1 = createSlider(1, 300, 50); // density
   slider1.input(updateSize);
   slider1.position(10, -150);
@@ -72,7 +82,7 @@ function setupDefaults() {
   strokeBaseline = 2;
   strokeWeight(strokeBaseline * 10); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 10;
-  xCount = 25;
+  xCount = 60;
   counter = 0;
   strokeMulti = 2;
   strokeWeight(1);
@@ -94,7 +104,7 @@ function setupArrays() {
 }
 
 function invert() {
-  bool = -bool;
+  bool = abs(bool - 1);
 }
 
 function next() {
@@ -115,6 +125,8 @@ function next2() {
 
 
 function touchMoved() {
+
+  if (bool){
   store = [];
   // calcDynamics();
   // brushSize = brushSizeBaseline * 1; // change 1 for velocity if desired.
@@ -142,10 +154,14 @@ function touchMoved() {
   }
 
   redrawIt();
-
+} else {
+strokeWeight(10);
+line(mouseX, mouseY, pmouseX, pmouseY);
+}
 }
 
 function updateSize() {
+
   brushSizeBaseline = slider1.value();
 }
 
