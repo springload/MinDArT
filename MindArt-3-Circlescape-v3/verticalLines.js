@@ -117,7 +117,7 @@ function touchMoved() {
 
 blendMode(DIFFERENCE);
 strokeCap(PROJECT);
-brush_rake(x, y, x2, y2, angle1, 100, 200+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+brush_rake(x, y, x2, y2, angle1, 30, 200+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
 render();
 }
 
