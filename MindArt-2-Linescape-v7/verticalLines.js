@@ -1,5 +1,6 @@
 // counters
-let xCount = 0, yCount = 0, counter = 0;
+let xCount = 0,
+  yCount = 0,
 let fromCol, toCol;
 let store = [];
 let arr = [];
@@ -17,6 +18,10 @@ let strokeMulti = 0;
 let newTextureButton;
 let slider1, slider2, slider3;
 
+// distance vector calculator
+let smoothDist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
+let velocity = 0;
 function setup() {
 
   // setup Basics
@@ -42,7 +47,7 @@ function setup() {
   fromCol= color(0, 0, 0);
   toCol = color(100, 100, 100);
   noFill()
-  stroke(255, 80);
+  stroke(255, 140);
   let marginX = 0;
   let marginY = 0;
 
@@ -63,10 +68,12 @@ function dimensionCalc() {
 
 
 function setupDefaults() {
-  strokeBaseline = 1.4;
   strokeWeight(strokeBaseline*10); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 15;
-  xCount =35;
+  strokeBaseline = 2;
+  strokeWeight(strokeBaseline * 10); // set a baseline in case strokeWeight within touchMoved is disabled
+  yCount = 10;
+  xCount = 30;
   counter = 0;
   strokeMulti = 2;
 }
@@ -76,8 +83,8 @@ function setupArrays() {
     arr[x] = [];
     for (let y = 0; y < yCount; y++) {
       let _x = (width / xCount) * x;
-      _x = map(_x, 0, width, -200, width+200); // ensures beyond margin
       let _y = (height / yCount) * y;
+      _y = map(_y, 0, height, -200, height + 200); // ensures beyond margin
       arr[x][y] = createVector(_x, _y);
     }
   }
@@ -89,7 +96,6 @@ function invert() {
 }
 
 function next() {
-setTimeout(next2, 150);
 }
 function next2(){
 yCount = int(yCount *= 1.3);
@@ -97,16 +103,19 @@ strokeBaseline *= 0.75;
 strokeWeight(strokeBaseline*10); // set a baseline in case strokeWeight within touchMoved is disabled
 strokeMulti *= 0.4;
 counter++;
-if (counter > 6) {
   setupDefaults();
 }
 setupArrays();
+  }
+  setupArrays();
 }
 
 
 function touchMoved() {
   store = [];
 
+  // calcDynamics();
+  brushSize = brushSizeBaseline * 1; // change 1 for velocity if desired.
   // calculate all points within a distance, then sort...
   for (let x = 0; x < xCount; x++) {
     for (let y = 0; y < yCount; y++) {
@@ -128,6 +137,8 @@ function touchMoved() {
     _d = _d / 2;
     // _d = random(_d / 2, _d);
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, bool * (1 / _d));
+    let lerpVal = (bool * (1 / _d));
+    arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, lerpVal);
   }
 
 // //  redrawNoise 
@@ -139,16 +150,31 @@ function touchMoved() {
 //     arr[_x][_y].x =   arr[_x][_y].x + xRand;
 //     arr[_x][_y].y =   arr[_x][_y].y + yRand;
 //   }
+  //   for (let i = 0; i < store.length; i++) {
+  //     let _x = store[i][1];
+  //     let _y = store[i][2];
+  //     arr[_x][_y].x =   arr[_x][_y].x + xRand;
+  //     arr[_x][_y].y =   arr[_x][_y].y + yRand;
+  //   }
 
   redrawIt();
 
+  noFill();
   ellipse(mouseX, mouseY, brushSize * 2, brushSize * 2);
 }
 
 function updateSize() {
-  brushSize = slider1.value();
+  brushSizeBaseline = slider1.value();
 }
 
+//   // calculate the distance between mouse position, and previous position. Average the previous
+//   let d = dist(mouseX, mouseY, pmouseX, pmouseY);
+//   smoothDist.shift();
+//   smoothDist.push(d);
+//   velocity = (10+(smoothDist.reduce(reducer) / smoothDist.length))/20;
+//
+//
+// }
 
 
 function sortFunction(a, b) {
@@ -159,7 +185,7 @@ function sortFunction(a, b) {
   }
 }
 
-function touchEnded(){
+function touchEnded() {
   // this will effectively redraw the frame sans cursor
   redrawIt();
 }
@@ -167,17 +193,36 @@ function touchEnded(){
 function redrawIt() {
   // blendMode(BLEND);
   background(50);
-  // blendMode(ADD); // ADD 4, ex 3 // mult dark... but noice
+  // blendMode(DARKEST); // ADD 4, ex 3 // mult dark... but noice
+
+  strokeWeight(1);
+  // noStroke();
+  stroke(255, 50);
   for (let y = 0; y < yCount; y++) {
 
-    // strokeWeight(strokeBaseline + (y * strokeMulti));
+  fill((180-(180 / yCount) * y));
+
+  //  strokeWeight(noise(y) * (strokeBaseline + (y * strokeMulti)));
+    // strokeWeight(noise(y)*strokeBaseline*10)
 
     // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
     beginShape();
+
+  vertex(0, height);
+
     for (let x = 0; x < xCount; x++) {
       curveVertex(arr[x][y].x, arr[x][y].y)
     }
-    endShape();
+
+    vertex(width, height);
+
+
+
+
+
+    endShape(CLOSE);
+
+
   }
 
 
