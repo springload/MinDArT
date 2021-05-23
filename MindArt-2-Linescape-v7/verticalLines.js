@@ -106,6 +106,7 @@ function invert() {
 
 function next() {
   yCount = int(yCount *= 1.3);
+  xCount = int(xCount *= 0.7);
 
   counter++;
 
