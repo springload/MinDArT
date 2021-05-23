@@ -77,6 +77,9 @@ function setupDefaults() {
   xCount = 25;
   counter = 0;
   strokeMulti = 2;
+
+  strokeWeight(1);
+  stroke(255, 50);
 }
 
 function setupArrays() {
@@ -192,8 +195,7 @@ function redrawIt() {
   // blendMode(BLEND);
   background(50);
   // blendMode(DARKEST); // ADD 4, ex 3 // mult dark... but noice
-  strokeWeight(1);
-  stroke(255, 50);
+
     for (let y = 0; y < yCount; y++) {
   fill((180-(180 / yCount) * y));
   //  strokeWeight(noise(y) * (strokeBaseline + (y * strokeMulti)));
