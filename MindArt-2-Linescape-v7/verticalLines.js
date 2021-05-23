@@ -113,7 +113,7 @@ function next() {
     setupDefaults();
   }
   setupArrays();
-  console.log(yCount);
+  // console.log(yCount);
 }
 
 
@@ -132,10 +132,11 @@ function touchMoved() {
   }
 
   // // sort by size
-  // store.sort(sortFunction);
+  store.sort(sortFunction);
+  store.reverse();
 
   // // redrawOrganic
-  for (let i = 0; i < store.length; i++) {
+  for (let i = 0; i < store.length/2; i++) {
     let _d = store[i][0];
     let _x = store[i][1];
     let _y = store[i][2];
@@ -183,7 +184,6 @@ function redrawIt() {
     vertex(0, height);
     for (let x = 0; x < xCount; x++) {
       curveVertex(arr[x][y].x, arr[x][y].y)
-      // ellipse(arr[x][y].x, arr[x][y].y, 20, 20)
     }
     vertex(width, height);
     endShape(CLOSE);
