@@ -74,7 +74,7 @@ function setupDefaults() {
   strokeBaseline = 2;
   strokeWeight(strokeBaseline * 10); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 10;
-  xCount = 30;
+  xCount = 25;
   counter = 0;
   strokeMulti = 2;
 }
@@ -155,8 +155,8 @@ function touchMoved() {
 
   redrawIt();
 
-  noFill();
-  ellipse(mouseX, mouseY, brushSize * 2, brushSize * 2);
+  // noFill();
+  // ellipse(mouseX, mouseY, brushSize * 2, brushSize * 2);
 }
 
 function updateSize() {
@@ -192,36 +192,19 @@ function redrawIt() {
   // blendMode(BLEND);
   background(50);
   // blendMode(DARKEST); // ADD 4, ex 3 // mult dark... but noice
-
   strokeWeight(1);
-  // noStroke();
   stroke(255, 50);
-  for (let y = 0; y < yCount; y++) {
-
+    for (let y = 0; y < yCount; y++) {
   fill((180-(180 / yCount) * y));
-
   //  strokeWeight(noise(y) * (strokeBaseline + (y * strokeMulti)));
-    // strokeWeight(noise(y)*strokeBaseline*10)
-
-    // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
-    beginShape();
-
+  // strokeWeight(noise(y)*strokeBaseline*10)
+  // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
+        beginShape();
   vertex(0, height);
-
     for (let x = 0; x < xCount; x++) {
       curveVertex(arr[x][y].x, arr[x][y].y)
     }
-
     vertex(width, height);
-
-
-
-
-
     endShape(CLOSE);
-
-
   }
-
-
 }
