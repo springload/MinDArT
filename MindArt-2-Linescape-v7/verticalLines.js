@@ -87,9 +87,9 @@ function setupArrays() {
     arr[x] = [];
     for (let y = 0; y < yCount; y++) {
       let _x = (width / xCount) * x;
-      _x = map(_x, 0, width, -vW*10, width + vW*10); // ensures beyond margin
+      _x = map(_x, 0, width, -vW * 10, width + vW * 10); // ensures beyond margin
       let _y = (height / yCount) * y;
-      _y = map(_y, 0, height, -vH*10, height + vH*10); // ensures beyond margin
+      _y = map(_y, 0, height, -vH * 10, height + vH * 10); // ensures beyond margin
       arr[x][y] = createVector(_x, _y);
     }
   }
@@ -140,42 +140,17 @@ function touchMoved() {
     let _y = store[i][2];
     let temp = createVector(mouseX, mouseY);
     _d = _d / 2;
-    // _d = random(_d / 2, _d);
     // let lerpVal = bool * (1 / _d);
-    let lerpVal = (bool * (1 / _d));
-    arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, lerpVal);
+    arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
   }
-
-  // //  redrawNoise
-  //   for (let i = 0; i < store.length; i++) {
-  //     let _x = store[i][1];
-  //     let _y = store[i][2];
-  //     let xRand = random(-2,2);
-  //     let yRand =  random(-2,2);
-  //     arr[_x][_y].x =   arr[_x][_y].x + xRand;
-  //     arr[_x][_y].y =   arr[_x][_y].y + yRand;
-  //   }
 
   redrawIt();
 
-  // noFill();
-  // ellipse(mouseX, mouseY, brushSize * 2, brushSize * 2);
 }
 
 function updateSize() {
   brushSizeBaseline = slider1.value();
 }
-
-// function calcDynamics() {
-//
-//   // calculate the distance between mouse position, and previous position. Average the previous
-//   let d = dist(mouseX, mouseY, pmouseX, pmouseY);
-//   smoothDist.shift();
-//   smoothDist.push(d);
-//   velocity = (10+(smoothDist.reduce(reducer) / smoothDist.length))/20;
-//
-//
-// }
 
 
 function sortFunction(a, b) {
@@ -186,23 +161,21 @@ function sortFunction(a, b) {
   }
 }
 
-function touchEnded() {
-  // this will effectively redraw the frame sans cursor
-  redrawIt();
-}
+// function touchEnded() {
+//   // this will effectively redraw the frame sans cursor
+//   redrawIt();
+// }
 
 function redrawIt() {
   // blendMode(BLEND);
   background(50);
   // blendMode(DARKEST); // ADD 4, ex 3 // mult dark... but noice
 
-    for (let y = 0; y < yCount; y++) {
-  // fill((180-(180 / yCount) * y));
-  //  strokeWeight(noise(y) * (strokeBaseline + (y * strokeMulti)));
-  // strokeWeight(noise(y)*strokeBaseline*10)
-  // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
-        beginShape();
-  vertex(0, height);
+  for (let y = 0; y < yCount; y++) {
+    // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
+    // fill
+    beginShape();
+    vertex(0, height);
     for (let x = 0; x < xCount; x++) {
       curveVertex(arr[x][y].x, arr[x][y].y)
     }
