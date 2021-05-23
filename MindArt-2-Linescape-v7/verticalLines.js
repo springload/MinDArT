@@ -113,6 +113,7 @@ function next() {
     setupDefaults();
   }
   setupArrays();
+  console.log(yCount);
 }
 
 
@@ -120,8 +121,6 @@ function touchMoved() {
 
   if (bool){
   store = [];
-  // calcDynamics();
-  // brushSize = brushSizeBaseline * 1; // change 1 for velocity if desired.
   // calculate all points within a distance, then sort...
   for (let x = 0; x < xCount; x++) {
     for (let y = 0; y < yCount; y++) {
@@ -132,7 +131,8 @@ function touchMoved() {
     }
   }
 
-  store.sort(sortFunction);
+  // // sort by size
+  // store.sort(sortFunction);
 
   // // redrawOrganic
   for (let i = 0; i < store.length; i++) {
@@ -183,7 +183,7 @@ function redrawIt() {
     vertex(0, height);
     for (let x = 0; x < xCount; x++) {
       curveVertex(arr[x][y].x, arr[x][y].y)
-      ellipse(arr[x][y].x, arr[x][y].y, 20, 20)
+      // ellipse(arr[x][y].x, arr[x][y].y, 20, 20)
     }
     vertex(width, height);
     endShape(CLOSE);
