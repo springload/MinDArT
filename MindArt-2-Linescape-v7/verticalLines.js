@@ -179,6 +179,6 @@ function redrawIt() {
       curveVertex(arr[x][y].x, arr[x][y].y)
     }
     curveVertex(width, height);
-    endShape(CLOSE);
+    endShape();
   }
 }
