@@ -1,6 +1,7 @@
 // counters
 let xCount = 0,
   yCount = 0,
+  counter = 0;
 let fromCol, toCol;
 let store = [];
 let arr = [];
@@ -8,7 +9,7 @@ let arr = [];
 // dimensions
 let vMax, hMax, wMax;
 bool = 1;
-let brushSize = 120;
+let brushSizeBaseline = 120;
 
 // strokes
 let strokeBaseline = 0;
@@ -22,6 +23,8 @@ let slider1, slider2, slider3;
 let smoothDist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 let velocity = 0;
+
+
 function setup() {
 
   // setup Basics
@@ -44,7 +47,7 @@ function setup() {
   slider1.style('width', '300px');
 
   // display baselines
-  fromCol= color(0, 0, 0);
+  fromCol = color(0, 0, 0);
   toCol = color(100, 100, 100);
   noFill()
   stroke(255, 140);
@@ -68,8 +71,6 @@ function dimensionCalc() {
 
 
 function setupDefaults() {
-  strokeWeight(strokeBaseline*10); // set a baseline in case strokeWeight within touchMoved is disabled
-  yCount = 15;
   strokeBaseline = 2;
   strokeWeight(strokeBaseline * 10); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 10;
@@ -83,6 +84,7 @@ function setupArrays() {
     arr[x] = [];
     for (let y = 0; y < yCount; y++) {
       let _x = (width / xCount) * x;
+      _x = map(_x, 0, width, -200, width + 200); // ensures beyond margin
       let _y = (height / yCount) * y;
       _y = map(_y, 0, height, -200, height + 200); // ensures beyond margin
       arr[x][y] = createVector(_x, _y);
@@ -96,16 +98,17 @@ function invert() {
 }
 
 function next() {
+  setTimeout(next2, 150);
 }
-function next2(){
-yCount = int(yCount *= 1.3);
-strokeBaseline *= 0.75;
-strokeWeight(strokeBaseline*10); // set a baseline in case strokeWeight within touchMoved is disabled
-strokeMulti *= 0.4;
-counter++;
-  setupDefaults();
-}
-setupArrays();
+
+function next2() {
+  yCount = int(yCount *= 1.3);
+  strokeBaseline *= 0.75;
+  strokeWeight(strokeBaseline * 10); // set a baseline in case strokeWeight within touchMoved is disabled
+  strokeMulti *= 0.4;
+  counter++;
+  if (counter > 6) {
+    setupDefaults();
   }
   setupArrays();
 }
@@ -113,7 +116,6 @@ setupArrays();
 
 function touchMoved() {
   store = [];
-
   // calcDynamics();
   brushSize = brushSizeBaseline * 1; // change 1 for velocity if desired.
   // calculate all points within a distance, then sort...
@@ -136,23 +138,17 @@ function touchMoved() {
     let temp = createVector(mouseX, mouseY);
     _d = _d / 2;
     // _d = random(_d / 2, _d);
-    arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, bool * (1 / _d));
+    // let lerpVal = bool * (1 / _d);
     let lerpVal = (bool * (1 / _d));
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, lerpVal);
   }
 
-// //  redrawNoise 
-//   for (let i = 0; i < store.length; i++) {
-//     let _x = store[i][1];
-//     let _y = store[i][2];
-//     let xRand = random(-2,2);
-//     let yRand =  random(-2,2);
-//     arr[_x][_y].x =   arr[_x][_y].x + xRand;
-//     arr[_x][_y].y =   arr[_x][_y].y + yRand;
-//   }
+  // //  redrawNoise
   //   for (let i = 0; i < store.length; i++) {
   //     let _x = store[i][1];
   //     let _y = store[i][2];
+  //     let xRand = random(-2,2);
+  //     let yRand =  random(-2,2);
   //     arr[_x][_y].x =   arr[_x][_y].x + xRand;
   //     arr[_x][_y].y =   arr[_x][_y].y + yRand;
   //   }
@@ -167,6 +163,8 @@ function updateSize() {
   brushSizeBaseline = slider1.value();
 }
 
+// function calcDynamics() {
+//
 //   // calculate the distance between mouse position, and previous position. Average the previous
 //   let d = dist(mouseX, mouseY, pmouseX, pmouseY);
 //   smoothDist.shift();
