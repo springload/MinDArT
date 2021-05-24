@@ -87,13 +87,14 @@ function setupDefaults() {
 }
 
 function setupArrays() {
+  arr = [];
   for (let x = 0; x < xCount; x++) {
     arr[x] = [];
     for (let y = 0; y < yCount; y++) {
       let _x = (width / xCount) * x;
-      _x = map(_x, 0, width, -vW * 10, width + vW * 10); // ensures beyond margin
+      _x = map(_x, 0, width, vW * 10, width - (vW * 10)); // ensures beyond margin
       let _y = (height / yCount) * y;
-      _y = map(_y, 0, height, -vH * 10, height + vH * 10); // ensures beyond margin
+       _y = map(_y, 0, height, vH * 10, height - (vH * 10)); // ensures beyond margin
       arr[x][y] = createVector(_x, _y);
     }
   }
@@ -173,12 +174,21 @@ function redrawIt() {
   for (let y = 0; y < yCount; y++) {
     // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
     fill(255-((255/yCount)*y));
+
     beginShape();
-    curveVertex(0, height);
-    for (let x = 0; x < xCount; x++) {
-      curveVertex(arr[x][y].x, arr[x][y].y)
+  vertex(0, height);
+  vertex(0, height);
+  vertex(arr[0][y].x, (arr[0][y].y + height)/2);
+
+   for (let x = 0; x < xCount; x++) {
+    curveVertex(arr[x][y].x, arr[x][y].y);
     }
-    curveVertex(width, height);
+
+    vertex(arr[xCount-1][y].x, (arr[xCount-1][y].y+height)/2);
+    vertex(width, height);
+        vertex(width, height);
+        vertex(0, height);
     endShape();
+
   }
 }
