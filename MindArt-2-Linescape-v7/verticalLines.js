@@ -51,7 +51,7 @@ function setup() {
 
   slider1 = createSlider(-500, 500, 0); // density
   slider1.input(updateSize);
-  slider1.position(10, 150);
+  slider1.position(10, -150);
   slider1.style('width', '300px');
 
   // display baselines
