@@ -180,19 +180,19 @@ function redrawIt() {
 
 let vvW = -10*vW;
 let vvH = -10*vH;
-
-  vertex(-vvW, height+vvH);
-  vertex(-vvW, height+vvH);
-  vertex(arr[0][y].x, (arr[0][y].y + height)/2);
+  //
+  // vertex(-vvW, height+vvH);
+  // vertex(-vvW, height+vvH);
+  // vertex(arr[0][y].x, (arr[0][y].y + height)/2);
 
    for (let x = 0; x < xCount; x++) {
     curveVertex(arr[x][y].x, arr[x][y].y);
     }
 
-    vertex(arr[xCount-1][y].x, (arr[xCount-1][y].y+height)/2);
-    vertex(width+vvW, height+vvH);
-        vertex(width+vvW, height+vvH);
-        vertex(-vvW, height+vvH);
+    // vertex(arr[xCount-1][y].x, (arr[xCount-1][y].y+height)/2);
+    // vertex(width+vvW, height+vvH);
+    //     vertex(width+vvW, height+vvH);
+    //     vertex(-vvW, height+vvH);
     endShape();
 
   }
