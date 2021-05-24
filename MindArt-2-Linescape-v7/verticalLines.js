@@ -181,7 +181,7 @@ function redrawIt() {
   vertex(arr[0][y].x, (arr[0][y].y + height)/2);
 
    for (let x = 0; x < xCount; x++) {
-    curveVertex(arr[x][y].x, arr[x][y].y);
+    vertex(arr[x][y].x, arr[x][y].y);
     }
 
     vertex(arr[xCount-1][y].x, (arr[xCount-1][y].y+height)/2);
