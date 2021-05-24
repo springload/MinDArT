@@ -49,9 +49,9 @@ function setup() {
   newTextureButton.style('width', '6vmax');
   newTextureButton.mousePressed(invert);
 
-  slider1 = createSlider(1, 300, 50); // density
+  slider1 = createSlider(-500, 500, 0); // density
   slider1.input(updateSize);
-  slider1.position(10, -150);
+  slider1.position(10, 150);
   slider1.style('width', '300px');
 
   // display baselines
@@ -81,7 +81,7 @@ function dimensionCalc() {
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 10;
-  xCount =25;
+  xCount =35;
   counter = 0;
   stroke(255, 50);
 }
@@ -92,9 +92,9 @@ function setupArrays() {
     arr[x] = [];
     for (let y = 0; y < yCount; y++) {
       let _x = (width / xCount) * x;
-      _x = map(_x, 0, width, vW * 10, width - (vW * 10)); // ensures beyond margin
+      _x = map(_x, 0, width, vW * 3, width - (vW * 3)); // ensures beyond margin
       let _y = (height / yCount) * y;
-       _y = map(_y, 0, height, vH * 10, height - (vH * 10)); // ensures beyond margin
+       _y = map(_y, 0, height, vH * 3, height - (vH *3)); // ensures beyond margin
       arr[x][y] = createVector(_x, _y);
     }
   }
@@ -106,7 +106,7 @@ function invert() {
 }
 
 function next() {
-  yCount = int(yCount *= 1.3);
+  yCount = int(yCount *= 1.5);
   xCount = int(xCount *= 0.9);
 
   counter++;
@@ -156,7 +156,8 @@ line(mouseX, mouseY, pmouseX, pmouseY);
 
 function updateSize() {
 
-  brushSizeBaseline = slider1.value();
+
+  curveTightness(slider1.value()/100);
 }
 
 
