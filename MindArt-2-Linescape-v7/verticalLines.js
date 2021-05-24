@@ -174,7 +174,7 @@ function redrawIt() {
   background(50);
   for (let y = 0; y < yCount; y++) {
     // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
-    fill(255-((255/yCount)*y));
+  //  fill(255-((255/yCount)*y));
 
     beginShape();
 
