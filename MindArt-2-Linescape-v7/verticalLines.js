@@ -92,14 +92,14 @@ function setupArrays() {
     arr[x] = [];
     for (let y = 0; y < yCount; y++) {
       let _x = (width / xCount) * x;
-      _x = map(_x, 0, width, vW * 10, width - (vW * 10)); // ensures beyond margin
+      _x = map(_x, 0, width, -vW * 10, width + (vW * 10)); // ensures beyond margin
       let _y = (height / yCount) * y;
-       _y = map(_y, 0, height, vH * 10, height - (vH * 10)); // ensures beyond margin
+       _y = map(_y, 0, height, -vH * 10, height + (vH * 10)); // ensures beyond margin
       arr[x][y] = createVector(_x, _y);
     }
   }
   redrawIt();
-}
+}z
 
 function invert() {
   bool = abs(bool - 1);
@@ -176,8 +176,12 @@ function redrawIt() {
     fill(255-((255/yCount)*y));
 
     beginShape();
-  vertex(0, height);
-  vertex(0, height);
+
+let vvW = 10*vW;
+let vvH = 10*vH;
+
+  vertex(-vvW, height+vvH);
+  vertex(-vvW, height+vvH);
   vertex(arr[0][y].x, (arr[0][y].y + height)/2);
 
    for (let x = 0; x < xCount; x++) {
@@ -185,9 +189,9 @@ function redrawIt() {
     }
 
     vertex(arr[xCount-1][y].x, (arr[xCount-1][y].y+height)/2);
-    vertex(width, height);
-        vertex(width, height);
-        vertex(0, height);
+    vertex(width+vvW, height+vvH);
+        vertex(width+vvW, height+vvH);
+        vertex(-vvW, height+vvH);
     endShape();
 
   }
