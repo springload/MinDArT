@@ -41,13 +41,13 @@ function setup() {
   newTextureButton.mousePressed(next);
 
   //invert
-  newTextureButton = createButton('Swap');
-  newTextureButton.position(2 * vMax, height - (10 * vH));
-  newTextureButton.class("select");
-  newTextureButton.style('font-size', '1.3vmax');
-  newTextureButton.style('height', '3vmax');
-  newTextureButton.style('width', '6vmax');
-  newTextureButton.mousePressed(invert);
+  swapButton = createButton('Draw');
+  swapButton.position(2 * vMax, height - (10 * vH));
+  swapButton.class("select");
+  swapButton.style('font-size', '1.3vmax');
+  swapButton.style('height', '3vmax');
+  swapButton.style('width', '6vmax');
+  swapButton.mousePressed(invert);
 
   slider1 = createSlider(-500, 500, 0); // density
   slider1.input(updateSize);
@@ -99,10 +99,20 @@ function setupArrays() {
     }
   }
   redrawIt();
-}z
+}
 
 function invert() {
   bool = abs(bool - 1);
+
+  if (bool){
+      stroke(255, 50);
+      strokeWeight(2);
+      swapButton.html('Draw');
+  } else {
+      stroke(255, 255);
+      strokeWeight(4);
+      swapButton.html('Push');
+  }
 }
 
 function next() {
@@ -114,7 +124,10 @@ function next() {
   if (counter > 6) {
     setupDefaults();
   }
+  bool = 0;
+  invert();
   setupArrays();
+
   // console.log(yCount);
 }
 
@@ -122,6 +135,7 @@ function next() {
 function touchMoved() {
 
   if (bool){
+
   store = [];
 
   // calculate all points within a distance, then sort...
@@ -143,13 +157,13 @@ function touchMoved() {
     let _x = store[i][1];
     let _y = store[i][2];
     let temp = createVector(mouseX, mouseY);
-    _d = _d / 3;
+    _d = _d / (width/1000);
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
   }
 
   redrawIt();
 } else {
-strokeWeight(10);
+
 line(mouseX, mouseY, pmouseX, pmouseY);
 }
 }
