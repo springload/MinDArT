@@ -112,7 +112,7 @@ function invert() {
       swapButton.html('Draw');
   } else {
       stroke(50, 255);
-      //strokeWeight(100);
+      strokeWeight(100);
       swapButton.html('Push');
   }
 }
