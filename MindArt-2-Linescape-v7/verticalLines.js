@@ -84,10 +84,10 @@ function dimensionCalc() {
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 15;
-  xCount = 100;
+  xCount = 180;
   counter = 0;
   stroke(255, 50);
-  brushSizeBaseline = 150;
+  brushSizeBaseline = 100;
 
   // fill(255,10);
 }
@@ -126,7 +126,7 @@ function invert() {
 function next() {
   yCount = int(yCount *= 1.4);
   xCount = int(xCount *= 0.95);
-  brushSizeBaseline *= 0.9;
+  brushSizeBaseline *= 0.95;
 
   counter++;
 
