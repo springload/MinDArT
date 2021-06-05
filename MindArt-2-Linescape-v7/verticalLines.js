@@ -143,6 +143,7 @@ function next() {
   drawArray = [];
   drawCounter = 0;
   drawArray[0] = [];
+  redrawIt();
 
   // console.log(yCount);
 }
