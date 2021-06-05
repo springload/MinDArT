@@ -211,7 +211,7 @@ function redrawIt() {
   background(50);
 
   stroke(255, 100);
-  strokeWeight(constrain(160/yCount, 2, 200));
+  strokeWeight(constrain(160/yCount, 1, 200));
 
 
   for (let y = 0; y < yCount; y++) {
