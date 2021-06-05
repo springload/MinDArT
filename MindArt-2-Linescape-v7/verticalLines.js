@@ -87,7 +87,7 @@ function setupDefaults() {
   xCount = 45;
   counter = 0;
   stroke(255, 50);
-  brushSizeBaseline = 200;
+  brushSizeBaseline = 100;
 
   // fill(255,10);
 }
@@ -126,7 +126,7 @@ function invert() {
 function next() {
   yCount = int(yCount *= 1.4);
   xCount = int(xCount *= 0.95);
-  brushSizeBaseline = 6000/yCount;
+  brushSizeBaseline *= 0.9;
 
   counter++;
 
