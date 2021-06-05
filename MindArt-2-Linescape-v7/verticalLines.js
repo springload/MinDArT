@@ -55,8 +55,8 @@ function setup() {
   slider1.style('width', '300px');
 
   // display baselines
-  fromCol = color(0, 0, 0);
-  toCol = color(100, 100, 100);
+  fromCol = color(100, 100, 100);
+  toCol = color(230, 230, 230);
   noFill()
   stroke(255, 140);
   let marginX = 0;
@@ -84,18 +84,19 @@ function setupDefaults() {
   xCount =35;
   counter = 0;
   stroke(255, 50);
+  // fill(255,10);
 }
 
 function setupArrays() {
   arr = [];
-  for (let x = 0; x < xCount; x++) {
-    arr[x] = [];
-    for (let y = 0; y < yCount; y++) {
-      let _x = (width / xCount) * x;
+  for (let i = 0; i < xCount; i++) {
+    arr[i] = [];
+    for (let j = 0; j < yCount; j++) {
+      let _x = (width / xCount) * i;
       _x = map(_x, 0, width, vW * 3, width - (vW * 3)); // ensures beyond margin
-      let _y = (height / yCount) * y;
+      let _y = ((height / yCount) * j);
        _y = map(_y, 0, height, vH * 3, height - (vH *3)); // ensures beyond margin
-      arr[x][y] = createVector(_x, _y);
+      arr[i][j] = createVector(_x, _y);
     }
   }
   redrawIt();
@@ -106,11 +107,11 @@ function invert() {
 
   if (bool){
       stroke(255, 50);
-      strokeWeight(2);
+      strokeWeight(3);
       swapButton.html('Draw');
   } else {
-      stroke(255, 255);
-      strokeWeight(4);
+      stroke(50, 255);
+      strokeWeight(100);
       swapButton.html('Push');
   }
 }
@@ -188,8 +189,8 @@ function redrawIt() {
     // curveTightness(0.5);
   background(50);
   for (let y = 0; y < yCount; y++) {
-    // stroke(lerpColor(fromCol, toCol, y / yCount)); possible speed reducer
-  //  fill(255-((255/yCount)*y));
+     stroke(lerpColor(fromCol, toCol, y / yCount)); // possible speed reducer
+   strokeWeight(((y/yCount)*4)+1);
 
     beginShape();
 
@@ -207,7 +208,7 @@ let vvH = -10*vH;
     // vertex(arr[xCount-1][y].x, (arr[xCount-1][y].y+height)/2);
     // vertex(width+vvW, height+vvH);
     //     vertex(width+vvW, height+vvH);
-    //     vertex(-vvW, height+vvH);
+        // vertex(-vvW, height+vvH);
     endShape();
 
   }
