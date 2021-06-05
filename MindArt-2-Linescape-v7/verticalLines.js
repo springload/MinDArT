@@ -22,6 +22,9 @@ let smoothDist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 let velocity = 0;
 
+let drawArray = [];
+let drawCounter = 0;
+
 
 function setup() {
 
@@ -81,7 +84,7 @@ function dimensionCalc() {
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 10;
-  xCount = 35;
+  xCount = 45;
   counter = 0;
   stroke(255, 50);
 
@@ -107,14 +110,16 @@ function invert() {
   bool = abs(bool - 1);
 
   if (bool){
-      stroke(255, 50);
-  //    strokeWeight(3);
+
       swapButton.html('Draw');
+
   } else {
-      stroke(50, 255);
-      strokeWeight(60);
+
+
       swapButton.html('Push');
   }
+
+  return false;
 }
 
 function next() {
@@ -126,14 +131,24 @@ function next() {
   if (counter > 6) {
     setupDefaults();
   }
-    strokeWeight(100/yCount);
+
   bool = 0;
   invert();
   setupArrays();
 
+  drawArray = [];
+  drawCounter = 0;
+  drawArray[0] = [];
+
   // console.log(yCount);
 }
 
+function touchEnded(){
+  if (!bool){
+  drawCounter++;
+  drawArray[drawCounter] = [];
+}
+}
 
 function touchMoved() {
 
@@ -164,11 +179,13 @@ function touchMoved() {
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
   }
 
-  redrawIt();
+
 } else {
 
-line(mouseX, mouseY, pmouseX, pmouseY);
+drawArray[drawCounter].push(createVector(mouseX, mouseY));
+// line(mouseX, mouseY, pmouseX, pmouseY);
 }
+  redrawIt();
 }
 
 function updateSize() {
@@ -190,8 +207,13 @@ function sortFunction(a, b) {
 function redrawIt() {
     // curveTightness(0.5);
   background(50);
+
+  stroke(255, 50);
+  strokeWeight(100/yCount);
+
+
   for (let y = 0; y < yCount; y++) {
-     stroke(lerpColor(fromCol, toCol, y / yCount)); // possible speed reducer
+  //   stroke(lerpColor(fromCol, toCol, y / yCount)); // possible speed reducer
    //strokeWeight(((y/yCount)*2));
 
     beginShape();
@@ -213,5 +235,23 @@ let vvH = -10*vH;
         // vertex(-vvW, height+vvH);
     endShape();
 
+  }
+
+
+
+  stroke(50, 255);
+  strokeWeight(40);
+
+  for (let i = 0; i < drawArray.length; i++){
+    beginShape();
+
+    if (!(drawArray[i] === undefined || drawArray[i].length == 0)){
+      console.log("fuckbox");
+      for (let j = 0; j < drawArray[i].length; j++){
+      curveVertex(drawArray[i][j].x, drawArray[i][j].y);
+  }
+}
+
+    endShape();
   }
 }
