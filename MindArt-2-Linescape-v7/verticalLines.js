@@ -7,7 +7,7 @@ let arr = [];
 // dimensions
 let vMax, hMax, wMax;
 bool = 1;
-let brushSizeBaseline = 80;
+let brushSizeBaseline = 60;
 
 // strokes
 let strokeBaseline = 0;
@@ -112,7 +112,7 @@ function invert() {
       swapButton.html('Draw');
   } else {
       stroke(50, 255);
-      strokeWeight(100);
+      strokeWeight(60);
       swapButton.html('Push');
   }
 }
