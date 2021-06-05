@@ -81,7 +81,7 @@ function dimensionCalc() {
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 10;
-  xCount =60;
+  xCount =40;
   counter = 0;
   stroke(255, 50);
 
@@ -160,7 +160,7 @@ function touchMoved() {
     let _x = store[i][1];
     let _y = store[i][2];
     let temp = createVector(mouseX, mouseY);
-    _d = _d / (width/100);
+    _d = _d / (width/400);
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
   }
 
