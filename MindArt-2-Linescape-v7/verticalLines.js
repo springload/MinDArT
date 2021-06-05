@@ -123,8 +123,9 @@ function invert() {
 }
 
 function next() {
-  yCount = int(yCount *= 1.5);
-  xCount = int(xCount *= 0.9);
+  yCount = int(yCount *= 1.4);
+  xCount = int(xCount *= 0.95);
+  brushSizeBaseline = 2000/yCount;
 
   counter++;
 
