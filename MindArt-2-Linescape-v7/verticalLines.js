@@ -89,6 +89,10 @@ function setupDefaults() {
   stroke(255, 50);
   brushSizeBaseline = 100;
 
+  stroke(255, 100);
+  strokeWeight(1);
+  fill(255, 255/yCount);
+
   // fill(255,10);
 }
 
@@ -143,6 +147,7 @@ function next() {
   drawArray[0] = [];
 
   // console.log(yCount);
+    fill(255, 255/yCount);
 }
 
 function touchEnded(){
@@ -210,9 +215,7 @@ function redrawIt() {
     // curveTightness(0.5);
   background(50);
 
-  stroke(255, 100);
-  strokeWeight(1);
-  fill(255, 255/yCount);
+
 
 
   for (let y = 0; y < yCount; y++) {
@@ -242,18 +245,18 @@ let vvH = -10*vH;
 
 
 
-  stroke(50, 255);
-  strokeWeight(40);
-
-  for (let i = 0; i < drawArray.length; i++){
-    beginShape();
-
-    if (!(drawArray[i] === undefined || drawArray[i].length == 0)){
-      for (let j = 0; j < drawArray[i].length; j++){
-      curveVertex(drawArray[i][j].x, drawArray[i][j].y);
-  }
-}
-
-    endShape();
-  }
+//   stroke(50, 255);
+//   strokeWeight(40);
+//
+//   for (let i = 0; i < drawArray.length; i++){
+//     beginShape();
+//
+//     if (!(drawArray[i] === undefined || drawArray[i].length == 0)){
+//       for (let j = 0; j < drawArray[i].length; j++){
+//       curveVertex(drawArray[i][j].x, drawArray[i][j].y);
+//   }
+// }
+//
+//     endShape();
+//   }
 }
