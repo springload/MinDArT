@@ -83,7 +83,7 @@ function dimensionCalc() {
 
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
-  yCount = 10;
+  yCount = 15;
   xCount = 45;
   counter = 0;
   stroke(255, 50);
@@ -128,7 +128,7 @@ function next() {
 
   counter++;
 
-  if (counter > 10) {
+  if (counter > 8) {
     setupDefaults();
   }
 
