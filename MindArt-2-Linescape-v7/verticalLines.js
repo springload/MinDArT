@@ -81,9 +81,10 @@ function dimensionCalc() {
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 10;
-  xCount =35;
+  xCount =60;
   counter = 0;
   stroke(255, 50);
+
   // fill(255,10);
 }
 
@@ -107,11 +108,11 @@ function invert() {
 
   if (bool){
       stroke(255, 50);
-      strokeWeight(3);
+  //    strokeWeight(3);
       swapButton.html('Draw');
   } else {
       stroke(50, 255);
-      strokeWeight(100);
+      //strokeWeight(100);
       swapButton.html('Push');
   }
 }
@@ -125,6 +126,7 @@ function next() {
   if (counter > 6) {
     setupDefaults();
   }
+    strokeWeight(100/yCount);
   bool = 0;
   invert();
   setupArrays();
@@ -190,7 +192,7 @@ function redrawIt() {
   background(50);
   for (let y = 0; y < yCount; y++) {
      stroke(lerpColor(fromCol, toCol, y / yCount)); // possible speed reducer
-   strokeWeight(((y/yCount)*4)+1);
+   //strokeWeight(((y/yCount)*2));
 
     beginShape();
 
