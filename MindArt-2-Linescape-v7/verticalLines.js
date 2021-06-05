@@ -7,7 +7,7 @@ let arr = [];
 // dimensions
 let vMax, hMax, wMax;
 bool = 1;
-let brushSizeBaseline = 70;
+let brushSizeBaseline = 80;
 
 // strokes
 let strokeBaseline = 0;
@@ -160,7 +160,7 @@ function touchMoved() {
     let _x = store[i][1];
     let _y = store[i][2];
     let temp = createVector(mouseX, mouseY);
-    _d = _d / (width/600);
+    _d = _d / (width/400);
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
   }
 
