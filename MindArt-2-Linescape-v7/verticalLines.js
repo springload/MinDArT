@@ -211,7 +211,7 @@ function redrawIt() {
   background(50);
 
   stroke(255, 100);
-  strokeWeight(120/yCount);
+  strokeWeight(160/yCount);
 
 
   for (let y = 0; y < yCount; y++) {
