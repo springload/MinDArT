@@ -128,7 +128,7 @@ function next() {
 
   counter++;
 
-  if (counter > 6) {
+  if (counter > 10) {
     setupDefaults();
   }
 
@@ -208,8 +208,8 @@ function redrawIt() {
     // curveTightness(0.5);
   background(50);
 
-  stroke(255, 50);
-  strokeWeight(100/yCount);
+  stroke(255, 100);
+  strokeWeight(30/yCount);
 
 
   for (let y = 0; y < yCount; y++) {
