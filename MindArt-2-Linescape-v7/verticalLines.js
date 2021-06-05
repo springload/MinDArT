@@ -32,7 +32,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background(255);
   dimensionCalc();
-  // blendMode(DIFFERENCE);
+
 
   // UI elements
   newTextureButton = createButton('Next');
@@ -84,7 +84,7 @@ function dimensionCalc() {
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 15;
-  xCount = 10;
+  xCount = 28;
   counter = 0;
   stroke(255, 50);
   brushSizeBaseline = 100;
@@ -210,8 +210,8 @@ function redrawIt() {
     // curveTightness(0.5);
   background(50);
 
-  //stroke(255, 100);
-  noStroke();
+  stroke(255, 100);
+  strokeWeight(1);
   fill(255, 255/yCount);
 
 
