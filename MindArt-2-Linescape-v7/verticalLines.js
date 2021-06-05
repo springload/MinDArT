@@ -87,6 +87,7 @@ function setupDefaults() {
   xCount = 45;
   counter = 0;
   stroke(255, 50);
+  brushSizeBaseline(200)
 
   // fill(255,10);
 }
