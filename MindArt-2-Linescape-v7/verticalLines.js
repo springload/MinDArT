@@ -98,8 +98,10 @@ function setupArrays() {
     arr[i] = [];
     for (let j = 0; j < yCount; j++) {
       let _x = (width / xCount) * i;
+
       _x = map(_x, 0, width, vW * -3, width + (vW * 3)); // ensures beyond margin
       let _y = ((height / yCount) * j);
+            _y= map(pow(_y, 2), 0, pow(height, 2), 0, height);
        _y = map(_y, 0, height, vH * -3, height + (vH *3)); // ensures beyond margin
       arr[i][j] = createVector(_x, _y);
     }
@@ -210,7 +212,7 @@ function redrawIt() {
     // curveTightness(0.5);
   background(50);
 
-  stroke(255, 100);
+  stroke(255, 50);
   strokeWeight(constrain(160/yCount, 1, 200));
 
 
