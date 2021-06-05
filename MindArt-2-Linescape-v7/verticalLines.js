@@ -32,7 +32,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background(255);
   dimensionCalc();
-
+  // blendMode(DIFFERENCE);
 
   // UI elements
   newTextureButton = createButton('Next');
@@ -84,14 +84,10 @@ function dimensionCalc() {
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 15;
-  xCount = 10;
+  xCount = 40;
   counter = 0;
   stroke(255, 50);
   brushSizeBaseline = 100;
-
-  stroke(255, 100);
-  strokeWeight(1);
-  fill(255, 255/yCount);
 
   // fill(255,10);
 }
@@ -147,7 +143,6 @@ function next() {
   drawArray[0] = [];
 
   // console.log(yCount);
-    fill(255, 255/yCount);
 }
 
 function touchEnded(){
@@ -215,7 +210,8 @@ function redrawIt() {
     // curveTightness(0.5);
   background(50);
 
-
+  stroke(255, 100);
+  strokeWeight(constrain(160/yCount, 1, 200));
 
 
   for (let y = 0; y < yCount; y++) {
@@ -227,36 +223,36 @@ function redrawIt() {
 let vvW = -10*vW;
 let vvH = -10*vH;
   //
-  vertex(-vvW, height+vvH);
-  vertex(-vvW, height+vvH);
-  vertex(arr[0][y].x, (arr[0][y].y + height)/2);
+  // vertex(-vvW, height+vvH);
+  // vertex(-vvW, height+vvH);
+  // vertex(arr[0][y].x, (arr[0][y].y + height)/2);
 
    for (let x = 0; x < xCount; x++) {
     curveVertex(arr[x][y].x, arr[x][y].y);
     }
 
-    vertex(arr[xCount-1][y].x, (arr[xCount-1][y].y+height)/2);
-    vertex(width+vvW, height+vvH);
-        vertex(width+vvW, height+vvH);
-        vertex(-vvW, height+vvH);
+    // vertex(arr[xCount-1][y].x, (arr[xCount-1][y].y+height)/2);
+    // vertex(width+vvW, height+vvH);
+    //     vertex(width+vvW, height+vvH);
+        // vertex(-vvW, height+vvH);
     endShape();
 
   }
 
 
 
-//   stroke(50, 255);
-//   strokeWeight(40);
-//
-//   for (let i = 0; i < drawArray.length; i++){
-//     beginShape();
-//
-//     if (!(drawArray[i] === undefined || drawArray[i].length == 0)){
-//       for (let j = 0; j < drawArray[i].length; j++){
-//       curveVertex(drawArray[i][j].x, drawArray[i][j].y);
-//   }
-// }
-//
-//     endShape();
-//   }
+  stroke(50, 255);
+  strokeWeight(40);
+
+  for (let i = 0; i < drawArray.length; i++){
+    beginShape();
+
+    if (!(drawArray[i] === undefined || drawArray[i].length == 0)){
+      for (let j = 0; j < drawArray[i].length; j++){
+      curveVertex(drawArray[i][j].x, drawArray[i][j].y);
+  }
+}
+
+    endShape();
+  }
 }
