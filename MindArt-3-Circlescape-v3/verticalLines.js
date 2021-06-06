@@ -15,27 +15,24 @@ let dragTracker = 0;
 
 let poleArr = [];
 
+
 let colArray = [
-['#D97398','#A65398','#263F73','#5679A6'],
 ['#345573', '#223240', '#F2913D', '#F24B0F'],
-['#080926','#162040','#364C59','#8DA69F'],
 ['#345573', '#F2913D', '#223240', '#F24B0F'],
-['#a4fba6','#4ae54a', '#0f9200', '#006203'],
 ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'],
 ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
 ['#3C5E73','#F2BBBB','#FFFFFF','#F24444'],
-['#F27ECA','#9726A6','#8F49F2','#6C2EF2'],
+['#9726A6','#8F49F2','#6C2EF2','#F27ECA'],
 ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'],
-['#F2B705','#F27EA9', '#05AFF2', '#F29F05'],
-['#A60321','#D9043D','#F29F05','#D8BA7A'],
 ['#F24452', '#5CE3F2', '#F2E205', '#F2CB05'],
 ['#2d3157','#34c1bb','#badccc','#ffda4d'],
 ['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6'],
-['#3FA663','#2D7345','#3391A6','#262626'],
 ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D']
 ];
 let colChoice = 0;
 let arrayChoice = 0;
+
+let bool = 0;
 
 
 function preload() {
@@ -54,6 +51,15 @@ function setup() {
   newButton.style('font-size', '2.6vmax');
   newButton.style('height', '4.5vmax');
   newButton.mousePressed(restart);
+
+  //invert
+  swapButton = createButton('Draw');
+  swapButton.position(2 * vMax, height - (10 * vH));
+  swapButton.class("select");
+  swapButton.style('font-size', '1.3vmax');
+  swapButton.style('height', '3vmax');
+  swapButton.style('width', '6vmax');
+  swapButton.mousePressed(invert);
 
 
   // vector array used to store points, this will max out at 100
@@ -117,9 +123,15 @@ function touchMoved() {
   //
   calcDynamics();
 
+
 blendMode(DIFFERENCE);
+if (bool){
 strokeCap(SQUARE);
 brush_rake(x, y, x2, y2, angle1, 40, 200+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+}
+else {
+brush_bubbles();
+}
 render();
 }
 
@@ -149,6 +161,25 @@ function calcDynamics() {
 }
 
 
+function brush_bubbles(){
+
+let a = createVector(mouseX, mouseY);
+let b = createVector(pmouseX, pmouseY);
+
+let di = 10*(p5.Vector.dist(a, b));
+
+for (let i = 0; i < di; i++){
+  let c = p5.Vector.lerp(a, b, (1/di)*i);
+  c.x = c.x + randomGaussian(-40, 40);
+  c.y = c.y + randomGaussian(-40, 40);
+  strokeWeight(10);
+  point(c.x, c.y);
+}
+
+
+
+
+}
 
 
 
@@ -188,6 +219,23 @@ function restart(){
   arrayChoice = arrayChoice%colArray.length;
   blendMode(BLEND);
   background(colArray[arrayChoice][0]);
-  console.log(arrayChoice);
+  console.log(colArray[arrayChoice]);
   // blend(DIFFERENCE);
+}
+
+function invert() {
+  bool = abs(bool - 1);
+
+  if (bool){
+
+      swapButton.html('Draw');
+
+  } else {
+
+
+      swapButton.html('Push');
+  }
+
+  console.log(bool);
+  return false;
 }
