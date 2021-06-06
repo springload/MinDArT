@@ -217,8 +217,8 @@ function redrawIt() {
 
 
   for (let y = 0; y < yCount; y++) {
-  //   stroke(lerpColor(fromCol, toCol, y / yCount)); // possible speed reducer
-   //strokeWeight(((y/yCount)*2));
+    stroke((1/yCount)*y*255, 180)
+    strokeWeight((1/yCount)*y*5);
 
     beginShape();
 
