@@ -19,10 +19,10 @@ let poleArr = [];
 let colArray = [
 ['#345573', '#223240', '#F2913D', '#F24B0F'],
 ['#345573', '#F2913D', '#223240', '#F24B0F'],
-['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'],
+// ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'],
 ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
-['#3C5E73','#F2BBBB','#FFFFFF','#F24444'],
-['#9726A6','#8F49F2','#6C2EF2','#F27ECA'],
+['#F2BBBB', '#3C5E73','#FFFFFF','#F24444'],
+['#6C2EF2', '#9726A6','#8F49F2','#F27ECA'],
 ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'],
 ['#F24452', '#5CE3F2', '#F2E205', '#F2CB05'],
 ['#2d3157','#34c1bb','#badccc','#ffda4d'],
@@ -125,7 +125,7 @@ function touchMoved() {
 
 if (bool){
 
-brush_rake(x, y, x2, y2, angle1, 40, 100+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+brush_rake(x, y, x2, y2, angle1, 55, 100+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
 }
 else {
 brush_bubbles();
