@@ -77,7 +77,6 @@ function setup() {
   }
 
   restart();
-
 }
 
 function touchEnded() {
@@ -124,9 +123,8 @@ function touchMoved() {
   calcDynamics();
 
 
-blendMode(DIFFERENCE);
 if (bool){
-strokeCap(SQUARE);
+
 brush_rake(x, y, x2, y2, angle1, 40, 200+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
 }
 else {
@@ -163,21 +161,9 @@ function calcDynamics() {
 
 function brush_bubbles(){
 
-let a = createVector(mouseX, mouseY);
-let b = createVector(pmouseX, pmouseY);
-
-let di = 10*(p5.Vector.dist(a, b));
-
-for (let i = 0; i < di; i++){
-  let c = p5.Vector.lerp(a, b, (1/di)*i);
-  c.x = c.x + randomGaussian(-40, 40);
-  c.y = c.y + randomGaussian(-40, 40);
-  strokeWeight(10);
-  point(c.x, c.y);
-}
-
-
-
+  stroke(colArray[arrayChoice][0]);
+  strokeWeight(200);
+  line(pmouseX, pmouseY, mouseX, mouseY);
 
 }
 
@@ -221,19 +207,22 @@ function restart(){
   background(colArray[arrayChoice][0]);
   console.log(colArray[arrayChoice]);
   // blend(DIFFERENCE);
+  bool = 0;
+  invert();
 }
 
 function invert() {
   bool = abs(bool - 1);
 
   if (bool){
-
-      swapButton.html('Draw');
+      strokeCap(SQUARE);
+      blendMode(DIFFERENCE);
+      swapButton.html('Erase');
 
   } else {
-
-
-      swapButton.html('Push');
+      strokeCap(ROUND);
+      blendMode(BLEND);
+      swapButton.html('Draw');
   }
 
   console.log(bool);
