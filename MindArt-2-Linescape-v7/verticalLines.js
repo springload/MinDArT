@@ -214,6 +214,8 @@ function sortFunction(a, b) {
 function redrawIt() {
     // curveTightness(0.5);
 
+
+
   background(50);
   blendMode(SCREEN);
   stroke(255, 100);
