@@ -83,7 +83,7 @@ function dimensionCalc() {
 
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
-  yCount = 15;
+  yCount = 40;
   xCount = 40;
   counter = 0;
   stroke(255, 50);
@@ -126,7 +126,7 @@ function invert() {
 }
 
 function next() {
-  yCount = int(yCount *= 1.5);
+  yCount = int(yCount *= 1.3);
   xCount = int(xCount *= 0.95);
   brushSizeBaseline *= 0.95;
 
@@ -180,7 +180,7 @@ function touchMoved() {
     let _x = store[i][1];
     let _y = store[i][2];
     let temp = createVector(mouseX, mouseY);
-    _d = _d / (width/200);
+    _d = _d / (vMax*0.5);
     arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
   }
 
@@ -212,8 +212,7 @@ function sortFunction(a, b) {
 function redrawIt() {
     // curveTightness(0.5);
   background(50);
-
-  stroke(255, 50);
+  stroke(255, 100);
   strokeWeight(constrain(160/yCount, 1, 200));
 
 
