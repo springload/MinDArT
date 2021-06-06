@@ -70,6 +70,8 @@ function setup() {
     poleArr.push(tmp);
   }
 
+  restart();
+
 }
 
 function touchEnded() {
@@ -186,5 +188,6 @@ function restart(){
   arrayChoice = arrayChoice%colArray.length;
   blendMode(BLEND);
   background(colArray[arrayChoice][0]);
+  console.log(arrayChoice);
   // blend(DIFFERENCE);
 }
