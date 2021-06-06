@@ -25,12 +25,14 @@ let velocity = 0;
 let drawArray = [];
 let drawCounter = 0;
 
+let img;
 
 function setup() {
 
   // setup Basics
   createCanvas(windowWidth, windowHeight);
-  background(255);
+
+
   dimensionCalc();
   // blendMode(DIFFERENCE);
 
@@ -84,7 +86,7 @@ function dimensionCalc() {
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
   yCount = 40;
-  xCount = 40;
+  xCount = 35;
   counter = 0;
   stroke(255, 50);
   brushSizeBaseline = 100;
@@ -211,7 +213,9 @@ function sortFunction(a, b) {
 
 function redrawIt() {
     // curveTightness(0.5);
+
   background(50);
+  blendMode(SCREEN);
   stroke(255, 100);
   strokeWeight(constrain(160/yCount, 1, 200));
 
@@ -242,6 +246,7 @@ let vvH = -10*vH;
   }
 
 
+  blendMode(BLEND);
 
   stroke(50, 255);
   strokeWeight(40);
@@ -257,4 +262,5 @@ let vvH = -10*vH;
 
     endShape();
   }
+
 }
