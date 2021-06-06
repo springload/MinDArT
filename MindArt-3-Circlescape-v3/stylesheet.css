@@ -10,11 +10,11 @@
     }
 
 
-.arcs4 {
-  height: 100%;
-  overscroll-behavior: none;
-  position: fixed;
-}
+    .p5Canvas {
+      height: 100%;
+     overscroll-behavior: none;
+      position: fixed;
+    }
 
 
 .loadingclass {
