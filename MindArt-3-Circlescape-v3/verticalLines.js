@@ -162,7 +162,7 @@ function calcDynamics() {
 function brush_bubbles(){
 
   stroke(colArray[arrayChoice][0]);
-  strokeWeight(200);
+  strokeWeight(120);
   line(pmouseX, pmouseY, mouseX, mouseY);
 
 }
