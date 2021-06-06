@@ -217,12 +217,12 @@ function redrawIt() {
   background(50);
   blendMode(SCREEN);
   stroke(255, 100);
-  strokeWeight(constrain(160/yCount, 1, 200));
+  //strokeWeight(constrain(160/yCount, 1, 200));
 
 
   for (let y = 0; y < yCount; y++) {
     stroke((1/yCount)*y*255, 180)
-    strokeWeight((1/yCount)*y*5);
+    strokeWeight((1/yCount)*y*3);
 
     beginShape();
 
