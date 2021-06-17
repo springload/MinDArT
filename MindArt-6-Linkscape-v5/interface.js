@@ -47,18 +47,18 @@ function writeTextUI(){
   saveButton.mousePressed(saveImg);
 
 
-  pinButton = createButton("  Turn pins on")
-  pinButton.class("select2");
-  pinButton.id("pin");
-  pinButton.style('font-size', '1.7vmax');
-  pinButton.style('height', '5vmax');
-  pinButton.style('width', '18vmax');
-  pinButton.position((3 * vMax), height - (7 * vMax));
-  pinButton.mousePressed(dotsToggle);
-  node = document.createElement("LI")
-  node.classList.add("fa");
-  node.classList.add("fa-map-pin");
-  $('#pin').prepend(node);
+  // pinButton = createButton("  Turn pins on")
+  // pinButton.class("select2");
+  // pinButton.id("pin");
+  // pinButton.style('font-size', '1.7vmax');
+  // pinButton.style('height', '5vmax');
+  // pinButton.style('width', '18vmax');
+  // pinButton.position((3 * vMax), height - (7 * vMax));
+  // pinButton.mousePressed(dotsToggle);
+  // node = document.createElement("LI")
+  // node.classList.add("fa");
+  // node.classList.add("fa-map-pin");
+  // $('#pin').prepend(node);
 
   addButton = createButton("  Add a string")
   addButton.class("select2");
