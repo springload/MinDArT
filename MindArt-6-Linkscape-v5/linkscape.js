@@ -325,7 +325,7 @@ function render() {
   let s = vMax * 8;
 ;
   blendMode(BLEND);
-  background(15);
+  background(240);
   // paintCanv.background(0, 10);
     image(paintCanv, 0, 0, width, height);
   blendMode(EXCLUSION);
