@@ -34,6 +34,29 @@ let radialLevels = [3, 5];
 
 let storedOrientation, rotateDirection, storedOrientationDegrees;
 
+let colArray = [
+['#D97398','#A65398','#263F73','#5679A6'], // 5
+// ['#192819','#2c4928','#719b25','#cbe368'], // 5
+['#345573', '#223240', '#F2913D', '#F24B0F'], // 5
+['#080926','#162040','#364C59','#8DA69F'], // 5
+['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream // 4
+['#a4fba6','#4ae54a', '#0f9200', '#006203'], // 5
+['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'], // 4
+['#172426', '#455559', '#D9C3B0', '#F2DFCE'], // 5
+['#3C5E73','#F2BBBB','#FFFFFF','#F24444'], // 4
+['#F27ECA','#9726A6','#8F49F2','#6C2EF2'], // 5
+['#BF4B8B', '#3981BF', '#1F628C', '#D92929'], // adidas-Telstar-50-anniversary // 4
+['#F2B705','#F27EA9', '#05AFF2', '#F29F05', '#F2541B'], // Lettering-Series-XXII-1 // 5
+['#A60321','#D9043D','#F29F05','#D8BA7A'], // 4
+['#F24452', '#5CE3F2', '#F2E205', '#F2CB05', '#F29D35'], // People-of-The-Internet // 5
+['#2d3157','#34c1bb','#badccc','#ffda4d'], // 4
+['#CCCCCC','#F2F2F2','#B3B3B3','#E6E6E6'], // 5
+['#3FA663','#2D7345','#3391A6','#262626'], // 5
+['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D', '#404040'] // Unchained// 5
+]
+
+
+
 function preload() {
   texture = loadImage('assets/texture.png');
   audio = loadSound('assets/audio.mp3');
@@ -220,8 +243,6 @@ function dragCalc(_sel, _mouseX, _mouseY) {
 }
 
 function dragSegment(_sel, xin, yin) {
-
-
   i = _sel[0];
   j = _sel[1];
   const dx = xin - x[i][j];
@@ -229,34 +250,22 @@ function dragSegment(_sel, xin, yin) {
   const angle = (atan2(dy, dx));
   x[i][j] = xin - cos(angle) * segLength;
   y[i][j] = yin - sin(angle) * segLength;
-
   //gravitational affector
 if (dotsActive){
   for (var k = 0; k < vt.length; k++) {
-
-
         // creat a vector for currently referenced dot
     let v1 = createVector(x[i][j], y[i][j]);
-
     let gate = 1;
-
     for (elt of vtStored[k]){
       if (abs(elt - j) < 20 && abs(elt - j) > 6){
         gate = 0;
       }
     }
-
     if (gate){
-
-
-
-
-
     var d = p5.Vector.dist(v1, vt[k]);
     if (d < distGravity){
       vtStored[k].push(j);
       // this is effectively a smoother
-
 
  x[i][j] = vt[k].x;
  y[i][j] = vt[k].y;
@@ -270,22 +279,30 @@ if (dotsActive){
 }
 
 function render() {
-  let colours = [0, 90, 150, 200, 200, 250];
-  // let colours = ['#1a1a1a'];
+  //let colours = [0, 90, 150, 200, 200, 250];
+  let colours = ['#1a1a1a', '#1a1a1a', '#1a1a1a', '#1a1a1a', '#1a1a1a', '#1a1a1a'];
   lineCanv.clear();
-
+  //lineCanv.blendMode(DIFFERENCE);
 
 
   for (let i = 0; i < x.length; i++) {
-    lineCanv.strokeWeight(1.9*vMax);
-    lineCanv.stroke(colours[i % colours.length], 200);
+    lineCanv.strokeWeight(0.2*vMax);
+
+  let cc = colorAlpha(colArray[6][i % colArray[6].length], 0.7);
+    lineCanv.stroke(cc);
+    lineCanv.fill(cc);
+    lineCanv.beginShape();
     for (let j = 0; j < x[i].length - 1 - cutSeg; j++) {
-      lineCanv.line(x[i][j], y[i][j], x[i][j + 1], y[i][j + 1])
+      lineCanv.curveVertex(x[i][j], y[i][j]);
     }
-    lineCanv.strokeWeight(1.4*vMax);
-      lineCanv.stroke(colours[(i+4) % colours.length], 190);
-      lineCanv.point(x[i][0], y[i][0]);
-      lineCanv.point(x[i][segNum-1], y[i][segNum-1]);
+
+        lineCanv.curveVertex(x[i][0], y[i][0]);
+            lineCanv.endShape(CLOSE);
+
+    // lineCanv.strokeWeight(1.4*vMax);
+    //   lineCanv.stroke(colours[(i+4) % colours.length], 190);
+    //   lineCanv.point(x[i][0], y[i][0]);
+    //   lineCanv.point(x[i][segNum-1], y[i][segNum-1]);
 
 }
 
@@ -458,3 +475,8 @@ function handleVisibilityChange() {
 }
 
 document.addEventListener("visibilitychange", handleVisibilityChange, false);
+
+function colorAlpha(aColor, alpha) {
+  var c = color(aColor);
+  return color('rgba(' + [red(c), green(c), blue(c), alpha].join(',') + ')');
+}

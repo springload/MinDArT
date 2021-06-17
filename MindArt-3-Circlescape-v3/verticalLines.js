@@ -125,7 +125,7 @@ function touchMoved() {
 
 if (bool){
 
-brush_rake(x, y, x2, y2, angle1, 55, 100+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+brush_rake(x, y, x2, y2, angle1, 55, 30+(velocity*3), 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
 }
 else {
 brush_bubbles();
