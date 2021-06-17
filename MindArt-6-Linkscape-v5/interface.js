@@ -66,7 +66,7 @@ function writeTextUI(){
   addButton.style('font-size', '1.7vmax');
   addButton.style('width', '20vmax');
   addButton.style('height', '5vmax');
-  addButton.position(22 * vMax, height - (7 * vMax));
+  addButton.position(3 * vMax, height - (7 * vMax));
   addButton.mousePressed(addLine);
 
   var node2 = document.createElement("LI")
