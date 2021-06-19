@@ -27,37 +27,70 @@ let drawCounter = 0;
 
 let img;
 
+function preload(){
+  audio = loadSound('assets/audio.mp3');
+  click = loadSound('assets/click.mp3');
+}
+
 function setup() {
 
   // setup Basics
-  createCanvas(windowWidth, windowHeight);
+
+    createCanvas(window.innerWidth, window.innerHeight);
+    pixelDensity(1);
 
 
-  dimensionCalc();
-  // blendMode(DIFFERENCE);
 
-  // UI elements
-  newTextureButton = createButton('Next');
-  newTextureButton.position(width - (8 * vMax), height - (10 * vH));
-  newTextureButton.class("select");
-  newTextureButton.style('font-size', '1.3vmax');
-  newTextureButton.style('height', '3vmax');
-  newTextureButton.style('width', '6vmax');
-  newTextureButton.mousePressed(next);
 
-  //invert
-  swapButton = createButton('Draw');
-  swapButton.position(2 * vMax, height - (10 * vH));
-  swapButton.class("select");
-  swapButton.style('font-size', '1.3vmax');
-  swapButton.style('height', '3vmax');
-  swapButton.style('width', '6vmax');
-  swapButton.mousePressed(invert);
 
-  slider1 = createSlider(-500, 500, 0); // density
-  slider1.input(updateSize);
-  slider1.position(10, -150);
-  slider1.style('width', '300px');
+
+
+    var stbtn = $("<div />").appendTo("body");
+    stbtn.addClass('startBtn');
+    $('<p>Touch here to begin</p>').appendTo(stbtn);
+    stbtn.mousedown(start);
+    stbtn.mousemove(start);
+
+
+}
+
+function start(){
+
+    $(".startBtn").remove();
+  //  fullscreen(1);
+
+    //todo, consider pausing audio context
+    if (audio.isPlaying()) {} else {
+      audio.loop(1);
+    }
+
+    // UI elements
+    newTextureButton = createButton('Next');
+    newTextureButton.position(width - (8 * vMax), height - (10 * vH));
+    newTextureButton.class("select");
+    newTextureButton.style('font-size', '1.3vmax');
+    newTextureButton.style('height', '3vmax');
+    newTextureButton.style('width', '6vmax');
+    newTextureButton.mousePressed(next);
+
+    //invert
+    swapButton = createButton('Draw');
+    swapButton.position(2 * vMax, height - (10 * vH));
+    swapButton.class("select");
+    swapButton.style('font-size', '1.3vmax');
+    swapButton.style('height', '3vmax');
+    swapButton.style('width', '6vmax');
+    swapButton.mousePressed(invert);
+
+    slider1 = createSlider(-500, 500, 0); // density
+    slider1.input(updateSize);
+    slider1.position(10, -150);
+    slider1.style('width', '300px');
+
+    dimensionCalc();
+
+
+
 
   // display baselines
   fromCol = color(100, 100, 100);
@@ -70,6 +103,12 @@ function setup() {
   // run setup functions
   setupDefaults();
   setupArrays();
+
+    // sizeWindow();
+    // writeTextUI();
+    // restart();
+
+
 }
 
 function dimensionCalc() {
@@ -230,19 +269,12 @@ function redrawIt() {
 
 let vvW = -10*vW;
 let vvH = -10*vH;
-  //
-  // vertex(-vvW, height+vvH);
-  // vertex(-vvW, height+vvH);
-  // vertex(arr[0][y].x, (arr[0][y].y + height)/2);
+
 
    for (let x = 0; x < xCount; x++) {
     curveVertex(arr[x][y].x, arr[x][y].y);
     }
 
-    // vertex(arr[xCount-1][y].x, (arr[xCount-1][y].y+height)/2);
-    // vertex(width+vvW, height+vvH);
-    //     vertex(width+vvW, height+vvH);
-        // vertex(-vvW, height+vvH);
     endShape();
 
   }
