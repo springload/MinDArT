@@ -102,7 +102,7 @@ $('#pin').prepend(node);
 
 function addLine(){
 initialiseLine(x.length); // init new line, new array
-if (x.length > 5){
+if (x.length > 2){
   $("#add").remove();
 }
 render();

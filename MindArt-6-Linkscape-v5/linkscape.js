@@ -1,6 +1,6 @@
 let x = [],
   y = [],
-  segNum = 650,
+  segNum = 250,
   segLength = 4,
   distGravity = 50;
 
@@ -85,6 +85,7 @@ function setup() {
 
 }
 
+
 function start() {
 
   $(".startBtn").remove();
@@ -102,6 +103,8 @@ function start() {
   paintCanv.strokeWeight(1 * vMax);
 
   windowResized();
+
+
 }
 
 
@@ -121,8 +124,6 @@ function reset() {
   vtCount = [];
 
 
-    scatterPoints();
-
   initialiseLine(0);
   drawActive = 1;
   writeTextUI();
@@ -135,19 +136,14 @@ function initialiseLine(l) {
   y[l] = [];
 
   for (let i = 0; i < segNum; i++) {
-    x[l][i] = map(i, 0, segNum, -width, width);
-    y[l][i] = (height/4 * x.length);
+    y[l][i] = map(i, 0, segNum, -height*5, height/6);
+    x[l][i] = (width/4)*(1+l);
     // y[l][i] = random(0, height);
   }
 
-  selected = [l, 0];
-  if (dotsActive) {
-    dotsActive = 0;
-    dragCalc(selected, width / 2, height / 2);
-    dotsActive = 1;
-  } else {
-    dragCalc(selected, width / 2, height / 2);
-  }
+  // selected = [l, 0];
+  // dragCalc(selected, width / 2, height / 2);
+
 
   beginning = 1;
 }
@@ -290,7 +286,7 @@ function render() {
 
 
   for (let i = 0; i < x.length; i++) {
-    lineCanv.strokeWeight(0.27 * vMax);
+    lineCanv.strokeWeight(0.6 * vMax);
     let cc = colorAlpha(colArray[levelVersion][i % colArray[levelVersion].length], 0.9);
     let cc2 = colorAlpha(colArray[levelVersion][i % colArray[levelVersion].length], 0.15);
     lineCanv.stroke(cc);
@@ -302,7 +298,7 @@ function render() {
 
     lineCanv.endShape();
 
-    lineCanv.strokeWeight(0.4 * vMax);
+    lineCanv.strokeWeight(1.2 * vMax);
     lineCanv.stroke(cc);
     lineCanv.point(x[i][0], y[i][0]);
     lineCanv.point(x[i][segNum - 1], y[i][segNum - 1]);
@@ -323,12 +319,11 @@ function render() {
   }
 
   let s = vMax * 8;
-;
-  blendMode(BLEND);
-  background(240);
+  // blendMode();
+  background(40);
   // paintCanv.background(0, 10);
-    image(paintCanv, 0, 0, width, height);
-  blendMode(EXCLUSION);
+  image(paintCanv, 0, 0, width, height);
+  // blendMode(EXCLUSION);
   image(lineCanv, 0, 0, width, height);
 
 
@@ -353,18 +348,6 @@ function render() {
 
 
 
-
-function scatterPoints() {
-
-
-    for (let j = 0; j < vt.length; j++) {
-      if (v.dist(vt[j]) < vMax * 20) {
-        bool = 0;
-      }
-    }
-
-
-}
 
 
 function windowResized() {
