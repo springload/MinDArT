@@ -47,7 +47,11 @@ function start() {
   if (audio.isPlaying()) {} else {
     audio.loop(1);
   }
+
+    fullscreen(1);
+
   dimensionCalc();
+
 
   // display baselines
   fromCol = color(100, 100, 100);
@@ -122,7 +126,7 @@ function next() {
   xCount = int(xCount *= 0.95);
   brushSizeBaseline *= 0.95;
   counter++;
-  if (counter > 8) {
+  if (counter > 7) {
     setupDefaults();
   }
   bool = 0;
@@ -131,7 +135,7 @@ function next() {
   redrawIt();
 
   cc++;
-  if (cc > colours.length) {
+  if (cc > colours.length-1) {
     cc = 0;
   }
 

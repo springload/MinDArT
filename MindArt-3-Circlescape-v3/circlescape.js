@@ -124,7 +124,7 @@ function touchMoved() {
 
   if (eraserOffToggle) {
 
-    brush_rake(x, y, x2, y2, angle1, 55, 30 + (velocity * 3) * drawMulti, 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
+    brush_rake(x, y, x2, y2, angle1, 20*drawMulti, 30 + (velocity * 3) * drawMulti, 10, 0.001); // x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, noise
   } else {
     eraser();
   }
@@ -201,7 +201,6 @@ function restart() {
   arrayChoice = arrayChoice % colArray.length;
   blendMode(BLEND);
   background(colArray[arrayChoice][0]);
-  console.log(colArray[arrayChoice]);
   drawBig();
 }
 
@@ -237,6 +236,7 @@ function windowResized(){
   writeTextUI();
   checkFS();
   render(); // not currently used
+  background(colArray[arrayChoice][0]);
 
 }
 
