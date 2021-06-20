@@ -112,6 +112,9 @@ render();
 
 function saveImg() {
   click.play();
+  background(40);
+  // paintCanv.background(0, 10);
+  image(paintCanv, 0, 0, width, height);
 
 save('stringscape' + month() + day() + hour() + second() + '.jpg');
 }
