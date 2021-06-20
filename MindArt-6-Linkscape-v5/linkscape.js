@@ -42,14 +42,14 @@ let colArray = [
   ['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream // 4
   ['#a4fba6', '#4ae54a', '#0f9200', '#006203'], // 5
   ['#6D808C', '#FFFFFF', '#D9AA8F', '#F2CAB3'], // 4
-  ['#172426', '#455559', '#D9C3B0', '#F2DFCE'], // 5
-  ['#3C5E73', '#F2BBBB', '#FFFFFF', '#F24444'], // 4
+  ['#F2DFCE', '#455559', '#D9C3B0', '#172426'], // 5
+  ['#F24444', '#F2BBBB', '#FFFFFF', '#3C5E73'], // 4
   ['#F27ECA', '#9726A6', '#8F49F2', '#6C2EF2'], // 5
   ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'], // adidas-Telstar-50-anniversary // 4
   ['#F2B705', '#F27EA9', '#05AFF2', '#F29F05', '#F2541B'], // Lettering-Series-XXII-1 // 5
   ['#A60321', '#D9043D', '#F29F05', '#D8BA7A'], // 4
   ['#F24452', '#5CE3F2', '#F2E205', '#F2CB05', '#F29D35'], // People-of-The-Internet // 5
-  ['#2d3157', '#34c1bb', '#badccc', '#ffda4d'], // 4
+  ['#34c1bb', '#badccc', '#ffda4d', '#2d3157'], // 4
   ['#CCCCCC', '#F2F2F2', '#B3B3B3', '#E6E6E6'], // 5
   ['#3FA663', '#2D7345', '#3391A6', '#262626'], // 5
   ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D', '#404040'] // Unchained// 5
@@ -89,7 +89,8 @@ function setup() {
 function start() {
 
   $(".startBtn").remove();
-  fullscreen(1);
+      fullscreen(1);
+
 
   // note currently everything resets on windowResized. Unsure if this is logical yet
 
@@ -97,12 +98,13 @@ function start() {
     audio.loop(1);
   }
 
-  reset();
 
   lineCanv.strokeWeight(1 * vMax);
   paintCanv.strokeWeight(1 * vMax);
 
   windowResized();
+
+  reset();
 
 
 }
@@ -115,6 +117,7 @@ function reset() {
   y = [];
 
   levelVersion++;
+  console.log(levelVersion);
   levelMax = colArray.length;
   if (levelVersion >= levelMax) {
     levelVersion = 0;
@@ -136,8 +139,9 @@ function initialiseLine(l) {
   y[l] = [];
 
   for (let i = 0; i < segNum; i++) {
-    y[l][i] = map(i, 0, segNum, -height*5, height/6);
-    x[l][i] = (width/4)*(1+l);
+    y[l][i] = map(i, 0, segNum, -height, height/6);
+      x[l][i] = map(i, 0, segNum, 0, (width/4)*(1+l));
+    // x[l][i] = (width/4)*(1+l);
     // y[l][i] = random(0, height);
   }
 
@@ -211,12 +215,9 @@ function touchMoved() {
 
   if (drawActive) {
     // do we really need these Layers? // or do we need double the calculation of Lines
-    if (beginning) {
-      dragCalc(selected, width / 2, height / 2);
-      beginning = 0;
-    } else {
+
       dragCalc(selected, winMouseX, winMouseY);
-    }
+
   }
 
 
@@ -359,7 +360,7 @@ function windowResized() {
   removeElements();
   writeTextUI();
   checkFS();
-  touchMoved();
+  // touchMoved();
 }
 
 
