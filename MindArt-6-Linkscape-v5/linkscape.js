@@ -35,24 +35,19 @@ let radialLevels = [3, 5];
 let storedOrientation, rotateDirection, storedOrientationDegrees;
 
 let colArray = [
-  ['#D97398', '#A65398', '#263F73', '#5679A6'], // 5
-  // ['#192819','#2c4928','#719b25','#cbe368'], // 5
-  ['#345573', '#223240', '#F2913D', '#F24B0F'], // 5
-  ['#080926', '#162040', '#364C59', '#8DA69F'], // 5
-  ['#345573', '#F2913D', '#223240', '#F24B0F'], // I think ill be fine after eating ice cream // 4
-  ['#a4fba6', '#4ae54a', '#0f9200', '#006203'], // 5
-  ['#6D808C', '#FFFFFF', '#D9AA8F', '#F2CAB3'], // 4
-  ['#F2DFCE', '#455559', '#D9C3B0', '#172426'], // 5
-  ['#F24444', '#F2BBBB', '#FFFFFF', '#3C5E73'], // 4
-  ['#F27ECA', '#9726A6', '#8F49F2', '#6C2EF2'], // 5
-  ['#BF4B8B', '#3981BF', '#1F628C', '#D92929'], // adidas-Telstar-50-anniversary // 4
-  ['#F2B705', '#F27EA9', '#05AFF2', '#F29F05', '#F2541B'], // Lettering-Series-XXII-1 // 5
-  ['#A60321', '#D9043D', '#F29F05', '#D8BA7A'], // 4
-  ['#F24452', '#5CE3F2', '#F2E205', '#F2CB05', '#F29D35'], // People-of-The-Internet // 5
-  ['#34c1bb', '#badccc', '#ffda4d', '#2d3157'], // 4
-  ['#CCCCCC', '#F2F2F2', '#B3B3B3', '#E6E6E6'], // 5
-  ['#3FA663', '#2D7345', '#3391A6', '#262626'], // 5
-  ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D', '#404040'] // Unchained// 5
+  ['#D97398', '#A65398', '#5679A6'], // 5
+  ['#F2913D', '#F24B0F','#5679A6'], // 5
+  ['#a4fba6', '#4ae54a', '#0f9200'], // 5
+  ['#6D808C', '#FFFFFF', '#D9AA8F'], // 4
+  ['#F2DFCE', '#FFFFFF', '#D9C3B0'], // 5
+  ['#F24444', '#F2BBBB', '#FFFFFF'], // 4
+  ['#F27ECA', '#9726A6', '#6C2EF2'], // 5
+  ['#BF4B8B', '#3981BF', '#D92929'], // adidas-Telstar-50-anniversary // 4
+  ['#F2B705', '#F27EA9', '#05AFF2'], // Lettering-Series-XXII-1 // 5
+  ['#A60321', '#D9043D', '#F29F05'], // 4
+  ['#F24452', '#5CE3F2', '#F2E205'], // People-of-The-Internet // 5
+  ['#CCCCCC', '#F2F2F2', '#B3B3B3'], // 5
+  ['#F2F2F2', '#A6A6A6', '#737373'] // Unchained// 5
 ]
 
 
@@ -321,7 +316,7 @@ function render() {
 
   let s = vMax * 8;
   // blendMode();
-  background(40);
+  background(70);
   // paintCanv.background(0, 10);
   image(paintCanv, 0, 0, width, height);
   // blendMode(EXCLUSION);
