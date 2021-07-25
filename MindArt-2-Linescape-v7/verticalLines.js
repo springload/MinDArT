@@ -65,7 +65,7 @@ function start() {
   setupDefaults();
   setupArrays();
 
-  // sizeWindow();
+   sizeWindow();
   writeTextUI();
   // restart();
   next();
@@ -96,7 +96,7 @@ function setupArrays() {
 
   // make col array
   for (let j = 0; j < yCount; j++) {
-    ccc = hexToRgb(colours[cc][0]);
+    ccc = hexToRgb(colours[cc][1]);
     arrLineCol[j] = [ccc.levels[0], ccc.levels[1], ccc.levels[2]]
   }
 
@@ -130,17 +130,21 @@ function next() {
     setupDefaults();
   }
   bool = 0;
-  activateDraw();
-  setupArrays();
-  redrawIt();
+
 
   cc++;
   if (cc > colours.length-1) {
     cc = 0;
   }
+    activateDraw();
+
+  setupArrays();
+  redrawIt();
+
+
 
   writeTextUI();
-  activateDraw();
+
   // console.log(yCount);
 }
 
@@ -197,10 +201,10 @@ function sortFunction(a, b) {
 }
 
 function redrawIt() {
-  background(50);
+  background(25);
   for (let y = 0; y < yCount; y++) {
     //stroke((1/yCount)*y*255, 180)
-    strokeWeight((1 / yCount) * y * 3);
+    strokeWeight((1 / yCount) * y * 4.5);
     stroke(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 200);
     beginShape();
     let vvW = -10 * vW;

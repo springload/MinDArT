@@ -38,16 +38,14 @@ let colArray = [
   ['#D97398', '#A65398', '#5679A6'], // 5
   ['#F2913D', '#F24B0F','#5679A6'], // 5
   ['#a4fba6', '#4ae54a', '#0f9200'], // 5
-  ['#6D808C', '#FFFFFF', '#D9AA8F'], // 4
+    ['#F2F2F2', '#A6A6A6', '#737373'], // Unchained// 5
+  ['#597d94', '#FFFFFF', '#D9AA8F'], // 4
   ['#F2DFCE', '#FFFFFF', '#D9C3B0'], // 5
   ['#F24444', '#F2BBBB', '#FFFFFF'], // 4
-  ['#F27ECA', '#9726A6', '#6C2EF2'], // 5
   ['#BF4B8B', '#3981BF', '#D92929'], // adidas-Telstar-50-anniversary // 4
-  ['#F2B705', '#F27EA9', '#05AFF2'], // Lettering-Series-XXII-1 // 5
-  ['#A60321', '#D9043D', '#F29F05'], // 4
   ['#F24452', '#5CE3F2', '#F2E205'], // People-of-The-Internet // 5
-  ['#CCCCCC', '#F2F2F2', '#B3B3B3'], // 5
-  ['#F2F2F2', '#A6A6A6', '#737373'] // Unchained// 5
+  ['#CCCCCC', '#F2F2F2', '#B3B3B3'] // 5
+
 ]
 
 
@@ -284,7 +282,7 @@ function render() {
   for (let i = 0; i < x.length; i++) {
     lineCanv.strokeWeight(0.6 * vMax);
     let cc = colorAlpha(colArray[levelVersion][i % colArray[levelVersion].length], 0.9);
-    let cc2 = colorAlpha(colArray[levelVersion][i % colArray[levelVersion].length], 0.15);
+    let cc2 = colorAlpha(colArray[levelVersion][i % colArray[levelVersion].length], 0.3);
     lineCanv.stroke(cc);
     lineCanv.noFill();
     lineCanv.beginShape();
@@ -316,7 +314,7 @@ function render() {
 
   let s = vMax * 8;
   // blendMode();
-  background(70);
+  background(45);
   // paintCanv.background(0, 10);
   image(paintCanv, 0, 0, width, height);
   // blendMode(EXCLUSION);
