@@ -32,7 +32,7 @@ function writeTextUI() {
   fill(0);
   noStroke();
 
-  newButton = createButton("Next")
+  newButton = createButton("New")
   newButton.class("select");
   newButton.position(width - (15 * vMax), height - (12.5 * vMax));
   newButton.style('font-size', '2.6vmax');

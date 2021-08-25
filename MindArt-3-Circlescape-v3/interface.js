@@ -17,7 +17,7 @@ function writeTextUI() {
 $(".interface").remove();
 $(".select").remove();
 
-newButton = createButton("Next")
+newButton = createButton("New")
 newButton.class("select");
 newButton.position(width - (15 * vMax), height - (6 * vMax));
 newButton.style('font-size', '2.6vmax');

@@ -53,7 +53,7 @@ function writeTextUI() {
   $(".select").remove();
 
   // UI elements
-  newDrawingButton = createButton('Next');
+  newDrawingButton = createButton('New');
   newDrawingButton.position(width - (10 * vMax), height - (6 * vMax));
   newDrawingButton.class("select");
   newDrawingButton.style('font-size', '1.7vmax');

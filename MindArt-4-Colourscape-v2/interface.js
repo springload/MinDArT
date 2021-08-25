@@ -56,7 +56,7 @@
     saveButton.position(width - (16 * vMax), height - (12.6 * vMax));
     saveButton.mousePressed(saveImage);
 
-    resetButton = createButton("Restart");
+    resetButton = createButton("New");
     resetButton.class("select");
     resetButton.style('font-size', '1.7vmax');
     resetButton.style('height', '5vmax');
