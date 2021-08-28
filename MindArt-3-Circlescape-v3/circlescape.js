@@ -159,7 +159,7 @@ function calcDynamics() {
 
 function eraser() {
   stroke(colArray[arrayChoice][0]);
-  strokeWeight(45);
+  strokeWeight(52);
   line(pmouseX, pmouseY, mouseX, mouseY);
 }
 
