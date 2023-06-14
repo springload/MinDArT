@@ -1,0 +1,8 @@
+Errors
+======
+
+Permissions-Policy header: Unrecognized feature: 'interest-cohort'
+
+According to Google, FLoC provides a privacy-preserving mechanism for interest-based ad selection.
+
+For example, if you use GitHub Pages or GitLab Pages to host your website, the tag is automatically added to block Google's FLoC technology. {Error can be ignored for MindArt}
