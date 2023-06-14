@@ -1,6 +1,15 @@
 {
+  "name": "mindart_pwa",
+  "version": "1.0.0",
+  "description": "mind art progressive web app, for offline use",
+  "main": "index.html",
+  "scripts": {
+    "build": "esbuild --outfile=sw.js --bundle sw.ts",
+    "serve": "dhost ."
+  },
   "dependencies": {
     "esbuild": "^0.18.2",
+    "workbox-cli": "^7.0.0",
     "workbox-precaching": "^7.0.0"
   }
 }
