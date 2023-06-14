@@ -4,7 +4,7 @@
   "description": "mind art progressive web app, for offline use",
   "main": "index.html",
   "scripts": {
-    "build": "esbuild --outfile=sw.js --bundle sw.ts",
+    "build": "esbuild --outfile=sw.js --bundle sw.ts && workbox injectManifest",
     "serve": "dhost ."
   },
   "dependencies": {
