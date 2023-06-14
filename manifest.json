@@ -3,7 +3,7 @@
     "name": "Mind Art",
     "short_name": "Mind Art",
     "description": "Mind Art Progressive Web App (PWA) for offline use.",
-    "start_url": "/",
+    "start_url": "/MindArtMaster",
     "background_color": "#FFFFFF",
     "theme_color": "#FFFFFF",
     "orientation": "any",
