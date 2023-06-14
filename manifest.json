@@ -10,7 +10,7 @@
     "display": "minimal-ui",
     "icons": [
         {
-            "src": "/mindArt_Logo.png",
+            "src": "mindArt_Logo.png",
             "sizes": "512x512"
         }
     ]
