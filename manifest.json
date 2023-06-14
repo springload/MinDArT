@@ -1,8 +1,8 @@
 {
     "lang": "en-us",
-    "name": "Mind Art",
-    "short_name": "Mind Art",
-    "description": "Mind Art Progressive Web App (PWA) for offline use.",
+    "name": "MinDArT",
+    "short_name": "MinDArT",
+    "description": "MinDArT Progressive Web App (PWA) for offline use.",
     "start_url": "https://med-art.github.io/MindArtMaster",
     "background_color": "#FFFFFF",
     "theme_color": "#FFFFFF",
