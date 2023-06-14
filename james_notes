@@ -1,5 +1,18 @@
-Errors
-======
+Changes
+========
+ - Progressive Web App configured using:
+    - Workbox - modules for precaching (without having to list all assets)
+    - Esbuild - used to build the package for install
+
+styles.css
+    - Changed border-background to white - to remove large grey box visible when window scales to 3 x 3 x 2 apps
+
+
+
+
+
+Testing Error Log
+==================
 
 Permissions-Policy header: Unrecognized feature: 'interest-cohort'
 
