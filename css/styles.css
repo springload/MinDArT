@@ -5,12 +5,12 @@
 
   border-width: medium;
     border-color: black;
-    background: white;
+    background: lightskyblue;
 
 
 }
 .grid > div {
-  background: white ;
+  background: lightskyblue ;
   padding: 1rem;
 
 }
