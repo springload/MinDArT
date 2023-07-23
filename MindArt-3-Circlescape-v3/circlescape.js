@@ -39,8 +39,8 @@ let eraserOffToggle = 0;
 
 function preload() {
 
-  audio = loadSound('assets/audio.mp3');
-  click = loadSound('assets/click.mp3');
+  audio = loadSound('../sound/Scene3_Circle.mp3');
+  click = loadSound('../sound/click.mp3');
 }
 
 

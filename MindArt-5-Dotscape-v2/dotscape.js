@@ -48,8 +48,8 @@ let pointStore;
 
 function preload() {
   bg = loadImage('assets/paper.jpg');
-  audio = loadSound('assets/audio.mp3');
-  click = loadSound('assets/click.mp3');
+  audio = loadSound('../sound/Scene5_Dot.mp3');
+  click = loadSound('../sound/click.mp3');
 }
 
 function start() {

@@ -27,8 +27,8 @@ let velocity = 0;
 let img, storedOrientation, direction, storedOrientationDegrees, rotateDirection;
 
 function preload() {
-  audio = loadSound('assets/audio.mp3');
-  click = loadSound('assets/click.mp3');
+  audio = loadSound('../sound/Scene2_Line.mp3');
+  click = loadSound('../sound/click.mp3');
 }
 
 function setup() {
@@ -201,7 +201,7 @@ function sortFunction(a, b) {
 }
 
 function redrawIt() {
-  background(25);
+  background(255);
   for (let y = 0; y < yCount; y++) {
     //stroke((1/yCount)*y*255, 180)
     strokeWeight((1 / yCount) * y * 4.5);

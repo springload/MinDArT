@@ -14,8 +14,8 @@ let appStarted = 0;
 
 function preload() {
   bg = loadImage('assets/paper.jpg');
-  audio = loadSound('assets/audio.mp3');
-  click = loadSound('assets/click.mp3');
+  audio = loadSound('../sound/Scene8_Symmetry .mp3');
+  click = loadSound('../sound/click.mp3');
   eraseAlpha = loadImage('assets/eraseAlpha3.png');
 }
 

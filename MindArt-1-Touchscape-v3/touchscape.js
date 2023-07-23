@@ -40,8 +40,8 @@ var storedOrientationDegrees = 0;
 function preload() {
   //load all brush assets and background
   background = loadImage('assets/sand_01.jpg');
-  audio = loadSound('assets/audio_01.mp3');
-  click = loadSound('assets/click.mp3');
+  audio = loadSound('../sound/Scene1_Touch.mp3');
+  click = loadSound('../sound/click.mp3');
   for (let i = 1; i < 3; i++) {
     gui_img[i] = loadImage('assets/gui' + i + '.png');
   }

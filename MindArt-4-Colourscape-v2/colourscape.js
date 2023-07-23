@@ -69,8 +69,8 @@
     for (let i = 0; i < 15; i++) {
       brush[i] = loadImage('assets/Cloud' + i + '.png') // brush loader
     }
-    audio = loadSound('assets/audio.mp3');
-    click = loadSound('assets/click.mp3');
+    audio = loadSound('../sound/Scene4_Colour.mp3');
+    click = loadSound('../sound/click.mp3');
   }
 
 

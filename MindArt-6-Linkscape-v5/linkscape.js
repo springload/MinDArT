@@ -52,8 +52,8 @@ let colArray = [
 
 function preload() {
   texture = loadImage('assets/texture.png');
-  audio = loadSound('assets/audio.mp3');
-  click = loadSound('assets/click.mp3');
+  audio = loadSound('../sound/Scene6_Link.mp3');
+  click = loadSound('../sound/click.mp3');
   pin = loadImage('assets/pin.png')
 }
 
