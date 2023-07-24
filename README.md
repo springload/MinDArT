@@ -3,10 +3,13 @@
 # TODO
 
 ## FUNCTIONALITY FIXES
-- Colour contrast issues in multiple apps
 - Bug identification and resolution
+- Apply digital brush tools to Colourscape (2 hours)
+
 
 ## COMMON ASSETS
+- Construct a test UI interface based on Catharina's suggestion. (2 hours)
+- Apply 1 by 1 to apps (1 hour each app)
 - Move all user interface functionality into a main UI framework (Material UI)
   - Includes all save/restart functionality
 - All audio tracks in a single repository
