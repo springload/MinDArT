@@ -178,7 +178,7 @@ function touchMoved() {
     // find the closest match, and paint that colour
     let choice = 0;
     if (toggle) {
-      choice = 2;
+      choice = 1;
     }
     if (store.length > 0) {
       ccc = hexToRgb(colours[cc][choice]);
@@ -201,7 +201,17 @@ function sortFunction(a, b) {
 }
 
 function redrawIt() {
-  background(255);
+
+  c1 = color(colours[cc][2]);
+  c2 = color(255);
+  
+  for(let y=0; y<height; y++){
+    n = map(y,0,height,0,1);
+    let newc = lerpColor(c1,c2,n);
+    stroke(newc);
+    line(0,y,width, y);
+  }
+
   for (let y = 0; y < yCount; y++) {
     //stroke((1/yCount)*y*255, 180)
     strokeWeight((1 / yCount) * y * 4.5);

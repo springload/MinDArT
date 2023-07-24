@@ -1,17 +1,16 @@
 let resetButton, saveButton, fsButton, toggleBut;
 let toggle = 0;
 
+
 var colours = [
-  ['#D9042B', '#F27405', '#730217'],
-  ['#3E8C49', '#F29D35', '#F26444'],
-  ['#F057F2', '#9177F2', '#5550F2'],
-  ['#F24968', '#19594D', '#8E1BBF'],
-  ['#F22738', '#F27E7E', '#F2F2F2'],
-  ['#432E8C', '#F2F2F2', '#03A688'],
-  ['#F2A007', '#0B5943', '#F24B0F'],
-  ['#494949', '#999999', '#F2F2F2'],
-  ['#F2C36B', '#049DBF', '#F21905']
+  ['#6A732C', '#18261B', '#BF9649'],
+  ['#8AA6A3', '#BFBFBF', '#4C5958'],
+  ['#F2B077', '#F24405', '#261813'],
+  ['#D94929', '#590902', '#F2B705'],
+  ['#F2B705', '#6F7302', '#384001'],
+  ['#0D0D0D', '#F2C572', '#262626']
 ];
+
 
 let cc = 0;
 
@@ -82,9 +81,9 @@ function createSwatch() {
   for (let i = 0; i < 2; i++) {
     swatch[i] = createButton("");
     swatch[i].size(7 * vMax, 10.5 * vMax);
-    swatch[i].style("background-color", colours[cc][i * 2]);
+    swatch[i].style("background-color", colours[cc][i]);
     swatch[i].style("border-width", '6px');
-    swatch[i].style("border-color", colours[cc][1 + (i * 2)]);
+    //swatch[i].style("border-color", colours[cc][1 + (i * 2)]); 
     swatch[i].class("box");
     swatch[i].id("swatch" + i);
     swatch[i].mousePressed(function() {
