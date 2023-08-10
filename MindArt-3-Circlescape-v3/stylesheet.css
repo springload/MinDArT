@@ -16,6 +16,11 @@ body{
 
 }
 
+@font-face {
+  font-family: AvenirNext;
+  src: url("/css/Fonts/AvenirNextLTPro-Regular.otf");
+}
+
 .p5Canvas {
   height: 100%;
  overscroll-behavior: none;
