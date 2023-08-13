@@ -15,6 +15,10 @@
 
 - window.orientation    : orientation is now depricated.
 
+- consolidate style sheets
+
+- Any similarities with interface.js
+
 
 ## COMMON ASSETS
 - Construct a test UI interface based on Catharina's suggestion. (2 hours)
