@@ -103,7 +103,7 @@ newButton.mousePressed(restart);
 
 function addFS(){
   $('.fsButton').remove();
-  fsButton = createImg('../assets/enterFS.png', "FULLSCREEN");
+  fsButton = createImg('https://jameswilce.github.io/DevMinDArT/assets/enterFS.png', "FULLSCREEN");
   fsButton.style('height', '4.5vMax');
   fsButton.class("fsButton");
   fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
