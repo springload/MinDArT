@@ -17,7 +17,6 @@ let dragTracker = 0;
 
 let poleArr = [];
 
-
 let colArray = [
   ['#345573', '#223240', '#F2913D', '#F24B0F'],
   ['#345573', '#F2913D', '#223240', '#F24B0F'],
@@ -31,6 +30,7 @@ let colArray = [
   ['#CCCCCC', '#F2F2F2', '#B3B3B3', '#E6E6E6'],
   ['#F2F2F2', '#A6A6A6', '#737373', '#0D0D0D']
 ];
+
 let colChoice = 0;
 let arrayChoice = 0;
 
@@ -67,7 +67,6 @@ function start(){
   }
   sizeWindow();
   writeTextUI();
-
 
 
   // vector array used to store points, this will max out at 100
@@ -164,10 +163,6 @@ function eraser() {
 }
 
 
-
-
-
-
 function brush_rake(x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, ns) {
 
   strokeW = ceil(brushWidth / qtyOfLines);
@@ -182,12 +177,6 @@ function brush_rake(x, y, x2, y2, angle, qtyOfLines, brushWidth, opacity, ns) {
   for (var i = 0; i < qtyOfLines; i++) {
 
     d = p5.Vector.lerp(a, c, (i / (qtyOfLines + 1)));
-
-    // // randomise
-    // vec[i].x = vec[i].x + random(-ns, ns);
-    //   vec[i].y = vec[i].y + random(-ns, ns);
-
-    // strokeWeight(noise(d.x, d.y)*3)
 
     line(vec[i].x, vec[i].y, d.x, d.y);
 

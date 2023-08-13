@@ -18,7 +18,7 @@ body{
 
 @font-face {
   font-family: AvenirNext;
-  src: url("https://jameswilce.github.io/DevMinDArT/css/Fonts/AvenirNextLTPro-Regular.otf");
+  src: url("../css/Fonts/AvenirNextLTPro-Regular.otf");
 }
 
 .p5Canvas {

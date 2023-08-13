@@ -12,8 +12,6 @@ function calcDimensions() {
 
 function writeTextUI() {
 
-  // TODO: REMOVE ELEMENTS
-
 $(".interface").remove();
 $(".select").remove();
 
@@ -23,7 +21,6 @@ newButton.position(width - (15 * vMax), height - (6 * vMax));
 newButton.style('font-size', '2.6vmax');
 newButton.style('height', '5vmax');
 newButton.mousePressed(restart);
-
 
   saveButton = createButton("Save")
   saveButton.class("select");
@@ -58,48 +55,7 @@ newButton.mousePressed(restart);
   drawBigBtn.style('height', '5vmax');
   drawBigBtn.style('width', '8vmax');
   drawBigBtn.mousePressed(drawBig);
-
-
-// createSwatch();
 }
-
-// function createSwatch() {
-//
-//   $(".box").remove();
-//   $(".toggle").remove();
-//
-//   swatch = [];
-//   for (let i = 0; i < 3; i++) {
-//     swatch[i] = createButton("");
-//     swatch[i].position(((i * 7)) * vMax, height - (6 * vMax));
-//     swatch[i].size(7 * vMax, 10.5 * vMax);
-//     swatch[i].style("background-color", colours[colVersion][i]);
-//         swatch[i].style("border-width", '6px');
-//             swatch[i].style("border-color", "white");
-//     swatch[i].class("box");
-//     swatch[i].id("swatch" + i);
-//     swatch[i].mousePressed(function() {
-//      changeCol(i);
-//     });
-//   }
-//   changeCol(currentC);
-//
-//
-//
-//   // toggleBut = createButton('Change Colours');
-//   // toggleBut.mousePressed(function() {
-//   //  changeCol(currentC+1);
-//   // });
-//   // toggleBut.class("toggle");
-//   // toggleBut.id("ui4");
-//   // toggleBut.position(3*vMax, height - (6 * vMax));
-//   // toggleBut.style('width', '21vmax')
-//   // toggleBut.style('font-size', '1.5vmax');
-//   // toggleBut.style('height', '4vmax');
-//
-//       // toggleIt();
-//
-// }
 
 function addFS(){
   $('.fsButton').remove();
@@ -118,12 +74,11 @@ function fs(){
 function checkFS(){
   if (!fullscreen()){
   addFS();
+  }
 }
-}
-
 
 function saveImg() {
 
-
   save('touchscape' + month() + day() + hour() + second() + '.jpg');
+
 }
