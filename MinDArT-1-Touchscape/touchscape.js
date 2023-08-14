@@ -115,10 +115,6 @@ function start() {
   pointStore = [];
   lineStore = [];
 
-  // window.addEventListener("orientationchange", function() {
-  //   alert(window.orientation);
-  // }, false);
-
 }
 
 function change(qty, width, opac) {
