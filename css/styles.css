@@ -6,14 +6,18 @@
   border-width: medium;
     border-color: black;
     background: white;
-
- 
 }
 .grid > div {
   background: white ;
   padding: 1rem;
 
 }
+
+@font-face {
+  font-family: AvenirNext;
+  src: url("../css/Fonts/AvenirNextLTPro-Regular.otf");
+}
+
 body {
   margin: 1rem;
   text-align: center;
