@@ -109,7 +109,7 @@ function makeDrawing(_x, _y, pX, pY) {
     drawLayer.translate(-width / 2, -height / 2);
     brushIt(_x, _y, pX, pY);
     drawLayer.translate(width / 2, height / 2);
-    drawLayer.rotate(PI * 01);
+    drawLayer.rotate(PI * 1);
     drawLayer.translate(-width / 2, -height / 2);
     brushIt(_x, _y, pX, pY);
     drawLayer.translate(width / 2, height / 2);
