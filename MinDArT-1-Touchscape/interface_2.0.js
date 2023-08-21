@@ -12,14 +12,14 @@ function calcDimensions() {
 
 function writeTextUI() {
 
-  // TODO: REMOVE ELEMENTS
+  // TODO: REMOVE ELEMENTS`
 
 $(".interface").remove();
 $(".select").remove();
 
 
   for (let i = 0; i < 4; i++) {
-    buttons[i] = createImg('assets/icon' + (1 + i) + '.png');
+    buttons[i] = createImg('assets/touchbrush' + (1 + i) + '.png');
     buttons[i].class("interface");
     buttons[i].id("interface"+i);
     buttons[i].style('width', '13vMax');
@@ -45,7 +45,10 @@ $(".select").remove();
   selector.style('width', '13vMax');
   selector.position(vMax * 11, windowHeight - vMax * 13);
 
-  resetButton = createButton('New');
+
+
+  const resetButton = new MDCButton(document.querySelector('new'));
+  //resetButton = createButton('New');
   resetButton.position(windowWidth - (10 * vMax) - (vMax * 5), windowHeight - vMax * 6);
   resetButton.class("select");
   resetButton.position(width - (16 * vMax), height - (7 * vMax));

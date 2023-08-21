@@ -7,8 +7,10 @@
     "serve": "dhost ."
   },
   "dependencies": {
+    "@material/button": "^14.0.0",
     "esbuild": "^0.18.2",
     "material-components-web": "^14.0.0",
+    "material-ui": "^0.20.2",
     "workbox-cli": "^7.0.0",
     "workbox-precaching": "^7.0.0"
   }
