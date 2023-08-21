@@ -21,9 +21,9 @@ $(".select").remove();
   for (let i = 0; i < 3; i++) {
     buttons[i] = createImg('assets/touchbrush' + (1 + i) + '.png');
     buttons[i].class("select");
-    //buttons[i].id("interface"+i);
+    buttons[i].id("interface"+i);
     buttons[i].style('width', '13vMax');
-    buttons[i].style('padding', '5px');
+    buttons[i].style('padding', '50px');
 
     $('#interface'+i).on("touchstart", function(event){
       rake(i);
@@ -115,5 +115,5 @@ function saveImg() {
 }
 
 function menu() {
-  window.location.href = "/";
+  window.location.href = "/DevMinDArT";
 }
