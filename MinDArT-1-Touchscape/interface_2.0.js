@@ -46,9 +46,7 @@ $(".select").remove();
   selector.position(vMax * 11, windowHeight - vMax * 13);
 
 
-
-  const resetButton = new MDCButton(document.querySelector('new'));
-  //resetButton = createButton('New');
+  resetButton = createButton('New');
   resetButton.position(windowWidth - (10 * vMax) - (vMax * 5), windowHeight - vMax * 6);
   resetButton.class("select");
   resetButton.position(width - (16 * vMax), height - (7 * vMax));
