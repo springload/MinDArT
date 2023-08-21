@@ -23,6 +23,7 @@ $(".select").remove();
     buttons[i].class("interface");
     buttons[i].id("interface"+i);
     buttons[i].style('width', '13vMax');
+    buttons[i].style('padding', '5px');
 
     $('#interface'+i).on("touchstart", function(event){
       rake(i);
@@ -40,10 +41,11 @@ $(".select").remove();
     buttons[i].position(vMax * (11 * i), windowHeight - vMax * 13);
   }
 
-  selector = createImg('assets/selector.png');
-  selector.class("interface");
-  selector.style('width', '13vMax');
-  selector.position(vMax * 11, windowHeight - vMax * 13);
+  
+  //selector = createImg('assets/selector.png');
+  //selector.class("interface");
+  //selector.style('width', '13vMax');
+  //selector.position(vMax * 11, windowHeight - vMax * 13);
 
 
   resetButton = createButton('New');
