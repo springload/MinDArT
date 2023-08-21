@@ -18,7 +18,7 @@ $(".interface").remove();
 $(".select").remove();
 
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 3; i++) {
     buttons[i] = createImg('assets/touchbrush' + (1 + i) + '.png');
     buttons[i].class("interface");
     buttons[i].id("interface"+i);
