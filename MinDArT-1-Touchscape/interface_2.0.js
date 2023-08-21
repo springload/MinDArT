@@ -20,8 +20,8 @@ $(".select").remove();
 
   for (let i = 0; i < 3; i++) {
     buttons[i] = createImg('assets/touchbrush' + (1 + i) + '.png');
-    buttons[i].class("interface");
-    buttons[i].id("interface"+i);
+    buttons[i].class("select");
+    //buttons[i].id("interface"+i);
     buttons[i].style('width', '13vMax');
     buttons[i].style('padding', '5px');
 
@@ -29,6 +29,7 @@ $(".select").remove();
       rake(i);
       event.preventDefault();
     })
+
     $('#interface'+i).on("click", function(event){
       rake(i);
       event.preventDefault();
