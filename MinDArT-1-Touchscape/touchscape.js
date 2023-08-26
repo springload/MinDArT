@@ -297,10 +297,7 @@ function sizeWindow() {
 
     rotateWindow(direction);
 
-
     storedOrientationDegrees = window.orientation;
-
-
 
   }
   storedOrientation = currentOrientation;
@@ -311,11 +308,7 @@ function sizeWindow() {
   driftX = width / 2;
   driftY = 0;
 
-
-
 }
-
-
 
 function stretchWindow() {
   var newfg = createGraphics(windowWidth, windowHeight);

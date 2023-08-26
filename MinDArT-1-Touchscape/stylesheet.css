@@ -103,12 +103,104 @@ transform: translate(-50%, -50%);
   /* border-radius: 3vmax; */
 
   width: 80%;
-
-
 }
 
 .box {
   border-width: 0;
   border-color: rgb(200, 200, 200);
   border-radius: 0.7vmax;
+}
+
+.button-white {
+  background-color: white;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 140px;
+  font-size: 1.7vmax;
+  font-family: "AvenirNext";
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  text-align: center;
+  margin: 20px;
+}
+
+.button-white::selection {
+  background-color: #419EE2;
+  color: white;
+  border: 4px solid white;
+}
+
+.button-blue {
+  background-color: #BEE4FE;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 140px;
+  font-size: 1.7vmax;
+  font-family: "AvenirNext";
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  text-align: center;
+  margin: 20px;
+}
+
+.imgbutton-brush1 {
+  background-image: url('assets/touchbrush1.png');
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: center;
+  border: none;
+  border-radius: 40px;
+  height: 70px;
+  width: 120px;
+}
+
+.imgbutton-brush1:active {
+  background-image: url('assets/touchbrush1.2.png');
+  border: 4px solid white;
+}
+
+.imgbutton-brush2 {
+  background-image: url('assets/touchbrush2.png');
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: center;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 120px;
+}
+
+.imgbutton-brush2:focus {
+  background-image: url('assets/touchbrush2.2.png');
+  border: 4px solid white;
+}
+
+.imgbutton-brush3 {
+  background-image: url('assets/touchbrush3.png');
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: center;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 120px;
+}
+
+.imgbutton-brush3:focus {
+  background-image: url('assets/touchbrush3.2.png');
+  border: 4px solid white;
+}
+
+.imgbutton {
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: center;
+  border: none;
+  border-radius: 40px;
+  height: 70px;
+  width: 120px;
 }
