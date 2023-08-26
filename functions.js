@@ -41,6 +41,18 @@ function Programme_AppRelease(){
         else{
             document.querySelector('.grid').innerHTML = wk1 + wk2 + wk3 + wk4 + wk5 + wk6 + wk7 + wk8;
         }
-
 }
-   
+
+
+// Common interface functions
+
+function saveImg() {
+    click.play();
+    save('linescape' + month() + day() + hour() + second() + '.jpg');
+ }
+
+ 
+function menu() {
+    //window.location.href = "https://jameswilce.github.io/DevMinDArT";
+    window.location.href = "/";
+}

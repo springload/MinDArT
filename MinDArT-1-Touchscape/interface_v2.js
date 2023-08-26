@@ -69,10 +69,10 @@ $('#interface'+i).on('contextmenu', event => event.preventDefault());
 
 }
 
-function menu() {
+//function menu() {
   //window.location.href = "https://jameswilce.github.io/DevMinDArT";
-  window.location.href = "/";
-}
+  //window.location.href = "/";
+//}
 
 function saveImg() {
   click.play();
