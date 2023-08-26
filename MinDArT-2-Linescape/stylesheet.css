@@ -1,5 +1,5 @@
     html {
-      -webkit-touch-callout:none;
+    -webkit-touch-callout:none;
     -webkit-user-select:none;
     -khtml-user-select:none;
     -moz-user-select:none;
@@ -86,4 +86,19 @@ transform: translate(-50%, -50%);
   border-color: rgb(200, 200, 200);
   border-radius: 0.7vmax;
 
+}
+
+.right-buttons {
+  background-color: #dbf9d4; 
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 140px;
+  font-size: 1.7vmax;
+  font-family: "AvenirNext";
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  text-align: center;
+  margin: 20px;
 }

@@ -1,4 +1,4 @@
-let resetButton, saveButton, fsButton, toggleBut;
+let resetButton, saveButton, homeButton, fsButton, toggleBut;
 let toggle = 0;
 
 
@@ -10,7 +10,6 @@ var colours = [
   ['#F2B705', '#6F7302', '#384001'],
   ['#0D0D0D', '#F2C572', '#262626']
 ];
-
 
 let cc = 0;
 
@@ -34,21 +33,22 @@ function writeTextUI() {
   $(".select").remove();
 
   // UI elements
-  newDrawingButton = createButton('New');
-  newDrawingButton.position(width - (10 * vMax), height - (6 * vMax));
-  newDrawingButton.class("select");
-  newDrawingButton.style('font-size', '1.7vmax');
-  newDrawingButton.style('height', '4vmax');
-  newDrawingButton.style('width', '8vmax');
-  newDrawingButton.mousePressed(next);
+  
+// Buttons on the right..
+homeButton = createButton('Main Menu');
+homeButton.position(windowWidth-170,windowHeight-290);
+homeButton.class('right-buttons');
+homeButton.mousePressed(menu);  
 
-  saveButton = createButton("Save")
-  saveButton.class("select");
-  saveButton.style('font-size', '1.7vmax');
-  saveButton.style('height', '4vmax');
-  saveButton.style('width', '8vmax');
-  saveButton.position(width - (10 * vMax), height - (12 * vMax));
-  saveButton.mousePressed(saveImg);
+resetButton = createButton('New');
+resetButton.position(windowWidth-170,windowHeight-205);
+resetButton.class('right-buttons');
+resetButton.mousePressed(resetTimeout);
+
+saveButton = createButton('Save');
+saveButton.position(windowWidth-170,windowHeight-120);
+saveButton.class('right-buttons');
+saveButton.mousePressed(saveImg);
 
 
   //invert
