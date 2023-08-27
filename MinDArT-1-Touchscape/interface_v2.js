@@ -53,17 +53,17 @@ $('#interface'+i).on('contextmenu', event => event.preventDefault());
 // Buttons on the right..
   homeButton = createButton('Main Menu');
   homeButton.position(windowWidth-170,windowHeight-290);
-  homeButton.class('button-blue');
+  homeButton.class('right-buttons');
   homeButton.mousePressed(menu);  
 
   resetButton = createButton('New');
   resetButton.position(windowWidth-170,windowHeight-205);
-  resetButton.class('button-blue');
+  resetButton.class('right-buttons');
   resetButton.mousePressed(resetTimeout);
 
   saveButton = createButton('Save');
   saveButton.position(windowWidth-170,windowHeight-120);
-  saveButton.class('button-blue');
+  saveButton.class('right-buttons');
   saveButton.mousePressed(saveImg);
 
 

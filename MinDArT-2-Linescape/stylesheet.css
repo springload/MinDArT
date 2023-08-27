@@ -102,3 +102,24 @@ transform: translate(-50%, -50%);
   text-align: center;
   margin: 20px;
 }
+
+.button-white {
+  background-color: white;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 140px;
+  font-size: 1.7vmax;
+  font-family: "AvenirNext";
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  text-align: center;
+  margin: 20px;
+}
+
+.button-white::selection {
+  background-color: #79D169;
+  color: white;
+  border: 4px solid white;
+}

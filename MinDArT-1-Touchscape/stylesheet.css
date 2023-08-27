@@ -10,7 +10,6 @@ background-color: #469ede;
 overflow: hidden;
 }
 
-
 @font-face {
   font-family: AvenirNext;
   src: url("../css/Fonts/AvenirNextLTPro-Regular.otf");
@@ -21,7 +20,6 @@ body{
   margin: 0;
 
 }
-
 
 .sketch {
   height: 100%;
@@ -58,7 +56,6 @@ transform: translate(-50%, -50%);
   height: 5vmax;
   touch-action: none;
 }
-
 
 .startBtn {
   -webkit-appearance: none;
@@ -99,9 +96,6 @@ transform: translate(-50%, -50%);
   text-align: center;
   background-color: #469ede;
   color: white;
-;
-  /* border-radius: 3vmax; */
-
   width: 80%;
 }
 
@@ -132,7 +126,7 @@ transform: translate(-50%, -50%);
   border: 4px solid white;
 }
 
-.button-blue {
+.right-buttons {
   background-color: #BEE4FE;
   border-radius: 40px;
   border: none;
