@@ -2,6 +2,7 @@
 let smoothDist = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 let velocity = 0;
+let currentFunction;
 
 let storedOrientation, storedOrientationDegrees, rotateDirection;
 
@@ -20,7 +21,6 @@ let poleArr = [];
 let colArray = [
   ['#345573', '#223240', '#F2913D', '#F24B0F'],
   ['#345573', '#F2913D', '#223240', '#F24B0F'],
-  // ['#6D808C','#FFFFFF','#D9AA8F','#F2CAB3'],
   ['#172426', '#455559', '#D9C3B0', '#F2DFCE'],
   ['#F2BBBB', '#3C5E73', '#FFFFFF', '#F24444'],
   ['#6C2EF2', '#9726A6', '#8F49F2', '#F27ECA'],
@@ -198,18 +198,20 @@ function eraseToggle() {
   eraserOffToggle = 0;
   strokeCap(ROUND);
   blendMode(BLEND);
-
+  currentFunction = "erase";
   return false;
 }
 
 function drawBig() {
   drawActive();
   drawMulti = 2;
+  currentFunction = "drawBig";
 }
 
 function drawSml() {
   drawActive();
   drawMulti = 0.5;
+  currentFunction = "drawSml";
 }
 
 function drawActive() {

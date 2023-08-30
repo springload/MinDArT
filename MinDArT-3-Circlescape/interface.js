@@ -15,21 +15,37 @@ function writeTextUI() {
 $(".interface").remove();
 $(".select").remove();
 
-newButton = createButton("New")
-newButton.class("select");
-newButton.position(width - (15 * vMax), height - (6 * vMax));
-newButton.style('font-size', '2.6vmax');
-newButton.style('height', '5vmax');
-newButton.mousePressed(restart);
+  eraseButton = createButton('Erase');
+  eraseButton.position(10, windowHeight-120);
+  eraseButton.class('button-white', 'select');
+  eraseButton.mousePressed(eraseToggle);
 
-  saveButton = createButton("Save")
-  saveButton.class("select");
-  saveButton.style('font-size', '1.7vmax');
-  saveButton.style('height', '5vmax');
-  saveButton.position(width - (15 * vMax), height - (12 * vMax));
+  drawSmlBtn = createButton('Draw Small');
+  drawSmlBtn.position(175,windowHeight-120);
+  drawSmlBtn.class('button-white-leftsplit');
+  drawSmlBtn.mousePressed(drawSml);
+
+  drawBigBtn = createButton('Draw Big');
+  drawBigBtn.position(320,windowHeight-120);
+  drawBigBtn.class('button-white-rightsplit');
+  drawBigBtn.mousePressed(drawBig);
+
+  // Buttons on the right..
+  homeButton = createButton('Main Menu');
+  homeButton.position(windowWidth-170,windowHeight-290);
+  homeButton.class('right-buttons');
+  homeButton.mousePressed(menu);  
+
+  resetButton = createButton('New');
+  resetButton.position(windowWidth-170,windowHeight-205);
+  resetButton.class('right-buttons');
+  resetButton.mousePressed(restart);
+
+  saveButton = createButton('Save');
+  saveButton.position(windowWidth-170,windowHeight-120);
+  saveButton.class('right-buttons');
   saveButton.mousePressed(saveImg);
-
-  //invert
+  /**
   eraseBtn = createButton('Erase');
   eraseBtn.position(2 * vMax, height - (6 * vMax));
   eraseBtn.class("select");
@@ -37,7 +53,7 @@ newButton.mousePressed(restart);
   eraseBtn.style('height', '5vmax');
   eraseBtn.style('width', '8vmax');
   eraseBtn.mousePressed(eraseToggle);
-
+   
   //invert
   drawSmlBtn = createButton('Draw Small');
   drawSmlBtn.position(11 * vMax, height - (6 * vMax));
@@ -55,11 +71,12 @@ newButton.mousePressed(restart);
   drawBigBtn.style('height', '5vmax');
   drawBigBtn.style('width', '8vmax');
   drawBigBtn.mousePressed(drawBig);
+ */ 
 }
 
 function addFS(){
   $('.fsButton').remove();
-  fsButton = createImg('https://jameswilce.github.io/DevMinDArT/assets/enterFS.png', "FULLSCREEN");
+  fsButton = createImg('../assets/enterFS.png', "FULLSCREEN");
   fsButton.style('height', '4.5vMax');
   fsButton.class("fsButton");
   fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
