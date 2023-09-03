@@ -3,6 +3,8 @@ let currentRake = 1;
 let i = 0;
 let buttons = [];
 
+var currentTarget = "";
+
 function calcDimensions() {
   if (width > height) {
     vMax = width / 100;
@@ -82,13 +84,19 @@ function saveImg() {
 function Eraser() {
   change(1, 200, 1);
   eraseActive = 1;
+ // selectAll('.target').removeClass('target');
+  eraseButton.Class('target');
   click.play();
+
 }
 
 function brush_1() {
   change(5, 60, 100);
   eraseActive = 0;
+ // selectAll('.target').removeClass('target');
+ // brush_1button.ClassList.addClass('target');
   click.play();
+
 }
 
 function brush_2() {
