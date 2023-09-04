@@ -43,15 +43,16 @@ function setup() {
 
 function start() {
   $(".startBtn").remove();
-  //  fullscreen(1);
+
+    // Show bottom left buttons
+    show_btns();
+
   if (audio.isPlaying()) {} else {
     audio.loop(1);
   }
-
-    fullscreen(1);
-
+  //  fullscreen(1);
+  fullscreen(0);
   dimensionCalc();
-
 
   // display baselines
   fromCol = color(100, 100, 100);
@@ -69,6 +70,8 @@ function start() {
   writeTextUI();
   // restart();
   next();
+
+
 }
 
 function dimensionCalc() {

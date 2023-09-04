@@ -56,3 +56,10 @@ function menu() {
     //window.location.href = "https://jameswilce.github.io/DevMinDArT";
     window.location.href = "/";
 }
+
+function show_btns() {
+    var x = document.getElementsByClassName("btn");
+    for (var i = 0; i < x.length; i++) {
+      x[i].style.display = "inline";
+    }
+  }

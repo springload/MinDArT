@@ -1,6 +1,7 @@
 let resetButton, saveButton, homeButton, fsButton, toggleBut;
 let toggle = 0;
 
+
 var colours = [
   ['#6A732C', '#18261B', '#BF9649'],
   ['#8AA6A3', '#BFBFBF', '#4C5958'],
@@ -20,18 +21,12 @@ function calcDimensions() {
   }
 }
 
-function removeElements() {
-  //todo
-}
-
 function writeTextUI() {
-
-  // TODO: REMOVE ELEMENTS
 
   $(".interface").remove();
   $(".select").remove();
 
-// UI elements
+  // UI elements
   
 // Buttons on the right..
 homeButton = createButton('Main Menu');
@@ -49,19 +44,14 @@ saveButton.position(windowWidth-170,windowHeight-120);
 saveButton.class('right-buttons');
 saveButton.mousePressed(saveImg);
 
-  //invert
-  swapButton = createButton('Draw');
-  swapButton.position(2 * vMax, height - (6 * vMax));
-  swapButton.class("select");
-  swapButton.style('font-size', '1.7vmax');
-  swapButton.style('height', '4vmax');
-  swapButton.style('width', '8vmax');
-  swapButton.mousePressed(activateDraw);
-
   slider1 = createSlider(-500, 500, 0); // density
   slider1.input(updateSize);
   slider1.position(10, -150);
   slider1.style('width', '300px');
+
+
+
+
 
   createSwatch();
 }
@@ -77,7 +67,6 @@ function createSwatch() {
     swatch[i].size(7 * vMax, 10.5 * vMax);
     swatch[i].style("background-color", colours[cc][i]);
     swatch[i].style("border-width", '6px');
-    //swatch[i].style("border-color", colours[cc][1 + (i * 2)]); 
     swatch[i].class("box");
     swatch[i].id("swatch" + i);
     swatch[i].mousePressed(function() {
