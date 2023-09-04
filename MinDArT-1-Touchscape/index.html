@@ -20,20 +20,23 @@
 
 
   <script src="touchscape.js"></script>
-  <!-- Current interface // <script src="interface.js"></script>-->
-  <script src="interface_v2.js"></script>
+  <script src="interface-v2.js"></script>
 
   </head>
 
 <body>
-
-
   <div id="p5_loading" class="loadingclass">
-    <!--<img src="assets/logo.jpg" class="loadImage">-->
     <img src="../assets/touch scape icon white.png" class="loadImage">
     <div class="loading">
     <i class="fa fa-spinner fa-spin"></i>
+    </div>
   </div>
+  <!-- Bottom left action buttons, initially hidden on load -->
+  <div id="myDIV" class="bottom-left">
+    <button class="btn button-white" onclick="Eraser()">Erase</button>
+    <button class="btn imgbutton-brush1" onclick="brush_1()"></button>
+    <button class="btn imgbutton-brush2" onclick="brush_2()"></button>
+    <button class="btn imgbutton-brush3" onclick="brush_3()"></button>
   </div>
 
 </body>

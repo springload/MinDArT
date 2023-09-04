@@ -18,7 +18,6 @@ html {
 body{
   padding: 0;
   margin: 0;
-
 }
 
 .sketch {
@@ -26,7 +25,6 @@ body{
   overscroll-behavior: none;
   position: fixed;
 }
-
 
 .loadingclass {
   margin: 0;
@@ -105,39 +103,52 @@ body{
   border-radius: 0.7vmax;
 }
 
+.bottom-left {
+  position: absolute;
+  left: 20px;
+  bottom: 30px;
+  margin: auto;
+  height: 70px;
+}
+
+.btn {
+  color: black;
+  border:none;
+  background-color: #BEE4FE;
+  border-radius: 40px;
+  height: 70px;
+  width: 120px;
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+  vertical-align: middle;
+  justify-content: space-evenly;
+  display: none;
+}
+
 .button-white {
   background-color: white;
   border-radius: 40px;
   border: none;
   height: 70px;
-  width: 140px;
+  width: 120px;
   font-size: 1.7vmax;
   letter-spacing: 1px;
   color: #4e4e4e;
   font-size: large;
   text-align: center;
-  margin: 20px;
 }
 
-.button-white:hover, .button-white:target {
-  background-color: #419EE2;
+.button-white:active, .button-white:hover {
   color: white;
   border: 4px solid white;
-}
-
-.right-buttons {
-  background-color: #BEE4FE;
+  background-color: #419EE2;
   border-radius: 40px;
-  border: none;
   height: 70px;
-  width: 140px;
-  font-size: 1.7vmax;
-  font-family: "AvenirNext";
-  letter-spacing: 1px;
-  color: #4e4e4e;
+  width: 120px;
+  font-weight: bold;
   font-size: large;
   text-align: center;
-  margin: 20px;
 }
 
 .imgbutton-brush1 {
@@ -147,13 +158,18 @@ body{
   background-position: center;
   border: none;
   border-radius: 40px;
-  height: 70px;
-  width: 120px;
+
 }
 
-.imgbutton-brush1:hover {
+.imgbutton-brush1.active, .imgbutton-brush1:hover  {
   background-image: url('assets/touchbrush1.2.png');
   border: 4px solid white;
+}
+
+.active {
+  background-color: #419EE2;
+  border: 4px solid white;
+  color: white;
 }
 
 .imgbutton-brush2 {
@@ -167,7 +183,7 @@ body{
   width: 120px;
 }
 
-.imgbutton-brush2:focus {
+.imgbutton-brush2.active, .imgbutton-brush2:hover {
   background-image: url('assets/touchbrush2.2.png');
   border: 4px solid white;
 }
@@ -183,17 +199,28 @@ body{
   width: 120px;
 }
 
-.imgbutton-brush3:focus {
+.imgbutton-brush3.active, .imgbutton-brush3:hover {
   background-image: url('assets/touchbrush3.2.png');
   border: 4px solid white;
 }
 
-.imgbutton {
-  background-repeat: no-repeat;
-  background-size:cover;
-  background-position: center;
-  border: none;
+.right-buttons {
+  background-color: #BEE4FE;
   border-radius: 40px;
+  border: none;
   height: 70px;
-  width: 120px;
+  width: 130px;
+  font-size: 1.7vmax;
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px;
+}
+
+.right-buttons:hover {
+  color: white;
+  border: 4px solid white;
+  background-color: #419EE2;
 }
