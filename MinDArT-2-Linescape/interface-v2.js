@@ -1,7 +1,6 @@
 let resetButton, saveButton, homeButton, fsButton, toggleBut;
 let toggle = 0;
 
-
 var colours = [
   ['#6A732C', '#18261B', '#BF9649'],
   ['#8AA6A3', '#BFBFBF', '#4C5958'],
@@ -26,8 +25,21 @@ function writeTextUI() {
   $(".interface").remove();
   $(".select").remove();
 
-  // UI elements
-  
+// UI elements
+
+// Add active class to the current button (highlight it)
+var header = document.getElementById("myDIV");
+var btns = header.getElementsByClassName("btn");
+for (var i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", function() {
+  var current = document.getElementsByClassName("active");
+  if (current.length > 0) { 
+    current[0].className = current[0].className.replace(" active", "");
+  }
+  this.className += " active";
+  });
+}
+
 // Buttons on the right..
 homeButton = createButton('Main Menu');
 homeButton.position(windowWidth-170,windowHeight-290);
@@ -48,11 +60,6 @@ saveButton.mousePressed(saveImg);
   slider1.input(updateSize);
   slider1.position(10, -150);
   slider1.style('width', '300px');
-
-
-
-
-
   createSwatch();
 }
 

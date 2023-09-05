@@ -1,24 +1,23 @@
-    html {
-    -webkit-touch-callout:none;
-    -webkit-user-select:none;
-    -khtml-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
-    -webkit-tap-highlight-color:rgba(0,0,0,0);
-    background-color: #7cce6c;
-    overflow: hidden;
-    }
+html {
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  background-color: #7cce6c;
+  overflow: hidden;
+}
     
-    @font-face {
-      font-family: AvenirNext;
-      src: url("../css/Fonts/AvenirNextLTPro-Regular.otf");
-    }
+body {
+  padding: 0; 
+  margin: 0;
+}
 
-    body {
-      padding: 0; 
-      margin: 0;
-    }
+p{
+  margin: 24px;    
+}
 
 .arcs4 {
   height: 100%;
@@ -26,15 +25,14 @@
   position: fixed;
 }
 
-
 .loadingclass {
   margin: 0;
-position: absolute;
-top: 50%;
-left: 50%;
--ms-transform: translate(-50%, -50%);
-transform: translate(-50%, -50%);
-
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-family: Tahoma, sans-serif;
 }
 
 .startBtn {
@@ -42,20 +40,18 @@ transform: translate(-50%, -50%);
   -moz-appearance: none;
   appearance: none;
   opacity: 1;
-  font-size: 4vmax;
-  font-family: "AvenirNext";
+  font-size: 40px;
+  font-family: Tahoma, sans-serif;
   letter-spacing: 1px;
   font-weight: 900;
   text-align: center;
   background-color: white;
+  vertical-align: middle;
   color: #7cce6c;
+  width: 500px;
+  height: 100px;
   border-color: white;
-  border-width: 3px;
-
-  border-style: solid;
-  border-radius: 3vmax;
-  padding: 3vmax;
-
+  border-radius: 45px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -64,7 +60,24 @@ transform: translate(-50%, -50%);
   box-shadow: 0px 0px 3px white;
 }
 
+.loading {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  opacity: 1;
+  font-family: Tahoma, sans-serif;
+  font-size: 4vmax;
+  letter-spacing: 1px;
+  font-weight: 900;
+  text-align: center;
+  background-color: #7cce6c;
+  color: white;
+  width: 80%;
+}
 
+.loadImage{
+  width: 80%;
+}
 
 .select {
   font-size: 1.5vmax;
@@ -74,11 +87,9 @@ transform: translate(-50%, -50%);
   color: #4e4e4e;
   background-color: white;
   border-width: 3;
-
   border-radius: 0.7vmax;
   width: 12vmax;
   height: 3vmax;
-
 }
 
 .box {
