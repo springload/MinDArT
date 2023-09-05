@@ -25,6 +25,9 @@ body {
   position: fixed;
 }
 
+p {
+  margin: 24px;
+}
 
 .loadingclass {
   margin: 0;
@@ -77,19 +80,19 @@ transform: translate(-50%, -50%);
   -moz-appearance: none;
   appearance: none;
   opacity: 1;
-  font-size: 4vmax;
-  font-family: "AvenirNext";
+  font-size: 40px;
+  font-family: Tahoma, sans-serif;
   letter-spacing: 1px;
   font-weight: 900;
   text-align: center;
   background-color: white;
+  vertical-align: middle;
   color: #7e888f;
+  width: 500px;
+  height: 100px;
   border-color: white;
-  border-width: 3px;
+  border-radius: 45px;
 
-  border-style: solid;
-  border-radius: 3vmax;
-  padding: 3vmax;
 
   position: absolute;
   top: 50%;
@@ -104,23 +107,41 @@ transform: translate(-50%, -50%);
   -moz-appearance: none;
   appearance: none;
   opacity: 1;
+  font-family: Tahoma, sans-serif;
   font-size: 4vmax;
-  font-family: "AvenirNext";
   letter-spacing: 1px;
   font-weight: 900;
   text-align: center;
-  background-color: white;
-  color: #7e888f;
+  background-color: #7e888f;
+  color: white;
 ;
   /* border-radius: 3vmax; */
-
   width: 80%;
-
-
 }
 
 .box {
   border-width: 0;
   border-color: rgb(200, 200, 200);
   border-radius: 0.7vmax;
+}
+
+.right-buttons {
+  background-color: #CBD8E1;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 130px;
+  font-size: 1.7vmax;
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px;
+}
+
+.right-buttons:hover {
+  color: white;
+  border: 4px solid white;
+  background-color: #4E4E4E;
 }
