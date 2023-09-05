@@ -58,8 +58,9 @@ function menu() {
 }
 
 function show_btns() {
-    var x = document.getElementsByClassName("btn");
-    for (var i = 0; i < x.length; i++) {
-      x[i].style.display = "inline";
+    var getBtns = document.getElementsByClassName("btn");
+    for (var i = 0; i < getBtns.length; i++) {
+      getBtns[i].style.display = "inline";
     }
   }
+

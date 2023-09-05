@@ -54,12 +54,13 @@ function setup() {
   $('<p>Touch here to begin</p>').appendTo(stbtn);
   stbtn.mousedown(start);
   stbtn.mousemove(start);
-
 }
 function start(){
 
   $(".startBtn").remove();
-  fullscreen(1);
+  fullscreen(0);
+
+  
   // note currently everything resets on windowResized. Unsure if this is logical yet
 
   if (audio.isPlaying()) {} else {
@@ -67,6 +68,7 @@ function start(){
   }
   sizeWindow();
   writeTextUI();
+
 
 
   // vector array used to store points, this will max out at 100
@@ -127,12 +129,6 @@ function touchMoved() {
   } else {
     eraser();
   }
-  render();
-}
-
-function render() {
-
-
 }
 
 function calcDynamics() {
@@ -226,7 +222,6 @@ function windowResized(){
   sizeWindow();
   writeTextUI();
   checkFS();
-  render(); // not currently used
   background(colArray[arrayChoice][0]);
 
 }
