@@ -19,6 +19,10 @@ body {
   margin: 0;
 }
 
+p {
+  margin: 24px;
+}
+
 .p5Canvas {
   height: 100%;
  overscroll-behavior: none;
@@ -111,19 +115,19 @@ transform: translate(-50%, -50%);
   -moz-appearance: none;
   appearance: none;
   opacity: 1;
-  font-size: 4vmax;
-  font-family: "AvenirNext";
+  font-size: 40px;
+  font-family: Tahoma, sans-serif;
   letter-spacing: 1px;
   font-weight: 900;
   text-align: center;
   background-color: white;
+  vertical-align: middle;
   color: #ef6301;
+  width: 500px;
+  height: 100px;
   border-color: white;
-  border-width: 3px;
+  border-radius: 45px;
 
-  border-style: solid;
-  border-radius: 3vmax;
-  padding: 3vmax;
 
   position: absolute;
   top: 50%;
@@ -139,22 +143,133 @@ transform: translate(-50%, -50%);
   appearance: none;
   opacity: 1;
   font-size: 4vmax;
-  font-family: "AvenirNext";
+  font-family: Tahoma, sans-serif;
   letter-spacing: 1px;
   font-weight: 900;
   text-align: center;
-  background-color: white;
-  color: #ef6301;
-;
-  /* border-radius: 3vmax; */
-
+  color: white;
+  background-color: #ef6301;
   width: 80%;
-
-
 }
 
 .box {
   border-width: 0;
   border-color: rgb(200, 200, 200);
   border-radius: 0.7vmax;
+}
+
+.bottom-left {
+  position: absolute;
+  left: 20px;
+  bottom: 30px;
+  margin: auto;
+  height: 70px;
+}
+
+.btn {
+  vertical-align: middle;
+  justify-content: space-evenly;
+  display: none;
+}
+
+.button-white {
+  background-color: white;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 120px;
+  font-size: 1.7vmax;
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  text-align: center;
+}
+
+.button-white:active, .button-white:hover {
+  color: white;
+  border: 4px solid white;
+  background-color: #ef6301;
+  border-radius: 40px;
+  height: 70px;
+  width: 120px;
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+}
+
+.btn_leftsplit {
+  background-color: white;
+  border-radius: 40px 0px 0px 40px;
+  border: 4px solid #4e4e4e;
+  height: 70px;
+  width: 130px;
+  font-size: 1.7vmax;
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+}
+
+.btn_leftsplit:active, .btn_leftsplit:hover {
+  background-color: #ef6301;
+  font-weight: bold;
+  color: white;
+  border: 4px solid white;
+}
+
+.btn_sq {
+  border: 4px solid #4e4e4e;
+  height: 70px;
+  width: 70px;
+}
+
+.btn_sq.active, .btn_sq:hover {
+  border: 4px solid white;
+}
+
+.btn_rightsplit {
+  background-color: white;
+  border-radius: 0px 40px 40px 0px;
+  border: 4px solid #4e4e4e;
+  height: 70px;
+  width: 130px;
+  font-size: 1.7vmax;
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+}
+
+.btn_rightsplit.active, .btn_rightsplit:hover {
+  background-color: #ef6301;
+  font-weight: bolder;
+  color: white;
+  border: 4px solid white;
+}
+
+.right-buttons {
+  background-color: #F3CDB9;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 130px;
+  font-size: 1.7vmax;
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px;
+}
+
+.right-buttons:hover {
+  color: white;
+  border: 4px solid white;
+  background-color: #eaa581;
+}
+
+.grpBtns {
+  display: inline-block;
 }
