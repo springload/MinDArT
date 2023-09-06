@@ -199,7 +199,7 @@ function display() {
       if (eraseActive) {
         fg.noStroke();
         fg.fill(127, 80);
-        fg.ellipse(mouseX, mouseY, vMax * 13, vMax * 13);
+        fg.ellipse(mouseX, mouseY, vMax * 4, vMax * 4); // values to change erase width (previously = 13)
       } else {
 
 
