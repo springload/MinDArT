@@ -32,7 +32,7 @@ function writeTextUI() {
   $(".select").remove();
 
 // UI elements
-  
+  /** 
 // Buttons on the right..
 homeButton = createButton('Main Menu');
 homeButton.position(windowWidth-170,windowHeight-290);
@@ -43,7 +43,7 @@ resetButton = createButton('New');
 resetButton.position(windowWidth-170,windowHeight-205);
 resetButton.class('right-buttons');
 resetButton.mousePressed(resetTimeout);
-
+*/
 saveButton = createButton('Save');
 saveButton.position(windowWidth-170,windowHeight-120);
 saveButton.class('right-buttons');

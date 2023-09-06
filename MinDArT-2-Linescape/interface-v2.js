@@ -49,18 +49,27 @@ homeButton.mousePressed(menu);
 resetButton = createButton('New');
 resetButton.position(windowWidth-170,windowHeight-205);
 resetButton.class('right-buttons');
-resetButton.mousePressed(resetTimeout);
+resetButton.mousePressed(next);
 
 saveButton = createButton('Save');
 saveButton.position(windowWidth-170,windowHeight-120);
 saveButton.class('right-buttons');
 saveButton.mousePressed(saveImg);
 
+createSwatch();
+/**
+sw0 = document.getElementsByClassName("btn_mid");
+sw0.style("background-color", colours[cc][0]);
+
+sw1 = document.getElementsByClassName("btn_flatleft");
+sw1.style("background-color", colours[cc][1]);
+
   slider1 = createSlider(-500, 500, 0); // density
   slider1.input(updateSize);
   slider1.position(10, -150);
   slider1.style('width', '300px');
-  createSwatch();
+ */
+  
 }
 
 function createSwatch() {
@@ -70,7 +79,7 @@ function createSwatch() {
 
   swatch = [];
   for (let i = 0; i < 2; i++) {
-    swatch[i] = createButton("");
+   // swatch[i] = createButton("");
     swatch[i].size(7 * vMax, 10.5 * vMax);
     swatch[i].style("background-color", colours[cc][i]);
     swatch[i].style("border-width", '6px');
@@ -79,10 +88,11 @@ function createSwatch() {
     swatch[i].mousePressed(function() {
       toggleIt();
     });
-
-
+    // set class background colours for buttons
+   // document.getElementsByClassName("btn_mid").style.backgroundColor = colours[cc][0];
+   // document.getElementsByClassName("btn_flatleft").style.backgroundColor = colours[cc][1];
   }
-
+/**
   toggleBut = createButton('Paint Lines');
   toggleBut.mouseClicked(toggleIt);
   toggleBut.class("toggle");
@@ -91,7 +101,7 @@ function createSwatch() {
   toggleBut.style('width', '18vmax')
   toggleBut.style('font-size', '1.7vmax');
   toggleBut.style('height', '4vmax');
-
+ */
   toggleIt();
 
 }
@@ -101,6 +111,7 @@ function toggleIt() {
   bool = 0;
   toggle = !toggle;
   for (let i = 0; i < 2; i++) {
+  // left colour  
     swatch[i].position(((i * 9) + 12) * vMax, height - (11 * vMax));
     swatch[i].size(9 * vMax, 8 * vMax);
   }
@@ -108,6 +119,7 @@ function toggleIt() {
   if (toggle) {
     n = 1;
   }
+  // right colour
   swatch[n].position(((toggle * 9) + 12) * vMax, height - (15.5 * vMax));
   swatch[n].size(9 * vMax, 12.5 * vMax);
 }

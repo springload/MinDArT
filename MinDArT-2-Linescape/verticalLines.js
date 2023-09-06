@@ -139,16 +139,15 @@ function next() {
   if (cc > colours.length-1) {
     cc = 0;
   }
-    activateDraw();
+  
+  activateDraw();
 
   setupArrays();
   redrawIt();
 
-
-
   writeTextUI();
 
-  // console.log(yCount);
+   console.log(colours);
 }
 
 function touchMoved() {
