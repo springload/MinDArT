@@ -58,8 +58,7 @@ function setup() {
 function start(){
 
   $(".startBtn").remove();
-  fullscreen(0);
-
+  //fullscreen(0);
   
   // note currently everything resets on windowResized. Unsure if this is logical yet
 
@@ -86,6 +85,7 @@ function start(){
   }
 
   restart();
+
 }
 
 function touchEnded() {
@@ -190,7 +190,6 @@ function restart() {
 }
 
 function eraseToggle() {
-  console.log("here");
   eraserOffToggle = 0;
   strokeCap(ROUND);
   blendMode(BLEND);
@@ -258,8 +257,6 @@ function stretchWindow() {
   // temp.resizeCanvas(windowWidth, windowHeight);
   // temp = newtemp;
   // newtemp.remove();
-
-
 }
 
 function rotateWindow(direction) {
@@ -273,9 +270,6 @@ function rotateWindow(direction) {
   // temp.resizeCanvas(windowWidth, windowHeight);
   // temp = newtemp;
   // newtemp.remove();
-
-
-
 
   // TODO: properly detect the orientation
   rotateDirection = rotateDirection * -1;

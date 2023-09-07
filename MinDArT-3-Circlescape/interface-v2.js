@@ -1,9 +1,12 @@
-let resetButton, saveButton, fsButton, toggleBut, vMin;
+let resetButton, saveButton, homeButton, fsButton, toggleBut, vMin;
 
-show_btns();
+
 
 function writeTextUI() {
 
+$(".interface").remove();
+$(".select").remove();
+$(".btn").replace.display("")
 // Add active class to the current button (highlight it)
 var header = document.getElementById("myDIV");
 var btns = header.getElementsByClassName("btn");
@@ -17,11 +20,13 @@ for (var i = 0; i < btns.length; i++) {
   });
 }
 
+//var colourOne = document.getElementsByClassName("");
+
   // Buttons on the right..
   homeButton = createButton('Main Menu');
   homeButton.position(windowWidth-170,windowHeight-290);
   homeButton.class('right-buttons');
-  homeButton.mousePressed(show_btns);  
+  homeButton.mousePressed(menu);  
 
   resetButton = createButton('New');
   resetButton.position(windowWidth-170,windowHeight-205);
@@ -32,6 +37,8 @@ for (var i = 0; i < btns.length; i++) {
   saveButton.position(windowWidth-170,windowHeight-120);
   saveButton.class('right-buttons');
   saveButton.mousePressed(saveImg);
+
+  //$(".btn").style.display("inline");
 }
 
 function addFS(){
@@ -63,3 +70,10 @@ function calcDimensions() {
     vMin = width / 100;
   }
 }
+
+function show_btns() {
+    var x = document.getElementsByClassName("btn");
+    for (var i = 0; i < x.length; i++) {
+      x[i].style.display = "inline";
+    }
+  }
