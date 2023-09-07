@@ -51,7 +51,7 @@ function start() {
     audio.loop(1);
   }
   //  fullscreen(1);
-  fullscreen(0);
+  //fullscreen(0);
   dimensionCalc();
 
   // display baselines
@@ -141,13 +141,9 @@ function next() {
   }
   
   activateDraw();
-
   setupArrays();
   redrawIt();
-
   writeTextUI();
-
-   console.log(colours);
 }
 
 function touchMoved() {

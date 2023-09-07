@@ -57,18 +57,12 @@ saveButton.class('right-buttons');
 saveButton.mousePressed(saveImg);
 
 createSwatch();
-/**
-sw0 = document.getElementsByClassName("btn_mid");
-sw0.style("background-color", colours[cc][0]);
-
-sw1 = document.getElementsByClassName("btn_flatleft");
-sw1.style("background-color", colours[cc][1]);
 
   slider1 = createSlider(-500, 500, 0); // density
   slider1.input(updateSize);
   slider1.position(10, -150);
   slider1.style('width', '300px');
- */
+
   
 }
 
@@ -79,20 +73,18 @@ function createSwatch() {
 
   swatch = [];
   for (let i = 0; i < 2; i++) {
-   // swatch[i] = createButton("");
-    swatch[i].size(7 * vMax, 10.5 * vMax);
+    swatch[i] = createButton("");
+    swatch[i].size(20 * vMax, 10.5 * vMax);
     swatch[i].style("background-color", colours[cc][i]);
-    swatch[i].style("border-width", '6px');
-    swatch[i].class("box");
-    swatch[i].id("swatch" + i);
+    //swatch[i].style("border-width", '4px');
+    //swatch[i].class("box");
+    //swatch[i].id("swatch" + i);
     swatch[i].mousePressed(function() {
       toggleIt();
     });
-    // set class background colours for buttons
-   // document.getElementsByClassName("btn_mid").style.backgroundColor = colours[cc][0];
-   // document.getElementsByClassName("btn_flatleft").style.backgroundColor = colours[cc][1];
+
   }
-/**
+
   toggleBut = createButton('Paint Lines');
   toggleBut.mouseClicked(toggleIt);
   toggleBut.class("toggle");
@@ -101,10 +93,11 @@ function createSwatch() {
   toggleBut.style('width', '18vmax')
   toggleBut.style('font-size', '1.7vmax');
   toggleBut.style('height', '4vmax');
- */
+ 
   toggleIt();
 
 }
+
 
 function toggleIt() {
 
@@ -114,6 +107,7 @@ function toggleIt() {
   // left colour  
     swatch[i].position(((i * 9) + 12) * vMax, height - (11 * vMax));
     swatch[i].size(9 * vMax, 8 * vMax);
+
   }
   var n = 0;
   if (toggle) {
