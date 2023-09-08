@@ -19,13 +19,6 @@ p {
   margin: 24px;
 }
 
-.p5Canvas {
-  height: 100%;
-  overscroll-behavior: none;
-  position: fixed;
-}
-
-
 .loadingclass {
   margin: 0;
 position: absolute;

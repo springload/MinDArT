@@ -11,21 +11,32 @@
   <link rel="stylesheet" href="stylesheet.css">
   <script src="../libraries/p5.min.js"></script>
   <script src="../libraries/p5.sound.js"></script>
+  <script src="../functions.js"></script>
 
   <script src="symmetryscape.js"></script>
-  <script src="interface.js"></script>
+  <script src="interface-symmetry.js"></script>
 
 
 </head>
 
 <body>
   <div id="p5_loading" class="loadingclass">
-    <img src="../assets/symmetry scape icon.png" class="loadImage">
+    <img src="../assets/symmetry scape icon white.png" class="loadImage">
     <div class="loading">
-    <i class="fa fa-spinner fa-spin"></i>
+      <p text-align="center">Loading...</p>
   </div>
   </div>
-
+  <!-- Bottom left action buttons, initially hidden on load -->
+  <div id="myDIV" class="bottom-left">
+    <button id="id-erase" class="btn button-white" onclick="eraser()">Erase</button>
+    <button id="id-paint" class="btn btn_flatright" onclick="">Draw</button>
+    <button id="colourOne" class="btn btn_mid" onclick="changeBrush(1)"></button>
+    <button id="colourTwo" class="btn btn_mid" onclick="changeBrush(2)"></button>
+    <button id="colourThree" class="btn btn_mid" onclick="changeBrush(3)"></button>
+    <button id="colourFour" class="btn btn_mid" onclick="changeBrush(4)"></button>
+    <button id="colourFive" class="btn btn_mid" onclick="changeBrush(5)"></button>
+    <button id="colourSix" class="btn btn_flatleft" onclick="changeBrush(6)"></button>
+  </div>
 </body>
 
 </html>

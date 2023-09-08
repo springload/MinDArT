@@ -16,18 +16,26 @@
 
   <script src="colourscape.js"></script>
   <script src="eraseBrush.js"></script>
-  <script src="interface.js"></script>
+  <script src="interface-v2.js"></script>
+  <script src="../functions.js"></script>
   </head>
 
 <body>
 
   <div id="p5_loading" class="loadingclass">
-    <img src="../assets/colour scape icon.png" class="loadImage">
+    <img src="../assets/colour scape icon white.png" class="loadImage">
     <div class="loading">
-    <i class="fa fa-spinner fa-spin"></i>
+      <p text-align="center">Loading...</p>
+    </div>
   </div>
+  <!-- Bottom left action buttons, initially hidden on load -->
+  <div id="myDIV" class="bottom-left">
+    <button id="id-erase" class="btn button-white" onclick="eraser()">Erase</button>
+    <button id="id-draw" class="btn button-white" onclick="switchToTrace()">Draw</button>
+    <button id="id-paint" class="btn btn_flatright" onclick="switchToPaint()">Paint</button>
+    <button id="id-warm" class="btn btn_mid" onclick="paintWarm()"></button>
+    <button id="id-cool" class="btn btn_flatleft" onclick="paintCool()"></button>
   </div>
-
 </body>
 
 </html>

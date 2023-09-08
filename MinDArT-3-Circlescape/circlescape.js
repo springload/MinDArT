@@ -59,13 +59,15 @@ function start(){
 
   $(".startBtn").remove();
   //fullscreen(0);
-  
+
   // note currently everything resets on windowResized. Unsure if this is logical yet
 
   if (audio.isPlaying()) {} else {
     audio.loop(1);
   }
+
   sizeWindow();
+
   writeTextUI();
 
 
@@ -187,6 +189,8 @@ function restart() {
   blendMode(BLEND);
   background(colArray[arrayChoice][0]);
   drawBig();
+  
+
 }
 
 function eraseToggle() {

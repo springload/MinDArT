@@ -10,21 +10,14 @@ background-color: #6aafac;
 overflow: hidden;
 }
 
-@font-face {
-  font-family: AvenirNext;
-  src: url("../css/Fonts/AvenirNextLTPro-Regular.otf");
-}
 body {
   padding: 0;
   margin: 0;
 }
 
-.p5Canvas {
-  height: 100%;
- overscroll-behavior: none;
-  position: fixed;
+p {
+  margin: 24px;
 }
-
 
 .loadingclass {
   margin: 0;
@@ -119,26 +112,23 @@ transform: translate(-50%, -50%);
   touch-action: none;
 }
 
-
 .startBtn {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   opacity: 1;
-  font-size: 4vmax;
-  font-family: "AvenirNext";
+  font-size: 40px;
+  font-family: Tahoma, sans-serif;
   letter-spacing: 1px;
   font-weight: 900;
   text-align: center;
   background-color: white;
+  vertical-align: middle;
   color: #6aafac;
+  width: 500px;
+  height: 100px;
   border-color: white;
-  border-width: 3px;
-
-  border-style: solid;
-  border-radius: 3vmax;
-  padding: 3vmax;
-
+  border-radius: 45px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -153,22 +143,178 @@ transform: translate(-50%, -50%);
   appearance: none;
   opacity: 1;
   font-size: 4vmax;
-  font-family: "AvenirNext";
+  font-family: Tahoma, sans-serif;
   letter-spacing: 1px;
   font-weight: 900;
   text-align: center;
-  background-color: white;
-  color: #6aafac;
-;
-  /* border-radius: 3vmax; */
-
+  background-color: #6aafac;
+  color: white;
   width: 80%;
-
-
 }
+
 
 .box {
   border-width: 0;
   border-color: rgb(200, 200, 200);
   border-radius: 0.7vmax;
+}
+
+.bottom-left {
+  position: absolute;
+  left: 20px;
+  bottom: 30px;
+  margin: auto;
+  height: 70px;
+  font-size: 0;
+}
+
+.btn {
+  color: black;
+  border:none;
+  background-color: #BEE4FE;
+  border-radius: 40px;
+  height: 70px;
+  width: 120px;
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+  vertical-align: middle;
+  justify-content: space-evenly;
+  display: none;
+}
+
+.button-white {
+  background-color: white;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 120px;
+  font-size: 1.7vmax;
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.button-white.active, .button-white:hover {
+  color: white;
+  border: 4px solid white;
+  background-color: #66B0AD;
+  border-radius: 40px;
+  height: 70px;
+  width: 120px;
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.btn_flatright {
+  color: #4e4e4e;
+  background-color: white;
+  border-top: 4px solid #5D605C;
+  border-left: 4px solid #5D605C;
+  border-bottom: 4px solid #5D605C;
+  border-right: 2px solid #5D605C;
+  height: 70px;
+  width: 100px;
+  border-radius: 40px 0px 0px 40px;
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+  padding-right: 0px;
+}
+
+.btn_flatright.active, .btn_flatright:hover {
+  color: white;
+  border-right: 2px solid white;
+  border-top: 4px solid white;
+  border-left: 4px solid white;
+  border-bottom: 4px solid white;
+  background-color: #66B0AD;
+}
+
+.btn_mid {
+  color: #4e4e4e;
+  border-top: 4px solid #5D605C;
+  border-left: 2px solid #5D605C;
+  border-bottom: 4px solid #5D605C;
+  border-right: 2px solid #5D605C;
+  border-radius: 0px;
+  height: 70px;
+  width: 70px;
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+  padding: 0px;
+}
+
+.btn_mid.active, .btn_mid:hover {
+  border: 4px solid white;
+}
+
+.btn_flatleft {
+  color: #4e4e4e;
+  border-top: 4px solid #5D605C;
+  border-left: 2px solid #5D605C;
+  border-bottom: 4px solid #5D605C;
+  border-right: 4px solid #5D605C;
+  height: 70px;
+  width: 80px;
+  border-radius: 0px 40px 40px 0px;
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+  padding-left: 0px;
+}
+
+.btn_flatleft.active, .btn_flatleft:hover {
+  border: 4px solid white;
+}
+
+
+.right-buttons {
+  background-color: #B9E3E1;
+  border-radius: 40px;
+  border: none;
+  height: 70px;
+  width: 130px;
+  font-size: 1.7vmax;
+  letter-spacing: 1px;
+  color: #4e4e4e;
+  font-size: large;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px;
+}
+
+.right-buttons:hover {
+  color: white;
+  border: 4px solid white;
+  background-color: #66B0AD;
+}
+
+#colourOne {
+  background-color: #000000;
+}
+
+#colourTwo {
+  background-color: #444444;
+}
+
+#colourThree {
+  background-color: #888888;
+}
+
+#colourFour {
+  background-color: #a1a1a1;
+}
+
+#colourFive {
+  background-color: #c2c2c2;
+}
+
+#colourSix {
+  background-color: #ffffff;
 }

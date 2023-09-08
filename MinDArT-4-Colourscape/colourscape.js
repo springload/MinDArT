@@ -121,6 +121,7 @@
   function reset(){
     calcDimensions();
     writeTextUI();
+    resetButtons();
 
     backdrop();
     segLength = windowWidth / 40; // length of delay between touch and paint or line // 15 is a good value
@@ -321,8 +322,6 @@
     // TODO: properly detect the orientation
     rotateDirection = rotateDirection * -1;
   }
-
-
 
   function checkFS(){
     if (!fullscreen()){
