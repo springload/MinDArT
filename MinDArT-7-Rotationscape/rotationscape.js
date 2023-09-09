@@ -53,11 +53,6 @@ function start() {
   }
 
   restart();
-
-
-
-
-
 }
 
 
@@ -91,10 +86,6 @@ function mousePressed() {
 
     return false;
 }
-
-
-
-
 
 function touchMoved() {
 

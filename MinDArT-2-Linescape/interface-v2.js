@@ -40,6 +40,12 @@ for (var i = 0; i < btns.length; i++) {
   });
 }
 
+// Set the button colours
+var getColours = header.getElementsByClassName("swatch");
+for (var c = 0; c < getColours.length; c++) {
+  getColours[c].style.backgroundColor=colours[cc][c];
+}
+
 // Buttons on the right..
 homeButton = createButton('Main Menu');
 homeButton.position(windowWidth-170,windowHeight-290);
@@ -56,6 +62,7 @@ saveButton.position(windowWidth-170,windowHeight-120);
 saveButton.class('right-buttons');
 saveButton.mousePressed(saveImg);
 
+/**
 createSwatch();
 
   slider1 = createSlider(-500, 500, 0); // density
@@ -64,8 +71,8 @@ createSwatch();
   slider1.style('width', '300px');
 
   
-}
-
+}*/
+/* *
 function createSwatch() {
 
   $(".box").remove();
@@ -95,7 +102,7 @@ function createSwatch() {
   toggleBut.style('height', '4vmax');
  
   toggleIt();
-
+*/ 
 }
 
 

@@ -31,13 +31,12 @@
   <!-- Bottom left action buttons, initially hidden on load -->
   <div id="myDIV" class="bottom-left">
     <button class="btn button-white" onclick="eraser()">Erase</button>
-      <div class="grpBtns">
-        <button class="btn btn_leftsplit">Draw</button>
-        <button class="btn btn_sq"></button>
-        <button class="btn btn_sq"></button>
-        <button class="btn btn_sq"></button>
-        <button class="btn btn_rightsplit" onclick="reCenterTimeout()">Pick new centre</button>
-      </div>
+    <button class="btn btn_flatright">Draw</button>
+    <button id="colourOne" class="btn btn_sq box"></button>
+    <button id="colourTwo" class="btn btn_sq box"></button>
+    <button id="colourThree" class="btn btn_sq box"></button>
+    <button id="colourFour" class="btn btn_sq box"></button>
+    <button class="btn btn_flatleft" onclick="reCenterTimeout()">Pick new centre</button>
   </div>
 </body>
 
