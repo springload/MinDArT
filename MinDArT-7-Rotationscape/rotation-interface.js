@@ -95,6 +95,7 @@ for (let i = 0; i < 4; i++){
 }
 
 function eraser(){
+resetButtons();
 brushSelected = 6;
 button.remove();
 //button = createImg('assets/eraseOn.png');
@@ -158,6 +159,7 @@ function interruptor() {
 }
 
 function restart() {
+  resetButtons();
   counter++;
   swatchSel++;
   if (swatchSel > colArray.length-1){
@@ -188,7 +190,7 @@ function saveImg() {
     click.play();
   image(bg, 0, 0, width, height);
   image(drawLayer, 0, 0, width, height);
-  save('SymmetryScape' + month() + day() + hour() + second() + '.jpg');
+  save('rotationscape' + month() + day() + hour() + second() + '.jpg');
 }
 
 function checkFS(){

@@ -107,7 +107,7 @@ function saveImg() {
   // paintCanv.background(0, 10);
   image(paintCanv, 0, 0, width, height);
 
-save('stringscape' + month() + day() + hour() + second() + '.jpg');
+save('linkscape' + month() + day() + hour() + second() + '.jpg');
 }
 
 

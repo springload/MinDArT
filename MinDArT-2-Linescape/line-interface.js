@@ -138,48 +138,6 @@ function toggleIt() {
   //bool = 1;
 }
 
-
-/**
-function toggleIt() {
-
-  bool = 0;
-  toggle = !toggle;
- // for (let i = 0; i < 2; i++) {
-  //  swatch[i].position(((i * 9) + 12) * vMax, height - (11 * vMax));
-//    swatch[i].size(9 * vMax, 8 * vMax);
-//  }
-
-//  var n = 0;
- // if (toggle) {
- //   n = 1;
- // }
- // swatch[n].position(((toggle * 9) + 12) * vMax, height - (15.5 * vMax));
- // swatch[n].size(9 * vMax, 12.5 * vMax);
-
- 
-  if (!toggle) {
-    resetButtons();
-    setActive(ElementById("btnPaint");)
-    setActiveElementById("btnright");
-    } else {
-    resetButtons();
-    setActiveElementById("btnPaint");
-    setActiveElementById("btnleft");
-}
-
-}
- */
-
-function btnL() {
-    resetButtons();
-
-    toggleIt();
-}
-
-function btnR() {
-    resetButtons();
-    toggleIt();
-}
 function paintOff() {
   for (let i = 0; i < 2; i++) {
     swatch[i].position(((i * 9) + 12) * vMax, height - (11 * vMax));

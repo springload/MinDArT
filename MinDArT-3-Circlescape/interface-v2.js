@@ -5,7 +5,7 @@ function writeTextUI() {
 $(".interface").remove();
 $(".select").remove();
 
-
+show_btns();
 
 // Add active class to the current button (highlight it)
 var header = document.getElementById("myDIV");
@@ -36,10 +36,6 @@ for (var i = 0; i < btns.length; i++) {
   saveButton.class('right-buttons');
   saveButton.mousePressed(saveImg);
   
-  document.querySelectorAll(".btn").forEach((btn) => {
-    btn.style.display = "inline";
-  });
-  
 }
 
 
@@ -50,6 +46,11 @@ function addFS(){
   fsButton.class("fsButton");
   fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
   fsButton.mousePressed(fs);
+}
+
+function saveImg() {
+  click.play();
+  save('circlescape' + month() + day() + hour() + second() + '.jpg');
 }
 
 function fs(){

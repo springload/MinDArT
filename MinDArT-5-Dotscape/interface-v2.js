@@ -50,7 +50,7 @@ function restart() {
 
 function saveImg() {
   click.play();
-  save('touchscape' + month() + day() + hour() + second() + '.jpg');
+  save('dotscape' + month() + day() + hour() + second() + '.jpg');
 }
 
 function checkFS(){

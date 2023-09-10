@@ -198,7 +198,7 @@ function saveImg() {
     click.play();
   image(bg, 0, 0, width, height);
   image(drawLayer, 0, 0, width, height);
-  save('SymmetryScape' + month() + day() + hour() + second() + '.jpg');
+  save('symmetryscape' + month() + day() + hour() + second() + '.jpg');
 }
 
 function checkFS(){
