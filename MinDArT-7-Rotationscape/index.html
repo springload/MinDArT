@@ -15,7 +15,7 @@
 <script src="../libraries/p5.sound.js"></script>
 
   <script src="rotationscape.js"></script>
-  <script src="interface-v2.js"></script>
+  <script src="rotation-interface.js"></script>
   <script src="../functions.js"></script>
 
 
@@ -31,11 +31,11 @@
   <!-- Bottom left action buttons, initially hidden on load -->
   <div id="myDIV" class="bottom-left">
     <button class="btn button-white" onclick="eraser()">Erase</button>
-    <button class="btn btn_flatright">Draw</button>
-    <button id="colourOne" class="btn btn_sq box"></button>
-    <button id="colourTwo" class="btn btn_sq box"></button>
-    <button id="colourThree" class="btn btn_sq box"></button>
-    <button id="colourFour" class="btn btn_sq box"></button>
+    <button id="btnDraw" class="btn btn_flatright">Draw</button>
+    <button id="colourOne" class="btn btn_sq box" onclick="changeBrush(1)"></button>
+    <button id="colourTwo" class="btn btn_sq box" onclick="changeBrush(2)"></button>
+    <button id="colourThree" class="btn btn_sq box" onclick="changeBrush(3)"></button>
+    <button id="colourFour" class="btn btn_sq box" onclick="changeBrush(4)"></button>
     <button class="btn btn_flatleft" onclick="reCenterTimeout()">Pick new centre</button>
   </div>
 </body>

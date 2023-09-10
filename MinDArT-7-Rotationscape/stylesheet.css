@@ -144,6 +144,7 @@ transform: translate(-50%, -50%);
 .box {
   border-width: 0;
   border-color: rgb(200, 200, 200);
+  display: none;
 }
 
 .bottom-left {

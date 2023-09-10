@@ -45,13 +45,6 @@ function Programme_AppRelease(){
 
 
 // Common interface functions
-
-function saveImg() {
-    click.play();
-    save('linescape' + month() + day() + hour() + second() + '.jpg');
- }
-
- 
 function menu() {
     //window.location.href = "https://jameswilce.github.io/DevMinDArT";
     window.location.href = "/";
