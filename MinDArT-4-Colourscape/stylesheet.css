@@ -176,7 +176,7 @@ transform: translate(-50%, -50%);
   ); 
 }
 
-.btn_mid.active, .btn_mid:hover {
+.btn_mid.active{
   border: 4px solid white;
 }
 
@@ -210,7 +210,7 @@ transform: translate(-50%, -50%);
   ); 
 }
 
-.btn_flatleft.active, .btn_flatleft:hover {
+.btn_flatleft.active {
   border: 4px solid white;
 }
 

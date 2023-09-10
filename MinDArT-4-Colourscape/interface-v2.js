@@ -52,10 +52,10 @@
     resetButton.class('right-buttons');
     resetButton.mousePressed(reset);
 
-    saveButton = createButton('Reset Btns');
+    saveButton = createButton('Save');
     saveButton.position(windowWidth-170,windowHeight-120);
     saveButton.class('right-buttons');
-    saveButton.mousePressed(resetButtons);
+    saveButton.mousePressed(saveImage);
 
   }
 
@@ -86,7 +86,7 @@
     }
     bool = 1;
   }
-
+/**
   function paintWarm() {
     resetButtons();
     setActive("id-paint", "id-warm");
@@ -106,7 +106,7 @@
     colourBool = colourBool;
     setActive('id-paint', 'id-cool');
   }
-
+ */
   function switchToTrace() {
     click.play();
     bool = 0;
@@ -130,11 +130,11 @@
     eraseState = 1;
     if (eraserVersion) {
       resetButtons();
-      activeButtons("id-erase", "id-paint");
+      setActive("id-erase", "id-paint");
 
     } else {
         resetButtons();
-        activeButtons("id-erase", "id-draw");
+        setActive("id-erase", "id-draw");
     }
   }
 

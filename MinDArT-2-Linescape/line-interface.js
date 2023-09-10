@@ -121,7 +121,25 @@ function createSwatch() {
   toggleIt();
 
 }
+function toggleIt() {
+  click.play();
+  bool = 0;
+  resetButtons();
+  toggle = !toggle;
 
+  if (!toggle) {
+      resetButtons();
+      setActive("btnPaint", "btnleft");
+
+  } else {
+      resetButtons();
+      setActive("btnPaint", "btnright");
+  }
+  //bool = 1;
+}
+
+
+/**
 function toggleIt() {
 
   bool = 0;
@@ -139,9 +157,9 @@ function toggleIt() {
  // swatch[n].size(9 * vMax, 12.5 * vMax);
 
  
-  if (bool = 0) {
+  if (!toggle) {
     resetButtons();
-    setActiveElementById("btnPaint");
+    setActive(ElementById("btnPaint");)
     setActiveElementById("btnright");
     } else {
     resetButtons();
@@ -150,6 +168,7 @@ function toggleIt() {
 }
 
 }
+ */
 
 function btnL() {
     resetButtons();
@@ -201,4 +220,10 @@ function setActiveElementsById(id) {
         otherElement.classList.add('active');
       }
     }
+  }
+
+  function setActive (id1, id2) {
+    resetButtons();
+    document.getElementById(id1).classList.add("active");
+    document.getElementById(id2).classList.add("active");
   }
