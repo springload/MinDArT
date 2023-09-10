@@ -157,6 +157,7 @@ transform: translate(-50%, -50%);
   border-width: 0;
   border-color: rgb(200, 200, 200);
   border-radius: 0.7vmax;
+  display: none;
 }
 
 .bottom-left {
@@ -226,14 +227,6 @@ transform: translate(-50%, -50%);
   padding-right: 0px;
 }
 
-.btn_flatright.active, .btn_flatright:hover {
-  color: white;
-  border-right: 2px solid white;
-  border-top: 4px solid white;
-  border-left: 4px solid white;
-  border-bottom: 4px solid white;
-  background-color: #66B0AD;
-}
 
 .btn_mid {
   color: #4e4e4e;

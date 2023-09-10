@@ -18,18 +18,18 @@ function writeTextUI() {
 
   show_btns();
 
-// Add active class to the current button (highlight it)
-var header = document.getElementById("myDIV");
-var btns = header.getElementsByClassName("btn");
-for (var i = 0; i < btns.length; i++) {
-btns[i].addEventListener("click", function() {
-    var current = document.getElementsByClassName("active");
-        if (current.length > 0) { 
-            current[0].className = current[0].className.replace(" active", "");
-        }
-    this.className += " active";
-    });
-}
+  // Add active class to the current button (highlight it)
+  var header = document.getElementById("myDIV");
+  var btns = header.getElementsByClassName("btn");
+  for (var i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", function() {
+      var current = document.getElementsByClassName("active");
+          if (current.length > 0) { 
+              current[0].className = current[0].className.replace(" active", "");
+          }
+      this.className += " active";
+      });
+  }
 
   // Buttons on the right..
   homeButton = createButton('Main Menu');
@@ -48,9 +48,15 @@ btns[i].addEventListener("click", function() {
   saveButton.mousePressed(saveImg);
 
 
-  button = createButton("");
-  button.mousePressed(eraser);
-
+  /**
+function swatch (btnID, a) {
+    swatchBtn = document.getElementById(btnID);
+    swatchBtn.style.backgroundColor=colArray[a];
+    swatchBtn.mousePressed(function() {
+        changeBrush('a' + 1)
+    });
+ */
+    /**
     swatch1 = createButton("");
     swatch1.position(12 * vMax, height - (13 * vMax));
     swatch1.size(6 * vMax, 10.5 * vMax);
@@ -74,11 +80,9 @@ btns[i].addEventListener("click", function() {
     swatch3.size(6 * vMax, 10.5 * vMax);
     swatch3.style('background-color', colArray[2]);
     swatch3.class("box");
-
     swatch3.mousePressed(function() {
       changeBrush(3)
     });
-
 
     swatch4 = createButton("");
     swatch4.position(30 * vMax, height - (13 * vMax));
@@ -107,38 +111,49 @@ btns[i].addEventListener("click", function() {
       changeBrush(6)
     });
 
-    selColour = createButton("");
+    selColour = createImg('assets/colSelected.png');
+    selColour.position(12 * vMax, height - (16 * vMax));
+    selColour.size(6 * vMax, 16 * vMax);
     selColour.mousePressed();
-
+ */
 
 }
+
+
 
 function eraser(){
 
 brushSelected = 6;
 button.remove();
-button = createButton("");
+button = createImg('assets/eraseOn.png');
+button.position(1.5 * vMax, height - (12 * vMax));
+button.size(12 * vMax, 12 * vMax);
 button.mousePressed(eraser);
 selColour.remove();
 
-}
+  }
 
 
   function changeBrush(brushSel) {
     click.play();
+    resetButtons();
+/**
     button.remove();
-    button = createButton("");
+    button = createImg('assets/eraseOff.png');
+    button.position(1.5 * vMax, height - (12 * vMax));
+    button.size(12 * vMax, 12 * vMax);
+*/   
+
     button.mousePressed(eraser);
 
     brushSelected = brushSel-1;
-
+/**
     selColour.remove();
     selColour = createImg('assets/colSelected.png');
     selColour.position((12 + ((brushSel-1) * 6)) * vMax, height - (16 * vMax));
-    selColour.class("box");
     selColour.size(6 * vMax, 16 * vMax);
     selColour.mousePressed();
-
+*/ 
   }
 
 
