@@ -134,6 +134,7 @@ p {
   color: #4e4e4e;
   font-size: large;
   text-align: center;
+  margin-right: 10px;
 }
 
 .button-white:active, .button-white:hover {
@@ -155,7 +156,7 @@ p {
   background-position: center;
   border: none;
   border-radius: 40px;
-
+  margin-right: 10px;
 }
 
 .imgbutton-brush1.active, .imgbutton-brush1:hover  {
@@ -178,6 +179,7 @@ p {
   border: none;
   height: 70px;
   width: 120px;
+  margin-right: 10px;
 }
 
 .imgbutton-brush2.active, .imgbutton-brush2:hover {
@@ -194,6 +196,7 @@ p {
   border: none;
   height: 70px;
   width: 120px;
+  margin-right: 10px;
 }
 
 .imgbutton-brush3.active, .imgbutton-brush3:hover {
