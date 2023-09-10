@@ -44,9 +44,6 @@ function setup() {
 function start() {
   $(".startBtn").remove();
 
-    // Show bottom left buttons
-    show_btns();
-
   if (audio.isPlaying()) {} else {
     audio.loop(1);
   }
@@ -66,7 +63,7 @@ function start() {
   setupDefaults();
   setupArrays();
 
-   sizeWindow();
+  sizeWindow();
   writeTextUI();
   // restart();
   next();
@@ -119,12 +116,14 @@ function setupArrays() {
 }
 
 function activateDraw() {
+  resetButtons();
   bool = 1;
   paintOff();
   return false;
 }
 
 function next() {
+  resetButtons();
   yCount = int(yCount *= 1.3);
   xCount = int(xCount *= 0.95);
   brushSizeBaseline *= 0.95;

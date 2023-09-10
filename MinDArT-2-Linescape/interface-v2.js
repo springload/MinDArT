@@ -27,6 +27,9 @@ function writeTextUI() {
 
 // UI elements
 
+// Show bottom left buttons
+show_btns();
+
 // Add active class to the current button (highlight it)
 var header = document.getElementById("myDIV");
 var btns = header.getElementsByClassName("btn");
@@ -46,6 +49,12 @@ for (var c = 0; c < getColours.length; c++) {
   getColours[c].style.backgroundColor=colours[cc][c];
 }
 
+if (toggle = 0) {
+  setActive("btnPaint","btnleft");
+} else {
+  setActive("btnErase","btnright");
+}
+
 // Buttons on the right..
 homeButton = createButton('Main Menu');
 homeButton.position(windowWidth-170,windowHeight-290);
@@ -62,17 +71,8 @@ saveButton.position(windowWidth-170,windowHeight-120);
 saveButton.class('right-buttons');
 saveButton.mousePressed(saveImg);
 
-/**
 createSwatch();
 
-  slider1 = createSlider(-500, 500, 0); // density
-  slider1.input(updateSize);
-  slider1.position(10, -150);
-  slider1.style('width', '300px');
-
-  
-}*/
-/* *
 function createSwatch() {
 
   $(".box").remove();
@@ -80,53 +80,40 @@ function createSwatch() {
 
   swatch = [];
   for (let i = 0; i < 2; i++) {
-    swatch[i] = createButton("");
-    swatch[i].size(20 * vMax, 10.5 * vMax);
     swatch[i].style("background-color", colours[cc][i]);
-    //swatch[i].style("border-width", '4px');
-    //swatch[i].class("box");
-    //swatch[i].id("swatch" + i);
-    swatch[i].mousePressed(function() {
-      toggleIt();
-    });
-
+   // swatch[i].mousePressed(function() {
+     // toggleIt();
+   // });
   }
-
-  toggleBut = createButton('Paint Lines');
-  toggleBut.mouseClicked(toggleIt);
-  toggleBut.class("toggle");
-  toggleBut.id("ui4");
-  toggleBut.position(12 * vMax, height - (6 * vMax));
-  toggleBut.style('width', '18vmax')
-  toggleBut.style('font-size', '1.7vmax');
-  toggleBut.style('height', '4vmax');
- 
-  toggleIt();
-*/ 
 }
-
+  toggleIt();
+}
 
 function toggleIt() {
 
   bool = 0;
   toggle = !toggle;
   for (let i = 0; i < 2; i++) {
-  // left colour  
-    swatch[i].position(((i * 9) + 12) * vMax, height - (11 * vMax));
-    swatch[i].size(9 * vMax, 8 * vMax);
+  // left colour
+   // swatch = document.getElementsByClassName("swatch");  
+//swatch[i].position(((i * 9) + 12) * vMax, height - (11 * vMax));
+   // swatch[i].size(9 * vMax, 8 * vMax);
+    setActive('btnPaint','btnleft');
 
-  }
   var n = 0;
   if (toggle) {
     n = 1;
   }
   // right colour
-  swatch[n].position(((toggle * 9) + 12) * vMax, height - (15.5 * vMax));
-  swatch[n].size(9 * vMax, 12.5 * vMax);
+ // swatch[n].position(((toggle * 9) + 12) * vMax, height - (15.5 * vMax));
+//  swatch[n].size(9 * vMax, 12.5 * vMax);
+setActive('btnPaint','btnright');
+}
 }
 
 function paintOff() {
   for (let i = 0; i < 2; i++) {
+    swatch = document.getElementsByClassName("swatch");
     swatch[i].position(((i * 9) + 12) * vMax, height - (11 * vMax));
     swatch[i].size(9 * vMax, 8 * vMax);
   }
@@ -156,3 +143,4 @@ function saveImg() {
   click.play();
   save('linescape' + month() + day() + hour() + second() + '.jpg');
 }
+

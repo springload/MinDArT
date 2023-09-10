@@ -71,3 +71,20 @@ function show_btns() {
             activeButtons[i].classList.remove("active");
         }
   }
+  
+  function setActive (id1, id2) {
+    resetButtons();
+    document.getElementById(id1).classList.add("active");
+    document.getElementById(id2).classList.add("active");
+  }
+
+
+  function setActiveElementById(id) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.classList.add('active');
+    }
+  }
+
+
+  
