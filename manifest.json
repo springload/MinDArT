@@ -1,9 +1,9 @@
 {
     "lang": "en-us",
     "name": "MinDArT",
-    "short_name": "MinDArT",
+    "short_name": "MinDArT DEV",
     "description": "MinDArT Progressive Web App (PWA) for offline use.",
-    "start_url": "https://med-art.github.io/MindArtMaster",
+    "start_url": "https://jameswilce.github.io/DevMinDArT",
     "background_color": "#FFFFFF",
     "theme_color": "#FFFFFF",
     "orientation": "any",
