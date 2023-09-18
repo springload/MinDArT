@@ -52,21 +52,21 @@ for (var c = 0; c < getColours.length; c++) {
   getColours[c].style.backgroundColor=colArray[swatchSel][c];
 }
 
-// Buttons on the right..
-homeButton = createButton('Main Menu');
-homeButton.position(windowWidth-170,windowHeight-290);
-homeButton.class('right-buttons');
-homeButton.mousePressed(menu);  
+  // Buttons on the right..
+  homeButton = createButton('Main Menu');
+  homeButton.position(width - (13 * vMax),height - (20 * vMax));
+  homeButton.class('right-buttons');
+  homeButton.mousePressed(menu);  
 
-resetButton = createButton('New');
-resetButton.position(windowWidth-170,windowHeight-205);
-resetButton.class('right-buttons');
-resetButton.mousePressed(restart);
+  resetButton = createButton('New');
+  resetButton.position(width - (13 * vMax),height - (14 * vMax));
+  resetButton.class('right-buttons');
+  resetButton.mousePressed(restart);
 
-saveButton = createButton('Save');
-saveButton.position(windowWidth-170,windowHeight-120);
-saveButton.class('right-buttons');
-saveButton.mousePressed(saveImg);
+  saveButton = createButton('Save');
+  saveButton.position(width - (13 * vMax),height - (8 * vMax));
+  saveButton.class('right-buttons');
+  saveButton.mousePressed(saveImg);
 
 // TODO: this code to be removed in future.
   button = createImg('assets/eraseOn.png');
@@ -193,6 +193,7 @@ function saveImg() {
   save('rotationscape' + month() + day() + hour() + second() + '.jpg');
 }
 
+/**
 function checkFS(){
   if (!fullscreen()){
   addFS();
@@ -212,7 +213,7 @@ function fs(){
   fullscreen(1);
   $('.fsButton').remove();
 }
-
+ */
 function colorAlpha(aColor, alpha) {
   var c = color(aColor);
   return color('rgba(' + [red(c), green(c), blue(c), alpha].join(',') + ')');

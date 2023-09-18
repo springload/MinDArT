@@ -43,20 +43,19 @@
 
     // Buttons on the right..
     homeButton = createButton('Main Menu');
-    homeButton.position(windowWidth-170,windowHeight-290);
+    homeButton.position(width - (13 * vMax),height - (20 * vMax));
     homeButton.class('right-buttons');
     homeButton.mousePressed(menu);  
 
     resetButton = createButton('New');
-    resetButton.position(windowWidth-170,windowHeight-205);
+    resetButton.position(width - (13 * vMax),height - (14 * vMax));
     resetButton.class('right-buttons');
     resetButton.mousePressed(reset);
 
     saveButton = createButton('Save');
-    saveButton.position(windowWidth-170,windowHeight-120);
+    saveButton.position(width - (13 * vMax),height - (8 * vMax));
     saveButton.class('right-buttons');
     saveButton.mousePressed(saveImage);
-
   }
 
   function resetButtons() {
@@ -142,7 +141,7 @@
     click.play();
     save('colourscape' + month() + day() + hour() + second() + '.jpg');
   }
-
+/**
   function addFS(){
     $('.fsButton').remove();
     fsButton = createImg("../assets/enterFS.png", "FULLSCREEN");
@@ -156,7 +155,7 @@
     fullscreen(1);
     $('.fsButton').remove();
   }
-
+ */
   function setActive (id1, id2) {
     resetButtons();
     document.getElementById(id1).classList.add("active");
