@@ -81,7 +81,7 @@ function setup() {
 function start() {
   // NOTE: what is redraw();
   $(".startBtn").remove();
-  //fullscreen(1);
+  fullscreen(1);
   click.play();
   if (audio.isPlaying()) {} else {
     audio.loop(1);
@@ -253,12 +253,12 @@ function reset() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight*0.9);
-  //sizeWindow();
+  resizeCanvas(windowWidth, windowHeight);
+  sizeWindow();
 
-  // removeElements();
- // writeTextUI();
- // display();
+   removeElements();
+ writeTextUI();
+ display();
  // checkFS();
 }
 /**
