@@ -92,7 +92,7 @@ function start() {
   textLayer.clear();
   introComplete = 1;
   sizeWindow();
-  windowResized();
+  windowResized(windowWidth, windowHeight);
   writeTextUI();
   rake(currentRake);
   reset();
