@@ -9,7 +9,8 @@ html, body {
   background-color: #469ede;
   margin: 0;
   padding: 0;
-  overflow: clip;
+  object-fit: fill;
+  overflow: hidden;
 }
 
 p {

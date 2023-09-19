@@ -18,7 +18,7 @@ var x = 100,
   px = [],
   py = [],
   pA = [];
-angle1 = 0.0,
+  angle1 = 0.0,
   dragLength = 30;
 
 var r = 0;
@@ -309,14 +309,14 @@ function sizeWindow() {
 }
 
 function stretchWindow() {
-  var newfg = createGraphics(windowWidth, windowHeight*0.9);
-  newfg.image(fg, 0, 0, windowWidth, windowHeight*0.9);
-  fg.resizeCanvas(windowWidth, windowHeight*0.9);
+  var newfg = createGraphics(windowWidth, windowHeight);
+  newfg.image(fg, 0, 0, windowWidth, windowHeight);
+  fg.resizeCanvas(windowWidth, windowHeight);
   fg = newfg;
 
-  var newpLayer = createGraphics(windowWidth, windowHeight*0.9);
-  newpLayer.image(pLayer, 0, 0, windowWidth, windowHeight*0.9);
-  pLayer.resizeCanvas(windowWidth, windowHeight*0.9);
+  var newpLayer = createGraphics(windowWidth, windowHeight);
+  newpLayer.image(pLayer, 0, 0, windowWidth, windowHeight);
+  pLayer.resizeCanvas(windowWidth, windowHeight);
   pLayer = newpLayer;
 }
 
