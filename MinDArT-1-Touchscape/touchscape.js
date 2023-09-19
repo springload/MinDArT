@@ -4,12 +4,12 @@ let storedOrientation, currentOrientation, rotateDirection = -1;
 // mouse Tracking
 let isMousedown = 0;
 let vMax;
-let introText = ["Touch and Listen", "Look", "Draw"];
+//let introText = ["Touch and Listen", "Look", "Draw"];
 let appCol = "#469ede"; // 70, 158, 222
 
 //data storage - not currently in use
-let pointStore;
-let lineStore;
+//let pointStore;
+//let lineStore;
 
 // new variables below
 var x = 100,
@@ -52,11 +52,11 @@ function preload() {
 function setup() {
 
   //createCanvas(window.innerWidth, window.innerHeight);
-  createCanvas(windowWidth, windowHeight * 0.9);
+  createCanvas(windowWidth, windowHeight);
   // NOTE: UInsure if these should be in setup, or declared globally an put into restart
   fg = createGraphics(width, height);
   pLayer = createGraphics(width, height);
-  textLayer = createGraphics(width, height); // BUG: what is text layer doing?
+ // textLayer = createGraphics(width, height); // BUG: what is text layer doing?
   introLayer = createGraphics(width, height);
 
   fg.strokeWeight(strokeW);
@@ -90,7 +90,7 @@ function start() {
 
   calcDimensions(); // BUG: remove?
 
-  textLayer.clear();
+ // textLayer.clear();
   introComplete = 1;
   sizeWindow();
   windowResized();
@@ -110,8 +110,8 @@ function start() {
   canvas.addEventListener('mouseup', touchstop);
 
   //DATA
-  pointStore = [];
-  lineStore = [];
+ // pointStore = [];
+ // lineStore = [];
 
 }
 
@@ -253,7 +253,7 @@ function reset() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(windowWidth, windowHeight*0.9);
   //sizeWindow();
 
   // removeElements();
@@ -301,7 +301,7 @@ function sizeWindow() {
   storedOrientation = currentOrientation;
   segLength = width / 15;
   calcDimensions();
-  textLayer.resizeCanvas(windowWidth, windowHeight);
+  //textLayer.resizeCanvas(windowWidth, windowHeight);
   //bLayer.tint(255, 190);
   driftX = width / 2;
   driftY = 0;
@@ -309,14 +309,14 @@ function sizeWindow() {
 }
 
 function stretchWindow() {
-  var newfg = createGraphics(windowWidth, windowHeight);
-  newfg.image(fg, 0, 0, windowWidth, windowHeight);
-  fg.resizeCanvas(windowWidth, windowHeight);
+  var newfg = createGraphics(windowWidth, windowHeight*0.9);
+  newfg.image(fg, 0, 0, windowWidth, windowHeight*0.9);
+  fg.resizeCanvas(windowWidth, windowHeight*0.9);
   fg = newfg;
 
-  var newpLayer = createGraphics(windowWidth, windowHeight);
-  newpLayer.image(pLayer, 0, 0, windowWidth, windowHeight);
-  pLayer.resizeCanvas(windowWidth, windowHeight);
+  var newpLayer = createGraphics(windowWidth, windowHeight*0.9);
+  newpLayer.image(pLayer, 0, 0, windowWidth, windowHeight*0.9);
+  pLayer.resizeCanvas(windowWidth, windowHeight*0.9);
   pLayer = newpLayer;
 }
 
