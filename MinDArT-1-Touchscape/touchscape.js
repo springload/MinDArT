@@ -93,7 +93,7 @@ function start() {
   textLayer.clear();
   introComplete = 1;
   sizeWindow();
-  windowResized(windowWidth, windowHeight);
+  windowResized();
   writeTextUI();
   rake(currentRake);
   reset();
@@ -254,12 +254,12 @@ function reset() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  sizeWindow();
+  //sizeWindow();
 
   // removeElements();
-  writeTextUI();
-  display();
-  checkFS();
+ // writeTextUI();
+ // display();
+ // checkFS();
 }
 /**
 function checkFS(){
