@@ -52,7 +52,7 @@ function preload() {
 function setup() {
 
   //createCanvas(window.innerWidth, window.innerHeight);
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight * 0.9);
   // NOTE: UInsure if these should be in setup, or declared globally an put into restart
   fg = createGraphics(width, height);
   pLayer = createGraphics(width, height);
