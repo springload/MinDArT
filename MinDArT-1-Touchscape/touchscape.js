@@ -80,7 +80,7 @@ function setup() {
 function start() {
   // NOTE: what is redraw();
   $(".startBtn").remove();
-  fullscreen(1);
+  //fullscreen(1);
   click.play();
   if (audio.isPlaying()) {} else {
     audio.loop(1);
@@ -258,7 +258,7 @@ function windowResized() {
   // removeElements();
   writeTextUI();
   display();
-  checkFS();
+  //checkFS();
 }
 
 function checkFS(){
