@@ -4,30 +4,19 @@ let storedOrientation, currentOrientation, rotateDirection = -1;
 // mouse Tracking
 let isMousedown = 0;
 let vMax;
-let introText = ["Touch and Listen", "Look", "Draw"];
-let appCol = "#469ede"; // 70, 158, 222
-
-//data storage - not currently in use
-let pointStore;
-let lineStore;
 
 // new variables below
 var x = 100,
-  y = 100,
-  vec = [],
-  px = [],
-  py = [],
-  pA = [];
-  angle1 = 0.0,
-  dragLength = 30;
+    y = 100,
+    vec = [],
+    angle1 = 0.0,
+    dragLength = 30;
 
-var r = 0;
 var qtyOfLines = 40;
 var brushWidth = 200;
 var strokeW = (brushWidth / qtyOfLines);
 var opacity = 200;
 
-var gui_img = [];
 var pebble = [];
 
 var randomScalar = [];
@@ -51,23 +40,16 @@ function preload() {
 
 function setup() {
 
-  createCanvas(window.innerWidth, window.innerHeight);
-  //createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight);
   // NOTE: UInsure if these should be in setup, or declared globally an put into restart
   fg = createGraphics(innerWidth, innerHeight);
   pLayer = createGraphics(width, height);
-  textLayer = createGraphics(width, height); // BUG: what is text layer doing?
-  introLayer = createGraphics(width, height);
 
   fg.strokeWeight(strokeW);
   fg.noFill();
   fg.stroke(20, 100);
 
   colorMode(HSB, 360, 100, 100, 1.0);
-
-  introLayer.fill(255, 30);
-  introLayer.blendMode(BLEND);
-  introLayer.noStroke();
 
   pixelDensity(1); // effectively ignores retina displays
 
@@ -79,7 +61,7 @@ function setup() {
 }
 
 function start() {
-  // NOTE: what is redraw();
+
   $(".startBtn").remove();
   fullscreen(1);
   click.play();
@@ -90,14 +72,12 @@ function start() {
 
   calcDimensions(); // BUG: remove?
 
-  textLayer.clear();
-  introComplete = 1;
   sizeWindow();
-  windowResized();
+  //windowResized();
   writeTextUI();
   rake(currentRake);
-  reset();
-  counter = 0;
+  //reset();
+  //counter = 0;
 
 
   // all event listeners //// BUG: should these be in setup?
@@ -108,10 +88,6 @@ function start() {
   canvas.addEventListener('touchend', touchstop);
   canvas.addEventListener('touchleave', touchstop);
   canvas.addEventListener('mouseup', touchstop);
-
-  //DATA
-  pointStore = [];
-  lineStore = [];
 
 }
 
@@ -154,8 +130,6 @@ function moved(ev) {
 
   makeArray(x, y, x2, y2, angle1);
   display();
-
-
 
   return false;
 }
@@ -254,10 +228,10 @@ function reset() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  sizeWindow();
+ // sizeWindow();
 
   //removeElements();
-  writeTextUI();
+ // writeTextUI();
   display();
  // checkFS();
 }
@@ -269,7 +243,7 @@ function checkFS(){
 }
 }
  */
-
+/**
 function sizeWindow() {
   // canvas.width = window.innerWidth;
   // canvas.height =  window.innerHeight;
@@ -301,13 +275,12 @@ function sizeWindow() {
   storedOrientation = currentOrientation;
   segLength = width / 15;
   calcDimensions();
-  textLayer.resizeCanvas(windowWidth, windowHeight);
   //bLayer.tint(255, 190);
   driftX = width / 2;
   driftY = 0;
 
 }
-
+ */
 function stretchWindow() {
   var newfg = createGraphics(windowWidth, windowHeight);
   newfg.image(fg, 0, 0, windowWidth, windowHeight);
@@ -319,7 +292,7 @@ function stretchWindow() {
   pLayer.resizeCanvas(windowWidth, windowHeight);
   pLayer = newpLayer;
 }
-
+/**
 function rotateWindow(direction) {
   var newfg = createGraphics(windowWidth, windowHeight);
   newfg.push();
@@ -344,7 +317,7 @@ function rotateWindow(direction) {
   // TODO: properly detect the orientation
   rotateDirection = rotateDirection * -1;
 }
-
+ */
 //startSimulation and pauseSimulation defined elsewhere
 function handleVisibilityChange() {
   if (document.hidden) {
