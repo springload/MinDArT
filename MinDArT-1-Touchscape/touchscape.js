@@ -80,7 +80,7 @@ function setup() {
 function start() {
   // NOTE: what is redraw();
   $(".startBtn").remove();
-  fullscreen(1);
+  //fullscreen(1);
   click.play();
   if (audio.isPlaying()) {} else {
     audio.loop(1);
@@ -88,11 +88,11 @@ function start() {
   change();
 
   calcDimensions(); // BUG: remove?
-  sizeWindow(); // BUG: remove?
 
   textLayer.clear();
   introComplete = 1;
   sizeWindow();
+  windowResized();
   writeTextUI();
   rake(currentRake);
   reset();
@@ -260,14 +260,14 @@ function windowResized() {
   display();
   checkFS();
 }
-
+/**
 function checkFS(){
   console.log("checking");
   if (!fullscreen()){
   addFS();
 }
 }
-
+ */
 
 function sizeWindow() {
   // canvas.width = window.innerWidth;

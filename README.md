@@ -1,5 +1,11 @@
 # DevMinDArT
 
+# UPDATING THE PACKAGE
+1. Update 'manifest.json'
+  - "Start_URL", "Short Name", Icons "src" 
+2. Run `npm run build` to generate the new package in './dist/' folder (this will also update the version number)
+3. Update menu URL path in 'functions.js'.
+
 # TODO
 
 07-08: New clone of MindArtMaster.
