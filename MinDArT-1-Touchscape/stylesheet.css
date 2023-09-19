@@ -1,18 +1,19 @@
 html, body {
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  user-select:none;
+  background-color: #469ede;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
-
 p {
   margin: 24px;
-}
-
-.sketch {
-  height: 100%;
-  overscroll-behavior: none;
-  position: fixed;
 }
 
 .loadingclass {
