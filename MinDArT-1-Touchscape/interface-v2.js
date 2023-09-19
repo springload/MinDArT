@@ -15,7 +15,6 @@ function writeTextUI() {
   // TODO: REMOVE ELEMENTS
 
 $(".interface").remove();
-$(".select").remove();
 
     $('#interface'+i).on("touchstart", function(event){
       rake(i);
@@ -43,17 +42,17 @@ for (var i = 0; i < btns.length; i++) {
 
 // Buttons on the right..
 homeButton = createButton('Main Menu');
-homeButton.position(windowWidth-170,windowHeight-290);
+homeButton.position(width - (13 * vMax),height - (20 * vMax));
 homeButton.class('right-buttons');
 homeButton.mousePressed(menu);  
 
 resetButton = createButton('New');
-resetButton.position(windowWidth-170,windowHeight-205);
+resetButton.position(width - (13 * vMax),height - (14 * vMax));
 resetButton.class('right-buttons');
 resetButton.mousePressed(resetTimeout);
 
 saveButton = createButton('Save');
-saveButton.position(windowWidth-170,windowHeight-120);
+saveButton.position(width - (13 * vMax),height - (8 * vMax));
 saveButton.class('right-buttons');
 saveButton.mousePressed(saveImg);
 

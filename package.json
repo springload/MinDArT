@@ -11,15 +11,11 @@
     "esbuild": "^0.18.2",
     "material-components-web": "^14.0.0",
     "material-ui": "^0.20.2",
-<<<<<<< HEAD
     "update": "^0.4.2",
     "workbox-cli": "^7.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.19.3",
-=======
-    "workbox-cli": "^7.0.0",
->>>>>>> parent of 98836b7 (Updates to right menu buttons and package rebuild)
     "workbox-precaching": "^7.0.0"
   }
 }
