@@ -20,11 +20,11 @@ $(".select").remove();
     $('#interface'+i).on("touchstart", function(event){
       rake(i);
       event.preventDefault();
-    })
+    }, {passive: false});
     $('#interface'+i).on("click", function(event){
       rake(i);
       event.preventDefault();
-    })
+    }, {passive: false});
 
     show_btns();
 
