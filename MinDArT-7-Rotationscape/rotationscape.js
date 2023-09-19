@@ -46,7 +46,7 @@ function start() {
   counter = rotArray.length;
 
   $('.startBtn').remove();
-  fullscreen(1);
+  //fullscreen(1);
 
   if (audio.isPlaying()) {} else {
     audio.loop(1);

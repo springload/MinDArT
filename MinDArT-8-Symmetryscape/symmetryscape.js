@@ -40,7 +40,7 @@ function setup() {
 function start() {
 
   $('.startBtn').remove();
-  fullscreen(1);
+  //fullscreen(1);
   windowResized(); // note, this seems unecessary, but for some reason am not always getting fs, this forces it for now.
   appStarted = 1;
 

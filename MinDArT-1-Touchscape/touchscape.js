@@ -221,6 +221,7 @@ function display() {
 
 
 function resetTimeout() {
+  resetButtons();
   setTimeout(reset, 50);
 
   getPressure = function(ev) {
