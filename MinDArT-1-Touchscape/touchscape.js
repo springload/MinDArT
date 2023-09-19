@@ -51,13 +51,12 @@ function preload() {
 
 function setup() {
 
-  createCanvas(window.innerWidth, window.innerHeight);
-  //createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight);
   // NOTE: UInsure if these should be in setup, or declared globally an put into restart
-  fg = createGraphics(innerWidth, innerHeight);
-  pLayer = createGraphics(width, height);
-  textLayer = createGraphics(width, height); // BUG: what is text layer doing?
-  introLayer = createGraphics(width, height);
+  fg = createGraphics(windowWidth, windowHeight);
+  pLayer = createGraphics(windowWidth, windowHeight);
+  textLayer = createGraphics(windowWidth, windowHeight); // BUG: what is text layer doing?
+  introLayer = createGraphics(windowWidth, windowHeight);
 
   fg.strokeWeight(strokeW);
   fg.noFill();
@@ -210,13 +209,13 @@ function display() {
     }
   }
   blendMode(BLEND);
-  image(background, 0, 0, width, height);
+  image(background, 0, 0, windowWidth, windowHeight);
   blendMode(OVERLAY);
 
-  image(fg, 0, 0, width, height);
+  image(fg, 0, 0, windowWidth, windowHeight);
   blendMode(BLEND);
   noTint();
-  image(pLayer, 0, 0, width, height);
+  image(pLayer, 0, 0, windowWidth, windowHeight);
 }
 
 
@@ -232,7 +231,7 @@ function resetTimeout() {
 function reset() {
   click.play();
   blendMode(REPLACE);
-  image(background, 0, 0, width, height);
+  image(background, 0, 0, windowWidth, windowHeight);
   fg.clear();
   pLayer.clear();
   change(qtyOfLines, brushWidth, opacity); // sort of circular
@@ -273,7 +272,7 @@ function checkFS(){
 function sizeWindow() {
   // canvas.width = window.innerWidth;
   // canvas.height =  window.innerHeight;
-  image(background, 0, 0, width, height);
+  image(background, 0, 0, windowWidth, windowHeight);
   if (width < height) {
     currentOrientation = "portrait";
   } else {
