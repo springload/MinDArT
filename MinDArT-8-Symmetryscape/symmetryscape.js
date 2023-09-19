@@ -188,7 +188,7 @@ function windowResized() {
   drawLayer.strokeCap(PROJECT);
   dimensionCalc();
   writeTextUI();
-  checkFS();
+  //checkFS();
   render();
 }
 

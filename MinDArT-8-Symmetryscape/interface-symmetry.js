@@ -200,7 +200,7 @@ function saveImg() {
   image(drawLayer, 0, 0, width, height);
   save('symmetryscape' + month() + day() + hour() + second() + '.jpg');
 }
-
+/**
 function checkFS(){
   if (!fullscreen()){
   addFS();
@@ -220,3 +220,4 @@ function fs(){
   fullscreen(1);
   $('.fsButton').remove();
 }
+ */

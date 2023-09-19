@@ -139,7 +139,7 @@ function sizeWindow(){
   dimensionCalc();
   removeElements();
   writeTextUI();
-    checkFS();
+   // checkFS();
   stage--;
   nextDrawing();
 }

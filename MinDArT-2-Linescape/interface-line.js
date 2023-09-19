@@ -31,14 +31,14 @@ function writeTextUI() {
   $(".interface").remove();
   $(".select").remove();
 
-  $('#interface'+i).on("touchstart", function(event){
+  $('#interface').on("touchstart", function(event){
     event.preventDefault();
   }, {passive: false});
-  $('#interface'+i).on("click", function(event){
+  $('#interface').on("click", function(event){
     event.preventDefault();
   }, {passive: false});
 
-  
+
 // UI elements
 show_btns(); 
 

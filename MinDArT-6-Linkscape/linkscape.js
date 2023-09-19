@@ -352,7 +352,7 @@ function windowResized() {
   calcDimensions();
   removeElements();
   writeTextUI();
-  checkFS();
+ // checkFS();
   // touchMoved();
 }
 

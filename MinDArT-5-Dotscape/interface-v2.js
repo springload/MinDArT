@@ -52,7 +52,7 @@ function saveImg() {
   click.play();
   save('dotscape' + month() + day() + hour() + second() + '.jpg');
 }
-
+/**
 function checkFS(){
   if (!fullscreen()){
   addFS();
@@ -72,3 +72,4 @@ function fs(){
   fullscreen(1);
   $('.fsButton').remove();
 }
+ */
