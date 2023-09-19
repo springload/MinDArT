@@ -29,22 +29,21 @@ function writeTextUI(){
   $(".select").remove();
     $(".select2").remove();
 
-
   // Buttons on the right..
-  homeButton = createButton('Main Menu');
-  homeButton.position(width - (13 * vMax),height - (20 * vMax));
-  homeButton.class('right-buttons');
-  homeButton.mousePressed(menu);  
+homeButton = createButton('Main Menu');
+homeButton.position(windowWidth-170,windowHeight-290);
+homeButton.class('right-buttons');
+homeButton.mousePressed(menu);  
 
-  resetButton = createButton('New');
-  resetButton.position(width - (13 * vMax),height - (14 * vMax));
-  resetButton.class('right-buttons');
-  resetButton.mousePressed(reset);
+resetButton = createButton('New');
+resetButton.position(windowWidth-170,windowHeight-205);
+resetButton.class('right-buttons');
+resetButton.mousePressed(reset);
 
-  saveButton = createButton('Save');
-  saveButton.position(width - (13 * vMax),height - (8 * vMax));
-  saveButton.class('right-buttons');
-  saveButton.mousePressed(saveImg);
+saveButton = createButton('Save');
+saveButton.position(windowWidth-170,windowHeight-120);
+saveButton.class('right-buttons');
+saveButton.mousePressed(saveImg);
 
   // pinButton = createButton("  Turn pins on")
   // pinButton.class("select2");
@@ -111,7 +110,7 @@ function saveImg() {
 save('linkscape' + month() + day() + hour() + second() + '.jpg');
 }
 
-/**
+
 function checkFS(){
   if (!fullscreen()){
   addFS();
@@ -131,4 +130,3 @@ function fs(){
   fullscreen(1);
   $('.fsButton').remove();
 }
- */

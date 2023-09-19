@@ -1,13 +1,13 @@
 {
     "lang": "en-us",
-    "name": "Dev MinDArT",
+    "name": "MinDArT",
     "short_name": "MinDArT DEV",
     "description": "MinDArT Progressive Web App (PWA) for offline use.",
     "start_url": "https://jameswilce.github.io/DevMinDArT",
     "background_color": "#FFFFFF",
     "theme_color": "#FFFFFF",
-    "orientation": "landscape",
-    "display": "fullscreen",
+    "orientation": "any",
+    "display": "minimal-ui",
     "icons": [
         {
             "src": "/DevMinDArT/mindArt_Logo.png",

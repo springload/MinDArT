@@ -31,21 +31,22 @@ btns[i].addEventListener("click", function() {
     });
 }
 
-    // Buttons on the right..
-    homeButton = createButton('Main Menu');
-    homeButton.position(width - (13 * vMax),height - (20 * vMax));
-    homeButton.class('right-buttons');
-    homeButton.mousePressed(menu);  
+  // Buttons on the right..
+  homeButton = createButton('Main Menu');
+  homeButton.position(windowWidth-170,windowHeight-290);
+  homeButton.class('right-buttons');
+  homeButton.mousePressed(menu);  
+
+  resetButton = createButton('New');
+  resetButton.position(windowWidth-170,windowHeight-205);
+  resetButton.class('right-buttons');
+  resetButton.mousePressed(restart);
   
-    resetButton = createButton('New');
-    resetButton.position(width - (13 * vMax),height - (14 * vMax));
-    resetButton.class('right-buttons');
-    resetButton.mousePressed(restart);
-  
-    saveButton = createButton('Save');
-    saveButton.position(width - (13 * vMax),height - (8 * vMax));
-    saveButton.class('right-buttons');
-    saveButton.mousePressed(saveImg);
+  saveButton = createButton('Save');
+  saveButton.position(windowWidth-170,windowHeight-120);
+  saveButton.class('right-buttons');
+  saveButton.mousePressed(saveImg);
+
 
   button = createButton("");
   button.mousePressed(eraser);
@@ -199,7 +200,7 @@ function saveImg() {
   image(drawLayer, 0, 0, width, height);
   save('symmetryscape' + month() + day() + hour() + second() + '.jpg');
 }
-/**
+
 function checkFS(){
   if (!fullscreen()){
   addFS();
@@ -219,4 +220,3 @@ function fs(){
   fullscreen(1);
   $('.fsButton').remove();
 }
- */

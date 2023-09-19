@@ -22,23 +22,23 @@ for (var i = 0; i < btns.length; i++) {
 
   // Buttons on the right..
   homeButton = createButton('Main Menu');
-  homeButton.position(width - (13 * vMax),height - (20 * vMax));
+  homeButton.position(windowWidth-170,windowHeight-290);
   homeButton.class('right-buttons');
   homeButton.mousePressed(menu);  
 
   resetButton = createButton('New');
-  resetButton.position(width - (13 * vMax),height - (14 * vMax));
+  resetButton.position(windowWidth-170,windowHeight-205);
   resetButton.class('right-buttons');
   resetButton.mousePressed(restart);
 
   saveButton = createButton('Save');
-  saveButton.position(width - (13 * vMax),height - (8 * vMax));
+  saveButton.position(windowWidth-170,windowHeight-120);
   saveButton.class('right-buttons');
   saveButton.mousePressed(saveImg);
   
 }
 
-/**
+
 function addFS(){
   $('.fsButton').remove();
   fsButton = createImg('../assets/enterFS.png', "FULLSCREEN");
@@ -46,6 +46,11 @@ function addFS(){
   fsButton.class("fsButton");
   fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
   fsButton.mousePressed(fs);
+}
+
+function saveImg() {
+  click.play();
+  save('circlescape' + month() + day() + hour() + second() + '.jpg');
 }
 
 function fs(){
@@ -58,13 +63,6 @@ function checkFS(){
   addFS();
   }
 }
-
- */
-function saveImg() {
-  click.play();
-  save('circlescape' + month() + day() + hour() + second() + '.jpg');
-}
-
 
 function calcDimensions() {
   if (width > height) {
