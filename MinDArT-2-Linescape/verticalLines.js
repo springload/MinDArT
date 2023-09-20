@@ -47,8 +47,6 @@ function start() {
   if (audio.isPlaying()) {} else {
     audio.loop(1);
   }
-  //  fullscreen(1);
-  //fullscreen(0);
   dimensionCalc();
 
   // display baselines

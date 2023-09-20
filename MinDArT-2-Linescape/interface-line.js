@@ -20,16 +20,10 @@ function calcDimensions() {
   }
 }
 
-function removeElements() {
-  //todo
-}
-
 function writeTextUI() {
 
   // TODO: REMOVE ELEMENTS
-
   $(".interface").remove();
-  $(".select").remove();
 
   $('#interface').on("touchstart", function(event){
     event.preventDefault();
@@ -63,37 +57,20 @@ for (var c = 0; c < getColours.length; c++) {
 
 // Buttons on the right..
 homeButton = createButton('Main Menu');
-homeButton.position(windowWidth-170,windowHeight-290);
+homeButton.position(width - (13 * vMax),height - (20 * vMax));
 homeButton.class('right-buttons');
 homeButton.mousePressed(menu);  
 
 resetButton = createButton('New');
-resetButton.position(windowWidth-170,windowHeight-205);
+resetButton.position(width - (13 * vMax),height - (14 * vMax));
 resetButton.class('right-buttons');
 resetButton.mousePressed(next);
 
 saveButton = createButton('Save');
-saveButton.position(windowWidth-170,windowHeight-120);
+saveButton.position(width - (13 * vMax),height - (8 * vMax));
 saveButton.class('right-buttons');
 saveButton.mousePressed(saveImg);
 
-  //invert
-  /**
-  swapButton = createButton('Draw');
-  swapButton.position(2 * vMax, height - (6 * vMax));
-  swapButton.class("select");
-  swapButton.style('font-size', '1.7vmax');
-  swapButton.style('height', '4vmax');
-  swapButton.style('width', '8vmax');
-  swapButton.mousePressed(activateDraw);
-
-*/
-/**
-  slider1 = createSlider(-500, 500, 0); // density
-  slider1.input(updateSize);
-  slider1.position(10, -150);
-  slider1.style('width', '300px');
- */
   createSwatch();
 }
 
@@ -108,42 +85,24 @@ function createSwatch() {
     swatch[i].size(7 * vMax, 10.5 * vMax);
     swatch[i].style("background-color", colours[cc][i]);
     swatch[i].style("border-width", '6px');
-    //swatch[i].style("border-color", colours[cc][1 + (i * 2)]); 
     swatch[i].class("box");
     swatch[i].id("swatch" + i);
-    swatch[i].mousePressed(function() {
-      toggleIt();
-    });
-
   }
-/**
-  toggleBut = createButton('Paint Lines');
-  toggleBut.mouseClicked(toggleIt);
-  toggleBut.class("toggle");
-  toggleBut.id("ui4");
-  toggleBut.position(12 * vMax, height - (6 * vMax));
-  toggleBut.style('width', '18vmax')
-  toggleBut.style('font-size', '1.7vmax');
-  toggleBut.style('height', '4vmax');
- */
-  toggleIt();
 
 }
-function toggleIt() {
-  click.play();
+
+function left_colour() {
   bool = 0;
   resetButtons();
-  toggle = !toggle;
+  toggle = false;
+  click.play();
+}
 
-  if (!toggle) {
-      resetButtons();
-      setActive("btnPaint", "btnleft");
-
-  } else {
-      resetButtons();
-      setActive("btnPaint", "btnright");
-  }
-  //bool = 1;
+function right_colour() {
+  bool = 0;
+  resetButtons();
+  toggle = true;
+  click.play();
 }
 
 function paintOff() {
@@ -153,43 +112,7 @@ function paintOff() {
   }
 }
 
-function addFS() {
-  $('.fsButton').remove();
-  fsButton = createImg('../assets/enterFS.png', "FULLSCREEN");
-  fsButton.style('height', '4.5vMax');
-  fsButton.class("fsButton");
-  fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
-  fsButton.mousePressed(fs);
-}
-
-function checkFS() {
-  if (!fullscreen()) {
-    addFS();
-  }
-}
-
-function fs() {
-  fullscreen(1);
-  $('.fsButton').remove();
-}
-
 function saveImg() {
   click.play();
   save('linescape' + month() + day() + hour() + second() + '.jpg');
 }
-
-function setActiveElementsById(id) {
-    const element = document.getElementById(id);
-    if (element && element.classList.contains('active')) {
-      const otherElement = document.getElementById('btnPaint');
-      if (otherElement) {
-        otherElement.classList.add('active');
-      }
-    }
-  }
-
-  function setActive (id1, id2) {
-    resetButtons();
-    document.getElementById(id1).classList.add("active");
-    document.getElementById(id2).classList.add("active");
-  }

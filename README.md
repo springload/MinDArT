@@ -17,6 +17,7 @@
 2/
 - Gesture (shadow), pulling down from the top/bottom.
 - {CAM UPDATE}
+- Update swatch buttons to remove 'paint lines' button which is confusing : COMPLETE
 
 3/
 - Gesture (shadow), pulling down from the top/bottom.
