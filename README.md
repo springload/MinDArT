@@ -6,9 +6,13 @@
 2. Run `npm run build` to generate the new package in './dist/' folder (this will also update the version number)
 3. Update menu URL path in 'functions.js'.
 
+# To check with Emma
+1/
+  - Updated default to start with no-rake selected (erase), this is so users are encouraged to select the rake they want to use.  And prevents accidental marks on open.
+
 # TODO - Emma Discussion (20/09)
 1/ 
-- Check eraser size (APP 3 SIZE)
+- Check eraser size (APP 3 SIZE) : COMPLETE
 
 2/
 - Gesture (shadow), pulling down from the top/bottom.
@@ -40,7 +44,7 @@ GOOD!
 - Eraser size needs to be updated to App 3.
 
 
-Email HTML form
+Email HTML form, to Googlesheet.
 
 
 ## FUNCTIONALITY FIXES

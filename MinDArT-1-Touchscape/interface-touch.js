@@ -1,6 +1,6 @@
 let resetButton, saveButton, fsButton;
 let buttons = [];
-let currentRake = 1;
+let currentRake = 0;
 
 function calcDimensions() {
   if (width > height) {
@@ -15,12 +15,12 @@ function writeTextUI() {
   // TODO: REMOVE ELEMENTS
 
 $(".interface").remove();
-$(".select").remove();
 
     $('#interface'+i).on("touchstart", function(event){
       rake(i);
       event.preventDefault();
     }, {passive: false});
+
     $('#interface'+i).on("click", function(event){
       rake(i);
       event.preventDefault();
@@ -59,21 +59,7 @@ saveButton.mousePressed(saveImg);
 
 
 }
-/**
-function addFS(){
-  $('.fsButton').remove();
-  fsButton = createImg('../assets/enterFS.png');
-  fsButton.style('height', '4.5vMax');
-  fsButton.class("fsButton");
-  fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
-  fsButton.mousePressed(fs);
-}
 
-function fs(){
-  fullscreen(1);
-  $('.fsButton').remove();
-}
- */
 function rake(version) {
 
   currentRake = version;
@@ -96,31 +82,6 @@ function rake(version) {
   }
   click.play();
 }
-
-function Eraser() {
-    change(1, 200, 1);
-    eraseActive = 1;
-    click.play();
-  
-  }
-  
-  function brush_1() {
-    change(5, 60, 100);
-    eraseActive = 0;
-    click.play();
-  
-  }
-  
-  function brush_2() {
-    change(15, 100, 100);
-    eraseActive = 0;
-    click.play();
-  }
-  function brush_3() {
-    change(60, 150, 100);
-    eraseActive = 0;
-    click.play();
-  }
 
 function saveImg() {
   click.play();
