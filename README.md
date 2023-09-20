@@ -6,8 +6,41 @@
 2. Run `npm run build` to generate the new package in './dist/' folder (this will also update the version number)
 3. Update menu URL path in 'functions.js'.
 
-# TODO
+# TODO - Emma Discussion (20/09)
+1/ 
+- Check eraser size (APP 3 SIZE)
 
+2/
+- Gesture (shadow), pulling down from the top/bottom.
+- {CAM UPDATE}
+
+3/
+- Gesture (shadow), pulling down from the top/bottom.
+
+4/
+- Eraser needs to be thinner (APP 3 SIZE)
+- Lag on draw.
+- Erase - different layers
+  - Need a solution so its clearer what is being erased.
+  - Drop down/up button to select the correct
+- Colour selection buttons, need to be able to select the correct colour (Paint is a distraction)
+  - Same format as 3, dont the Paint label.
+
+5/
+GOOD!
+
+6/
+GOOD!
+
+7/ 
+- Look at 2 buttons being selected at the same time.
+- Eraser size needs to be updated to App 3.
+
+8
+- Eraser size needs to be updated to App 3.
+
+
+Email HTML form
 
 
 ## FUNCTIONALITY FIXES
