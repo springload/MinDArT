@@ -28,6 +28,7 @@ function writeTextUI() {
   $('#interface').on("touchstart", function(event){
     event.preventDefault();
   }, {passive: false});
+  
   $('#interface').on("click", function(event){
     event.preventDefault();
   }, {passive: false});
