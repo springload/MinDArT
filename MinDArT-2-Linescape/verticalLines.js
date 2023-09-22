@@ -103,10 +103,10 @@ function setupArrays() {
     arr[i] = [];
     for (let j = 0; j < yCount; j++) {
       let _x = (width / xCount) * i;
-      _x = map(_x, 0, width, vW * -15, width + (vW * 15)); // ensures beyond margin
+      _x = map(_x, 0, width, vW * -20, width + (vW * 20)); // ensures beyond margin
       let _y = ((height / yCount) * j);
       _y = map(pow(_y, 2), 0, pow(height, 2), 0, height);
-      _y = map(_y, 0, height, vH * -15, height + (vH * 15)); // ensures beyond margin
+      _y = map(_y, 0, height, vH * -20, height + (vH * 20)); // ensures beyond margin
       arr[i][j] = createVector(_x, _y);
     }
   }
@@ -200,10 +200,10 @@ function sortFunction(a, b) {
 function redrawIt() {
 
 
-  background(255,100);
+  background(255);
     for (let y = 0; y < yCount; y++) {
       strokeWeight((1 / yCount) * y * 4.5);
-      stroke(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 100);
+      stroke(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 90);
       fill(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 100);
       beginShape();
       let vvW = -10 * vW;
