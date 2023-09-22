@@ -94,7 +94,7 @@ function setupArrays() {
 
   // make col array
   for (let j = 0; j < yCount; j++) {
-    ccc = hexToRgb(colours[cc][1]);
+    ccc = hexToRgb(colours[cc][1], 0.5);
     arrLineCol[j] = [ccc.levels[0], ccc.levels[1], ccc.levels[2]]
   }
 
