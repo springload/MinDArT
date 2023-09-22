@@ -81,7 +81,7 @@ function dimensionCalc() {
 
 function setupDefaults() {
   strokeWeight(2); // set a baseline in case strokeWeight within touchMoved is disabled
-  yCount = 40;
+  yCount = 35;
   xCount = 35;
   counter = 0;
   stroke(255, 50);
@@ -94,7 +94,7 @@ function setupArrays() {
 
   // make col array
   for (let j = 0; j < yCount; j++) {
-    ccc = hexToRgb(colours[cc][1]);
+    ccc = hexToRgb(colours[cc][1], 0.5);
     arrLineCol[j] = [ccc.levels[0], ccc.levels[1], ccc.levels[2]]
   }
 
@@ -103,10 +103,10 @@ function setupArrays() {
     arr[i] = [];
     for (let j = 0; j < yCount; j++) {
       let _x = (width / xCount) * i;
-      _x = map(_x, 0, width, vW * -3, width + (vW * 3)); // ensures beyond margin
+      _x = map(_x, 0, width, vW * -20, width + (vW * 20)); // ensures beyond margin
       let _y = ((height / yCount) * j);
       _y = map(pow(_y, 2), 0, pow(height, 2), 0, height);
-      _y = map(_y, 0, height, vH * -3, height + (vH * 3)); // ensures beyond margin
+      _y = map(_y, 0, height, vH * -20, height + (vH * 20)); // ensures beyond margin
       arr[i][j] = createVector(_x, _y);
     }
   }
@@ -139,6 +139,8 @@ function next() {
   
   activateDraw();
   setupArrays();
+  background(255, 255);
+  blendMode(BLEND);
   redrawIt();
   writeTextUI();
 }
@@ -197,28 +199,25 @@ function sortFunction(a, b) {
 
 function redrawIt() {
 
-  c1 = color(colours[cc][2]);
-  c2 = color(255);
-  
-  for(let y=0; y<height; y++){
-    n = map(y,0,height,0,1);
-    let newc = lerpColor(c1,c2,n);
-    stroke(newc);
-    line(0,y,width, y);
-  }
 
-  for (let y = 0; y < yCount; y++) {
-    //stroke((1/yCount)*y*255, 180)
-    strokeWeight((1 / yCount) * y * 4.5);
-    stroke(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 200);
-    beginShape();
-    let vvW = -10 * vW;
-    let vvH = -10 * vH;
-    for (let x = 0; x < xCount; x++) {
-      curveVertex(arr[x][y].x, arr[x][y].y);
-    }
-    endShape();
-  }}
+  background(255);
+    for (let y = 0; y < yCount; y++) {
+      strokeWeight((1 / yCount) * y * 4.5);
+      stroke(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 90);
+      fill(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 100);
+      beginShape();
+      let vvW = -10 * vW;
+      let vvH = -10 * vH;
+      for (let x = 0; x < xCount; x++) {
+        curveVertex(arr[x][y].x, arr[x][y].y);
+      }
+  
+      // curveVertex(windowWidth, windowHeight);
+      // curveVertex(0, windowHeight);
+  
+      endShape();
+    }}
+  
 
 function hexToRgb(hex) {
   hex = hex.replace('#', '');
