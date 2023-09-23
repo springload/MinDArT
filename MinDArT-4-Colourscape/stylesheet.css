@@ -123,44 +123,16 @@ transform: translate(-50%, -50%);
   margin-right: 10px;
 }
 
-.btn_flatright {
-  color: #4e4e4e;
-  background-color: white;
-  border-top: 4px solid #5D605C;
-  border-left: 4px solid #5D605C;
-  border-bottom: 4px solid #5D605C;
-  border-right: 2px solid #5D605C;
-  height: 70px;
-  width: 120px;
+#id-draw {
+  margin-left: 10px;
+}
+
+.btn_leftsplit {
   border-radius: 40px 0px 0px 40px;
-  font-weight: bold;
-  font-size: large;
-  text-align: center;
-  padding-right: 0px;
-}
-
-.btn_flatright.active, .btn_flatright:hover {
-  color: white;
-  border-right: 2px solid white;
-  border-top: 4px solid white;
-  border-left: 4px solid white;
-  border-bottom: 4px solid white;
-  background-color: #E23A4C;
-}
-
-.btn_mid {
-  color: #4e4e4e;
-  border-top: 4px solid #5D605C;
-  border-left: 2px solid #5D605C;
-  border-bottom: 4px solid #5D605C;
-  border-right: 2px solid #5D605C;
-  border-radius: 0px;
+  border: #4e4e4e solid 4px;
   height: 70px;
-  width: 100px;
-  font-weight: bold;
-  font-size: large;
-  text-align: center;
-  padding: 0px;
+  width: 140px;
+  color: #4e4e4e;
   background-image: repeating-linear-gradient(
     90deg,
     #E23A4C,
@@ -176,23 +148,16 @@ transform: translate(-50%, -50%);
   ); 
 }
 
-.btn_mid.active{
+.btn_leftsplit.active, .btn_leftsplit:hover {
   border: 4px solid white;
 }
 
-.btn_flatleft {
-  color: #4e4e4e;
-  border-top: 4px solid #5D605C;
-  border-left: 2px solid #5D605C;
-  border-bottom: 4px solid #5D605C;
-  border-right: 4px solid #5D605C;
-  height: 70px;
-  width: 120px;
+.btn_rightsplit {
   border-radius: 0px 40px 40px 0px;
-  font-weight: bold;
-  font-size: large;
-  text-align: center;
-  padding-left: 0px;
+  border: #4e4e4e solid 4px;
+  height: 70px;
+  width: 140px;
+  color: #4e4e4e;
   background-image: repeating-linear-gradient(
     90deg,
     #002D65,
@@ -207,10 +172,10 @@ transform: translate(-50%, -50%);
     #27CB6F 100px,
     #05A664 100px,
     #05A664
-  ); 
+  );
 }
 
-.btn_flatleft.active {
+.btn_rightsplit.active, .btn_rightsplit:hover {
   border: 4px solid white;
 }
 
@@ -235,4 +200,3 @@ transform: translate(-50%, -50%);
   border: 4px solid white;
   background-color: #E23A4C;
 }
-

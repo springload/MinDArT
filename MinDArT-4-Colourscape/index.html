@@ -32,12 +32,13 @@
   </div>
   <!-- Bottom left action buttons, initially hidden on load -->
   <div id="myDIV" class="bottom-left">
-    <button id="id-erase" class="btn button-white" onclick="eraser()">Erase</button>
-    <button id="id-draw" class="btn button-white" onclick="switchToTrace()">Draw</button>
-    <button id="id-paint" class="btn btn_flatright" onclick="switchToPaint()">Paint</button>
-    <button id="id-warm" class="btn btn_mid"></button>
-    <button id="id-cool" class="btn btn_flatleft""></button>
+    <button id="id-erasedraw" class="btn button-white" onclick="drawErase()">Erase Draw</button>
+      <button id="id-erasepaint" class="btn button-white" onclick="paintErase()">Erase Paint</button>
+    <button id="id-warm" class="btn btn_leftsplit" onclick="paintWarm()"></button>
+    <button id="id-cool" class="btn btn_rightsplit" onclick="paintCool()"></button>
+    <button id="id-draw" class="btn button-white" onclick="switchToTrace()" style="background-color: #66B0AD; color: white;">Draw</button>
   </div>
+
 </body>
 
 </html>

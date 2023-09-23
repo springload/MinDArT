@@ -67,75 +67,44 @@
         }
   }
 
-  function switchToPaint() {
-    click.play();
-    eraseState = 0;
-    eraserVersion = 0;
-    resetButtons();
-
-    if (bool) {
-      colourBool = !colourBool;
-    }
-    if (!colourBool) {
-        resetButtons();
-        setActive("id-paint", "id-warm");
-
-    } else {
-        resetButtons();
-        setActive("id-paint", "id-cool");
-    }
-    bool = 1;
-  }
-/**
   function paintWarm() {
-    resetButtons();
-    setActive("id-paint", "id-warm");
-    click.play();
     eraseState = 0;
     eraserVersion = 0;
-    colourBool = !colourBool;
-
-
+    resetButtons();
+    colourBool = false;
+    click.play();
+    bool = 1;
   }
 
   function paintCool() {
-    click.play();
     eraseState = 0;
     eraserVersion = 0;
     resetButtons();
-    colourBool = colourBool;
-    setActive('id-paint', 'id-cool');
+    colourBool = true;
+    click.play();
+    bool = 1;
   }
- */
+ 
   function switchToTrace() {
     click.play();
     bool = 0;
     eraseState = 0; // revert to True for erase before passing back to eraser function, which inverts
     eraserVersion = 0;
     resetButtons();
-   // button2.remove();
-   // button2 = createImg("assets/icon2.1.png"); // Draw selected
-   // button2.style('width', '12.6vmax');
-   // button2.position(20.5 * vMax, height - (12.6* vMax));
-   // button2.mousePressed(switchToTrace);
   }
 
-  function eraser() {
-    click.play();
+  function paintErase() {
     resetButtons();
-    if (eraseState === 1) {
-      eraserVersion = !eraserVersion;
-      console.log(eraserVersion);
-    }
     eraseState = 1;
-    if (eraserVersion) {
-      resetButtons();
-      setActive("id-erase", "id-paint");
+    eraserVersion = true;
+    click.play();
+  }
 
-    } else {
-        resetButtons();
-        setActive("id-erase", "id-draw");
-    }
+  function drawErase() {
+    resetButtons();
+    eraseState = 1;
+    eraserVersion = false;
+    click.play();
   }
 
   function saveImage() {
@@ -143,23 +112,4 @@
     save('colourscape' + month() + day() + hour() + second() + '.jpg');
   }
 
-  function addFS(){
-    $('.fsButton').remove();
-    fsButton = createImg("../assets/enterFS.png", "FULLSCREEN");
-    fsButton.style('height', '4.5vMax');
-    fsButton.class("fsButton");
-    fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
-    fsButton.mousePressed(fs);
-  }
-
-  function fs(){
-    fullscreen(1);
-    $('.fsButton').remove();
-  }
-
-  function setActive (id1, id2) {
-    resetButtons();
-    document.getElementById(id1).classList.add("active");
-    document.getElementById(id2).classList.add("active");
-  }
   

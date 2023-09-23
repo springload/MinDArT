@@ -136,7 +136,7 @@
     backdrop();
     segLength = windowWidth / 40; // length of delay between touch and paint or line // 15 is a good value
     setProperties(0, 0);
-        paintLayer.clear();
+    paintLayer.clear();
     traceLayer.clear();
     if (!bool) invertTracing();
     render();
