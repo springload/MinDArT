@@ -1,4 +1,4 @@
-  // images
+  // images 
   let bg;
   let brush = [];
   // brush mechanics
@@ -42,8 +42,17 @@
     [334, 81, 91],
     [300, 67, 99]
   ];
-  const hueDrift = 3;
-  const satDrift = 3;
+
+  let colourLevel = 0;
+
+  let colourSwatch = [
+    ['#F2A97E','#F28D77','#BF7E7E','#7E708C','#49538C'],
+    ['#F2A74B','#F2955E','#D95F43','#734663','#2A1A40'],
+    ['#F21905','#A60303','#027373','#025159','#025159'],
+    ['#D9D9D9','#88898C','#565759','#0D0D0D','#00010D'],
+    ['#FCFFF5','#D1DBBD','#91AA9D','#3E606F','#193441']
+  ]
+
   const rotateDrift = 0.6;
   let bool = 1;
   let brushTemp = 0;
@@ -113,12 +122,13 @@
     imageMode(CENTER); // centers loaded brushes
     blendMode(BLEND); // consider overlay and multiply
     traceLayer.blendMode(LIGHTEST); // consider overlay and multiply
-    colorMode(HSB, 360, 100, 100, 1);
-    paintLayer.colorMode(HSB, 360, 100, 100, 1);
+    colorMode(RGB, 255, 255, 255, 1);
+    paintLayer.colorMode(RGB, 255, 255, 255, 255);
     traceLayer.colorMode(HSB, 360, 100, 100, 1);
   }
 
   function reset(){
+    colourLevel = (colourLevel + 1) % 5; //TODO
     calcDimensions();
     writeTextUI();
     resetButtons();
@@ -152,17 +162,24 @@
 
     if (bool) {
       //image(bg, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
-      let swatchTemp = int(random(0, 5));
-      if (colourBool) {
-        colHue = cloudHSB[swatchTemp][0];
-        colSat = cloudHSB[swatchTemp][1];
-        colBri = cloudHSB[swatchTemp][2];
+      if (!colourBool) {
+        let selectedNum = Math.floor(random(0,2));
+       currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
       } else {
-        colHue = sunsetHSB[swatchTemp][0];
-        colSat = sunsetHSB[swatchTemp][1];
-        colBri = sunsetHSB[swatchTemp][2];
+        let selectedNum = Math.floor(random(3,5));
+        currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
       }
     }
+  }
+
+  
+  function hexToRgb(hex) {
+    hex = hex.replace('#', '');
+    var bigint = parseInt(hex, 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+    return color(r, g, b);
   }
 
 
@@ -200,14 +217,10 @@
     autoY = autoY + (random(-20, 22));
     makeDrawing(autoX % width, autoY % height, pautoX % width, pautoY % height);
   }
-
   function makeDrawing(_x, _y, pX, pY) {
     milliCounter = millis();
     if (bool) {
       if (milliCounter > milliTrack + milliComp) {
-        if (colSat < 10) {
-          colSat += 30
-        }
         dx = _x - tempX;
         dy = _y - tempY;
         angle1 = atan2(dy, dx) + (random(-rotateDrift, rotateDrift)); // https://p5js.org/reference/#/p5/atan2
@@ -225,9 +238,9 @@
       }
     }
   }
-
   function segment(rakeX, rakeY, a, rake, scalar) {
-    paintLayer.tint((colHue += random(-hueDrift, hueDrift)), (colSat += random(-satDrift, satDrift)), colBri, colOpacity); // Display at half opacity
+    currentColour.setAlpha(0.5);
+    paintLayer.tint(currentColour); // Display at half opacity
     paintLayer.push();
     paintLayer.imageMode(CENTER); // centers loaded brushes
     paintLayer.translate(rakeX + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))), rakeY + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))));
