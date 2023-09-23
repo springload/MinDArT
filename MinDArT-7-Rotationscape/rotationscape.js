@@ -162,7 +162,7 @@ function brushIt(_x, _y, pX, pY) {
 
   }  else if (brushSelected === 6) {
     drawLayer.blendMode(REMOVE);
-    drawLayer.image(eraseAlpha, _x - 50, _y - 50, 100, 100);
+    drawLayer.image(eraseAlpha, _x - 25, _y - 25, 50, 50);
     drawLayer.blendMode(BLEND);
 
   }
