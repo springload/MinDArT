@@ -9,6 +9,7 @@ user-select:none;
 background-color: #f1b300;
 overflow: hidden;
 overscroll-behavior: none;
+height: 100%;
 }
 
 body{
