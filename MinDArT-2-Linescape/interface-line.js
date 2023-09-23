@@ -2,7 +2,7 @@ let resetButton, saveButton, homeButton, fsButton, toggleBut;
 let toggle = 0;
 
 var colours = [
-  ['#F2B705', '#363432'],
+  ['#F2B705', '#701036'],
   ['#0D0D0D', '#0D0D0D'],
   ['#F2B077', '#023E73'],
   ['#D94929', '#590902'],
@@ -10,7 +10,7 @@ var colours = [
   ['#F2B705', '#011F26'],
   ['#F2B705', '#A6600A'],
   ['#F2B705', '#1450A4'],
-  ['#F2B705', '#701036']
+  ['#F2B705', '#363432']
 ];
 
 
