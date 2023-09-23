@@ -39,26 +39,6 @@ function writeTextUI() {
 
 
 // UI elements
-show_btns(); 
-
-    // Add active class to the current button (highlight it)
-    var header = document.getElementById("myDIV");
-    var btns = header.getElementsByClassName("btn");
-    for (var i = 0; i < btns.length; i++) {
-    btns[i].addEventListener("click", function() {
-        var current = document.getElementsByClassName("active");
-            if (current.length > 0) { 
-                current[0].className = current[0].className.replace(" active", "");
-            }
-        this.className += " active";
-        });
-    }
-
-// Set the button colours
-var getColours = header.getElementsByClassName("swatch");
-for (var c = 0; c < getColours.length; c++) {
-  getColours[c].style.backgroundColor=colours[cc][c];
-}
 
 // Buttons on the right..
 homeButton = createButton('Main Menu');
