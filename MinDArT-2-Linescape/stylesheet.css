@@ -9,6 +9,7 @@ html {
   background-color: #7cce6c;
   overflow: hidden;
   overscroll-behavior: none;
+  height: 100%;
 }
     
 body {
