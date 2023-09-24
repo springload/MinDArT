@@ -1,7 +1,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-  grid-gap: 30px;
+  grid-gap: 20px;
 
   border-width: medium;
     border-color: black;
@@ -9,8 +9,12 @@
 }
 .grid > div {
   background: white ;
-  padding: 1rem;
+  padding: 0.5rem;
 
+}
+
+.grid.active {
+  padding: 20px;
 }
 
 @font-face {
