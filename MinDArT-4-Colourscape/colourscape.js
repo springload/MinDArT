@@ -134,7 +134,7 @@
     resetButtons();
 
     backdrop();
-    segLength = windowWidth / 40; // length of delay between touch and paint or line // 15 is a good value
+    segLength = windowWidth / 15; // length of delay between touch and paint or line // 15 is a good value (previously 40)
     setProperties(0, 0);
     paintLayer.clear();
     traceLayer.clear();
