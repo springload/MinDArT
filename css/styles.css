@@ -9,12 +9,12 @@
 }
 .grid > div {
   background: white ;
-  padding: 0.5rem;
+  padding: 0.25rem;
 
 }
 
 .grid.active {
-  padding: 20px;
+  padding: 10px;
 }
 
 @font-face {
