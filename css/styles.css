@@ -1,7 +1,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-  grid-gap: 0.25rem;
+  grid-gap: 30px;
 
   border-width: medium;
     border-color: black;
