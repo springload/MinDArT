@@ -106,7 +106,7 @@
     colHue = random(colHueMin, colHueMax);
     colSat = random(colSatMin, colSatMax);
     strokeWeight(4); // for line work
-    traceLayer.strokeWeight(7);
+    traceLayer.strokeWeight(3);
     stroke(255, 0, 255); // for line work
 
     setLayerProperties();
