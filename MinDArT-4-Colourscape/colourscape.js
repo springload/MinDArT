@@ -106,7 +106,7 @@
     colHue = random(colHueMin, colHueMax);
     colSat = random(colSatMin, colSatMax);
     strokeWeight(4); // for line work
-    traceLayer.strokeWeight(3);
+   
     stroke(255, 0, 255); // for line work
 
     setLayerProperties();
@@ -126,6 +126,8 @@
     colorMode(RGB, 255, 255, 255, 1);
     paintLayer.colorMode(RGB, 255, 255, 255, 255);
     traceLayer.colorMode(HSB, 360, 100, 100, 1);
+    traceLayer.strokeWeight(3);
+    traceLayer.stroke(255, 0, 255, 0.4); // for line work
   }
 
   function reset(){
@@ -235,7 +237,7 @@
     } else {
       for (let i = 0; i < 2; i++) {
         // traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
-        traceLayer.stroke(255, 0, 255, 0.4); // for line work
+        // traceLayer.stroke(255, 0, 255, 0.4); // for line work
         traceLayer.line(_x + random(-5, 5), _y + random(-5, 5), pX, pY);
       }
     }
