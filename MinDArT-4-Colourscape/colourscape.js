@@ -106,6 +106,7 @@
     colHue = random(colHueMin, colHueMax);
     colSat = random(colSatMin, colSatMax);
     strokeWeight(4); // for line work
+    traceLayer.strokeWeight(3);
     stroke(255, 0, 255); // for line work
 
     setLayerProperties();
@@ -207,6 +208,7 @@
     image(paintLayer, width / 2, height / 2);
     blendMode(LIGHTEST);
     image(traceLayer, width / 2, height / 2);
+    console.log(frameRate());
 
   }
 
@@ -231,10 +233,10 @@
         milliTrack = milliCounter;
       }
     } else {
-      for (let i = 0; i < 5; i++) {
-        traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
+      for (let i = 0; i < 2; i++) {
+        // traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
         traceLayer.stroke(255, 0, 255, 0.4); // for line work
-        traceLayer.line(_x + random(-3, 3), _y + random(-3, 3), pX + random(-3, 3), pY + random(-3, 3));
+        traceLayer.line(_x + random(-5, 5), _y + random(-5, 5), pX, pY);
       }
     }
   }
@@ -260,7 +262,6 @@
     writeTextUI();
     checkFS();
      render();
-
 
 
   }
