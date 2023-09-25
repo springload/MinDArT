@@ -235,11 +235,12 @@
         milliTrack = milliCounter;
       }
     } else {
-      for (let i = 0; i < 2; i++) {
-        // traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
-        // traceLayer.stroke(255, 0, 255, 0.4); // for line work
-        traceLayer.line(_x + random(-5, 5), _y + random(-5, 5), pX, pY);
-      }
+      // for (let i = 0; i < 2; i++) {
+      //   // traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
+      //   // traceLayer.stroke(255, 0, 255, 0.4); // for line work
+      //   traceLayer.line(_x + random(-5, 5), _y + random(-5, 5), pX, pY);
+      // }
+      traceLayer.line(_x, _y, pX, pY);
     }
   }
   function segment(rakeX, rakeY, a, rake, scalar) {
