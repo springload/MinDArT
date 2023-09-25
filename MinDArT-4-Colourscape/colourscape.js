@@ -106,7 +106,7 @@
     colHue = random(colHueMin, colHueMax);
     colSat = random(colSatMin, colSatMax);
     strokeWeight(4); // for line work
-    traceLayer.strokeWeight(3);
+    traceLayer.strokeWeight(7);
     stroke(255, 0, 255); // for line work
 
     setLayerProperties();
@@ -208,7 +208,7 @@
     image(paintLayer, width / 2, height / 2);
     blendMode(LIGHTEST);
     image(traceLayer, width / 2, height / 2);
-    console.log(frameRate());
+    // console.log(frameRate());
 
   }
 
@@ -339,7 +339,7 @@
 
   function checkFS(){
     if (!fullscreen()){
-    addFS();
+   // addFS();
   }
   }
 
