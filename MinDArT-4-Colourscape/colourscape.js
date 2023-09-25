@@ -126,8 +126,8 @@
     colorMode(RGB, 255, 255, 255, 1);
     paintLayer.colorMode(RGB, 255, 255, 255, 255);
     traceLayer.colorMode(HSB, 360, 100, 100, 1);
-    traceLayer.strokeWeight(3);
-    traceLayer.stroke(255, 0, 255, 0.4); // for line work
+    traceLayer.strokeWeight(5);
+    traceLayer.stroke(255, 0, 255, 0.8); // for line work
   }
 
   function reset(){
@@ -264,7 +264,7 @@
     writeTextUI();
     checkFS();
      render();
-
+console.log("resized");
 
   }
 
