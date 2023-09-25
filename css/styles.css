@@ -1,6 +1,6 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 20px 40px;
 
   border-width: medium;
@@ -9,8 +9,6 @@
 }
 .grid > div {
   background: white ;
-  padding: 0.25rem;
-
 }
 
 @font-face {
@@ -23,7 +21,6 @@ body {
   text-align: center;
   font-size: 1vmax;
   font-family: "AvenirNext";
-
   letter-spacing: 1px;
   font-weight: 900;
 
