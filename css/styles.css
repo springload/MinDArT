@@ -1,11 +1,8 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 0.5rem;
-
-  border-width: medium;
-    border-color: black;
-    background: white;
+  grid-template-columns: repeat(auto-fill, minmax(0, 1fr));
+  max-width: 4fr;
+  background: white;
 }
 .grid > div {
   background: white ;
