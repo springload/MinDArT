@@ -65,6 +65,9 @@
         for (var i = 0; i < activeButtons.length; i++) {
             activeButtons[i].classList.remove("active");
         }
+
+        traceLayer.strokeWeight(5);
+        traceLayer.stroke(255, 0, 255, 0.8); // for line work
   }
 
   function paintWarm() {
