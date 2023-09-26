@@ -1,7 +1,7 @@
 {
     "lang": "en-us",
-    "name": "MinDArT 2.0",
-    "short_name": "MinDArT DEV",
+    "name": "MinDArT",
+    "short_name": "MinDArT",
     "description": "MinDArT Progressive Web App (PWA) for offline use.",
     "start_url": "https://jameswilce.github.io/DevMinDArT",
     "background_color": "#FFFFFF",
