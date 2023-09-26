@@ -106,6 +106,7 @@
     colHue = random(colHueMin, colHueMax);
     colSat = random(colSatMin, colSatMax);
     strokeWeight(4); // for line work
+   
     stroke(255, 0, 255); // for line work
 
     setLayerProperties();
@@ -125,6 +126,8 @@
     colorMode(RGB, 255, 255, 255, 1);
     paintLayer.colorMode(RGB, 255, 255, 255, 255);
     traceLayer.colorMode(HSB, 360, 100, 100, 1);
+    traceLayer.strokeWeight(8);
+    traceLayer.stroke(255, 0, 255, 0.8); // for line work
   }
 
   function reset(){
@@ -207,6 +210,7 @@
     image(paintLayer, width / 2, height / 2);
     blendMode(LIGHTEST);
     image(traceLayer, width / 2, height / 2);
+    // console.log(frameRate());
 
   }
 
@@ -231,11 +235,12 @@
         milliTrack = milliCounter;
       }
     } else {
-      for (let i = 0; i < 5; i++) {
-        traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
-        traceLayer.stroke(255, 0, 255, 0.4); // for line work
-        traceLayer.line(_x + random(-3, 3), _y + random(-3, 3), pX + random(-3, 3), pY + random(-3, 3));
-      }
+      // for (let i = 0; i < 2; i++) {
+      //   // traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
+      //   // traceLayer.stroke(255, 0, 255, 0.4); // for line work
+      //   traceLayer.line(_x + random(-5, 5), _y + random(-5, 5), pX, pY);
+      // }
+      traceLayer.line(_x, _y, pX, pY);
     }
   }
   function segment(rakeX, rakeY, a, rake, scalar) {
@@ -260,8 +265,7 @@
     writeTextUI();
     checkFS();
      render();
-
-
+console.log("resized");
 
   }
 
@@ -338,7 +342,7 @@
 
   function checkFS(){
     if (!fullscreen()){
-    addFS();
+   // addFS();
   }
   }
 

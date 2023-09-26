@@ -65,6 +65,7 @@
         for (var i = 0; i < activeButtons.length; i++) {
             activeButtons[i].classList.remove("active");
         }
+
   }
 
   function paintWarm() {
@@ -91,6 +92,8 @@
     eraseState = 0; // revert to True for erase before passing back to eraser function, which inverts
     eraserVersion = 0;
     resetButtons();
+    traceLayer.strokeWeight(8);
+    traceLayer.stroke(255, 0, 255, 0.8); // for line work
   }
 
   function paintErase() {
