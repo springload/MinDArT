@@ -57,6 +57,8 @@
     saveButton.class('right-buttons');
     saveButton.mousePressed(saveImage);
 
+    // set an eraser to start so no accidental painting happens on load
+    drawErase();
   }
 
   function resetButtons() {
