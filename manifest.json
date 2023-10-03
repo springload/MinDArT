@@ -16,19 +16,19 @@
             "purpose": "any"
         },
         {
-            "src": "/DevMinDArT/mindArt_Logo_152.png",
+            "src": "/DevMinDArT/assets/mindArt_Logo_152.png",
             "sizes": "152x152",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/DevMinDArT/mindArt_Logo_384.png",
+            "src": "/DevMinDArT/assets/mindArt_Logo_384.png",
             "sizes": "384x384",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/DevMinDArT/mindArt_Logo.png",
+            "src": "/DevMinDArT/assets/mindArt_Logo.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
