@@ -1,7 +1,7 @@
 function Programme_AppRelease(){
 
     // set programme start date (mm/dd/yyyy)
-    var date = new Date("09/26/2023");
+    var date = new Date("08/26/2023");
 
     // Calculate the number of elapsed days since programme start
     var today = new Date();
