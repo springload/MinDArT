@@ -24,8 +24,6 @@ saveButton.position(windowWidth-170,windowHeight-120);
 saveButton.class('right-buttons');
 saveButton.mousePressed(saveImg);
 
-
-
 }
 
 function writeRestartUI() {
@@ -52,24 +50,3 @@ function saveImg() {
   click.play();
   save('dotscape' + month() + day() + hour() + second() + '.jpg');
 }
-/**
-function checkFS(){
-  if (!fullscreen()){
-  addFS();
-}
-}
-
-function addFS(){
-  $('.fsButton').remove();
-  fsButton = createImg("../assets/enterFS.png", "FULLSCREEN");
-  fsButton.style('height', '4.5vMax');
-  fsButton.class("fsButton");
-  fsButton.position(width - (7.5 * vMax), 1.5 * vMax);
-  fsButton.mousePressed(fs);
-}
-
-function fs(){
-  fullscreen(1);
-  $('.fsButton').remove();
-}
- */
