@@ -54,8 +54,7 @@ function preload() {
 
 function start() {
   $(".startBtn").remove();
-  //fullscreen(1);
-  // note currently everything resets on windowResized. Unsure if this is logical yet
+
 
   if (audio.isPlaying()) {} else {
     audio.loop(1);
@@ -85,12 +84,9 @@ function setup() {
   stbtn.mousedown(start);
   stbtn.mousemove(start);
 
-
-
 }
 
 function reset() {
-
 
   // initialised dimensions and start intro
   dimensionCalc();
@@ -105,8 +101,6 @@ function reset() {
   canvas.addEventListener('touchleave', touchstop);
   canvas.addEventListener('mouseup', touchstop);
   canvas.addEventListener('mouseup', touchstop);
-  // canvas.addEventListener('orientationchange', resizeWindow);
-  // canvas.addEventListener('resize', resizeWindow);
 
   //DATA
   lineStore = [];
@@ -139,7 +133,6 @@ function sizeWindow(){
   dimensionCalc();
   removeElements();
   writeTextUI();
-   // checkFS();
   stage--;
   nextDrawing();
 }
@@ -165,22 +158,27 @@ function touchstop() {
   render();
 }
 
+
 function moved(ev) {
 
   if (!isMousedown) return;
   ev.preventDefault();
 
-
+/** // note original code for drawing lines between dots //
   for (let i = 0; i < dotsCount; i++) {
     dots[i].clicked(winMouseX, winMouseY);
   }
   lineLayer.stroke(colHue, colSat, colBri, 80);
   lineLayer.strokeWeight(8);
-  lineLayer.clear();
+  lineLayer.clear(); 
   if (throughDotCount > 0) {
     lineLayer.line(tempwinMouseX, tempwinMouseY, winMouseX, winMouseY);
   }
-
+*/
+// JW code - remove if rolling back to above code.
+if (throughDotCount > 0) {
+  updateLines();
+}
 
   //DATA
   pressure = getPressure(ev);
@@ -195,7 +193,26 @@ function moved(ev) {
 
   return false;
 }
-
+// JW code - remove if rolling back to above code.
+function drawLine(prevDot, currDot) {
+  lineLayer.stroke(colHue, colSat, colBri, 80);
+  lineLayer.strokeWeight(8);
+  lineLayer.clear();
+  if (throughDotCount > 0) {
+    lineLayer.line(prevDot.x, prevDot.y, currDot.x, currDot.y);
+  }
+}
+// JW code - remove if rolling back to above code.
+function updateLines() {
+  if (throughDotCount > 0 && dots.length > 1) {
+    let prevDot = dots[throughDotCount - 1];
+    let currDot = dots.find(dot => dist(dot.x, dot.y, mouseX, mouseY) < dot.r * 2.05);
+    if (currDot) {
+      drawLine(prevDot, currDot);
+      requestAnimationFrame(updateLines);
+    }
+  }
+}
 
 function render() {
 
