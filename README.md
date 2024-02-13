@@ -15,17 +15,17 @@
 - Check eraser size (APP 3 SIZE) : COMPLETE
 
 2/
-- Gesture (shadow), pulling down from the top/bottom.
-- {CAM UPDATE}
+- Gesture (shadow), pulling down from the top/bottom : COMPLETE
+- {CAM UPDATE} : COMPLETE
 - Update swatch buttons to remove 'paint lines' button which is confusing : COMPLETE
 
 3/
-- Gesture (shadow), pulling down from the top/bottom.
+- Gesture (shadow), pulling down from the top/bottom : COMPLETE
 
 4/
-- Eraser needs to be thinner (APP 3 SIZE)
-- Lag on draw.
-- Erase - different layers
+- Eraser needs to be thinner (APP 3 SIZE) : COMPLETE
+- Lag on draw : COMPLETE
+- Erase - different layers : COMPLETE
   - Need a solution so its clearer what is being erased.
   - Drop down/up button to select the correct
 - Colour selection buttons, need to be able to select the correct colour (Paint is a distraction)
@@ -39,10 +39,10 @@ GOOD!
 
 7/ 
 - Look at 2 buttons being selected at the same time.
-- Eraser size needs to be updated to App 3.
+- Eraser size needs to be updated to App 3 : COMPLETE
 
 8
-- Eraser size needs to be updated to App 3.
+- Eraser size needs to be updated to App 3 : COMPLETE
 
 
 Email HTML form, to Googlesheet.
