@@ -86,28 +86,28 @@ function setup() {
 
 }
 
-function reset() {
 
+
+function reset() {
   // initialised dimensions and start intro
   dimensionCalc();
-  intro_X = (width * 0.30) - 100;
+  intro_X = width * 0.3 - 100;
 
   // add all event listeners to the canvas
-  canvas.addEventListener('touchmove', moved);
-  canvas.addEventListener('mousemove', moved);
-  canvas.addEventListener('touchstart', touchdown);
-  canvas.addEventListener('mousedown', touchdown);
-  canvas.addEventListener('touchend', touchstop);
-  canvas.addEventListener('touchleave', touchstop);
-  canvas.addEventListener('mouseup', touchstop);
-  canvas.addEventListener('mouseup', touchstop);
+  canvas.addEventListener("touchmove", moved);
+  canvas.addEventListener("mousemove", moved);
+  canvas.addEventListener("touchstart", touchdown);
+  canvas.addEventListener("mousedown", touchdown);
+  canvas.addEventListener("touchend", touchstop);
+  canvas.addEventListener("touchleave", touchstop);
+  canvas.addEventListener("mouseup", touchstop);
+  canvas.addEventListener("mouseup", touchstop);
 
   //DATA
   lineStore = [];
   pointStore = [];
 
-    render();
-
+  render();
 }
 
 // calcuate Dimensions for use in this sketch, done during initialise and resize.
@@ -125,7 +125,7 @@ function windowResized() {
   sizeWindow();
 }
 
-function sizeWindow(){
+function sizeWindow() {
   resizeCanvas(windowWidth, windowHeight);
   lineLayer.resizeCanvas(windowWidth, windowHeight);
   permaLine.resizeCanvas(windowWidth, windowHeight);
@@ -143,9 +143,8 @@ function touchdown(ev) {
   let _x = winMouseX;
   let _y = winMouseY;
   for (let i = 0; i < dotsCount; i++) {
-
     dots[i].getCol(_x, _y);
-//    dots[i].clicked(_y, _y); //todo/// BUG: , cause of double line issues?
+    //    dots[i].clicked(_y, _y); //todo/// BUG: , cause of double line issues?
   }
 
   return false;
@@ -158,7 +157,40 @@ function touchstop() {
   render();
 }
 
+function moved(ev) {
+  if (!isMousedown) return;
+  ev.preventDefault();
 
+  let prevMouse = { x: tempwinMouseX, y: tempwinMouseY };
+  let curMouse = { x: winMouseX, y: winMouseY };
+
+  for (let i = 0; i < dotsCount; i++) {
+    dots[i].clicked(winMouseX, winMouseY);
+  }
+
+  let distance = dist(prevMouse.x, prevMouse.y, curMouse.x, curMouse.y);
+  lineLayer.strokeWeight(8 + distance / 10); // Adjust the thickness based on distance
+  lineLayer.stroke(colHue, colSat, colBri, 80 - distance / 10); // Adjust the transparency based on distance
+  lineLayer.clear();
+  if (throughDotCount > 0) {
+    lineLayer.line(tempwinMouseX, tempwinMouseY, winMouseX, winMouseY);
+  }
+
+  //DATA
+  pressure = getPressure(ev);
+  pointStore.push({
+    time: new Date().getTime(),
+    x: mouseX,
+    y: mouseY,
+    pressure: pressure,
+    distance: distance,
+  });
+
+  render();
+
+  return false;
+}
+/**
 function moved(ev) {
 
   if (!isMousedown) return;
@@ -188,10 +220,9 @@ function moved(ev) {
 
   return false;
 }
-
+ */
 
 function render() {
-
   image(tintedBG, 0, 0, width, height);
   image(lineLayer, 0, 0);
   image(permaLine, 0, 0);
@@ -206,8 +237,6 @@ function render() {
   }
 }
 
-
-
 //startSimulation and pauseSimulation defined elsewhere
 function handleVisibilityChange() {
   if (document.hidden) {
@@ -219,7 +248,6 @@ function handleVisibilityChange() {
 
 document.addEventListener("visibilitychange", handleVisibilityChange, false);
 
-
 function copyLine() {
   permaLine.stroke(colHue, colSat, colBri, 80);
   permaLine.strokeWeight(6);
@@ -228,27 +256,27 @@ function copyLine() {
     let y1 = tempwinMouseY;
     let x2 = tempwinMouseX2;
     let y2 = tempwinMouseY2;
-  permaLine.line(x1, y1, x2, y2);
+    permaLine.line(x1, y1, x2, y2);
     //DATA
     lineStore.push({
       line: {
         x1: x1,
         y1: y1,
         x2: x2,
-        y2: y2
+        y2: y2,
       },
       points: pointStore,
-      stage: stage
+      stage: stage,
     });
     pointStore = [];
-
   }
 }
 
+/**  Commented out, is this needed?
 getPressure = function(ev) {
   return ((ev.touches && ev.touches[0] && typeof ev.touches[0]["force"] !== "undefined") ? ev.touches[0]["force"] : 1.0);
 }
-
+ */
 
 // Dot class, not used in intro
 class Dot {
@@ -278,13 +306,15 @@ class Dot {
     }
   }
   clicked(x, y) {
-
     let rMultiplier = 1;
     let d = dist(x, y, this.x, this.y);
     if (throughDotCount === 0) {
       rMultiplier = 1.2; // increase radius for first grab
     }
-    if (d < this.r * 2.05 * rMultiplier && (this.x != verifyX || this.y != verifyY)) {
+    if (
+      d < this.r * 2.05 * rMultiplier &&
+      (this.x != verifyX || this.y != verifyY)
+    ) {
       verifyX = this.x;
       verifyY = this.y;
       tempwinMouseX2 = tempwinMouseX;
@@ -297,9 +327,9 @@ class Dot {
       // this.brightness = 250;
       if (colHue != this.h) {
         if (abs(colHue - this.h) > 280) {
-          this.h = (((this.h + colHue) / 2) - 180) % 360;;
+          this.h = ((this.h + colHue) / 2 - 180) % 360;
         } else {
-          this.h = ((this.h + colHue) / 2) % 360;;
+          this.h = ((this.h + colHue) / 2) % 360;
         }
       }
       colHue = this.h;
@@ -309,6 +339,8 @@ class Dot {
     }
   }
 }
+
+
 
 function nextDrawing() {
   throughDotCount = 0;
