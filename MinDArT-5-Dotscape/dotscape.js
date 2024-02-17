@@ -286,10 +286,10 @@ class Dot {
   }
   clicked(x, y) {
 
-    let rMultiplier = 1;
+    let rMultiplier = 1.4; // {previously 1}
     let d = dist(x, y, this.x, this.y);
     if (throughDotCount === 0) {
-      rMultiplier = 1.2; // increase radius for first grab
+      rMultiplier = 1.4; // increase radius for first grab {previously 1.2}
     }
     if (d < this.r * 2.05 * rMultiplier && (this.x != verifyX || this.y != verifyY)) {
       verifyX = this.x;
