@@ -153,44 +153,11 @@ function touchdown(ev) {
 function touchstop() {
   isMousedown = 0;
   lineLayer.clear();
-  throughDotCount = 0;
+  throughDotCount = 1;
   render();
 }
 
-function moved(ev) {
-  if (!isMousedown) return;
-  ev.preventDefault();
 
-  let prevMouse = { x: tempwinMouseX, y: tempwinMouseY };
-  let curMouse = { x: winMouseX, y: winMouseY };
-
-  for (let i = 0; i < dotsCount; i++) {
-    dots[i].clicked(winMouseX, winMouseY);
-  }
-
-  let distance = dist(prevMouse.x, prevMouse.y, curMouse.x, curMouse.y);
-  lineLayer.strokeWeight(8 + distance / 10); // Adjust the thickness based on distance
-  lineLayer.stroke(colHue, colSat, colBri, 80 - distance / 10); // Adjust the transparency based on distance
-  lineLayer.clear();
-  if (throughDotCount > 0) {
-    lineLayer.line(tempwinMouseX, tempwinMouseY, winMouseX, winMouseY);
-  }
-
-  //DATA
-  pressure = getPressure(ev);
-  pointStore.push({
-    time: new Date().getTime(),
-    x: mouseX,
-    y: mouseY,
-    pressure: pressure,
-    distance: distance,
-  });
-
-  render();
-
-  return false;
-}
-/**
 function moved(ev) {
 
   if (!isMousedown) return;
@@ -220,7 +187,6 @@ function moved(ev) {
 
   return false;
 }
- */
 
 function render() {
   image(tintedBG, 0, 0, width, height);
@@ -272,11 +238,10 @@ function copyLine() {
   }
 }
 
-/**  Commented out, is this needed?
 getPressure = function(ev) {
   return ((ev.touches && ev.touches[0] && typeof ev.touches[0]["force"] !== "undefined") ? ev.touches[0]["force"] : 1.0);
 }
- */
+
 
 // Dot class, not used in intro
 class Dot {
