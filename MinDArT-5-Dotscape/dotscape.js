@@ -155,7 +155,7 @@ function touchdown() {
 function touchstop(ev) {
   console.log("touchstop : throughDotCount="+ throughDotCount);
   isMousedown = 0;
-  throughDotCount = 1;
+ // throughDotCount = 1;
   lineLayer.clear();
   render();
 
@@ -282,10 +282,10 @@ class Dot {
     }
   }
   clicked(x, y) {
-    let rMultiplier = 1;
+    let rMultiplier = 1.4;
     let d = dist(x, y, this.x, this.y);
     if (throughDotCount === 0) {
-      rMultiplier = 1.4; // increase radius for first grab {previously 1.2}
+      rMultiplier = 2; // increase radius for first grab {previously 1.2}
     }
     if (
       d < this.r * 2.05 * rMultiplier &&
