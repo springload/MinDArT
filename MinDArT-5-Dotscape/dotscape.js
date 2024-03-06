@@ -137,55 +137,66 @@ function sizeWindow() {
   nextDrawing();
 }
 
-function touchdown(ev) {
-  isMousedown = 1;
+function touchdown() {
 
+  isMousedown = 1;
+  throughDotCount = 0;
+  console.log("touchdown : throughDotCount="+ throughDotCount);
   let _x = winMouseX;
   let _y = winMouseY;
+  
   for (let i = 0; i < dotsCount; i++) {
     dots[i].getCol(_x, _y);
-    //    dots[i].clicked(_y, _y); //todo/// BUG: , cause of double line issues?
   }
 
   return false;
 }
 
-function touchstop() {
+function touchstop(ev) {
+  console.log("touchstop : throughDotCount="+ throughDotCount);
   isMousedown = 0;
-  lineLayer.clear();
   throughDotCount = 1;
+  lineLayer.clear();
   render();
+
 }
 
 
 function moved(ev) {
-
   if (!isMousedown) return;
-  ev.preventDefault();
+
+  preventDefault(ev);
 
   for (let i = 0; i < dotsCount; i++) {
     dots[i].clicked(winMouseX, winMouseY);
   }
+
   lineLayer.stroke(colHue, colSat, colBri, 80);
   lineLayer.strokeWeight(8);
-  lineLayer.clear(); 
-  if (throughDotCount > 0) {
+  lineLayer.clear();
+
+
+//  if (throughDotCount > 0) {
     lineLayer.line(tempwinMouseX, tempwinMouseY, winMouseX, winMouseY);
-  }
+// }
 
-
-  //DATA
-  pressure = getPressure(ev);
-  pointStore.push({
-    time: new Date().getTime(),
-    x: mouseX,
-    y: mouseY,
-    pressure: pressure
-  });
+  // DATA
+  const time = new Date().getTime();
+  const pressure = getPressure(ev);
+  pointStore.push({ time, x: mouseX, y: mouseY, pressure });
 
   render();
 
   return false;
+  console.log("moved : throughDotCount="+ throughDotCount);
+}
+
+function preventDefault(ev) {
+  if (ev.preventDefault) {
+    ev.preventDefault();
+  } else {
+    ev.returnValue = false;
+  }
 }
 
 function render() {
