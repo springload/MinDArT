@@ -141,7 +141,7 @@ function touchdown() {
 
   isMousedown = 1;
   throughDotCount = 0;
-  console.log("touchdown : throughDotCount="+ throughDotCount);
+
   let _x = winMouseX;
   let _y = winMouseY;
   
@@ -152,10 +152,10 @@ function touchdown() {
   return false;
 }
 
-function touchstop(ev) {
-  console.log("touchstop : throughDotCount="+ throughDotCount);
+function touchstop() {
+
   isMousedown = 0;
- // throughDotCount = 1;
+  throughDotCount = 1;
   lineLayer.clear();
   render();
 
@@ -176,9 +176,9 @@ function moved(ev) {
   lineLayer.clear();
 
 
-//  if (throughDotCount > 0) {
+  //if (throughDotCount > 0) {  // removed in response to line issues
     lineLayer.line(tempwinMouseX, tempwinMouseY, winMouseX, winMouseY);
-// }
+  //}
 
   // DATA
   const time = new Date().getTime();
@@ -188,7 +188,7 @@ function moved(ev) {
   render();
 
   return false;
-  console.log("moved : throughDotCount="+ throughDotCount);
+
 }
 
 function preventDefault(ev) {
@@ -260,7 +260,6 @@ class Dot {
     this.x = x;
     this.y = y;
     this.r = r;
-    // this.brightness = 255;
     this.h = primaryArray[int(random(0, 3))];
     this.s = 0;
     this.b = random(80, 255);
@@ -282,10 +281,10 @@ class Dot {
     }
   }
   clicked(x, y) {
-    let rMultiplier = 1.4;
+    let rMultiplier = 1.5;
     let d = dist(x, y, this.x, this.y);
     if (throughDotCount === 0) {
-      rMultiplier = 2; // increase radius for first grab {previously 1.2}
+      rMultiplier = 1.2; // increase radius for first grab
     }
     if (
       d < this.r * 2.05 * rMultiplier &&
@@ -300,7 +299,7 @@ class Dot {
       throughDotCount++;
       tempOpacity = 20;
       hitRad = 60;
-      // this.brightness = 250;
+
       if (colHue != this.h) {
         if (abs(colHue - this.h) > 280) {
           this.h = ((this.h + colHue) / 2 - 180) % 360;
@@ -321,7 +320,6 @@ class Dot {
 function nextDrawing() {
   throughDotCount = 0;
   dotsCount = 0;
-  // click.play();
   permaLine.clear();
   lineLayer.clear();
   if (stage < 3) {
