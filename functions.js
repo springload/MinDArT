@@ -40,8 +40,7 @@ function Programme_AppRelease(){
             document.querySelector('.grid').innerHTML = wk1 + wk2 + wk3 + wk4 + wk5 + wk6 + wk7;
         } 
         else{
-            //document.querySelector('.grid').innerHTML = wk1 + wk2 + wk3 + wk4 + wk5 + wk6 + wk7 + wk8;
-            document.querySelector('.grid').innerHTML = wk1 + wk3 + wk5;
+            document.querySelector('.grid').innerHTML = wk1 + wk2 + wk3 + wk4 + wk5 + wk6 + wk7 + wk8;
         }
 }
 
