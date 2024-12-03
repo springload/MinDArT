@@ -4,7 +4,6 @@ let storedOrientation,
   rotateDirection = -1;
 let isMousedown = false;
 let vMax;
-const introText = ["Touch and Listen", "Look", "Draw"];
 const appCol = "#469ede"; // 70, 158, 222
 
 // Data storage
@@ -38,7 +37,7 @@ let tempY = [];
 let storedOrientationDegrees = 0;
 
 // Graphics layers
-let fg, pLayer, textLayer, introLayer;
+let fg, pLayer, textLayer;
 let background, audio, click;
 
 function preload() {
@@ -64,7 +63,6 @@ function initializeLayers() {
   fg = createGraphics(width, height);
   pLayer = createGraphics(width, height);
   textLayer = createGraphics(width, height);
-  introLayer = createGraphics(width, height);
 }
 
 function setupGraphics() {
@@ -73,10 +71,6 @@ function setupGraphics() {
   fg.stroke(20, 100);
 
   colorMode(HSB, 360, 100, 100, 1.0);
-
-  introLayer.fill(255, 30);
-  introLayer.blendMode(BLEND);
-  introLayer.noStroke();
 
   pixelDensity(1);
 }
@@ -93,7 +87,6 @@ function start() {
   sizeWindow();
 
   textLayer.clear();
-  introComplete = 1;
 
   sizeWindow();
   writeTextUI();
@@ -270,16 +263,6 @@ function reset() {
   display();
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  sizeWindow();
-
-  // removeElements();
-  writeTextUI();
-  display();
-  //checkFS();
-}
-
 function checkFS() {
   console.log("checking");
   if (!fullscreen()) {
@@ -322,41 +305,68 @@ function sizeWindow() {
   driftY = 0;
 }
 
-function stretchWindow() {
-  var newfg = createGraphics(windowWidth, windowHeight);
-  newfg.image(fg, 0, 0, windowWidth, windowHeight);
-  fg.resizeCanvas(windowWidth, windowHeight);
-  fg = newfg;
+function removeGraphics(buffer) {
+  if (buffer) {
+    buffer.remove();
+    buffer = null;
+  }
+}
 
-  var newpLayer = createGraphics(windowWidth, windowHeight);
+function stretchWindow() {
+  // Create new buffers
+  const newfg = createGraphics(windowWidth, windowHeight);
+  const newpLayer = createGraphics(windowWidth, windowHeight);
+
+  // Copy content to new buffers
+  newfg.image(fg, 0, 0, windowWidth, windowHeight);
   newpLayer.image(pLayer, 0, 0, windowWidth, windowHeight);
-  pLayer.resizeCanvas(windowWidth, windowHeight);
+
+  // Clean up old buffers
+  removeGraphics(fg);
+  removeGraphics(pLayer);
+
+  // Assign new buffers
+  fg = newfg;
   pLayer = newpLayer;
 }
 
 function rotateWindow(direction) {
-  var newfg = createGraphics(windowWidth, windowHeight);
+  // Create new buffers
+  const newfg = createGraphics(windowWidth, windowHeight);
+  const newpLayer = createGraphics(windowWidth, windowHeight);
+
+  // Handle fg rotation
   newfg.push();
   newfg.translate(width / 2, height / 2);
   newfg.rotate((PI / 2) * direction);
   newfg.translate(-height / 2, -width / 2);
   newfg.image(fg, 0, 0, windowHeight, windowWidth);
   newfg.pop();
-  fg.resizeCanvas(windowWidth, windowHeight);
-  fg = newfg;
 
-  var newpLayer = createGraphics(windowWidth, windowHeight);
+  // Handle pLayer rotation
   newpLayer.push();
   newpLayer.translate(width / 2, height / 2);
   newpLayer.rotate((PI / 2) * direction);
   newpLayer.translate(-height / 2, -width / 2);
   newpLayer.image(pLayer, 0, 0, windowHeight, windowWidth);
   newpLayer.pop();
-  pLayer.resizeCanvas(windowWidth, windowHeight);
+
+  // Clean up old buffers
+  removeGraphics(fg);
+  removeGraphics(pLayer);
+
+  // Assign new buffers
+  fg = newfg;
   pLayer = newpLayer;
 
-  // TODO: properly detect the orientation
   rotateDirection = rotateDirection * -1;
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  sizeWindow();
+  writeTextUI();
+  display();
 }
 
 //startSimulation and pauseSimulation defined elsewhere
