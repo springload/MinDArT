@@ -54,10 +54,10 @@ function preload() {
 }
 
 function setup() {
+  setupLoadingScreen(start);
   createCanvas(window.innerWidth, window.innerHeight);
   initializeLayers();
   setupGraphics();
-  createStartButton();
 }
 
 function initializeLayers() {
@@ -81,22 +81,7 @@ function setupGraphics() {
   pixelDensity(1);
 }
 
-function createStartButton() {
-  const startButton = document.createElement("div");
-  startButton.classList.add("startBtn");
-
-  const startText = document.createElement("p");
-  startText.textContent = "Touch here to begin";
-  startButton.appendChild(startText);
-
-  document.body.appendChild(startButton);
-
-  startButton.addEventListener("mousedown", start);
-  startButton.addEventListener("mousemove", start);
-}
-
 function start() {
-  document.querySelector(".startBtn")?.remove();
   click.play();
 
   if (!audio.isPlaying()) {
