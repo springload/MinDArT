@@ -1,0 +1,13 @@
+:root {
+  --color-white: white;
+  --color-black: black;
+  --color-grey-40: #4e4e4e;
+  /* oklch(42.4% 0 0) */
+  --color-blue-70: #469ede;
+  /* oklch(67.37% 0.1268 243.4) */
+  --color-blue-90: #bee4fe;
+  /* oklch(90% 0.0535 238.1) */
+  --font-avenir: 'Avenir Next LT Pro', Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+  /* Fallbacks all the way down, we're not loading any of these fonts: */
+  --font-tahoma: Tahoma, Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+}
