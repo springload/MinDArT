@@ -47,3 +47,28 @@ body {
   overscroll-behavior: none;
   position: fixed;
 }
+
+
+.interface {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  padding-inline: 20px;
+  padding-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  /* prevent the interface from receiving clicks meant for the canvas (pointer-events is turned back on in .btn so we can still click buttons)  */
+  pointer-events: none;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+}
+
+.app-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

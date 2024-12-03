@@ -108,3 +108,61 @@ function setupLoadingScreen(onStart) {
 
   startButton.style.display = "block";
 }
+
+function initializeAppControls(appName, resetCallback) {
+  const buttonConfigs = [
+    {
+      name: "reset-button",
+      handler:
+        resetCallback || (() => console.warn("No reset callback provided")),
+    },
+    {
+      name: "save-button",
+      handler: () => {
+        click.play();
+        save(`${appName}${month()}${day()}${hour()}${second()}.jpg`);
+      },
+    },
+  ];
+
+  const [resetButton, saveButton] = buttonConfigs.reduce(
+    (acc, { name, handler }) => {
+      // warning if the button isn't found
+      const element = document.querySelector(`[data-element="${name}"]`);
+      if (!element) {
+        console.warn(
+          `${name} not found - missing element with data-element="${name}"`
+        );
+        return acc;
+      }
+      // otherwise, add the click handler
+      element.addEventListener("click", handler);
+      return [...acc, element];
+    },
+    []
+  );
+
+  return {
+    resetButton,
+    saveButton,
+    container: document.querySelector(".app-controls"),
+  };
+}
+
+function initializeToolbarButtons() {
+  const toolbar = document.querySelector('[data-element="toolbar"]');
+
+  if (toolbar) {
+    const btns = Array.from(toolbar.getElementsByClassName("btn"));
+    btns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const clicked = e.currentTarget;
+        const current = document.querySelector(".active");
+        if (current) {
+          current.classList.remove("active");
+        }
+        clicked.classList.add("active");
+      });
+    });
+  }
+}

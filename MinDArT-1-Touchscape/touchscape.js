@@ -33,7 +33,7 @@ let tempX = [];
 let tempY = [];
 
 // Graphics layers
-let fg, pLayer, textLayer;
+let fg, pLayer;
 let background, audio, click;
 
 function preload() {
@@ -49,17 +49,23 @@ function preload() {
 }
 
 function setup() {
+  // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
-  createCanvas(window.innerWidth, window.innerHeight);
-  stopAudioWhenHidden(audio);
+  initializeAppControls("touchscape", resetTimeout);
+  initializeToolbarButtons();
+  // set up p5 for drawing
+  const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
+  mainCanvas.parent(
+    document.querySelector('[data-element="canvas-container"]')
+  );
   initializeLayers();
   setupGraphics();
+  stopAudioWhenHidden(audio);
 }
 
 function initializeLayers() {
   fg = createGraphics(width, height);
   pLayer = createGraphics(width, height);
-  textLayer = createGraphics(width, height);
 }
 
 function setupGraphics() {
@@ -82,8 +88,6 @@ function start() {
   change();
   ({ vMax } = calcViewportDimensions());
 
-  textLayer.clear();
-  writeTextUI();
   rake(currentRake);
   reset();
   counter = 0;
@@ -248,11 +252,10 @@ function reset() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 
-  const { dimensions, resizedLayers } = handleResize([fg, pLayer, textLayer]);
-  [fg, pLayer, textLayer] = resizedLayers;
+  const { dimensions, resizedLayers } = handleResize([fg, pLayer]);
+  [fg, pLayer] = resizedLayers;
   ({ vMax } = dimensions);
 
-  writeTextUI();
   display();
 }
 

@@ -10,24 +10,6 @@ function calcDimensions() {
   }
 }
 
-function writeTextUI() {
-  const header = document.getElementById("myDIV");
-  if (header) {
-    const btns = header.getElementsByClassName("btn");
-    Array.from(btns).forEach((btn) => {
-      btn.addEventListener("click", function () {
-        const current = document.querySelector(".active");
-        if (current) {
-          current.classList.remove("active");
-        }
-        this.classList.add("active");
-      });
-    });
-  }
-
-  createAppControls("touchscape", resetTimeout);
-}
-
 function rake(version) {
   currentRake = version;
 
