@@ -12,8 +12,8 @@
   /* cover other interface elements like buttons */
   z-index: 1;
 
-  background: var(--color-blue-70);
-  color: var(--color-white);
+  background: var(--theme-bg, var(--color-blue-70));
+  color: var(--theme-color, var(--color-white));
 
   /* progressive enhancement: in supported browsers, fade out loading screen when the start button is pressed */
   transition: opacity var(--fade-out-duration), display var(--fade-out-duration) allow-discrete;
@@ -78,7 +78,7 @@
   padding-inline: 1.5em;
   padding-block: 0.7em;
 
-  background-color: var(--color-white);
-  color: var(--color-blue-70);
-  box-shadow: 0px 0px 3px var(--color-white);
+  background-color: var(--theme-color, var(--color-white));
+  color: var(--theme-bg, var(--color-blue-70));
+  box-shadow: 0px 0px 3px var(--theme-color, var(--color-white));
 }
