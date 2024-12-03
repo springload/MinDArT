@@ -1,0 +1,9 @@
+.u-theme-blue {
+  --theme-bg: var(--color-blue-70);
+  --theme-color: var(--color-white);
+}
+
+.u-theme-green {
+  --theme-bg: var(--color-green-80);
+  --theme-color: var(--color-white);
+}

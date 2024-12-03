@@ -60,7 +60,6 @@ function setup() {
   );
   initializeLayers();
   setupGraphics();
-  stopAudioWhenHidden(audio);
 }
 
 function initializeLayers() {
@@ -92,6 +91,7 @@ function start() {
   reset();
   counter = 0;
 
+  stopAudioWhenHidden(audio);
   setupEventListeners();
   initializeDataStores();
 }
