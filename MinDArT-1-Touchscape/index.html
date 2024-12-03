@@ -23,21 +23,38 @@
 
   </head>
 
-<body>
-  <div id="p5_loading" class="loadingclass">
-    <img src="../assets/touch scape icon white.png" class="loadImage">
-    <div class="loading">
-      <p text-align="center">Loading...</p>
+  <body>
+    <div id="p5_loading" class="loadingclass">
+      <img src="../assets/touch scape icon white.png" class="loadImage">
+      <div class="loading">
+        <p text-align="center">Loading...</p>
+      </div>
     </div>
-  </div>
-  <!-- Bottom left action buttons, initially hidden on load -->
-  <div id="myDIV" class="bottom-left">
-    <button class="btn button-white" onclick="rake(0)">Erase</button>
-    <button class="btn imgbutton-brush1" onclick="rake(1)"></button>
-    <button class="btn imgbutton-brush2" onclick="rake(2)"></button>
-    <button class="btn imgbutton-brush3" onclick="rake(3)"></button>
-  </div>
+    
+    <!-- Bottom left action buttons, initially hidden on load -->
+    <div id="myDIV" class="bottom-left">
+      <button class="btn btn--white" onclick="rake(0)">Erase</button>
 
-</body>
+      <button class="btn btn--white" onclick="rake(1)">
+        <svg viewBox="0 0 120 70">
+          <path d="m32.8 23.4h54.4m0 11.6h-54.4m0 11.6h54.4" />
+        </svg>
+      </button>
+
+      <button class="btn btn--white" onclick="rake(2)">
+        <svg viewBox="0 0 120 70">
+          <path d="M32.8 17.2h54.4m0 7.1h-54.4m0 7.1h54.4m0 7.1h-54.4m0 7.1h54.4m0 7.1 h-54.4" />
+        </svg>
+      </button>
+
+      <button class="btn btn--white" onclick="rake(3)">
+        <svg viewBox="0 0 120 70">
+          <path
+        d="M32.8 11.7h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4" />
+        </svg>
+      </button>
+    </div>
+
+  </body>
 
 </html>
