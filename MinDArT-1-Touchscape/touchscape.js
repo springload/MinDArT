@@ -1,7 +1,4 @@
 // Configuration and state variables
-let storedOrientation,
-  currentOrientation,
-  rotateDirection = -1;
 let isMousedown = false;
 let vMax;
 const appCol = "#469ede"; // 70, 158, 222
@@ -34,7 +31,6 @@ let randomScalar = [];
 let tempID = [];
 let tempX = [];
 let tempY = [];
-let storedOrientationDegrees = 0;
 
 // Graphics layers
 let fg, pLayer, textLayer;
@@ -83,12 +79,9 @@ function start() {
   }
 
   change();
-  calcDimensions();
-  sizeWindow();
+  ({ vMax } = calcViewportDimensions());
 
   textLayer.clear();
-
-  sizeWindow();
   writeTextUI();
   rake(currentRake);
   reset();
@@ -164,8 +157,6 @@ function makeArray(x, y, x2, y2, angle) {
   a.sub(b);
 
   for (var i = 0; i < qtyOfLines; i++) {
-    // cool
-    // d = p5.Vector.lerp(a, c, (i/qtyOfLines)*random(0,1));
     d = p5.Vector.lerp(
       a,
       c,
@@ -200,7 +191,7 @@ function display() {
       if (eraseActive) {
         fg.noStroke();
         fg.fill(127, 80);
-        fg.ellipse(mouseX, mouseY, vMax * 4, vMax * 4); // values to change erase width (previously = 13)
+        fg.ellipse(mouseX, mouseY, vMax * 4, vMax * 4);
       } else {
         bool++;
         fg.line(
@@ -241,14 +232,12 @@ function reset() {
   image(background, 0, 0, width, height);
   fg.clear();
   pLayer.clear();
-  change(qtyOfLines, brushWidth, opacity); // sort of circular
+  change(qtyOfLines, brushWidth, opacity);
 
-  // basic random counter to determine how many pebbles will be present on the screen;
   tempcount = int(random(0.7, 3));
-  // now a loop based on that random number, to place the pebbles on screen
   for (let k = 0; k < tempcount; k++) {
-    randomScalar[k] = int(random(120, 180)); // scale
-    tempID[k] = int(random(1, 7)); // which pebble iteration
+    randomScalar[k] = int(random(120, 180));
+    tempID[k] = int(random(1, 7));
     tempX[k] = int(random(0, width - randomScalar[k]));
     tempY[k] = int(random(0, height - randomScalar[k]));
     pLayer.image(
@@ -263,113 +252,17 @@ function reset() {
   display();
 }
 
-function checkFS() {
-  console.log("checking");
-  if (!fullscreen()) {
-    addFS();
-  }
-}
-
-function sizeWindow() {
-  // canvas.width = window.innerWidth;
-  // canvas.height =  window.innerHeight;
-  image(background, 0, 0, width, height);
-  if (width < height) {
-    currentOrientation = "portrait";
-  } else {
-    currentOrientation = "landscape";
-  }
-  if (currentOrientation === storedOrientation) {
-    stretchWindow();
-  } else {
-    if (window.orientation < storedOrientationDegrees) {
-      direction = 1;
-    } else {
-      direction = -1;
-    }
-
-    if (abs(window.orientation - storedOrientationDegrees) == 270) {
-      direction = -direction;
-    }
-
-    rotateWindow(direction);
-
-    storedOrientationDegrees = window.orientation;
-  }
-  storedOrientation = currentOrientation;
-  segLength = width / 15;
-  calcDimensions();
-  textLayer.resizeCanvas(windowWidth, windowHeight);
-  //bLayer.tint(255, 190);
-  driftX = width / 2;
-  driftY = 0;
-}
-
-function removeGraphics(buffer) {
-  if (buffer) {
-    buffer.remove();
-    buffer = null;
-  }
-}
-
-function stretchWindow() {
-  // Create new buffers
-  const newfg = createGraphics(windowWidth, windowHeight);
-  const newpLayer = createGraphics(windowWidth, windowHeight);
-
-  // Copy content to new buffers
-  newfg.image(fg, 0, 0, windowWidth, windowHeight);
-  newpLayer.image(pLayer, 0, 0, windowWidth, windowHeight);
-
-  // Clean up old buffers
-  removeGraphics(fg);
-  removeGraphics(pLayer);
-
-  // Assign new buffers
-  fg = newfg;
-  pLayer = newpLayer;
-}
-
-function rotateWindow(direction) {
-  // Create new buffers
-  const newfg = createGraphics(windowWidth, windowHeight);
-  const newpLayer = createGraphics(windowWidth, windowHeight);
-
-  // Handle fg rotation
-  newfg.push();
-  newfg.translate(width / 2, height / 2);
-  newfg.rotate((PI / 2) * direction);
-  newfg.translate(-height / 2, -width / 2);
-  newfg.image(fg, 0, 0, windowHeight, windowWidth);
-  newfg.pop();
-
-  // Handle pLayer rotation
-  newpLayer.push();
-  newpLayer.translate(width / 2, height / 2);
-  newpLayer.rotate((PI / 2) * direction);
-  newpLayer.translate(-height / 2, -width / 2);
-  newpLayer.image(pLayer, 0, 0, windowHeight, windowWidth);
-  newpLayer.pop();
-
-  // Clean up old buffers
-  removeGraphics(fg);
-  removeGraphics(pLayer);
-
-  // Assign new buffers
-  fg = newfg;
-  pLayer = newpLayer;
-
-  rotateDirection = rotateDirection * -1;
-}
-
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  sizeWindow();
+
+  const { dimensions, resizedLayers } = handleResize([fg, pLayer, textLayer]);
+  [fg, pLayer, textLayer] = resizedLayers;
+  ({ vMax } = dimensions);
+
   writeTextUI();
   display();
 }
 
-//startSimulation and pauseSimulation defined elsewhere
 function handleVisibilityChange() {
   if (document.hidden) {
     audio.stop();
