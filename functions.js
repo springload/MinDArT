@@ -7,21 +7,21 @@ function Programme_AppRelease() {
   var elapsedDays = Math.floor((today - date) / 86400000);
 
   var wk1 =
-    '<div class="grid-Active"><a href="MinDArT-1-Touchscape/index.html"><img class="session" src="assets/touch scape icon.png" alt="Week 1 - Touchscape"></a></div>';
+    '<div class="grid-Active"><a href="MinDArT-1-Touchscape/index.html"><img class="session" src="assets/touchscape-icon.png" alt="Week 1 - Touchscape"></a></div>';
   var wk2 =
-    '<div class="grid-Active"><a href="MinDArT-2-Linescape/index.html"><img class="session" src="assets/line scape icon.png" alt="Week 2 - Linescape"><p></p></a></div>';
+    '<div class="grid-Active"><a href="MinDArT-2-Linescape/index.html"><img class="session" src="assets/linescape-icon.png" alt="Week 2 - Linescape"><p></p></a></div>';
   var wk3 =
-    '<div class="grid-Active"><a href="MinDArT-3-Circlescape/index.html"><img class="session" src="assets/circle scape icon.png" alt="Week 3 - Circlescape"><p></a></p></div>';
+    '<div class="grid-Active"><a href="MinDArT-3-Circlescape/index.html"><img class="session" src="assets/circlescape-icon.png" alt="Week 3 - Circlescape"><p></a></p></div>';
   var wk4 =
-    '<div class="grid-Active"><a href="MinDArT-4-Colourscape/index.html"><img class="session" src="assets/colour scape icon.png" alt="Week 4 - Colourscape"></a></div>';
+    '<div class="grid-Active"><a href="MinDArT-4-Colourscape/index.html"><img class="session" src="assets/colourscape-icon.png" alt="Week 4 - Colourscape"></a></div>';
   var wk5 =
-    '<div class="grid-Active"><a href="MinDArT-5-Dotscape/index.html"><img class="session" src="assets/dot scape icon.png" alt="Week 5 - Dotscape"></a></div>';
+    '<div class="grid-Active"><a href="MinDArT-5-Dotscape/index.html"><img class="session" src="assets/dotscape-icon.png" alt="Week 5 - Dotscape"></a></div>';
   var wk6 =
-    '<div class="grid-Active"><a href="MinDArT-6-Linkscape/index.html"><img class="session" src="assets/link scape icon.png" alt="Week 6 - Linkscape"><p></a></p></div>';
+    '<div class="grid-Active"><a href="MinDArT-6-Linkscape/index.html"><img class="session" src="assets/linkscape-icon.png" alt="Week 6 - Linkscape"><p></a></p></div>';
   var wk7 =
-    '<div class="grid-Active"><a href="MinDArT-7-Rotationscape/index.html"><img class="session" src="assets/rotation scape icon.png" alt="Week 7 - Rotationscape"><p></a></p></div>';
+    '<div class="grid-Active"><a href="MinDArT-7-Rotationscape/index.html"><img class="session" src="assets/rotationscape-icon.png" alt="Week 7 - Rotationscape"><p></a></p></div>';
   var wk8 =
-    '<div class="grid-Active"><a href="MinDArT-8-Symmetryscape/index.html"><img class="session" src="assets/symmetry scape icon.png" alt="Week 8 - Symmetryscape"></a></div>';
+    '<div class="grid-Active"><a href="MinDArT-8-Symmetryscape/index.html"><img class="session" src="assets/symmetryscape-icon.png" alt="Week 8 - Symmetryscape"></a></div>';
 
   // determine apps to display
   if (elapsedDays < 7) {
