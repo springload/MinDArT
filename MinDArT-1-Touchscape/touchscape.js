@@ -51,6 +51,7 @@ function preload() {
 function setup() {
   setupLoadingScreen(start);
   createCanvas(window.innerWidth, window.innerHeight);
+  stopAudioWhenHidden(audio);
   initializeLayers();
   setupGraphics();
 }
@@ -263,13 +264,4 @@ function windowResized() {
   display();
 }
 
-function handleVisibilityChange() {
-  if (document.hidden) {
-    audio.stop();
-  } else {
-    audio.loop(1);
-  }
-}
-
-document.addEventListener("visibilitychange", handleVisibilityChange, false);
 window.addEventListener("resize", windowResized);
