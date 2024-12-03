@@ -10,7 +10,6 @@
 
   <link rel="stylesheet" href="css/styles.css">
   <link rel="shortcut icon" href="mindArt_Logo.png">
-  <link rel="manifest" href="manifest.json">
 
   <script src="functions.js"></script>
 
@@ -18,23 +17,41 @@
 
 
 
-<body>
-  <div><img class="main" src="assets/mindart.png" alt="Logo"></div>
+<body class="home">
+  <main>
+    <img class="logo" src="assets/mindart.png" alt="MinDArT logo">
+    
+    <div class="grid" data-element="home-grid">
+      <a href="MinDArT-1-Touchscape/index.html" data-week="1">
+        <img src="assets/touchscape-icon.png" alt="Week 1 - Touchscape">
+      </a>
+      <a href="MinDArT-2-Linescape/index.html" data-week="2">
+        <img src="assets/linescape-icon.png" alt="Week 2 - Linescape">
+      </a>
+      <a href="MinDArT-3-Circlescape/index.html" data-week="3">
+        <img src="assets/circlescape-icon.png" alt="Week 3 - Circlescape">
+      </a>
+      <a href="MinDArT-4-Colourscape/index.html" data-week="4">
+        <img src="assets/colourscape-icon.png" alt="Week 4 - Colourscape">
+      </a>
+      <a href="MinDArT-5-Dotscape/index.html" data-week="5">
+        <img src="assets/dotscape-icon.png" alt="Week 5 - Dotscape">
+      </a>
+      <a href="MinDArT-6-Linkscape/index.html" data-week="6">
+        <img src="assets/linkscape-icon.png" alt="Week 6 - Linkscape">
+      </a>
+      <a href="MinDArT-7-Rotationscape/index.html" data-week="7">
+        <img src="assets/rotationscape-icon.png" alt="Week 7 - Rotationscape">
+      </a>
+      <a href="MinDArT-8-Symmetryscape/index.html" data-week="8">
+        <img src="assets/symmetryscape-icon.png" alt="Week 8 - Symmetryscape">
+      </a>
+    </div>
+  </main>
 
-  <div class="grid">
-    <script>
-      Programme_AppRelease();
-    </script>
-  </div>
-
-
-
-  <!-- Register ServiceWorker required to cache files for offline use. -->
-  <Script>
-    if('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-    }
-  </Script>
+  <script>
+    showOnlyCurrentLinks();
+  </script>
 </body>
 
 </html>
