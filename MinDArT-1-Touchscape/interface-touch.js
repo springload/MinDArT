@@ -11,42 +11,15 @@ function calcDimensions() {
 }
 
 function writeTextUI() {
-  document.querySelectorAll(".interface").forEach((el) => el.remove());
-
-  const interfaceElement = document.getElementById("interface" + i);
-  if (interfaceElement) {
-    interfaceElement.addEventListener(
-      "touchstart",
-      (event) => {
-        rake(i);
-        event.preventDefault();
-      },
-      { passive: false }
-    );
-
-    interfaceElement.addEventListener(
-      "click",
-      (event) => {
-        rake(i);
-        event.preventDefault();
-      },
-      { passive: false }
-    );
-  }
-
-  show_btns();
-
   const header = document.getElementById("myDIV");
   if (header) {
     const btns = header.getElementsByClassName("btn");
     Array.from(btns).forEach((btn) => {
       btn.addEventListener("click", function () {
-        // Remove active class from current active button
         const current = document.querySelector(".active");
         if (current) {
           current.classList.remove("active");
         }
-        // Add active class to clicked button
         this.classList.add("active");
       });
     });
