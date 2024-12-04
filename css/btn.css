@@ -42,14 +42,14 @@
   }
 }
 
-.btn--light-blue {
-  background-color: var(--color-blue-90);
-  color: var(--color-grey-40);
+.btn--theme {
+  background-color: var(--theme-button-bg, var(--color-blue-90));
+  color: var(--theme-button-color, var(--color-grey-40));
 
   &:hover {
-    border-color: var(--color-white);
-    background-color: var(--color-blue-70);
-    color: var(--color-white);
+    border-color: var(--theme-button-hover, var(--color-white));
+    background-color: var(--theme-bg, var(--color-blue-70));
+    color: var(--theme-button-hover, var(--color-white));
   }
 }
 

@@ -36,6 +36,32 @@ let tempY = [];
 let fg, pLayer;
 let background, audio, click;
 
+let currentRake = 0;
+
+function rake(version) {
+  currentRake = version;
+
+  switch (version) {
+    case 0:
+      change(1, 200, 1);
+      eraseActive = 1;
+      break;
+    case 1:
+      change(5, 60, 100);
+      eraseActive = 0;
+      break;
+    case 2:
+      change(15, 100, 100);
+      eraseActive = 0;
+      break;
+    case 3:
+      change(60, 150, 100);
+      eraseActive = 0;
+      break;
+  }
+  click.play();
+}
+
 function preload() {
   // Load assets
   background = loadImage("assets/sand_01.jpg");
