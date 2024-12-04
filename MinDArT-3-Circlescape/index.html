@@ -1,51 +1,49 @@
  <!-- Circlescape (Version: 3) -->
 
 <!DOCTYPE html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="mobile-web-app-capable" content="yes">
-  
-  <title>MinDArT : Week 3 - Circlescape</title>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>MinDArT : Week 3 - Circlescape</title>
 
-    <script src="../libraries/jquery-3.4.1.min.js"></script>
-    <link rel="stylesheet" href="stylesheet.css">
     <link rel="stylesheet" href="../css/styles.css">
 
     <script language="javascript" type="text/javascript" src="../libraries/p5.js"></script>
     <script language="javascript" type="text/javascript" src="../libraries/p5.sound.js"></script>
+
+    <script src="../functions.js"></script>
+    <script src="../shared/resize.js"></script>
     <script language="javascript" type="text/javascript" src="circlescape.js"></script>
-    <script language="javascript" type="text/javascript" src="interface-v2.js"></script>
-    <script lang="javascript" type="text/javascript" src="../functions.js"></script>
+  </head>
 
-</head>
-
-<body class="u-theme-yellow">
-  <dialog class="loading-screen" data-element="loading-dialog" open>
-    <div class="loading-screen__inner">
-      <div class="loading-screen__loading" id="p5_loading" >
-        <img src="../assets/circlescape-icon-white.png">
-        <p class="loading-screen__text">Loading...</p>
+  <body class="u-theme-yellow">
+    <dialog class="loading-screen" data-element="loading-dialog" open>
+      <div class="loading-screen__inner">
+        <div class="loading-screen__loading" id="p5_loading" >
+          <img src="../assets/circlescape-icon-white.png">
+          <p class="loading-screen__text">Loading...</p>
+        </div>
+        <button class="loading-screen__start" data-element="start-button">
+          Touch here to begin
+        </button>
       </div>
-      <button class="loading-screen__start" data-element="start-button">
-        Touch here to begin
-      </button>
-    </div>
-  </dialog>
-  
-  <div data-element="canvas-container"></div>
-  
-  <div class="interface">
-    <div class="toolbar" data-element="toolbar">
-      <button class="btn button-white" onclick="eraseToggle()">Erase</button>
-      <button class="btn btn--leftsplit" onclick="drawSml()">Draw small</button>
-      <button class="btn btn--rightsplit" onclick="drawBig()">Draw big</button>
-    </div>
+    </dialog>
+    
+    <div data-element="canvas-container"></div>
+    
+    <div class="interface">
+      <div class="toolbar" data-element="toolbar">
+        <button class="btn btn--white" onclick="eraseToggle()">Erase</button>
+        <button class="btn btn--white btn--leftsplit" onclick="drawSmall()">Draw small</button>
+        <button class="btn btn--white btn--rightsplit" onclick="drawBig()">Draw big</button>
+      </div>
 
-    <div class="app-controls">
-      <a href="/" class="btn btn--theme">Main Menu</a>
-      <button class="btn btn--theme" data-element="reset-button">New</button>
-      <button class="btn btn--theme" data-element="save-button">Save</button>
-    </div>
-</body>
+      <div class="app-controls">
+        <a href="/" class="btn btn--theme">Main Menu</a>
+        <button class="btn btn--theme" data-element="reset-button">New</button>
+        <button class="btn btn--theme" data-element="save-button">Save</button>
+      </div>
+  </body>
 </html>
