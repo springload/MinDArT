@@ -9,6 +9,12 @@
   /* oklch(90% 0.0535 238.1) */
   --color-green-80: #7cce6c;
   /* oklch(77.61% 0.1554 140.43) */
+  --color-green-90: #dbf9d4;
+  /* oklch(95% 0.058 139.8) */
+  --color-yellow-80: #f1b300;
+  /* oklch(80.26% 0.1649 83.37) */
+  --color-yellow-90: #ead39e;
+  /* oklch(87.33% 0.0733 87.23) */
 
 
   --font-avenir: 'Avenir Next LT Pro', Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;

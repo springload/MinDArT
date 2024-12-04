@@ -10,22 +10,18 @@
 
     <title>MinDArT : Week 1 - Touchscape</title>
 
-    <link rel="stylesheet" href="../css/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="../css/styles.css">
 
     <script src="../libraries/p5.min.js"></script>
     <script src="../libraries/p5.sound.min.js"></script>
-    <script src="../libraries/p5.dom.js"></script>
     <script src="../functions.js"></script>
     <script src="../shared/resize.js"></script>
-
     <script src="touchscape.js"></script>
-    <script src="interface-touch.js"></script>
 
   </head>
 
-  <body>
-    <dialog class="loading-screen u-theme-blue" data-element="loading-dialog" open>
+  <body class="u-theme-blue">
+    <dialog class="loading-screen" data-element="loading-dialog" open>
       <div class="loading-screen__inner">
         <div class="loading-screen__loading" id="p5_loading" >
           <img src="../assets/touchscape-icon-white.png">
@@ -55,12 +51,11 @@
       </div>
       
       <div class="app-controls">
-        <a href="/" class="btn btn--light-blue">Main Menu</a>
-        <button class="btn btn--light-blue" data-element="reset-button">New</button>
-        <button class="btn btn--light-blue" data-element="save-button">Save</button>
+        <a href="/" class="btn btn--theme">Main Menu</a>
+        <button class="btn btn--theme" data-element="reset-button">New</button>
+        <button class="btn btn--theme" data-element="save-button">Save</button>
       </div>
     </div>
-
     
   </body>
 

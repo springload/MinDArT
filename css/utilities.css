@@ -1,9 +1,24 @@
 .u-theme-blue {
   --theme-bg: var(--color-blue-70);
   --theme-color: var(--color-white);
+  --theme-button-bg: var(--color-blue-90);
+  --theme-button-color: var(--color-grey-40);
+  --theme-button-hover: var(--color-white);
+
 }
 
 .u-theme-green {
   --theme-bg: var(--color-green-80);
   --theme-color: var(--color-white);
+  --theme-button-bg: var(--color-green-90);
+  --theme-button-color: var(--color-grey-40);
+  --theme-button-hover: var(--color-white);
+}
+
+.u-theme-yellow {
+  --theme-bg: var(--color-yellow-80);
+  --theme-color: var(--color-white);
+  --theme-button-bg: var(--color-yellow-90);
+  --theme-button-color: var(--color-grey-40);
+  --theme-button-hover: var(--color-white);
 }
