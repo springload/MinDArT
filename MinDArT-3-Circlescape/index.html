@@ -20,18 +20,32 @@
 
 </head>
 
-<body>
-  <div id="p5_loading" class="loadingclass">
-    <img src="../assets/circlescape-icon-white.png" class="loadImage">
-    <div class="loading">
-      <p text-align="center">Loading...</p>
+<body class="u-theme-yellow">
+  <dialog class="loading-screen" data-element="loading-dialog" open>
+    <div class="loading-screen__inner">
+      <div class="loading-screen__loading" id="p5_loading" >
+        <img src="../assets/circlescape-icon-white.png">
+        <p class="loading-screen__text">Loading...</p>
+      </div>
+      <button class="loading-screen__start" data-element="start-button">
+        Touch here to begin
+      </button>
     </div>
-  </div>
-    <!-- Bottom left action buttons, initially hidden on load -->
-    <div id="myDIV" class="bottom-left">
+  </dialog>
+  
+  <div data-element="canvas-container"></div>
+  
+  <div class="interface">
+    <div class="toolbar" data-element="toolbar">
       <button class="btn button-white" onclick="eraseToggle()">Erase</button>
-      <button class="btn btn_leftsplit" onclick="drawSml()">Draw small</button>
-      <button class="btn btn_rightsplit" onclick="drawBig()">Draw big</button>
+      <button class="btn btn--leftsplit" onclick="drawSml()">Draw small</button>
+      <button class="btn btn--rightsplit" onclick="drawBig()">Draw big</button>
+    </div>
+
+    <div class="app-controls">
+      <a href="/" class="btn btn--theme">Main Menu</a>
+      <button class="btn btn--theme" data-element="reset-button">New</button>
+      <button class="btn btn--theme" data-element="save-button">Save</button>
     </div>
 </body>
 </html>
