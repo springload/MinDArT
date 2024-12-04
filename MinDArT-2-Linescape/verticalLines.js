@@ -10,7 +10,6 @@ let ccc;
 
 // dimensions
 let vMax, hMax, wMax, vW, vH;
-bool = 1;
 let brushSizeBaseline = 60;
 
 // strokes
@@ -37,6 +36,7 @@ function setup() {
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
   initializeAppControls("linescape", next);
+  initializeSwatches();
 
   // set up p5 for drawing
   const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
@@ -103,8 +103,6 @@ function setupArrays() {
 
 function activateDraw() {
   resetButtons();
-  bool = 1;
-  paintOff();
   return false;
 }
 
@@ -117,13 +115,13 @@ function next() {
   if (counter > 7) {
     setupDefaults();
   }
-  bool = 0;
 
   cc++;
   if (cc > colours.length - 1) {
     cc = 0;
   }
 
+  updateSwatchColors();
   activateDraw();
   setupArrays();
   background(255, 255);
@@ -143,47 +141,33 @@ function touchMoved() {
     }
   }
 
-  // sort by size
-  store.sort(sortFunction);
+  store.sort((a, b) => b[0] - a[0]);
 
-  if (bool) {
-    // redrawOrganic
-    for (let i = 0; i < store.length; i++) {
-      let _d = store[i][0];
-      let _x = store[i][1];
-      let _y = store[i][2];
-      let temp = createVector(mouseX, mouseY);
-      _d = _d / (vMax * 0.2);
-      arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
-    }
-  } else {
-    // find the closest match, and paint that colour
-    let choice = 0;
-    if (toggle) {
-      choice = 1;
-    }
-    if (store.length > 0) {
-      ccc = hexToRgb(colours[cc][choice]);
-      arrLineCol[store[store.length - 1][2]] = [
-        ccc.levels[0],
-        ccc.levels[1],
-        ccc.levels[2],
-      ];
-    }
+  for (let i = 0; i < store.length; i++) {
+    let _d = store[i][0];
+    let _x = store[i][1];
+    let _y = store[i][2];
+    let temp = createVector(mouseX, mouseY);
+    _d = _d / (vMax * 0.2);
+    arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
   }
+
+  // If a swatch is active, apply color
+  if (store.length > 0) {
+    let choice = toggle ? 1 : 0; // which swatch color to use
+    ccc = hexToRgb(colours[cc][choice]);
+    arrLineCol[store[store.length - 1][2]] = [
+      ccc.levels[0],
+      ccc.levels[1],
+      ccc.levels[2],
+    ];
+  }
+
   redrawIt();
 }
 
 function updateSize() {
   curveTightness(slider1.value() / 100);
-}
-
-function sortFunction(a, b) {
-  if (a[0] === b[0]) {
-    return b;
-  } else {
-    return a[0] > b[0] ? -1 : 1;
-  }
 }
 
 function redrawIt() {
@@ -209,7 +193,7 @@ function redrawIt() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 
-  const { dimensions } = handleResize();
+  const { dimensions, orientationChanged } = handleResize();
   ({ vMax } = dimensions);
 
   if (orientationChanged) {

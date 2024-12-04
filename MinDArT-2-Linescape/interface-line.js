@@ -1,5 +1,5 @@
-let resetButton, saveButton, homeButton, fsButton, toggleBut;
 let toggle = 0;
+let swatch = [];
 
 var colours = [
   ["#F2B705", "#701036"],
@@ -15,42 +15,23 @@ var colours = [
 
 let cc = 0;
 
-function writeTextUI() {
-  createSwatch();
+function initializeSwatches() {
+  updateSwatchColors();
+  document.querySelectorAll('[data-element="swatch"]').forEach((swatch, i) => {
+    swatch.addEventListener("click", () => switchSwatch(i));
+  });
+
+  setActiveElementById("swatch0");
 }
 
-function createSwatch() {
-  $(".box").remove();
-  $(".toggle").remove();
-
-  swatch = [];
-  for (let i = 0; i < 2; i++) {
-    swatch[i] = createButton("");
-    swatch[i].size(7 * vMax, 10.5 * vMax);
-    swatch[i].style("background-color", colours[cc][i]);
-    swatch[i].style("border-width", "6px");
-    swatch[i].class("box");
-    swatch[i].id("swatch" + i);
-  }
-}
-
-function left_colour() {
-  bool = 0;
+function switchSwatch(number) {
   resetButtons();
-  toggle = false;
+  toggle = number === 1; // true if second swatch
+  setActiveElementById("swatch" + number);
   click.play();
 }
 
-function right_colour() {
-  bool = 0;
-  resetButtons();
-  toggle = true;
-  click.play();
-}
-
-function paintOff() {
-  for (let i = 0; i < 2; i++) {
-    swatch[i].position((i * 9 + 12) * vMax, height - 11 * vMax);
-    swatch[i].size(9 * vMax, 8 * vMax);
-  }
+function updateSwatchColors() {
+  document.getElementById("swatch0").style.backgroundColor = colours[cc][0];
+  document.getElementById("swatch1").style.backgroundColor = colours[cc][1];
 }
