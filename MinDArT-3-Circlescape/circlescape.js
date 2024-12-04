@@ -88,7 +88,7 @@ function start() {
     let tmp = p5.Vector.lerp(v1, v2, i / d);
     poleArr.push(tmp);
   }
-
+  stopAudioWhenHidden(audio);
   restart();
 }
 

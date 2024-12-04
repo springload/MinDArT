@@ -1,358 +1,269 @@
-  // images 
-  let bg;
-  let brush = [];
-  // brush mechanics
-  let angle1, segLength;
-  let scalar = 30;
-  let tempwinMouseX = 0;
-  let tempwinMouseY = 0;
-  let tempX = 100;
-  let tempY = 100;
-  let dx, dy;
-  // VARIABLES FOR TIME DELAY ON BRUSH
-  let milliCounter;
-  let milliTrack = 0;
-  //BRUSH CHARACTERISTICS
-  let milliComp = 5;
-  let scatterAmount = 2;
-  // COLOUR VARAIABLES
-  let colHue;
-  const colHueMin = 0;
-  const colHueMax = 360;
-  let colSat;
-  const colSatMin = 0;
-  const colSatMax = 255;
-  let colBri;
-  const colBriMin = 0;
-  const colBriMax = 255;
-  let colOpacity = 0.4;
-  let colourBool = 0;
-  let introLayer;
-  let cloudHSB = [
-    [180, 47, 25],
-    [178, 23, 55],
-    [170, 15, 75],
-    [164, 12, 95],
-    [176, 45, 19]
-  ];
-  let sunsetHSB = [
-    [11, 53, 96],
-    [13, 83, 91],
-    [2, 90, 100],
-    [334, 81, 91],
-    [300, 67, 99]
-  ];
+// images
+let bg;
+let brush = [];
+// brush mechanics
+let angle1, segLength;
+let scalar = 30;
+let tempwinMouseX = 0;
+let tempwinMouseY = 0;
+let tempX = 100;
+let tempY = 100;
+let dx, dy;
+// VARIABLES FOR TIME DELAY ON BRUSH
+let milliCounter;
+let milliTrack = 0;
+//BRUSH CHARACTERISTICS
+let milliComp = 5;
+let scatterAmount = 2;
+// COLOUR VARAIABLES
+let colHue;
+const colHueMin = 0;
+const colHueMax = 360;
+let colSat;
+const colSatMin = 0;
+const colSatMax = 255;
+let colBri;
+const colBriMin = 0;
+const colBriMax = 255;
+let colOpacity = 0.4;
+let colourBool = 0;
+let introLayer;
+let cloudHSB = [
+  [180, 47, 25],
+  [178, 23, 55],
+  [170, 15, 75],
+  [164, 12, 95],
+  [176, 45, 19],
+];
+let sunsetHSB = [
+  [11, 53, 96],
+  [13, 83, 91],
+  [2, 90, 100],
+  [334, 81, 91],
+  [300, 67, 99],
+];
 
-  let colourLevel = 0;
+let colourLevel = 0;
 
-  let colourSwatch = [
-    ['#F2A97E','#F28D77','#BF7E7E','#7E708C','#49538C'],
-    ['#F2A74B','#F2955E','#D95F43','#734663','#2A1A40'],
-    ['#F21905','#A60303','#027373','#025159','#025159'],
-    ['#CFCFCF','#88898C','#565759','#0D0D0D','#00010D'],
-    ['#91AA9D','#D1DBBD','#91AA9D','#3E606F','#193441']
-  ]
+let colourSwatch = [
+  ["#F2A97E", "#F28D77", "#BF7E7E", "#7E708C", "#49538C"],
+  ["#F2A74B", "#F2955E", "#D95F43", "#734663", "#2A1A40"],
+  ["#F21905", "#A60303", "#027373", "#025159", "#025159"],
+  ["#CFCFCF", "#88898C", "#565759", "#0D0D0D", "#00010D"],
+  ["#91AA9D", "#D1DBBD", "#91AA9D", "#3E606F", "#193441"],
+];
 
-  const rotateDrift = 0.6;
-  let bool = 1;
-  let brushTemp = 0;
-  let buttonText1state = 0;
-  let buttonText2state = 0;
-  let wmax, hmax, vMax;
-  let audio;
-  let startState = 0;
-  let alphaErase;
-  let eraseState = 0;
-  let saveState = 1;
-  let buttonTEST;
-  let autoX = 0,
-    autoY = 0,
-    pautoX = 0,
-    pautoY = 0; // automated drawing mouse states
-  let paintLayer, traceLayer;
-  let started = 0;
-  let storedOrientation, storedOrientationDegrees, rotateDirection;
+const rotateDrift = 0.6;
+let bool = 1;
+let brushTemp = 0;
+let buttonText1state = 0;
+let buttonText2state = 0;
+let vMax;
+let audio;
+let startState = 0;
+let alphaErase;
+let eraseState = 0;
+let saveState = 1;
+let buttonTEST;
+let autoX = 0,
+  autoY = 0,
+  pautoX = 0,
+  pautoY = 0; // automated drawing mouse states
+let paintLayer, traceLayer;
+let started = 0;
 
-  function preload() {
-    bg = loadImage('assets/paper.jpg'); // background paper
-    for (let i = 0; i < 15; i++) {
-      brush[i] = loadImage('assets/Cloud' + i + '.png') // brush loader
+function preload() {
+  bg = loadImage("assets/paper.jpg"); // background paper
+  for (let i = 0; i < 15; i++) {
+    brush[i] = loadImage("assets/Cloud" + i + ".png"); // brush loader
+  }
+  audio = loadSound("../sound/Scene4_Colour.mp3");
+  click = loadSound("../sound/click.mp3");
+}
+
+function start() {
+  click.play();
+  if (!audio.isPlaying()) {
+    audio.loop(1);
+  }
+  stopAudioWhenHidden(audio);
+
+  reset();
+  started = 1;
+}
+
+function setup() {
+  // add JS functionality to existing HTML elements
+  setupLoadingScreen(start);
+  initializeAppControls("colourscape", reset);
+  initializeToolbarButtons();
+  // set up p5 for drawing
+  const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
+  mainCanvas.parent(
+    document.querySelector('[data-element="canvas-container"]')
+  );
+  paintLayer = createGraphics(width, height);
+  traceLayer = createGraphics(width, height);
+
+  pixelDensity(1); // Ignores retina displays
+
+  colHue = random(colHueMin, colHueMax);
+  colSat = random(colSatMin, colSatMax);
+  strokeWeight(4); // for line work
+  stroke(255, 0, 255); // for line work
+
+  setLayerProperties();
+}
+
+function setLayerProperties() {
+  imageMode(CENTER); // centers loaded brushes
+  blendMode(BLEND); // consider overlay and multiply
+  traceLayer.blendMode(LIGHTEST); // consider overlay and multiply
+  colorMode(RGB, 255, 255, 255, 1);
+  paintLayer.colorMode(RGB, 255, 255, 255, 255);
+  traceLayer.colorMode(HSB, 360, 100, 100, 1);
+  traceLayer.strokeWeight(8);
+  traceLayer.stroke(255, 0, 255, 0.8); // for line work
+}
+
+function reset() {
+  colourLevel = (colourLevel + 1) % 5; //TODO
+  calcViewportDimensions();
+  writeTextUI();
+  resetButtons();
+
+  backdrop();
+  segLength = windowWidth / 40; // length of delay between touch and paint or line // 15 is a good value.
+  setProperties(0, 0);
+  paintLayer.clear();
+  traceLayer.clear();
+  if (!bool) invertTracing();
+  render();
+}
+
+function backdrop() {
+  background(255);
+  noTint();
+  image(bg, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight); // display backgrond
+}
+
+function touchStarted() {
+  if (!started) {
+    start();
+  }
+  setProperties(winMouseX, winMouseY);
+}
+
+function setProperties(_x, _y) {
+  tempwinMouseX = windowWidth / 2 - _x; // record position on downpress
+  tempwinMouseY = windowHeight / 2 - _y; // record position on downpress
+  brushTemp = int(random(0, brush.length - 1));
+
+  if (bool) {
+    //image(bg, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
+    if (!colourBool) {
+      let selectedNum = Math.floor(random(0, 2));
+      currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
+    } else {
+      let selectedNum = Math.floor(random(3, 5));
+      currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
     }
-    audio = loadSound('../sound/Scene4_Colour.mp3');
-    click = loadSound('../sound/click.mp3');
   }
+}
 
-
-  function start() {
-    $(".startBtn").remove();
-    fullscreen(1);
-    // note currently everything resets on windowResized. Unsure if this is logical yet
-
-    if (audio.isPlaying()) {} else {
-      audio.loop(1);
+function touchMoved() {
+  if (started) {
+    if (eraseState === 0) {
+      makeDrawing(winMouseX, winMouseY, pwinMouseX, pwinMouseY);
+    } else {
+      eraseDrawing();
     }
 
-    reset();
-    started = 1;
-  }
-
-  function setup() {
-    createCanvas(windowWidth, windowHeight);
-
-    paintLayer = createGraphics(width, height);
-    traceLayer = createGraphics(width, height);
-    pixelDensity(1); // Ignores retina displays
-
-    colHue = random(colHueMin, colHueMax);
-    colSat = random(colSatMin, colSatMax);
-    strokeWeight(4); // for line work
-   
-    stroke(255, 0, 255); // for line work
-
-    setLayerProperties();
-
-
-    var stbtn = $("<div />").appendTo("body");
-    stbtn.addClass('startBtn');
-    $('<p>Touch here to begin</p>').appendTo(stbtn);
-    stbtn.mousedown(start);
-    stbtn.mousemove(start);
-  }
-
-  function setLayerProperties(){
-    imageMode(CENTER); // centers loaded brushes
-    blendMode(BLEND); // consider overlay and multiply
-    traceLayer.blendMode(LIGHTEST); // consider overlay and multiply
-    colorMode(RGB, 255, 255, 255, 1);
-    paintLayer.colorMode(RGB, 255, 255, 255, 255);
-    traceLayer.colorMode(HSB, 360, 100, 100, 1);
-    traceLayer.strokeWeight(8);
-    traceLayer.stroke(255, 0, 255, 0.8); // for line work
-  }
-
-  function reset(){
-    colourLevel = (colourLevel + 1) % 5; //TODO
-    calcDimensions();
-    writeTextUI();
-    resetButtons();
-
-    backdrop();
-    segLength = windowWidth / 40; // length of delay between touch and paint or line // 15 is a good value.
-    setProperties(0, 0);
-    paintLayer.clear();
-    traceLayer.clear();
-    if (!bool) invertTracing();
     render();
   }
 
-  function backdrop() {
-    background(255);
-    noTint();
-    image(bg, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight); // display backgrond
-  }
+  return false;
+}
 
-  function touchStarted() {
-    if (!started){
-      start();
+function render() {
+  blendMode(BLEND);
+  backdrop();
+  blendMode(DARKEST);
+  image(paintLayer, width / 2, height / 2);
+  blendMode(LIGHTEST);
+  image(traceLayer, width / 2, height / 2);
+  // console.log(frameRate());
+}
+
+function autoDraw() {
+  pautoX = autoX;
+  pautoY = autoY;
+  autoX = autoX + random(-50, 55);
+  autoY = autoY + random(-20, 22);
+  makeDrawing(autoX % width, autoY % height, pautoX % width, pautoY % height);
+}
+
+function makeDrawing(_x, _y, pX, pY) {
+  milliCounter = millis();
+  if (bool) {
+    if (milliCounter > milliTrack + milliComp) {
+      dx = _x - tempX;
+      dy = _y - tempY;
+      angle1 = atan2(dy, dx) + random(-rotateDrift, rotateDrift); // https://p5js.org/reference/#/p5/atan2
+      tempX = _x - (cos(angle1) * segLength) / 2; // https://p5js.org/examples/interaction-follow-1.html
+      tempY = _y - (sin(angle1) * segLength) / 2;
+      scalar = constrain(
+        70 * (random(3, abs(_x - pX)) / windowWidth),
+        0.2,
+        1.2
+      );
+      segment(tempX, tempY, angle1, brush[brushTemp], scalar);
+      milliTrack = milliCounter;
     }
-      setProperties(winMouseX, winMouseY); 
+  } else {
+    // for (let i = 0; i < 2; i++) {
+    //   // traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
+    //   // traceLayer.stroke(255, 0, 255, 0.4); // for line work
+    //   traceLayer.line(_x + random(-5, 5), _y + random(-5, 5), pX, pY);
+    // }
+    traceLayer.line(_x, _y, pX, pY);
   }
+}
 
-  function setProperties(_x, _y) {
-    tempwinMouseX = ((windowWidth / 2) - _x); // record position on downpress
-    tempwinMouseY = ((windowHeight / 2) - _y); // record position on downpress
-    brushTemp = int(random(0, brush.length-1));
+function segment(rakeX, rakeY, a, rake, scalar) {
+  currentColour.setAlpha(0.5);
+  paintLayer.tint(currentColour); // Display at half opacity
+  paintLayer.push();
+  paintLayer.imageMode(CENTER); // centers loaded brushes
+  paintLayer.translate(
+    rakeX +
+      randomGaussian(
+        -scatterAmount * (0.1 * scalar),
+        scatterAmount * (0.1 * scalar)
+      ),
+    rakeY +
+      randomGaussian(
+        -scatterAmount * (0.1 * scalar),
+        scatterAmount * (0.1 * scalar)
+      )
+  );
+  paintLayer.scale(scalar);
+  paintLayer.rotate(a);
+  paintLayer.image(rake, 0, 0, 200, 200);
+  paintLayer.imageMode(CORNER); // centers loaded brushes
+  paintLayer.pop();
+}
 
-    if (bool) {
-      //image(bg, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
-      if (!colourBool) {
-        let selectedNum = Math.floor(random(0,2));
-       currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
-      } else {
-        let selectedNum = Math.floor(random(3,5));
-        currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
-      }
-    }
-  }
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 
-  
-  function hexToRgb(hex) {
-    hex = hex.replace('#', '');
-    var bigint = parseInt(hex, 16);
-    var r = (bigint >> 16) & 255;
-    var g = (bigint >> 8) & 255;
-    var b = bigint & 255;
-    return color(r, g, b);
-  }
+  const { dimensions, resizedLayers } = handleResize([paintLayer, traceLayer]);
+  [paintLayer, traceLayer] = resizedLayers;
+  ({ vMax } = dimensions);
 
+  setLayerProperties();
+  writeTextUI(); // TODO: remove this?
+  render();
+}
 
-
-  function touchMoved() {
-
-    if (started){
-
-      if (eraseState === 0) {
-        makeDrawing(winMouseX, winMouseY, pwinMouseX, pwinMouseY);
-      } else {
-        eraseDrawing();
-      }
-
-      render();
-    }
-
-    return false;
-  }
-
-  function render(){
-    blendMode(BLEND);
-    backdrop();
-    blendMode(DARKEST);
-    image(paintLayer, width / 2, height / 2);
-    blendMode(LIGHTEST);
-    image(traceLayer, width / 2, height / 2);
-    // console.log(frameRate());
-
-  }
-
-  function autoDraw() {
-    pautoX = autoX;
-    pautoY = autoY;
-    autoX = autoX + (random(-50, 55));
-    autoY = autoY + (random(-20, 22));
-    makeDrawing(autoX % width, autoY % height, pautoX % width, pautoY % height);
-  }
-  function makeDrawing(_x, _y, pX, pY) {
-    milliCounter = millis();
-    if (bool) {
-      if (milliCounter > milliTrack + milliComp) {
-        dx = _x - tempX;
-        dy = _y - tempY;
-        angle1 = atan2(dy, dx) + (random(-rotateDrift, rotateDrift)); // https://p5js.org/reference/#/p5/atan2
-        tempX = _x - (cos(angle1) * segLength / 2); // https://p5js.org/examples/interaction-follow-1.html
-        tempY = _y - (sin(angle1) * segLength / 2);
-        scalar = constrain(70 * (random(3, abs(_x - pX)) / windowWidth), 0.2, 1.2);
-        segment(tempX, tempY, angle1, brush[brushTemp], scalar)
-        milliTrack = milliCounter;
-      }
-    } else {
-      // for (let i = 0; i < 2; i++) {
-      //   // traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
-      //   // traceLayer.stroke(255, 0, 255, 0.4); // for line work
-      //   traceLayer.line(_x + random(-5, 5), _y + random(-5, 5), pX, pY);
-      // }
-      traceLayer.line(_x, _y, pX, pY);
-    }
-  }
-  function segment(rakeX, rakeY, a, rake, scalar) {
-    currentColour.setAlpha(0.5);
-    paintLayer.tint(currentColour); // Display at half opacity
-    paintLayer.push();
-    paintLayer.imageMode(CENTER); // centers loaded brushes
-    paintLayer.translate(rakeX + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))), rakeY + (randomGaussian(-scatterAmount * (0.1 * scalar), scatterAmount * (0.1 * scalar))));
-    paintLayer.scale(scalar);
-    paintLayer.rotate(a);
-    paintLayer.image(rake, 0, 0, 200, 200);
-    paintLayer.imageMode(CORNER); // centers loaded brushes
-    paintLayer.pop();
-  }
-
-
-
-  function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-    sizeWindow();
-    setLayerProperties();
-    writeTextUI();
-    checkFS();
-     render();
-console.log("resized");
-
-  }
-
-
-  function sizeWindow() {
-    if (width < height) {
-      currentOrientation = "portrait";
-    } else {
-      currentOrientation = "landscape";
-    }
-    if (currentOrientation === storedOrientation) {
-      stretchWindow();
-    } else {
-      if (window.orientation < storedOrientationDegrees) {
-        direction = 1;
-      } else {
-        direction = -1;
-      }
-
-      if (abs(window.orientation - storedOrientationDegrees) == 270){
-        direction = -direction;
-      }
-      rotateWindow(direction);
-      storedOrientationDegrees = window.orientation;
-    }
-    storedOrientation = currentOrientation;
-    calcDimensions();
-  }
-
-  function stretchWindow() {
-
-    var newpaintLayer = createGraphics(windowWidth, windowHeight);
-    newpaintLayer.image(paintLayer, 0, 0, windowWidth, windowHeight);
-    paintLayer.resizeCanvas(windowWidth, windowHeight);
-    paintLayer = newpaintLayer;
-    newpaintLayer.remove();
-
-    var newtraceLayer = createGraphics(windowWidth, windowHeight);
-    newtraceLayer.image(traceLayer, 0, 0, windowWidth, windowHeight);
-    traceLayer.resizeCanvas(windowWidth, windowHeight);
-    traceLayer = newtraceLayer;
-    newtraceLayer.remove();
-
-
-  }
-
-  function rotateWindow(direction) {
-    var newpaintLayer = createGraphics(windowWidth, windowHeight);
-    newpaintLayer.push();
-    newpaintLayer.translate(width / 2, height / 2);
-    newpaintLayer.rotate((PI / 2) * direction);
-    newpaintLayer.translate(-height / 2, -width / 2);
-    newpaintLayer.image(paintLayer, 0, 0, windowHeight, windowWidth);
-    newpaintLayer.pop()
-    paintLayer.resizeCanvas(windowWidth, windowHeight);
-    paintLayer = newpaintLayer;
-    newpaintLayer.remove();
-
-    var newtraceLayer = createGraphics(windowWidth, windowHeight);
-    newtraceLayer.push();
-    newtraceLayer.translate(width / 2, height / 2);
-    newtraceLayer.rotate((PI / 2) * direction);
-    newtraceLayer.translate(-height / 2, -width / 2);
-    newtraceLayer.image(traceLayer, 0, 0, windowHeight, windowWidth);
-    newtraceLayer.pop()
-    traceLayer.resizeCanvas(windowWidth, windowHeight);
-    traceLayer = newtraceLayer;
-    newtraceLayer.remove();
-
-
-    // TODO: properly detect the orientation
-    rotateDirection = rotateDirection * -1;
-  }
-
-  function checkFS(){
-    if (!fullscreen()){
-   // addFS();
-  }
-  }
-
-  //startSimulation and pauseSimulation defined elsewhere
-  function handleVisibilityChange() {
-    if (document.hidden) {
-      audio.stop();
-    } else {
-      audio.loop(1);
-    }
-  }
-
-  document.addEventListener("visibilitychange", handleVisibilityChange, false);
+window.addEventListener("resize", windowResized);

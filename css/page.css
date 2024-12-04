@@ -6,13 +6,16 @@ body {
   /* prevent flash of color on tap */
   -webkit-tap-highlight-color: transparent;
 
-  padding-inline: 1rem;
   font-family: var(--font-avenir);
   /* TODO: font-weight was set as 900, but that weight isn't in the repo */
 
   &:where(:not(.home)) {
     overflow: hidden;
   }
+}
+
+.main {
+  padding: 1rem;
 }
 
 .logo {
@@ -23,7 +26,7 @@ body {
 
 .grid {
   margin-inline: auto;
-  margin-bottom: 1rem;
+  /* keep it to max 4 columns */
   max-width: 1320px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
