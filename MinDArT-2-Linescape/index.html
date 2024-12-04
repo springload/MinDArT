@@ -8,7 +8,6 @@
 
     <title>MinDArT : Week 2 - Linescape</title>
 
-    <link rel="stylesheet" href="stylesheet.css">
     <link rel="stylesheet" href="../css/styles.css">
 
     <script src="../libraries/p5.js"></script>
@@ -22,8 +21,8 @@
 
   </head>
 
-  <body>
-    <dialog class="loading-screen u-theme-green" data-element="loading-dialog" open>
+  <body class="u-theme-green">
+    <dialog class="loading-screen" data-element="loading-dialog" open>
       <div class="loading-screen__inner">
         <div class="loading-screen__loading" id="p5_loading" >
           <img src="../assets/linescape-icon-white.png">
@@ -39,15 +38,14 @@
     
     <div class="interface">
       <div class="toolbar" data-element="toolbar">
-        <div class="swatch-container">
-          <!-- Color swatches will be added here -->
-        </div>
+        <button id="swatch0" class="btn" onclick="switchSwatch(0)"></button>
+        <button id="swatch1" class="btn" onclick="switchSwatch(1)"></button>
       </div>
       
       <div class="app-controls">
-        <a href="/" class="btn btn--light-blue">Main Menu</a>
-        <button class="btn btn--light-blue" data-element="reset-button">New</button>
-        <button class="btn btn--light-blue" data-element="save-button">Save</button>
+        <a href="/" class="btn btn--theme">Main Menu</a>
+        <button class="btn btn--theme" data-element="reset-button">New</button>
+        <button class="btn btn--theme" data-element="save-button">Save</button>
       </div>
     </div>
     
