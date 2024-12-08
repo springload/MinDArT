@@ -217,8 +217,8 @@ function makeDrawing(_x, _y, pX, pY) {
 
       dx = _x - tempX;
       dy = _y - tempY;
-      angle1 = atan2(dy, dx) + random(-rotateDrift, rotateDrift);
-      tempX = _x - (cos(angle1) * segLength) / 2;
+      angle1 = atan2(dy, dx) + random(-rotateDrift, rotateDrift); // https://p5js.org/reference/#/p5/atan2
+      tempX = _x - (cos(angle1) * segLength) / 2; // https://p5js.org/examples/interaction-follow-1.html
       tempY = _y - (sin(angle1) * segLength) / 2;
       scalar = constrain(
         70 * (random(3, abs(_x - pX)) / windowWidth),
