@@ -207,10 +207,18 @@ function makeDrawing(_x, _y, pX, pY) {
   milliCounter = millis();
   if (bool) {
     if (milliCounter > milliTrack + milliComp) {
+      if (!colourBool) {
+        let selectedNum = Math.floor(random(0, 2));
+        currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
+      } else {
+        let selectedNum = Math.floor(random(3, 5));
+        currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
+      }
+
       dx = _x - tempX;
       dy = _y - tempY;
-      angle1 = atan2(dy, dx) + random(-rotateDrift, rotateDrift); // https://p5js.org/reference/#/p5/atan2
-      tempX = _x - (cos(angle1) * segLength) / 2; // https://p5js.org/examples/interaction-follow-1.html
+      angle1 = atan2(dy, dx) + random(-rotateDrift, rotateDrift);
+      tempX = _x - (cos(angle1) * segLength) / 2;
       tempY = _y - (sin(angle1) * segLength) / 2;
       scalar = constrain(
         70 * (random(3, abs(_x - pX)) / windowWidth),
@@ -221,11 +229,6 @@ function makeDrawing(_x, _y, pX, pY) {
       milliTrack = milliCounter;
     }
   } else {
-    // for (let i = 0; i < 2; i++) {
-    //   // traceLayer.strokeWeight(constrain(abs((_y + _x) - (pX + pY)), .8, 3.5)); // for line work
-    //   // traceLayer.stroke(255, 0, 255, 0.4); // for line work
-    //   traceLayer.line(_x + random(-5, 5), _y + random(-5, 5), pX, pY);
-    // }
     traceLayer.line(_x, _y, pX, pY);
   }
 }
