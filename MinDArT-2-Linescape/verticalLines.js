@@ -101,11 +101,6 @@ function setupArrays() {
   redrawIt();
 }
 
-function activateDraw() {
-  resetButtons();
-  return false;
-}
-
 function next() {
   resetButtons();
   yCount = int((yCount *= 1.3));
@@ -122,7 +117,6 @@ function next() {
   }
 
   updateSwatchColors();
-  activateDraw();
   setupArrays();
   background(255, 255);
   blendMode(BLEND);

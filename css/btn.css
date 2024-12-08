@@ -63,6 +63,12 @@
   color: var(--color-grey-40);
 }
 
+/* 'split' buttons are grouped together to prevent them wrapping individually on small screens */
+.btn-group--split {
+  display: flex;
+  gap: 4px;
+}
+
 .btn--leftsplit {
   border-radius: 40px 0px 0px 40px;
   width: 140px;
@@ -70,8 +76,6 @@
 }
 
 .btn--rightsplit {
-  /* sites closer to its neighbour than the standard 8px gap*/
-  margin-left: -4px;
   border-radius: 0px 40px 40px 0px;
   width: 140px;
   padding-right: 12px;

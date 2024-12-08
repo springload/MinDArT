@@ -38,8 +38,10 @@
     
     <div class="interface">
       <div class="toolbar" data-element="toolbar">
-        <button id="swatch0" class="btn" onclick="switchSwatch(0)"></button>
-        <button id="swatch1" class="btn" onclick="switchSwatch(1)"></button>
+        <div class="btn-group--split">
+          <button id="swatch0" class="btn btn--leftsplit" onclick="switchSwatch(0)"></button>
+          <button id="swatch1" class="btn btn--rightsplit" onclick="switchSwatch(1)"></button>
+        </div>
       </div>
       
       <div class="app-controls">

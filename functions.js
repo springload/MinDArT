@@ -38,7 +38,7 @@ function show_btns() {
 }
 
 function resetButtons() {
-  var activeButtons = document.querySelectorAll("button.active");
+  var activeButtons = document.querySelectorAll(".btn.active");
   for (var i = 0; i < activeButtons.length; i++) {
     activeButtons[i].classList.remove("active");
   }

@@ -77,7 +77,7 @@ function preload() {
 function setup() {
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
-  initializeAppControls("touchscape", resetTimeout);
+  initializeAppControls("touchscape", reset);
   initializeToolbarButtons();
   // set up p5 for drawing
   const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
@@ -242,11 +242,6 @@ function display() {
   blendMode(BLEND);
   noTint();
   image(pLayer, 0, 0, width, height);
-}
-
-function resetTimeout() {
-  resetButtons();
-  reset();
 }
 
 function reset() {

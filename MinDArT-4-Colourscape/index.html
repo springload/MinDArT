@@ -44,8 +44,10 @@
     <div class="toolbar" data-element="toolbar">
       <button id="erasedraw" class="btn btn--white" onclick="drawErase()">Erase Draw</button>
       <button id="erasepaint" class="btn btn--white" onclick="paintErase()">Erase Paint</button>
-      <button id="warm" class="btn btn--leftsplit btn--warm-stripes" onclick="paintWarm()"></button>
-      <button id="cool" class="btn btn--rightsplit btn--cool-stripes" onclick="paintCool()"></button>
+      <div class="btn-group--split">
+        <button id="warm" class="btn btn--leftsplit btn--warm-stripes" onclick="paintWarm()"></button>
+        <button id="cool" class="btn btn--rightsplit btn--cool-stripes" onclick="paintCool()"></button>
+      </div>
       <button id="draw" class="btn btn--white" onclick="switchToTrace()">Draw</button>
     </div>
     
