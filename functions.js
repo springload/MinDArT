@@ -127,24 +127,6 @@ function initializeAppControls(appName, resetCallback) {
   };
 }
 
-function initializeToolbarButtons() {
-  const toolbar = document.querySelector('[data-element="toolbar"]');
-
-  if (toolbar) {
-    const btns = Array.from(toolbar.getElementsByClassName("btn"));
-    btns.forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const clicked = e.currentTarget;
-        const current = document.querySelector(".active");
-        if (current) {
-          current.classList.remove("active");
-        }
-        clicked.classList.add("active");
-      });
-    });
-  }
-}
-
 function hexToRgb(hex) {
   hex = hex.replace("#", "");
   var bigint = parseInt(hex, 16);
@@ -157,4 +139,16 @@ function hexToRgb(hex) {
 function colorAlpha(aColor, alpha) {
   var c = color(aColor);
   return color("rgba(" + [red(c), green(c), blue(c), alpha].join(",") + ")");
+}
+
+function setupCanvasEventListeners() {
+  const canvas = document.querySelector("canvas");
+  canvas.addEventListener("touchmove", moved, { passive: false }); // passive: false prevents scroll on touch
+  canvas.addEventListener("mousemove", moved);
+  canvas.addEventListener("touchstart", touchdown);
+  canvas.addEventListener("mousedown", touchdown);
+  canvas.addEventListener("touchend", touchstop);
+  canvas.addEventListener("touchleave", touchstop);
+  canvas.addEventListener("mouseup", touchstop);
+  canvas.addEventListener("mouseup", touchstop);
 }

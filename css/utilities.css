@@ -18,3 +18,8 @@
   --theme-bg: var(--color-red-60);
   --theme-button-bg: var(--color-red-80);
 }
+
+.u-theme-grey {
+  --theme-bg: var(--color-grey-60);
+  --theme-button-bg: var(--color-grey-90);
+}

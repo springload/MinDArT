@@ -118,19 +118,8 @@ function start() {
   counter = 0;
 
   stopAudioWhenHidden(audio);
-  setupEventListeners();
+  setupCanvasEventListeners();
   initializeDataStores();
-}
-
-function setupEventListeners() {
-  const canvas = document.querySelector("canvas");
-  canvas.addEventListener("touchmove", moved, { passive: false });
-  canvas.addEventListener("mousemove", moved);
-  canvas.addEventListener("touchstart", touchdown);
-  canvas.addEventListener("mousedown", touchdown);
-  canvas.addEventListener("touchend", touchstop);
-  canvas.addEventListener("touchleave", touchstop);
-  canvas.addEventListener("mouseup", touchstop);
 }
 
 function initializeDataStores() {

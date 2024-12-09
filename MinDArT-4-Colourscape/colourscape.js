@@ -129,7 +129,7 @@ function setLayerProperties() {
 function reset() {
   colourLevel = (colourLevel + 1) % 5; //TODO
   calcViewportDimensions();
-  writeTextUI();
+  drawErase();
   resetButtons();
 
   backdrop();
@@ -265,7 +265,6 @@ function windowResized() {
   ({ vMax } = dimensions);
 
   setLayerProperties();
-  writeTextUI(); // TODO: remove this?
   render();
 }
 

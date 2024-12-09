@@ -4,22 +4,32 @@ let stage = 1;
 // dot tracking
 let dots = [],
   throughDotCount = 0,
-  dotSize, dotQty, ringQty;
+  dotSize,
+  dotQty,
+  ringQty;
 
 // mouse/geometry tracking
-let isMousedown, tempwinMouseX, tempwinMouseY, tempwinMouseX2, tempwinMouseY2,
+let isMousedown,
+  tempwinMouseX,
+  tempwinMouseY,
+  tempwinMouseX2,
+  tempwinMouseY2,
   verifyX = 0,
   verifyY = 0,
-  vMax, circleRad,
+  vMax,
+  circleRad,
   rad = 50.0; // animatedRadius
 
 // colour tracking
-let hueDrift, brightDrift, satDrift,
+let hueDrift,
+  brightDrift,
+  satDrift,
   primaryArray = [360, 60, 240], // RGB in HSB terms
   colHue = 360,
   colSat = 100,
   colBri = 100,
-  tintedBG, appCol;
+  tintedBG,
+  appCol;
 
 // intro tracking
 let xintro = [],
@@ -45,28 +55,31 @@ let introText = ["Touch and Listen", "Look", "Draw"],
 let lineStore;
 let pointStore;
 
-
 function preload() {
-  bg = loadImage('assets/paper.jpg');
-  audio = loadSound('../sound/Scene5_Dot.mp3');
-  click = loadSound('../sound/click.mp3');
+  bg = loadImage("assets/paper.jpg");
+  audio = loadSound("../sound/Scene5_Dot.mp3");
+  click = loadSound("../sound/click.mp3");
 }
 
 function start() {
-  $(".startBtn").remove();
-
-
-  if (audio.isPlaying()) {} else {
+  click.play();
+  if (!audio.isPlaying()) {
     audio.loop(1);
   }
+  stopAudioWhenHidden(audio);
   sizeWindow();
-  writeTextUI();
   reset();
 }
 
 function setup() {
+  // add JS functionality to existing HTML elements
+  setupLoadingScreen(start);
+  initializeAppControls("dotscape", nextDrawing);
   // create canvas and all layers
-  createCanvas(windowWidth, windowHeight);
+  const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
+  mainCanvas.parent(
+    document.querySelector('[data-element="canvas-container"]')
+  );
   lineLayer = createGraphics(width, height);
   permaLine = createGraphics(width, height);
   tintedBG = createGraphics(width, height);
@@ -77,31 +90,15 @@ function setup() {
   appCol = color(205, 12, 64, 0.1);
   lineLayer.colorMode(HSB, 360, 100, 100, 100);
   permaLine.colorMode(HSB, 360, 100, 100, 100);
-
-  var stbtn = $("<div />").appendTo("body");
-  stbtn.addClass('startBtn');
-  $('<p>Touch here to begin</p>').appendTo(stbtn);
-  stbtn.mousedown(start);
-  stbtn.mousemove(start);
-
 }
-
-
 
 function reset() {
   // initialised dimensions and start intro
-  dimensionCalc();
+  ({ width, height, vMax } = calcViewportDimensions());
+  calcCircleRadius();
   intro_X = width * 0.3 - 100;
 
-  // add all event listeners to the canvas
-  canvas.addEventListener("touchmove", moved);
-  canvas.addEventListener("mousemove", moved);
-  canvas.addEventListener("touchstart", touchdown);
-  canvas.addEventListener("mousedown", touchdown);
-  canvas.addEventListener("touchend", touchstop);
-  canvas.addEventListener("touchleave", touchstop);
-  canvas.addEventListener("mouseup", touchstop);
-  canvas.addEventListener("mouseup", touchstop);
+  setupCanvasEventListeners();
 
   //DATA
   lineStore = [];
@@ -110,13 +107,10 @@ function reset() {
   render();
 }
 
-// calcuate Dimensions for use in this sketch, done during initialise and resize.
-function dimensionCalc() {
+function calcCircleRadius() {
   if (width > height) {
-    vMax = width / 100;
     circleRad = height * 0.45;
   } else {
-    vMax = height / 100;
     circleRad = width * 0.45;
   }
 }
@@ -127,24 +121,26 @@ function windowResized() {
 
 function sizeWindow() {
   resizeCanvas(windowWidth, windowHeight);
-  lineLayer.resizeCanvas(windowWidth, windowHeight);
-  permaLine.resizeCanvas(windowWidth, windowHeight);
-  tintedBG.resizeCanvas(windowWidth, windowHeight);
-  dimensionCalc();
-  removeElements();
-  writeTextUI();
+
+  const { dimensions, resizedLayers } = handleResize([
+    lineLayer,
+    permaLine,
+    tintedBG,
+  ]);
+  [lineLayer, permaLine, tintedBG] = resizedLayers;
+  ({ vMax, width, height } = dimensions);
+  calcCircleRadius();
   stage--;
   nextDrawing();
 }
 
 function touchdown() {
-
   isMousedown = 1;
   throughDotCount = 0;
 
   let _x = winMouseX;
   let _y = winMouseY;
-  
+
   for (let i = 0; i < dotsCount; i++) {
     dots[i].getCol(_x, _y);
   }
@@ -153,14 +149,11 @@ function touchdown() {
 }
 
 function touchstop() {
-
   isMousedown = 0;
   throughDotCount = 1;
   lineLayer.clear();
   render();
-
 }
-
 
 function moved(ev) {
   if (!isMousedown) return;
@@ -175,9 +168,8 @@ function moved(ev) {
   lineLayer.strokeWeight(8);
   lineLayer.clear();
 
-
   //if (throughDotCount > 0) {  // removed in response to line issues
-    lineLayer.line(tempwinMouseX, tempwinMouseY, winMouseX, winMouseY);
+  lineLayer.line(tempwinMouseX, tempwinMouseY, winMouseX, winMouseY);
   //}
 
   // DATA
@@ -188,7 +180,6 @@ function moved(ev) {
   render();
 
   return false;
-
 }
 
 function preventDefault(ev) {
@@ -214,17 +205,6 @@ function render() {
   }
 }
 
-//startSimulation and pauseSimulation defined elsewhere
-function handleVisibilityChange() {
-  if (document.hidden) {
-    audio.stop();
-  } else {
-    audio.loop(1);
-  }
-}
-
-document.addEventListener("visibilitychange", handleVisibilityChange, false);
-
 function copyLine() {
   permaLine.stroke(colHue, colSat, colBri, 80);
   permaLine.strokeWeight(6);
@@ -249,10 +229,13 @@ function copyLine() {
   }
 }
 
-getPressure = function(ev) {
-  return ((ev.touches && ev.touches[0] && typeof ev.touches[0]["force"] !== "undefined") ? ev.touches[0]["force"] : 1.0);
-}
-
+getPressure = function (ev) {
+  return ev.touches &&
+    ev.touches[0] &&
+    typeof ev.touches[0]["force"] !== "undefined"
+    ? ev.touches[0]["force"]
+    : 1.0;
+};
 
 // Dot class, not used in intro
 class Dot {
@@ -315,7 +298,11 @@ class Dot {
   }
 }
 
-
+function restart() {
+  stage = 0; // ⚠️ this is different from the value at initialization (1)
+  calcViewportDimensions();
+  nextDrawing();
+}
 
 function nextDrawing() {
   throughDotCount = 0;
@@ -336,7 +323,7 @@ function nextDrawing() {
     stage5grid();
   }
   tintedBG.image(bg, 0, 0, width, height);
-  tintedBG.fill(0, (20 * stage));
+  tintedBG.fill(0, 20 * stage);
   tintedBG.rect(0, 0, width, height);
   stage++;
   render();
@@ -346,7 +333,10 @@ function stage0grid() {
   let manualArray = [
     [1, 1, 4, 1, 1, 3, 4, 3, 1, 5, 4, 5, 1, 7, 4, 7],
     [1, 1, 2, 1, 3, 1, 4, 1, 1, 3, 4, 3, 1, 5, 4, 5, 1, 7, 2, 7, 3, 7, 4, 7],
-    [1, 1, 3, 1, 2, 2, 4, 2, 1, 3, 3, 3, 2, 4, 4, 4, 1, 5, 3, 5, 2, 6, 4, 6, 1, 7, 3, 7, 2, 8, 4, 8]
+    [
+      1, 1, 3, 1, 2, 2, 4, 2, 1, 3, 3, 3, 2, 4, 4, 4, 1, 5, 3, 5, 2, 6, 4, 6, 1,
+      7, 3, 7, 2, 8, 4, 8,
+    ],
   ];
   dots = [];
   let w = width / 5;
@@ -354,7 +344,11 @@ function stage0grid() {
   let r = vMax * 2;
   dotQtyY = manualArray[stage].length / 2;
   for (let i = 0; i < manualArray[stage].length; i += 2) {
-    dots[dotsCount++] = new Dot(manualArray[stage][i] * w, manualArray[stage][i + 1] * h, r);
+    dots[dotsCount++] = new Dot(
+      manualArray[stage][i] * w,
+      manualArray[stage][i + 1] * h,
+      r
+    );
   }
 }
 
@@ -379,13 +373,28 @@ function stage1grid() {
     let spaceY = height / dotQtyY + 2;
     for (let i = 0; i < dotQtyX; i++) {
       for (let j = 0; j < dotQtyY; j += 4) {
-        dots[dotsCount++] = new Dot(((i + 0.5) * spaceX) - (spaceX / 6), (j + 0.5) * spaceY, r);
-        dots[dotsCount++] = new Dot(((i + 0.5) * spaceX) + (spaceX / 6), (j + 0.5) * spaceY, r);
-        dots[dotsCount++] = new Dot(((i + 0.5) * spaceX) - (spaceX / 3), (j + 0.5) * spaceY + (spaceY * 2), r);
-        dots[dotsCount++] = new Dot(((i + 0.5) * spaceX) + ((spaceX / 6) * 2), (j + 0.5) * spaceY + (spaceY * 2), r);
+        dots[dotsCount++] = new Dot(
+          (i + 0.5) * spaceX - spaceX / 6,
+          (j + 0.5) * spaceY,
+          r
+        );
+        dots[dotsCount++] = new Dot(
+          (i + 0.5) * spaceX + spaceX / 6,
+          (j + 0.5) * spaceY,
+          r
+        );
+        dots[dotsCount++] = new Dot(
+          (i + 0.5) * spaceX - spaceX / 3,
+          (j + 0.5) * spaceY + spaceY * 2,
+          r
+        );
+        dots[dotsCount++] = new Dot(
+          (i + 0.5) * spaceX + (spaceX / 6) * 2,
+          (j + 0.5) * spaceY + spaceY * 2,
+          r
+        );
       }
     }
-
   } else if (stage === 5) {
     dotQtyX = 4;
     dotQtyY = 13 * 4;
@@ -394,10 +403,26 @@ function stage1grid() {
     let spaceY = height / dotQtyY + 2;
     for (let i = 0; i < dotQtyX; i++) {
       for (let j = 0; j < dotQtyY; j += 4) {
-        dots[dotsCount++] = new Dot(((i + 0.5) * spaceX) - (spaceX / 6), (j + 0.5) * spaceY, r);
-        dots[dotsCount++] = new Dot(((i + 0.5) * spaceX) + (spaceX / 6), (j + 0.5) * spaceY, r);
-        dots[dotsCount++] = new Dot(((i + 0.5) * spaceX) - (spaceX / 3), (j + 0.5) * spaceY + (spaceY * 2), r);
-        dots[dotsCount++] = new Dot(((i + 0.5) * spaceX) + ((spaceX / 6) * 2), (j + 0.5) * spaceY + (spaceY * 2), r);
+        dots[dotsCount++] = new Dot(
+          (i + 0.5) * spaceX - spaceX / 6,
+          (j + 0.5) * spaceY,
+          r
+        );
+        dots[dotsCount++] = new Dot(
+          (i + 0.5) * spaceX + spaceX / 6,
+          (j + 0.5) * spaceY,
+          r
+        );
+        dots[dotsCount++] = new Dot(
+          (i + 0.5) * spaceX - spaceX / 3,
+          (j + 0.5) * spaceY + spaceY * 2,
+          r
+        );
+        dots[dotsCount++] = new Dot(
+          (i + 0.5) * spaceX + (spaceX / 6) * 2,
+          (j + 0.5) * spaceY + spaceY * 2,
+          r
+        );
       }
     }
   }
@@ -416,8 +441,8 @@ function stage2grid() {
     for (let j = 0; j < dotQty; j++) {
       let rotateVal = j * (360 / dotQty);
       let tran = (circleRad / ringQty) * (i + 1);
-      let tempX = (tran * cos(radians(rotateVal))) + width / 2;
-      let tempY = (tran * sin(radians(rotateVal))) + height / 2;
+      let tempX = tran * cos(radians(rotateVal)) + width / 2;
+      let tempY = tran * sin(radians(rotateVal)) + height / 2;
       dots[dotsCount++] = new Dot(tempX, tempY, r);
     }
   }
@@ -431,12 +456,12 @@ function stage3grid() {
     r = vMax * 0.75;
   }
   for (let i = 0; i < ringQty; i++) {
-    for (let j = 0; j < dotQty + (i * 3); j++) {
-      let rotateVal = j * (360 / (dotQty + (i * 3)));
+    for (let j = 0; j < dotQty + i * 3; j++) {
+      let rotateVal = j * (360 / (dotQty + i * 3));
       let tran = (circleRad / ringQty) * (i + 1);
-      let tempX = (tran * cos(radians(rotateVal))) + width / 2;
-      let tempY = (tran * sin(radians(rotateVal))) + height / 2;
-      r = r - (r / 100);
+      let tempX = tran * cos(radians(rotateVal)) + width / 2;
+      let tempY = tran * sin(radians(rotateVal)) + height / 2;
+      r = r - r / 100;
       dots[dotsCount++] = new Dot(tempX, tempY, r);
     }
   }
@@ -460,10 +485,10 @@ function stage4grid() {
   }
   for (let i = 0; i < dotQty; i++) {
     let rotateVal = i * 137.5;
-    let tran = (((gap) / dotQty) * (i + 1)) + remainder;
-    let tempX = (tran * cos(radians(rotateVal))) + width / 2;
-    let tempY = (tran * sin(radians(rotateVal))) + height / 2;
-    r = r + ((i / 40000) * vMax);
+    let tran = (gap / dotQty) * (i + 1) + remainder;
+    let tempX = tran * cos(radians(rotateVal)) + width / 2;
+    let tempY = tran * sin(radians(rotateVal)) + height / 2;
+    r = r + (i / 40000) * vMax;
     dots[dotsCount++] = new Dot(tempX, tempY, r);
   }
 }
@@ -474,9 +499,8 @@ function stage5grid() {
     y = 7;
     noiseAmp = 8;
     dotSize = 5;
-
   } else if (stage === 12) {
-    writeRestartUI();
+    restart();
   }
   dotQtyX = x;
   dotQtyY = y;
@@ -486,8 +510,12 @@ function stage5grid() {
     for (let j = 0; j < dotQtyY; j++) {
       let noiseX = int((random(-width, width) * noiseAmp) / 150);
       let noiseY = int((random(-height, height) * noiseAmp) / 150);
-      let r = random((vMax * (dotSize / 10)), (vMax * (dotSize / 10)) * 2);
-      dots[dotsCount++] = new Dot(noiseX + (spaceX * 1.5) + (spaceX * i), noiseY + (spaceY * 1.5) + (spaceY * j), r);
+      let r = random(vMax * (dotSize / 10), vMax * (dotSize / 10) * 2);
+      dots[dotsCount++] = new Dot(
+        noiseX + spaceX * 1.5 + spaceX * i,
+        noiseY + spaceY * 1.5 + spaceY * j,
+        r
+      );
     }
   }
   noiseAmp += 10;
@@ -495,3 +523,5 @@ function stage5grid() {
   y += 5;
   dotSize--;
 }
+
+window.addEventListener("resize", windowResized);
