@@ -133,6 +133,10 @@ function initializeToolbarButtons() {
     const btns = Array.from(toolbar.getElementsByClassName("btn"));
     btns.forEach((btn) => {
       btn.addEventListener("click", (e) => {
+        // Prevent the event from reaching the canvas
+        e.preventDefault();
+        e.stopPropagation();
+
         const clicked = e.currentTarget;
         const current = document.querySelector(".active");
         if (current) {
@@ -171,4 +175,10 @@ function setupCanvasEventListeners() {
   canvas.addEventListener("touchleave", touchstop);
   canvas.addEventListener("mouseup", touchstop);
   canvas.addEventListener("mouseup", touchstop);
+}
+
+function isClickOnButton(e) {
+  return (
+    e.target.closest(".btn") !== null || e.target.closest(".interface") !== null
+  );
 }

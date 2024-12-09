@@ -74,6 +74,12 @@
   }
 }
 
+.btn--square {
+  border-radius: 0;
+  min-width: unset;
+  aspect-ratio: 1;
+}
+
 .btn--theme {
   background-color: var(--theme-button-bg, var(--color-blue-90));
   color: var(--color-grey-40);
@@ -82,22 +88,24 @@
 /* 'split' buttons are grouped together to prevent them wrapping individually on small screens */
 .btn-group--split {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
 
   :where(.btn) {
-    width: 140px;
     border-color: var(--color-grey-40);
   }
 }
 
 .btn--leftsplit {
+  width: 140px;
   border-radius: 40px 0px 0px 40px;
-  padding-left: 12px;
+  padding-left: 16px;
 }
 
 .btn--rightsplit {
+  width: 140px;
   border-radius: 0px 40px 40px 0px;
-  padding-right: 12px;
+  padding-right: 16px;
 }
 
 .active {

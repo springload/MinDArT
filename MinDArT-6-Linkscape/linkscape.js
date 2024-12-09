@@ -19,7 +19,7 @@ let dotsActive = true;
 
 let levelVersion = 0;
 let levelMax = 9;
-const colArray = [
+const palettes = [
   ["#D97398", "#A65398", "#5679A6"],
   ["#F2913D", "#F24B0F", "#5679A6"],
   ["#a4fba6", "#4ae54a", "#0f9200"],
@@ -42,22 +42,22 @@ function preload() {
 }
 
 function setup() {
+  // add JS functionality to existing HTML elements
+  setupLoadingScreen(start);
+  initializeAppControls("linkscape", reset);
+
+  // Initialize dimensions
+  ({ width, height, vMin, vMax } = calcViewportDimensions());
+
   // Create canvas and attach to container
-  const mainCanvas = createCanvas(windowWidth, windowHeight);
+  const mainCanvas = createCanvas(width, height);
   mainCanvas.parent(
     document.querySelector('[data-element="canvas-container"]')
   );
 
   // Create graphics layers
-  lineLayer = createGraphics(windowWidth, windowHeight);
-  paintLayer = createGraphics(windowWidth, windowHeight);
-
-  // Initialize dimensions
-  ({ width, height, vMin, vMax } = calcViewportDimensions());
-
-  // Setup initial state
-  setupLoadingScreen(start);
-  initializeAppControls("linkscape", reset);
+  lineLayer = createGraphics(width, height);
+  paintLayer = createGraphics(width, height);
 }
 
 function start() {
@@ -82,7 +82,7 @@ function reset() {
   vt = [];
   vtCount = [];
 
-  levelVersion = (levelVersion + 1) % colArray.length;
+  levelVersion = (levelVersion + 1) % palettes.length;
 
   initialiseLine(0);
   isDragging = true;
@@ -232,7 +232,7 @@ function render() {
   paintLayer.clear();
 
   for (let i = 0; i < x.length; i++) {
-    const baseColor = colArray[levelVersion][i % colArray[levelVersion].length];
+    const baseColor = palettes[levelVersion][i % palettes[levelVersion].length];
     const mainColor = colorAlpha(baseColor, 0.9);
     const shadowColor = colorAlpha(baseColor, 0.3);
 

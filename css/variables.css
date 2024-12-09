@@ -11,6 +11,10 @@
   /* oklch(61% 0.199 18.4) */
   --color-red-80: #f6b2b9;
   /* oklch(83% 0.08 12) */
+  --color-orange-70: #ef6301;
+  /* oklch(66.76% 0.1914 44.76) */
+  --color-orange-90: #f3cdb9;
+  /* oklch(87.6% 0.051 49.4)*/
   --color-yellow-80: #f1b300;
   /* oklch(80.3% 0.1649 83.37) */
   --color-yellow-90: #ead39e;
@@ -31,6 +35,7 @@
   /* oklch(29.15% 0.05 264.6) */
   --color-slate-80: #b8c3db;
   /* oklch(81.63% 0.036 266) */
+
 
   --font-avenir: 'Avenir Next LT Pro', Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
   /* Fallbacks all the way down, we're not loading any of these fonts: */
