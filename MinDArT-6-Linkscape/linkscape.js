@@ -4,198 +4,144 @@ let x = [],
   segLength = 4,
   distGravity = 50;
 
-let selectedArray = [];
-let lineCanv, // lineLayer
-  shadow, // shadowLayer
-  texture,
-  beginning;
-let bgCol, stringCol;
-let driftVal = 0,
-  selected = [0, 0];
-drawActive = 1;
-let audio;
+let lineLayer, paintLayer;
+let texture, pin;
+let audio, click;
+let isDragging = false;
+let selected = [0, 0];
 
-let cutSeg = 0;
-
-// constraint paramaters
-let vt = [];
-let vtCount = [];
-let vtStored = [];
+// Constraint parameters
+let vt = []; // Vector points for pin positions
+let vtCount = []; // Count of points affected by each pin
+let vtStored = []; // Store which segments are affected by pins
+let dotsActive = true;
 
 let levelVersion = 0;
 let levelMax = 9;
-let gridLevels = [
-  [1, 1],
-  [2, 1],
-  [1, 2],
-  [2, 2],
+const colArray = [
+  ["#D97398", "#A65398", "#5679A6"],
+  ["#F2913D", "#F24B0F", "#5679A6"],
+  ["#a4fba6", "#4ae54a", "#0f9200"],
+  ["#F2F2F2", "#A6A6A6", "#737373"],
+  ["#597d94", "#FFFFFF", "#D9AA8F"],
+  ["#F2DFCE", "#FFFFFF", "#D9C3B0"],
+  ["#F24444", "#F2BBBB", "#FFFFFF"],
+  ["#BF4B8B", "#3981BF", "#D92929"],
+  ["#F24452", "#5CE3F2", "#F2E205"],
+  ["#CCCCCC", "#F2F2F2", "#B3B3B3"],
 ];
-let radialLevels = [3, 5];
 
-let storedOrientation, rotateDirection, storedOrientationDegrees;
-
-let colArray = [
-  ['#D97398', '#A65398', '#5679A6'], // 5
-  ['#F2913D', '#F24B0F','#5679A6'], // 5
-  ['#a4fba6', '#4ae54a', '#0f9200'], // 5
-    ['#F2F2F2', '#A6A6A6', '#737373'], // Unchained// 5
-  ['#597d94', '#FFFFFF', '#D9AA8F'], // 4
-  ['#F2DFCE', '#FFFFFF', '#D9C3B0'], // 5
-  ['#F24444', '#F2BBBB', '#FFFFFF'], // 4
-  ['#BF4B8B', '#3981BF', '#D92929'], // adidas-Telstar-50-anniversary // 4
-  ['#F24452', '#5CE3F2', '#F2E205'], // People-of-The-Internet // 5
-  ['#CCCCCC', '#F2F2F2', '#B3B3B3'] // 5
-
-]
-
-
+let width, height, vMin, vMax;
 
 function preload() {
-  texture = loadImage('assets/texture.png');
-  audio = loadSound('../sound/Scene6_Link.mp3');
-  click = loadSound('../sound/click.mp3');
-  pin = loadImage('assets/pin.png')
+  texture = loadImage("assets/texture.png");
+  audio = loadSound("../sound/Scene6_Link.mp3");
+  click = loadSound("../sound/click.mp3");
+  pin = loadImage("assets/pin.png");
 }
 
 function setup() {
-  stringCol = color('#a1a1a1');
-  bgCol = color('#e5e5e5');
-  createCanvas(windowWidth, windowHeight);
+  // Create canvas and attach to container
+  const mainCanvas = createCanvas(windowWidth, windowHeight);
+  mainCanvas.parent(
+    document.querySelector('[data-element="canvas-container"]')
+  );
 
-  lineCanv = createGraphics(windowWidth, windowHeight);
-  lineCanv.stroke(55, 55, 65);
-  paintCanv = createGraphics(windowWidth, windowHeight);
-  paintCanv.stroke(55, 55, 65);
+  // Create graphics layers
+  lineLayer = createGraphics(windowWidth, windowHeight);
+  paintLayer = createGraphics(windowWidth, windowHeight);
 
+  // Initialize dimensions
+  ({ width, height, vMin, vMax } = calcViewportDimensions());
 
-
-
-  var stbtn = $("<div />").appendTo("body");
-  stbtn.addClass('startBtn');
-  $('<p>Touch here to begin</p>').appendTo(stbtn);
-  stbtn.mousedown(start);
-  stbtn.mousemove(start);
-
+  // Setup initial state
+  setupLoadingScreen(start);
+  initializeAppControls("linkscape", reset);
 }
-
 
 function start() {
-
-  $(".startBtn").remove();
-     // fullscreen(1);
-
-
-  // note currently everything resets on windowResized. Unsure if this is logical yet
-
-  if (audio.isPlaying()) {} else {
+  if (click) click.play();
+  if (audio && !audio.isPlaying()) {
     audio.loop(1);
   }
+  stopAudioWhenHidden(audio);
 
-
-  lineCanv.strokeWeight(1 * vMax);
-  paintCanv.strokeWeight(1 * vMax);
-
-  windowResized();
-
+  lineLayer.strokeWeight(1 * vMax);
+  paintLayer.strokeWeight(1 * vMax);
+  setupCanvasEventListeners();
   reset();
-
-
 }
 
-
 function reset() {
-  paintCanv.clear();
-  click.play();
+  paintLayer.clear();
+  if (click) click.play();
+
   x = [];
   y = [];
-
-  levelVersion++;
-  console.log(levelVersion);
-  levelMax = colArray.length;
-  if (levelVersion >= levelMax) {
-    levelVersion = 0;
-  }
-
   vt = [];
   vtCount = [];
 
+  levelVersion = (levelVersion + 1) % colArray.length;
 
   initialiseLine(0);
-  drawActive = 1;
-  writeTextUI();
+  isDragging = true;
   render();
 }
 
 function initialiseLine(l) {
-  // in  this function, each time a new drawing is started
   x[l] = [];
   y[l] = [];
 
   for (let i = 0; i < segNum; i++) {
-    y[l][i] = map(i, 0, segNum, -height, height/6);
-      x[l][i] = map(i, 0, segNum, 0, (width/4)*(1+l));
-    // x[l][i] = (width/4)*(1+l);
-    // y[l][i] = random(0, height);
+    y[l][i] = map(i, 0, segNum, -height, height / 6);
+    x[l][i] = map(i, 0, segNum, 0, (width / 4) * (1 + l));
+  }
+}
+
+function addLine() {
+  if (x.length < 3) {
+    initialiseLine(x.length);
+    render();
   }
 
-  // selected = [l, 0];
-  // dragCalc(selected, width / 2, height / 2);
-
-
-  beginning = 1;
+  if (x.length >= 3) {
+    const button = document.querySelector('[data-element="add-string-button"]');
+    if (button) button.setAttribute("inert", true);
+  }
 }
-
-
-function touchEnded() {
-  drawActive = 0;
-}
-
-function touchStarted() {
-
-
-
-
-  if (!drawActive) {
-
-    // for initial touch state, detect if a position is crossed. Then save that
-    // position as currently selected
+function touchdown() {
+  if (!isDragging) {
     for (let i = 0; i < x.length; i++) {
-
-      // if
       if (dist(winMouseX, winMouseY, x[i][0], y[i][0]) < 45) {
-        selected[0] = i;
-        selected[1] = 0;
-        drawActive = true;
-      } else if (dist(winMouseX, winMouseY, x[i][segNum - 1], y[i][segNum - 1]) < 45) {
-        selected[0] = i;
-        selected[1] = segNum - 1;
-        drawActive = true;
-      } else { // otherwise find nearest point
+        selected = [i, 0];
+        isDragging = true;
+      } else if (
+        dist(winMouseX, winMouseY, x[i][segNum - 1], y[i][segNum - 1]) < 45
+      ) {
+        selected = [i, segNum - 1];
+        isDragging = true;
+      } else {
         for (let j = 0; j < x[i].length; j++) {
           if (dist(winMouseX, winMouseY, x[i][j], y[i][j]) < 45) {
-            selected[0] = i;
+            selected = [i, j];
             if (j < 30) {
-              selected[1] = 1
+              selected[1] = 1;
             } else if (j > x[i].length - 30) {
               selected[1] = segNum - 1;
             } else {
               selected[1] = j;
             }
-            drawActive = true;
+            isDragging = true;
             break;
           }
         }
       }
-
-
     }
   }
-  //return false;
-
+  return false;
 }
 
-function touchMoved() {
-
+function moved() {
   vtStored = [];
 
   if (dotsActive) {
@@ -205,242 +151,127 @@ function touchMoved() {
     }
   }
 
-
-  if (drawActive) {
-    // do we really need these Layers? // or do we need double the calculation of Lines
-
-      dragCalc(selected, winMouseX, winMouseY);
-
+  if (isDragging) {
+    dragCalc(selected, winMouseX, winMouseY);
   }
 
-
   render();
-
   return false;
 }
 
+function touchstop() {
+  isDragging = false;
+}
 
+function dragCalc(sel, mouseX, mouseY) {
+  dragSegment(sel, mouseX, mouseY);
 
-
-function dragCalc(_sel, _mouseX, _mouseY) {
-  dragSegment(_sel, _mouseX, _mouseY);
-  let i2 = _sel[0];
-  let j2 = _sel[1];
-  for (let j = j2; j < x[i2].length - 1; j++) {
-    let t = [i2, j + 1];
-    dragSegment(t, x[i2][j], y[i2][j]);
+  let [i, j] = sel;
+  // Update following segments
+  for (let k = j; k < x[i].length - 1; k++) {
+    dragSegment([i, k + 1], x[i][k], y[i][k]);
   }
-  for (let j = j2; j > 0; j--) {
-    let t = [i2, j - 1];
-    dragSegment(t, x[i2][j], y[i2][j]);
+  // Update preceding segments
+  for (let k = j; k > 0; k--) {
+    dragSegment([i, k - 1], x[i][k], y[i][k]);
   }
 }
 
-function dragSegment(_sel, xin, yin) {
-  i = _sel[0];
-  j = _sel[1];
+function dragSegment(sel, xin, yin) {
+  const [i, j] = sel;
   const dx = xin - x[i][j];
   const dy = yin - y[i][j];
-  const angle = (atan2(dy, dx));
+  const angle = atan2(dy, dx);
+
   x[i][j] = xin - cos(angle) * segLength;
   y[i][j] = yin - sin(angle) * segLength;
-  //gravitational affector
+
   if (dotsActive) {
-    for (var k = 0; k < vt.length; k++) {
-      // creat a vector for currently referenced dot
+    for (let k = 0; k < vt.length; k++) {
       let v1 = createVector(x[i][j], y[i][j]);
-      let gate = 1;
-      for (elt of vtStored[k]) {
+      let gate = true;
+
+      for (let elt of vtStored[k]) {
         if (abs(elt - j) < 20 && abs(elt - j) > 6) {
-          gate = 0;
+          gate = false;
+          break;
         }
       }
+
       if (gate) {
-        var d = p5.Vector.dist(v1, vt[k]);
+        let d = p5.Vector.dist(v1, vt[k]);
         if (d < distGravity) {
           vtStored[k].push(j);
-          // this is effectively a smoother
-
           x[i][j] = vt[k].x;
           y[i][j] = vt[k].y;
-
           vtCount[k]++;
         }
-
       }
     }
   }
 }
 
 function render() {
-  //let colours = [0, 90, 150, 200, 200, 250];
-  let colours = ['#1a1a1a', '#1a1a1a', '#1a1a1a', '#1a1a1a', '#1a1a1a', '#1a1a1a'];
-  lineCanv.clear();
-  //lineCanv.blendMode(DIFFERENCE);
-
+  lineLayer.clear();
+  paintLayer.clear();
 
   for (let i = 0; i < x.length; i++) {
-    lineCanv.strokeWeight(0.6 * vMax);
-    let cc = colorAlpha(colArray[levelVersion][i % colArray[levelVersion].length], 0.9);
-    let cc2 = colorAlpha(colArray[levelVersion][i % colArray[levelVersion].length], 0.3);
-    lineCanv.stroke(cc);
-    lineCanv.noFill();
-    lineCanv.beginShape();
-    for (let j = 0; j < x[i].length - 1 - cutSeg; j++) {
-      lineCanv.curveVertex(x[i][j], y[i][j]);
+    const baseColor = colArray[levelVersion][i % colArray[levelVersion].length];
+    const mainColor = colorAlpha(baseColor, 0.9);
+    const shadowColor = colorAlpha(baseColor, 0.3);
+
+    // Draw main string
+    lineLayer.strokeWeight(0.6 * vMax);
+    lineLayer.stroke(mainColor);
+    lineLayer.noFill();
+    lineLayer.beginShape();
+    for (let j = 0; j < x[i].length; j++) {
+      lineLayer.curveVertex(x[i][j], y[i][j]);
     }
+    lineLayer.endShape();
 
-    lineCanv.endShape();
+    // Draw endpoints
+    lineLayer.strokeWeight(1.2 * vMax);
+    lineLayer.point(x[i][0], y[i][0]);
+    lineLayer.point(x[i][x[i].length - 1], y[i][x[i].length - 1]);
 
-    lineCanv.strokeWeight(1.2 * vMax);
-    lineCanv.stroke(cc);
-    lineCanv.point(x[i][0], y[i][0]);
-    lineCanv.point(x[i][segNum - 1], y[i][segNum - 1]);
-
-    paintCanv.strokeWeight(0.1 * vMax);
-
-    paintCanv.stroke(cc2);
-    paintCanv.noFill();
-    paintCanv.beginShape();
-    for (let j = 0; j < x[i].length - 1 - cutSeg; j++) {
-      paintCanv.curveVertex(x[i][j], y[i][j]);
+    // Draw shadow effect
+    paintLayer.strokeWeight(0.1 * vMax);
+    paintLayer.stroke(shadowColor);
+    paintLayer.noFill();
+    paintLayer.beginShape();
+    for (let j = 0; j < x[i].length; j++) {
+      paintLayer.curveVertex(x[i][j], y[i][j]);
     }
-
-    paintCanv.endShape();
-
-
-
+    paintLayer.endShape();
   }
 
-  let s = vMax * 8;
-  // blendMode();
+  // Render final composition
   background(45);
-  // paintCanv.background(0, 10);
-  image(paintCanv, 0, 0, width, height);
-  // blendMode(EXCLUSION);
-  image(lineCanv, 0, 0, width, height);
+  image(paintLayer, 0, 0, width, height);
+  image(lineLayer, 0, 0, width, height);
 
-
-
-
-
-
-  image(lineCanv, 0, 0, width, height);
-
+  // Draw pins if active
   if (dotsActive) {
-
-    for (var i = 0; i < vt.length; i++) {
-
-      image(pin, vt[i].x - (s / 2), vt[i].y - (s / 1.8), s, s);
+    const pinSize = vMax * 8;
+    for (let i = 0; i < vt.length; i++) {
+      image(
+        pin,
+        vt[i].x - pinSize / 2,
+        vt[i].y - pinSize / 1.8,
+        pinSize,
+        pinSize
+      );
     }
   }
-
-
-
 }
-
-
-
-
-
 
 function windowResized() {
-
-
   resizeCanvas(windowWidth, windowHeight);
-  sizeWindow();
-  calcDimensions();
-  removeElements();
-  writeTextUI();
- // checkFS();
-  // touchMoved();
+  const { dimensions, resizedLayers } = handleResize([lineLayer, paintLayer]);
+  [lineLayer, paintLayer] = resizedLayers;
+  ({ width, height, vMin, vMax } = dimensions);
+  lineLayer.strokeWeight(2.2 * vMax);
 }
 
-
-function sizeWindow() {
-  if (width < height) {
-    currentOrientation = "portrait";
-  } else {
-    currentOrientation = "landscape";
-  }
-  if (currentOrientation === storedOrientation) {
-    stretchWindow();
-  } else {
-    if (window.orientation < storedOrientationDegrees) {
-      direction = 1;
-    } else {
-      direction = -1;
-    }
-
-    if (abs(window.orientation - storedOrientationDegrees) == 270) {
-      direction = -direction;
-    }
-    rotateWindow(direction);
-    storedOrientationDegrees = window.orientation;
-  }
-  storedOrientation = currentOrientation;
-}
-
-function stretchWindow() {
-  var newlineCanv = createGraphics(windowWidth, windowHeight);
-  newlineCanv.image(lineCanv, 0, 0, windowWidth, windowHeight);
-  lineCanv.resizeCanvas(windowWidth, windowHeight);
-  lineCanv = newlineCanv;
-  newlineCanv.remove();
-  var newpaintCanv = createGraphics(windowWidth, windowHeight);
-  newpaintCanv.image(paintCanv, 0, 0, windowWidth, windowHeight);
-  paintCanv.resizeCanvas(windowWidth, windowHeight);
-  paintCanv = newpaintCanv;
-  newpaintCanv.remove();
-}
-
-function rotateWindow(direction) {
-  var newlineCanv = createGraphics(windowWidth, windowHeight);
-  newlineCanv.push();
-  newlineCanv.translate(width / 2, height / 2);
-  newlineCanv.rotate((PI / 2) * direction);
-  newlineCanv.translate(-height / 2, -width / 2);
-  newlineCanv.image(lineCanv, 0, 0, windowHeight, windowWidth);
-  newlineCanv.pop()
-  lineCanv.resizeCanvas(windowWidth, windowHeight);
-  lineCanv = newlineCanv;
-  newlineCanv.remove();
-
-  var newpaintCanv = createGraphics(windowWidth, windowHeight);
-  newpaintCanv.push();
-  newpaintCanv.translate(width / 2, height / 2);
-  newpaintCanv.rotate((PI / 2) * direction);
-  newpaintCanv.translate(-height / 2, -width / 2);
-  newpaintCanv.image(paintCanv, 0, 0, windowHeight, windowWidth);
-  newpaintCanv.pop()
-  paintCanv.resizeCanvas(windowWidth, windowHeight);
-  paintCanv = newpaintCanv;
-  newpaintCanv.remove();
-
-  // switch the grid around )
-  for (var i = 0; i < vt.length; i++) {
-    var y_ = vt[i].y;
-    var x_ = vt[i].x;
-    vt[i].y = x_;
-    vt[i].x = y_;
-  }
-
-  // TODO: properly detect the orientation
-  rotateDirection = rotateDirection * -1;
-}
-
-//startSimulation and pauseSimulation defined elsewhere
-function handleVisibilityChange() {
-  if (document.hidden) {
-    audio.stop();
-  } else {
-    audio.loop(1);
-  }
-}
-
-document.addEventListener("visibilitychange", handleVisibilityChange, false);
-
-function colorAlpha(aColor, alpha) {
-  var c = color(aColor);
-  return color('rgba(' + [red(c), green(c), blue(c), alpha].join(',') + ')');
-}
+window.addEventListener("resize", windowResized);

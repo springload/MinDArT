@@ -27,6 +27,10 @@
   /* oklch(67.4% 0.1268 243.4) */
   --color-blue-90: #bee4fe;
   /* oklch(90% 0.0535 238.1) */
+  --color-slate-30: #1f2b45;
+  /* oklch(29.15% 0.05 264.6) */
+  --color-slate-80: #b8c3db;
+  /* oklch(81.63% 0.036 266) */
 
   --font-avenir: 'Avenir Next LT Pro', Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
   /* Fallbacks all the way down, we're not loading any of these fonts: */

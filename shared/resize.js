@@ -6,8 +6,9 @@ function calcViewportDimensions() {
   const width = window.innerWidth;
   const height = window.innerHeight;
   const vMax = width > height ? width / 100 : height / 100;
+  const vMin = width > height ? height / 100 : width / 100;
 
-  return { width, height, vMax };
+  return { width, height, vMin, vMax };
 }
 
 function removeGraphics(buffer) {

@@ -23,3 +23,8 @@
   --theme-bg: var(--color-grey-60);
   --theme-button-bg: var(--color-grey-90);
 }
+
+.u-theme-slate {
+  --theme-bg: var(--color-slate-30);
+  --theme-button-bg: var(--color-slate-80);
+}

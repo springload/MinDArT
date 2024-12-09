@@ -7,12 +7,15 @@
   border-width: 4px;
   border-style: solid;
   border-color: transparent;
+  padding-inline: 12px;
 
   height: 70px;
   min-width: 120px;
 
-  display: grid;
-  place-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
   font-family: var(--font-tahoma);
   font-weight: bold;
@@ -22,15 +25,29 @@
 
   transition: 100ms linear color, 100ms linear background-color, 100ms linear border-color;
 
-  &:has(svg) {
+  &:where([inert]) {
+    opacity: 0.2;
+  }
+
+  &:has(svg.brush) {
     width: 120px;
+    padding-inline: 0;
   }
 
   :where(svg) {
     fill: none;
     stroke: currentColor;
     stroke-linecap: round;
-    stroke-width: 3.7px;
+
+    &:where(.brush) {
+      stroke-width: 3.7px;
+    }
+
+    &:where(.icon) {
+      width: 1em;
+      aspect-ratio: 1;
+      stroke-width: 6px;
+    }
   }
 
   &:active,

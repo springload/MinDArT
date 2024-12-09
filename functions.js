@@ -127,6 +127,23 @@ function initializeAppControls(appName, resetCallback) {
   };
 }
 
+function initializeToolbarButtons() {
+  const toolbar = document.querySelector('[data-element="toolbar"]');
+  if (toolbar) {
+    const btns = Array.from(toolbar.getElementsByClassName("btn"));
+    btns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const clicked = e.currentTarget;
+        const current = document.querySelector(".active");
+        if (current) {
+          current.classList.remove("active");
+        }
+        clicked.classList.add("active");
+      });
+    });
+  }
+}
+
 function hexToRgb(hex) {
   hex = hex.replace("#", "");
   var bigint = parseInt(hex, 16);
