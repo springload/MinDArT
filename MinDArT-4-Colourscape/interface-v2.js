@@ -2,12 +2,6 @@ let col, colSelect;
 let eraserVersion = 0; // erase paint = 0, erase trace = 1;
 let fsBool = 0;
 
-function writeTextUI() {
-  fill(0);
-  noStroke();
-  drawErase();
-}
-
 function paintWarm() {
   eraseState = 0;
   eraserVersion = 0;
