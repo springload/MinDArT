@@ -8,6 +8,7 @@ let lineLayer, paintLayer;
 let texture, pin;
 let audio, click;
 let isDragging = false;
+let isAddingPin = false;
 let selected = [0, 0];
 
 // Constraint parameters
@@ -109,7 +110,22 @@ function addLine() {
     if (button) button.setAttribute("inert", true);
   }
 }
+
+function addPin() {
+  isAddingPin = true;
+  document.querySelector("canvas").classList.add("adding-pin");
+}
+
 function touchdown() {
+  if (isAddingPin) {
+    vt.push(createVector(winMouseX, winMouseY));
+    vtCount.push(0);
+    vtStored.push([]);
+    isAddingPin = false;
+    document.querySelector("canvas").classList.remove("adding-pin");
+    render();
+    return false;
+  }
   if (!isDragging) {
     for (let i = 0; i < x.length; i++) {
       if (dist(winMouseX, winMouseY, x[i][0], y[i][0]) < 45) {

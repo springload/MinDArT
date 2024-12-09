@@ -46,7 +46,6 @@
     &:where(.icon) {
       width: 1em;
       aspect-ratio: 1;
-      stroke-width: 6px;
     }
   }
 

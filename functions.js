@@ -123,7 +123,7 @@ function initializeAppControls(appName, resetCallback) {
   return {
     resetButton,
     saveButton,
-    container: document.querySelector(".app-controls"),
+    container: document.querySelector('[data-element="app-controls"]'),
   };
 }
 
@@ -159,7 +159,10 @@ function colorAlpha(aColor, alpha) {
 }
 
 function setupCanvasEventListeners() {
-  const canvas = document.querySelector("canvas");
+  const canvasContainer = document.querySelector(
+    '[data-element="canvas-container"]'
+  );
+  const canvas = canvasContainer.querySelector("canvas");
   canvas.addEventListener("touchmove", moved, { passive: false }); // passive: false prevents scroll on touch
   canvas.addEventListener("mousemove", moved);
   canvas.addEventListener("touchstart", touchdown);
