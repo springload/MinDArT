@@ -9,7 +9,6 @@ let yCo = [];
 let velo = [];
 let brushBool = 0;
 let intX, intY;
-let eraseAlpha;
 let selectedPalette = 0;
 let counter = -1;
 let palettes = [
@@ -23,7 +22,6 @@ function preload() {
   bg = loadImage("assets/paper.jpg");
   audio = loadSound("../sound/Scene8_Symmetry .mp3");
   click = loadSound("../sound/click.mp3");
-  eraseAlpha = loadImage("assets/eraseAlpha3.png");
 }
 
 function setup() {
@@ -256,7 +254,9 @@ function brushIt(_x, _y, pX, pY) {
   if (brushSelected === 0) {
     // eraser
     drawLayer.blendMode(REMOVE);
-    drawLayer.image(eraseAlpha, _x - 25, _y - 25, 50, 50);
+    drawLayer.noStroke();
+    drawLayer.fill(255, 127);
+    drawLayer.circle(_x, _y, 50);
     drawLayer.blendMode(BLEND);
     return;
   }

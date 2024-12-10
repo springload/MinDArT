@@ -8,7 +8,6 @@ let yCo = [];
 let velo = [];
 let brushBool = 0;
 let intX, intY;
-let eraseAlpha;
 let centeringActive = 0;
 let centerX, centerY;
 let ellipseAnimated = 0;
@@ -36,7 +35,6 @@ function preload() {
   bg = loadImage("assets/paper.jpg");
   audio = loadSound("../sound/Scene7_Rotation.mp3");
   click = loadSound("../sound/click.mp3");
-  eraseAlpha = loadImage("assets/eraseAlpha3.png");
 }
 
 function setup() {
@@ -220,8 +218,11 @@ function brushIt(_x, _y, pX, pY) {
     drawLayer.strokeWeight(constrain(abs(_y + _x - (pX + pY)), 30, 40)); // for line work
     drawLayer.line(_x, _y, pX, pY);
   } else if (brushSelected === 6) {
+    // eraser
     drawLayer.blendMode(REMOVE);
-    drawLayer.image(eraseAlpha, _x - 25, _y - 25, 50, 50);
+    drawLayer.noStroke();
+    drawLayer.fill(255, 127);
+    drawLayer.circle(_x, _y, 50);
     drawLayer.blendMode(BLEND);
   }
 }
