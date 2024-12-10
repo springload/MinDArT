@@ -77,22 +77,16 @@ function preload() {
   for (let i = 0; i < 15; i++) {
     brush[i] = loadImage("assets/Cloud" + i + ".png"); // brush loader
   }
-  audio = loadSound("../sound/Scene4_Colour.mp3");
-  click = loadSound("../sound/click.mp3");
 }
 
 function start() {
-  click.play();
-  if (!audio.isPlaying()) {
-    audio.loop(1);
-  }
-  stopAudioWhenHidden(audio);
-
+  playSoundtrack();
   reset();
   started = 1;
 }
 
-function setup() {
+async function setup() {
+  await initAudio("4_Colour");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
   initializeAppControls("colourscape", reset);
@@ -192,7 +186,6 @@ function render() {
   image(paintLayer, width / 2, height / 2);
   blendMode(LIGHTEST);
   image(traceLayer, width / 2, height / 2);
-  // console.log(frameRate());
 }
 
 function autoDraw() {

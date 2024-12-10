@@ -31,13 +31,12 @@ let palettes = [
   ["#F2F2F2", "#A6A6A6", "#0D0D0D", "#202020"], // Unchained// 5
 ];
 
-function preload() {
+async function preload() {
   bg = loadImage("assets/paper.jpg");
-  audio = loadSound("../sound/Scene7_Rotation.mp3");
-  click = loadSound("../sound/click.mp3");
 }
 
-function setup() {
+async function setup() {
+  await initAudio("7_Rotation");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
   initializeAppControls("rotationscape", restart);
@@ -56,12 +55,7 @@ function setup() {
 
 function start() {
   counter = -1;
-  click.play();
-  if (!audio.isPlaying()) {
-    audio.loop(1);
-  }
-  stopAudioWhenHidden(audio);
-
+  playSoundtrack();
   restart();
 }
 
@@ -229,7 +223,6 @@ function brushIt(_x, _y, pX, pY) {
 
 function reCenter(e) {
   if (e) {
-    e.preventDefault();
     e.stopPropagation();
   }
   centeringActive = true;
@@ -283,7 +276,6 @@ function setSwatchColors() {
 
 function eraser(e) {
   if (e) {
-    e.preventDefault();
     e.stopPropagation();
   }
   resetButtons();
@@ -292,10 +284,8 @@ function eraser(e) {
 
 function changeBrush(brushSel, e) {
   if (e) {
-    e.preventDefault();
     e.stopPropagation();
   }
-  click.play();
   brushSelected = brushSel - 1;
   strokeAssign();
 }

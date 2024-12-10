@@ -11,17 +11,16 @@
     <link rel="stylesheet" href="../css/styles.css">
 
     <script src="../libraries/p5.js"></script>
-    <script src="../libraries/p5.sound.js"></script>
 
     <script src="../functions.js"></script>
     <script src="../shared/resize.js"></script>
-    
+    <script src="../shared/audio.js"></script>
     <script src="interface-line.js"></script>
-    <script src="verticalLines.js"></script>
+    <script src="linescape.js"></script>
 
   </head>
 
-  <body class="u-theme-green">
+  <body class="u-theme-green" data-app-name="linescape">
     <dialog class="loading-screen" data-element="loading-dialog" open>
       <div class="loading-screen__inner">
         <div class="loading-screen__loading" id="p5_loading" >
@@ -39,8 +38,8 @@
     <div class="interface">
       <div class="toolbar" data-element="toolbar">
         <div class="btn-group--split">
-          <button id="swatch0" class="btn btn--leftsplit" onclick="switchSwatch(0)"></button>
-          <button id="swatch1" class="btn btn--rightsplit" onclick="switchSwatch(1)"></button>
+          <button class="btn btn--leftsplit active" data-element="swatch" data-swatch="0" onclick="switchSwatch(this)"></button>
+          <button class="btn btn--rightsplit" data-element="swatch" data-swatch="1" onclick="switchSwatch(this)" ></button>
         </div>
       </div>
       

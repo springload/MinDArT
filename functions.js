@@ -41,20 +41,6 @@ function hasActiveClass(el) {
   return Boolean(el && el.classList.contains("active"));
 }
 
-function stopAudioWhenHidden(audio) {
-  document.addEventListener(
-    "visibilitychange",
-    () => {
-      if (document.hidden) {
-        audio.stop();
-      } else if (!audio.isPlaying()) {
-        audio.loop(1);
-      }
-    },
-    false
-  );
-}
-
 function setupLoadingScreen(onStart) {
   const dialog = document.querySelector('[data-element="loading-dialog"]');
   const startButton = dialog.querySelector('[data-element="start-button"]');
@@ -63,15 +49,28 @@ function setupLoadingScreen(onStart) {
     throw new Error("Loading manager: Required elements not found");
   }
 
+  addClickSound(startButton);
+
   startButton.addEventListener("click", () => {
     dialog.close();
     onStart();
   });
-
+  // now that the p5 assets are loaded, the start button can be shown
   startButton.style.display = "block";
 }
 
 function initializeAppControls(appName, resetCallback) {
+  const appControls = document.querySelector('[data-element="app-controls"]');
+  if (!appControls) {
+    console.warn(
+      'No element with [data-element="app-controls"] found. App controls not initialized.'
+    );
+    return;
+  }
+  // there's currently only one link: 'Main Menu'
+  const links = appControls.querySelectorAll("a");
+  links.forEach(addClickSound);
+
   const buttonConfigs = [
     {
       name: "reset-button",
@@ -81,7 +80,6 @@ function initializeAppControls(appName, resetCallback) {
     {
       name: "save-button",
       handler: () => {
-        click.play();
         save(`${appName}${month()}${day()}${hour()}${second()}.jpg`);
       },
     },
@@ -90,14 +88,15 @@ function initializeAppControls(appName, resetCallback) {
   const [resetButton, saveButton] = buttonConfigs.reduce(
     (acc, { name, handler }) => {
       // warning if the button isn't found
-      const element = document.querySelector(`[data-element="${name}"]`);
+      const element = appControls.querySelector(`[data-element="${name}"]`);
       if (!element) {
         console.warn(
           `${name} not found - missing element with data-element="${name}"`
         );
         return acc;
       }
-      // otherwise, add the click handler
+      // otherwise, add the click sound and click handler
+      addClickSound(element);
       element.addEventListener("click", handler);
       return [...acc, element];
     },
@@ -114,11 +113,22 @@ function initializeAppControls(appName, resetCallback) {
 function initializeToolbarButtons() {
   const toolbar = document.querySelector('[data-element="toolbar"]');
   if (toolbar) {
-    const btns = Array.from(toolbar.getElementsByClassName("btn"));
+    const btns = Array.from(toolbar.querySelectorAll(".btn"));
+
     btns.forEach((btn) => {
+      addClickSound(btn);
+
+      if (
+        ["dotscape", "linkscape"].some(
+          (appName) => document.body.dataset.appName === appName
+        )
+      ) {
+        // for these applications we just want the clicks, not any of the other stuff
+        return;
+      }
+
       btn.addEventListener("click", (e) => {
         // Prevent the event from reaching the canvas
-        e.preventDefault();
         e.stopPropagation();
 
         const clicked = e.currentTarget;

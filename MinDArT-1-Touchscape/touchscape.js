@@ -59,14 +59,11 @@ function rake(version) {
       eraseActive = 0;
       break;
   }
-  click.play();
 }
 
 function preload() {
   // Load assets
   background = loadImage("assets/sand_01.jpg");
-  audio = loadSound("../sound/Scene1_Touch.mp3");
-  click = loadSound("../sound/click.mp3");
 
   // Load pebble assets
   for (let i = 1; i < 8; i++) {
@@ -74,7 +71,8 @@ function preload() {
   }
 }
 
-function setup() {
+async function setup() {
+  await initAudio("1_Touch");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
   initializeAppControls("touchscape", reset);
@@ -104,12 +102,7 @@ function setupGraphics() {
 }
 
 function start() {
-  click.play();
-
-  if (!audio.isPlaying()) {
-    audio.loop(1);
-  }
-
+  playSoundtrack();
   change();
   ({ vMax } = calcViewportDimensions());
 
@@ -117,7 +110,6 @@ function start() {
   reset();
   counter = 0;
 
-  stopAudioWhenHidden(audio);
   setupCanvasEventListeners();
   initializeDataStores();
 }
@@ -234,7 +226,6 @@ function display() {
 }
 
 function reset() {
-  click.play();
   blendMode(REPLACE);
   image(background, 0, 0, width, height);
   fg.clear();

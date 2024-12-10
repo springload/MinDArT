@@ -28,11 +28,11 @@ let velocity = 0;
 let img, direction;
 
 function preload() {
-  audio = loadSound("../sound/Scene2_Line.mp3");
-  click = loadSound("../sound/click.mp3");
+  // nothing to load
 }
 
-function setup() {
+async function setup() {
+  await initAudio("2_Line");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
   initializeAppControls("linescape", next);
@@ -48,11 +48,7 @@ function setup() {
 }
 
 function start() {
-  click.play();
-  if (!audio.isPlaying()) {
-    audio.loop(1);
-  }
-
+  playSoundtrack();
   // Initialize dimensions and graphics
   ({ vMax, width, height } = calcViewportDimensions());
 
@@ -62,9 +58,6 @@ function start() {
   // Set up initial state
   setupDefaults();
   setupArrays();
-
-  // Register audio visibility handler
-  stopAudioWhenHidden(audio);
 }
 
 function setupDefaults() {
@@ -148,8 +141,7 @@ function touchMoved() {
 
   // If a swatch is active, apply color
   if (store.length > 0) {
-    let choice = toggle ? 1 : 0; // which swatch color to use
-    ccc = hexToRgb(colours[cc][choice]);
+    ccc = hexToRgb(colours[cc][currentSwatch]);
     arrLineCol[store[store.length - 1][2]] = [
       ccc.levels[0],
       ccc.levels[1],

@@ -36,16 +36,15 @@ let width, height, vMin, vMax;
 
 function preload() {
   texture = loadImage("assets/texture.png");
-  audio = loadSound("../sound/Scene6_Link.mp3");
-  click = loadSound("../sound/click.mp3");
   pin = loadImage("assets/pin.png");
 }
 
-function setup() {
+async function setup() {
+  await initAudio("6_Link");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
   initializeAppControls("linkscape", reset);
-
+  initializeToolbarButtons();
   // Initialize dimensions
   ({ width, height, vMin, vMax } = calcViewportDimensions());
 
@@ -61,12 +60,7 @@ function setup() {
 }
 
 function start() {
-  if (click) click.play();
-  if (audio && !audio.isPlaying()) {
-    audio.loop(1);
-  }
-  stopAudioWhenHidden(audio);
-
+  playSoundtrack();
   lineLayer.strokeWeight(1 * vMax);
   paintLayer.strokeWeight(1 * vMax);
   setupCanvasEventListeners();
@@ -75,7 +69,6 @@ function start() {
 
 function reset() {
   paintLayer.clear();
-  if (click) click.play();
 
   x = [];
   y = [];

@@ -1,4 +1,4 @@
-let toggle = 0;
+let currentSwatch = 0;
 let swatch = [];
 
 var colours = [
@@ -17,21 +17,17 @@ let cc = 0;
 
 function initializeSwatches() {
   updateSwatchColors();
-  document.querySelectorAll('[data-element="swatch"]').forEach((swatch, i) => {
-    swatch.addEventListener("click", () => switchSwatch(i));
-  });
-
-  setActiveElementById("swatch0");
+  initializeToolbarButtons();
 }
 
-function switchSwatch(number) {
-  resetButtons();
-  toggle = number === 1; // true if second swatch
-  setActiveElementById("swatch" + number);
-  click.play();
+function switchSwatch(el) {
+  currentSwatch = parseInt(el.dataset.swatch);
 }
 
 function updateSwatchColors() {
-  document.getElementById("swatch0").style.backgroundColor = colours[cc][0];
-  document.getElementById("swatch1").style.backgroundColor = colours[cc][1];
+  const swatches = document.querySelectorAll('[data-element="swatch"]');
+  swatches.forEach((swatch) => {
+    const index = parseInt(swatch.dataset.swatch);
+    swatch.style.backgroundColor = colours[cc][index];
+  });
 }

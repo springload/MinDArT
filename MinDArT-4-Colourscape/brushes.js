@@ -6,7 +6,6 @@ function paintWarm() {
   eraseState = 0;
   eraserVersion = 0;
   colourBool = false;
-  click.play();
   bool = 1;
 }
 
@@ -14,12 +13,10 @@ function paintCool() {
   eraseState = 0;
   eraserVersion = 0;
   colourBool = true;
-  click.play();
   bool = 1;
 }
 
 function switchToTrace() {
-  click.play();
   bool = 0;
   eraseState = 0; // revert to True for erase before passing back to eraser function, which inverts
   eraserVersion = 0;
@@ -30,13 +27,11 @@ function switchToTrace() {
 function paintErase() {
   eraseState = 1;
   eraserVersion = true;
-  click.play();
 }
 
 function drawErase() {
   eraseState = 1;
   eraserVersion = false;
-  click.play();
 }
 
 function eraseDrawing() {

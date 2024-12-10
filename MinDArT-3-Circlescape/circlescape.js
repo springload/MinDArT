@@ -39,11 +39,11 @@ let arrayChoice = 0;
 let eraserOffToggle = 0;
 
 function preload() {
-  audio = loadSound("../sound/Scene3_Circle.mp3");
-  click = loadSound("../sound/click.mp3");
+  // nothing to load in this case
 }
 
-function setup() {
+async function setup() {
+  await initAudio("3_Circle");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
   initializeAppControls("circlescape", restart);
@@ -59,11 +59,7 @@ function setup() {
 }
 
 function start() {
-  click.play();
-  if (!audio.isPlaying()) {
-    audio.loop(1);
-  }
-
+  playSoundtrack();
   // Initialize dimensions and graphics
   ({ vMax, width, height } = calcViewportDimensions());
   vW = width / 100;
@@ -88,7 +84,6 @@ function start() {
     let tmp = p5.Vector.lerp(v1, v2, i / d);
     poleArr.push(tmp);
   }
-  stopAudioWhenHidden(audio);
   restart();
 }
 

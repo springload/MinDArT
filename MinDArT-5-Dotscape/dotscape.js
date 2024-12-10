@@ -57,24 +57,14 @@ let pointStore;
 
 function preload() {
   bg = loadImage("assets/paper.jpg");
-  audio = loadSound("../sound/Scene5_Dot.mp3");
-  click = loadSound("../sound/click.mp3");
 }
 
-function start() {
-  click.play();
-  if (!audio.isPlaying()) {
-    audio.loop(1);
-  }
-  stopAudioWhenHidden(audio);
-  sizeWindow();
-  reset();
-}
-
-function setup() {
+async function setup() {
+  await initAudio("5_Dot");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
   initializeAppControls("dotscape", nextDrawing);
+  initializeToolbarButtons();
   // create canvas and all layers
   const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
   mainCanvas.parent(
@@ -90,6 +80,12 @@ function setup() {
   appCol = color(205, 12, 64, 0.1);
   lineLayer.colorMode(HSB, 360, 100, 100, 100);
   permaLine.colorMode(HSB, 360, 100, 100, 100);
+}
+
+function start() {
+  playSoundtrack();
+  sizeWindow();
+  reset();
 }
 
 function reset() {

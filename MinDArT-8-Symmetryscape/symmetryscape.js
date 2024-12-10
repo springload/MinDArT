@@ -20,11 +20,10 @@ let palettes = [
 
 function preload() {
   bg = loadImage("assets/paper.jpg");
-  audio = loadSound("../sound/Scene8_Symmetry .mp3");
-  click = loadSound("../sound/click.mp3");
 }
 
-function setup() {
+async function setup() {
+  await initAudio("8_Symmetry");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
   initializeAppControls("symmetryscape", restart);
@@ -45,11 +44,7 @@ function setup() {
 function start() {
   counter = 0;
   selectedPalette = 0;
-  click.play();
-  if (!audio.isPlaying()) {
-    audio.loop(1);
-  }
-  stopAudioWhenHidden(audio);
+  playSoundtrack();
   initializeState();
 }
 
@@ -196,7 +191,6 @@ function render() {
 
 function eraser(e) {
   if (e) {
-    e.preventDefault();
     e.stopPropagation();
   }
   resetButtons();
@@ -206,7 +200,6 @@ function eraser(e) {
 
 function switchToDrawMode(e) {
   if (e) {
-    e.preventDefault();
     e.stopPropagation();
   }
   resetButtons();
@@ -233,10 +226,8 @@ function switchToDrawMode(e) {
 
 function changeBrush(brushSel, e) {
   if (e) {
-    e.preventDefault();
     e.stopPropagation();
   }
-  click.play();
   brushSelected = brushSel;
   if (brushSelected !== 0) {
     lastDrawingBrush = brushSelected;
