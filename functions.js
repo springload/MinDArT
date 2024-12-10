@@ -25,29 +25,9 @@ function showOnlyCurrentLinks() {
 }
 
 // Common interface functions
-function menu() {
-  window.location.href = "https://jameswilce.github.io/DevMinDArT";
-  //window.location.href = "/";
-}
-
-function show_btns() {
-  var getBtns = document.getElementsByClassName("btn");
-  for (var i = 0; i < getBtns.length; i++) {
-    getBtns[i].style.display = "inline";
-  }
-}
-
 function resetButtons() {
-  var activeButtons = document.querySelectorAll(".btn.active");
-  for (var i = 0; i < activeButtons.length; i++) {
-    activeButtons[i].classList.remove("active");
-  }
-}
-
-function setActive(id1, id2) {
-  resetButtons();
-  document.getElementById(id1).classList.add("active");
-  document.getElementById(id2).classList.add("active");
+  const activeButtons = document.querySelectorAll(".btn.active");
+  activeButtons.forEach((button) => button.classList.remove("active"));
 }
 
 function setActiveElementById(id) {
@@ -55,6 +35,10 @@ function setActiveElementById(id) {
   if (element) {
     element.classList.add("active");
   }
+}
+
+function hasActiveClass(el) {
+  return Boolean(el && el.classList.contains("active"));
 }
 
 function stopAudioWhenHidden(audio) {
@@ -138,6 +122,12 @@ function initializeToolbarButtons() {
         e.stopPropagation();
 
         const clicked = e.currentTarget;
+
+        // exception for a button in symmetryscape which should not receive the active styling
+        if (clicked.dataset.element === "draw-mode-button") {
+          return;
+        }
+
         const current = document.querySelector(".active");
         if (current) {
           current.classList.remove("active");

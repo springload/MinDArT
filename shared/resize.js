@@ -11,11 +11,10 @@ function calcViewportDimensions() {
   return { width, height, vMin, vMax };
 }
 
-function removeGraphics(buffer) {
-  if (buffer) {
-    buffer.remove();
-    buffer = null;
-  }
+function cleanupGraphics(buffer) {
+  // Instead of trying to remove the buffer, we'll just return null
+  // The garbage collector will handle the cleanup
+  return null;
 }
 
 function resizeGraphicsLayer(
@@ -25,20 +24,37 @@ function resizeGraphicsLayer(
   rotate = false,
   direction = 1
 ) {
+  // Create a new graphics buffer with the new dimensions
   const newLayer = createGraphics(width, height);
 
-  if (rotate) {
-    newLayer.push();
-    newLayer.translate(width / 2, height / 2);
-    newLayer.rotate((PI / 2) * direction);
-    newLayer.translate(-height / 2, -width / 2);
-    newLayer.image(layer, 0, 0, height, width);
-    newLayer.pop();
-  } else {
-    newLayer.image(layer, 0, 0, width, height);
+  // If the layer is not a P5.Image (like the background image), handle it differently
+  if (layer instanceof p5.Image) {
+    if (rotate) {
+      newLayer.push();
+      newLayer.translate(width / 2, height / 2);
+      newLayer.rotate((PI / 2) * direction);
+      newLayer.translate(-height / 2, -width / 2);
+      newLayer.image(layer, 0, 0, height, width);
+      newLayer.pop();
+    } else {
+      newLayer.image(layer, 0, 0, width, height);
+    }
+  } else if (layer instanceof p5.Graphics) {
+    if (rotate) {
+      newLayer.push();
+      newLayer.translate(width / 2, height / 2);
+      newLayer.rotate((PI / 2) * direction);
+      newLayer.translate(-height / 2, -width / 2);
+      newLayer.image(layer, 0, 0, height, width);
+      newLayer.pop();
+    } else {
+      newLayer.image(layer, 0, 0, width, height);
+    }
   }
 
-  removeGraphics(layer);
+  // Clean up the old layer
+  layer = cleanupGraphics(layer);
+
   return newLayer;
 }
 
