@@ -39,7 +39,7 @@ async function setup() {
   await initAudio("7_Rotation");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
-  initializeAppControls("rotationscape", restart);
+  initializeAppControls(restart);
   initializeToolbarButtons();
   // Create canvas and attach to container
   const mainCanvas = createCanvas(windowWidth, windowHeight);
@@ -60,7 +60,7 @@ function start() {
 }
 
 function restart() {
-  resetButtons();
+  clearActiveButtonState();
   counter++;
   selectedPalette++;
   if (selectedPalette > palettes.length - 1) {
@@ -226,7 +226,7 @@ function reCenter(e) {
     e.stopPropagation();
   }
   centeringActive = true;
-  resetButtons();
+  clearActiveButtonState();
   return false;
 }
 
@@ -235,7 +235,7 @@ function center() {
   centerX = mouseX;
   centerY = mouseY;
   ellipseAnimated = 255;
-  resetButtons();
+  clearActiveButtonState();
 }
 
 function draw() {
@@ -278,7 +278,7 @@ function eraser(e) {
   if (e) {
     e.stopPropagation();
   }
-  resetButtons();
+  clearActiveButtonState();
   brushSelected = 6;
 }
 

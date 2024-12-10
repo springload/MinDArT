@@ -35,7 +35,7 @@ async function setup() {
   await initAudio("2_Line");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
-  initializeAppControls("linescape", next);
+  initializeAppControls(next);
   initializeSwatches();
 
   // set up p5 for drawing
@@ -95,7 +95,7 @@ function setupArrays() {
 }
 
 function next() {
-  resetButtons();
+  clearActiveButtonState();
   yCount = int((yCount *= 1.3));
   xCount = int((xCount *= 0.95));
   brushSizeBaseline *= 0.95;

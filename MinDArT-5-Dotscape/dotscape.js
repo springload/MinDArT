@@ -63,7 +63,7 @@ async function setup() {
   await initAudio("5_Dot");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
-  initializeAppControls("dotscape", nextDrawing);
+  initializeAppControls(nextDrawing);
   initializeToolbarButtons();
   // create canvas and all layers
   const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);

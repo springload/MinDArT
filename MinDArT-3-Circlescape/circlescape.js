@@ -46,7 +46,7 @@ async function setup() {
   await initAudio("3_Circle");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
-  initializeAppControls("circlescape", restart);
+  initializeAppControls(restart);
   initializeToolbarButtons();
 
   // set up p5 for drawing

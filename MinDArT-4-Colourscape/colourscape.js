@@ -89,7 +89,7 @@ async function setup() {
   await initAudio("4_Colour");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
-  initializeAppControls("colourscape", reset);
+  initializeAppControls(reset);
   initializeToolbarButtons();
   // set up p5 for drawing
   const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
@@ -124,7 +124,7 @@ function reset() {
   colourLevel = (colourLevel + 1) % 5; //TODO
   calcViewportDimensions();
   drawErase();
-  resetButtons();
+  clearActiveButtonState();
 
   backdrop();
   segLength = windowWidth / 40; // length of delay between touch and paint or line // 15 is a good value.

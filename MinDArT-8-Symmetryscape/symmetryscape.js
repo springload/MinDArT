@@ -26,7 +26,7 @@ async function setup() {
   await initAudio("8_Symmetry");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
-  initializeAppControls("symmetryscape", restart);
+  initializeAppControls(restart);
   initializeToolbarButtons();
   // Create canvas and attach to container
   const mainCanvas = createCanvas(windowWidth, windowHeight);
@@ -49,7 +49,7 @@ function start() {
 }
 
 function initializeState() {
-  resetButtons();
+  clearActiveButtonState();
   setSwatchColors();
 
   fill(0);
@@ -86,7 +86,7 @@ function initializeState() {
 }
 
 function restart() {
-  resetButtons();
+  clearActiveButtonState();
   counter++;
   selectedPalette++;
   if (selectedPalette >= palettes.length) {
@@ -193,7 +193,7 @@ function eraser(e) {
   if (e) {
     e.stopPropagation();
   }
-  resetButtons();
+  clearActiveButtonState();
   lastDrawingBrush = brushSelected;
   brushSelected = 0;
 }
@@ -202,7 +202,7 @@ function switchToDrawMode(e) {
   if (e) {
     e.stopPropagation();
   }
-  resetButtons();
+  clearActiveButtonState();
 
   const toolbar = document.querySelector('[data-element="toolbar"]');
   const drawButton = toolbar.querySelector('[data-element="draw-mode-button"]');
@@ -232,7 +232,7 @@ function changeBrush(brushSel, e) {
   if (brushSelected !== 0) {
     lastDrawingBrush = brushSelected;
   }
-  resetButtons();
+  clearActiveButtonState();
 
   const toolbar = document.querySelector('[data-element="toolbar"]');
   const selectedButton = toolbar?.querySelector(`[data-brush="${brushSel}"]`);

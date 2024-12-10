@@ -43,7 +43,7 @@ async function setup() {
   await initAudio("6_Link");
   // add JS functionality to existing HTML elements
   setupLoadingScreen(start);
-  initializeAppControls("linkscape", reset);
+  initializeAppControls(reset);
   initializeToolbarButtons();
   // Initialize dimensions
   ({ width, height, vMin, vMax } = calcViewportDimensions());
