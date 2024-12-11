@@ -1,22 +1,20 @@
 {
   "name": "mindart_pwa",
   "version": "1.2.17",
-  "description": "mind art progressive web app, for offline use",
+  "description": "mind art progressive web app",
   "scripts": {
-    "build": "esbuild --outfile=sw.js --bundle sw.ts && workbox injectManifest",
+    "build": "node esbuild.config.js",
     "start": "dhost ."
   },
   "dependencies": {
-    "@material/button": "^14.0.0",
-    "esbuild": "^0.18.2",
-    "material-components-web": "^14.0.0",
-    "material-ui": "^0.20.2",
-    "update": "^0.4.2",
-    "workbox-cli": "^7.0.0"
+    "@serwist/build": "^9.0.11",
+    "@serwist/precaching": "^9.0.11",
+    "@serwist/routing": "^9.0.11",
+    "@serwist/sw": "^9.0.11",
+    "serwist": "^9.0.11"
   },
   "devDependencies": {
     "dhost": "^0.3.5",
-    "esbuild": "^0.19.3",
-    "workbox-precaching": "^7.0.0"
+    "esbuild": "^0.24.0"
   }
 }

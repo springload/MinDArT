@@ -1,166 +1,167 @@
-// orientation and direction for resizing the image
-let storedOrientation, currentOrientation, rotateDirection = -1;
-
-// mouse Tracking
-let isMousedown = 0;
+// Configuration and state variables
+let isMousedown = false;
 let vMax;
-let introText = ["Touch and Listen", "Look", "Draw"];
-let appCol = "#469ede"; // 70, 158, 222
+const appCol = "#469ede"; // 70, 158, 222
 
-//data storage - not currently in use
+// Data storage
 let pointStore;
 let lineStore;
 
-// new variables below
-var x = 100,
+// Drawing variables
+let x = 100,
   y = 100,
   vec = [],
   px = [],
   py = [],
-  pA = [];
-angle1 = 0.0,
+  pA = [],
+  angle1 = 0.0,
   dragLength = 30;
 
-var r = 0;
-var qtyOfLines = 40;
-var brushWidth = 200;
-var strokeW = (brushWidth / qtyOfLines);
-var opacity = 200;
+// Brush configuration
+let r = 0;
+let qtyOfLines = 40;
+let brushWidth = 200;
+let strokeW = brushWidth / qtyOfLines;
+let opacity = 200;
 
-var gui_img = [];
-var pebble = [];
+// Assets and storage
+let gui_img = [];
+let pebble = [];
+let randomScalar = [];
+let tempID = [];
+let tempX = [];
+let tempY = [];
 
-var randomScalar = [];
-var tempID = [];
-var tempX = [];
-var tempY = [];
+// Graphics layers
+let fg, pLayer;
+let background, audio, click;
 
-var storedOrientationDegrees = 0;
+let currentRake = 0;
 
-function preload() {
-  //load all brush assets and background
-  background = loadImage('assets/sand_01.jpg');
-  audio = loadSound('../sound/Scene1_Touch.mp3');
-  click = loadSound('../sound/click.mp3');
+function rake(version) {
+  currentRake = version;
 
-  //Load all pebble assets
-  for (let i = 1; i < 8; i++) {
-    pebble[i] = loadImage('assets/wpebble' + i + '.png');
+  switch (version) {
+    case 0:
+      change(1, 200, 1);
+      eraseActive = 1;
+      break;
+    case 1:
+      change(5, 60, 100);
+      eraseActive = 0;
+      break;
+    case 2:
+      change(15, 100, 100);
+      eraseActive = 0;
+      break;
+    case 3:
+      change(60, 150, 100);
+      eraseActive = 0;
+      break;
   }
 }
 
-function setup() {
+function preload() {
+  // Load assets
+  background = loadImage("assets/sand_01.jpg");
 
-  createCanvas(window.innerWidth, window.innerHeight);
-  // NOTE: UInsure if these should be in setup, or declared globally an put into restart
+  // Load pebble assets
+  for (let i = 1; i < 8; i++) {
+    pebble[i] = loadImage(`assets/wpebble${i}.png`);
+  }
+}
+
+async function setup() {
+  await initAudio("1_Touch");
+  // add JS functionality to existing HTML elements
+  setupLoadingScreen(start);
+  initializeAppControls(reset);
+  initializeToolbarButtons();
+  // set up p5 for drawing
+  const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
+  mainCanvas.parent(
+    document.querySelector('[data-element="canvas-container"]')
+  );
+  initializeLayers();
+  setupGraphics();
+}
+
+function initializeLayers() {
   fg = createGraphics(width, height);
   pLayer = createGraphics(width, height);
-  textLayer = createGraphics(width, height); // BUG: what is text layer doing?
-  introLayer = createGraphics(width, height);
+}
 
+function setupGraphics() {
   fg.strokeWeight(strokeW);
   fg.noFill();
   fg.stroke(20, 100);
 
   colorMode(HSB, 360, 100, 100, 1.0);
 
-  introLayer.fill(255, 30);
-  introLayer.blendMode(BLEND);
-  introLayer.noStroke();
-
-  pixelDensity(1); // effectively ignores retina displays
-
-  var stbtn = $("<div />").appendTo("body");
-  stbtn.addClass('startBtn');
-  $('<p>Touch here to begin</p>').appendTo(stbtn);
-  stbtn.mousedown(start);
-  stbtn.mousemove(start);
+  pixelDensity(1);
 }
 
 function start() {
-  // NOTE: what is redraw();
-  $(".startBtn").remove();
-  //fullscreen(1);
-  click.play();
-  if (audio.isPlaying()) {} else {
-    audio.loop(1);
-  }
+  playSoundtrack();
   change();
+  ({ vMax } = calcViewportDimensions());
 
-  calcDimensions(); // BUG: remove?
-  sizeWindow(); // BUG: remove?
-
-  textLayer.clear();
-  introComplete = 1;
-  sizeWindow();
-  writeTextUI();
   rake(currentRake);
   reset();
   counter = 0;
 
-
-  // all event listeners //// BUG: should these be in setup?
-  canvas.addEventListener('touchmove', moved);
-  canvas.addEventListener('mousemove', moved);
-  canvas.addEventListener('touchstart', touchdown);
-  canvas.addEventListener('mousedown', touchdown);
-  canvas.addEventListener('touchend', touchstop);
-  canvas.addEventListener('touchleave', touchstop);
-  canvas.addEventListener('mouseup', touchstop);
-
-  //DATA
-  pointStore = [];
-  lineStore = [];
-
+  setupCanvasEventListeners();
+  initializeDataStores();
 }
 
-function change(qty, width, opac) {
+function initializeDataStores() {
+  pointStore = [];
+  lineStore = [];
+}
+
+function change(qty = qtyOfLines, width = brushWidth, opac = opacity) {
   qtyOfLines = qty;
   brushWidth = width;
   opacity = opac;
-  vec = [];
-  for (i = 0; i < qtyOfLines; i++) {
-    vec[i] = [];
-  }
-  strokeW = ceil(brushWidth / qtyOfLines);
+  vec = Array(qtyOfLines)
+    .fill()
+    .map(() => []);
+  strokeW = Math.ceil(brushWidth / qtyOfLines);
   fg.strokeWeight(strokeW);
 }
 
 function touchdown(ev) {
-  isMousedown = 1;
+  isMousedown = true;
   return false;
 }
 
 function touchstop(ev) {
-  isMousedown = 0;
-  for (i = 0; i < qtyOfLines; i++) {
-    vec[i] = [];
-  }
+  isMousedown = false;
+  vec = Array(qtyOfLines)
+    .fill()
+    .map(() => []);
 }
 
 function moved(ev) {
   if (!isMousedown) return;
   ev.preventDefault();
 
-  dx = mouseX - x;
-  dy = mouseY - y;
+  const dx = mouseX - x;
+  const dy = mouseY - y;
 
   angle1 = atan2(dy, dx);
-  x = (mouseX) - cos(angle1) * dragLength;
-  x2 = (100) - cos(PI / 2) * 1;
-  y = (mouseY) - sin(angle1) * dragLength;
-  y2 = (100) - sin(PI / 2) * 1;
+  x = mouseX - cos(angle1) * dragLength;
+  const x2 = 100 - cos(PI / 2);
+  y = mouseY - sin(angle1) * dragLength;
+  const y2 = 100 - sin(PI / 2);
 
   makeArray(x, y, x2, y2, angle1);
   display();
-
-
 
   return false;
 }
 
 function makeArray(x, y, x2, y2, angle) {
-
   var a = createVector(x, y);
   var b = createVector(0, brushWidth / 2);
   b.rotate(angle);
@@ -168,9 +169,11 @@ function makeArray(x, y, x2, y2, angle) {
   a.sub(b);
 
   for (var i = 0; i < qtyOfLines; i++) {
-    // cool
-    // d = p5.Vector.lerp(a, c, (i/qtyOfLines)*random(0,1));
-    d = p5.Vector.lerp(a, c, (i / (qtyOfLines + 1)) + random(0, (1 / qtyOfLines) * 0.2));
+    d = p5.Vector.lerp(
+      a,
+      c,
+      i / (qtyOfLines + 1) + random(0, (1 / qtyOfLines) * 0.2)
+    );
     point(d.x, d.y);
 
     vec[i].push(d);
@@ -181,7 +184,8 @@ function display() {
   var bool = 0;
   if (vec[0].length > 1) {
     for (var i = 0; i < vec.length; i++) {
-      if (i === 0 || i === vec.length - 1 || (i % 3) === 2) { // if first line, last line or every 3rd line, then thin, else fat
+      if (i === 0 || i === vec.length - 1 || i % 3 === 2) {
+        // if first line, last line or every 3rd line, then thin, else fat
         fg.strokeWeight(strokeW / 2);
       } else {
         fg.strokeWeight(strokeW);
@@ -199,12 +203,15 @@ function display() {
       if (eraseActive) {
         fg.noStroke();
         fg.fill(127, 80);
-        fg.ellipse(mouseX, mouseY, vMax * 4, vMax * 4); // values to change erase width (previously = 13)
+        fg.ellipse(mouseX, mouseY, vMax * 4, vMax * 4);
       } else {
-
-
         bool++;
-        fg.line(n[n.length - 1].x, n[n.length - 1].y, n[n.length - 2].x, n[n.length - 2].y);
+        fg.line(
+          n[n.length - 1].x,
+          n[n.length - 1].y,
+          n[n.length - 2].x,
+          n[n.length - 2].y
+        );
       }
     }
   }
@@ -218,35 +225,26 @@ function display() {
   image(pLayer, 0, 0, width, height);
 }
 
-
-
-function resetTimeout() {
-  resetButtons();
-  setTimeout(reset, 50);
-
-  getPressure = function(ev) {
-    return ((ev.touches && ev.touches[0] && typeof ev.touches[0]["force"] !== "undefined") ? ev.touches[0]["force"] : 1.0);
-  }
-}
-
 function reset() {
-  click.play();
   blendMode(REPLACE);
   image(background, 0, 0, width, height);
   fg.clear();
   pLayer.clear();
-  change(qtyOfLines, brushWidth, opacity); // sort of circular
+  change(qtyOfLines, brushWidth, opacity);
 
-
-  // basic random counter to determine how many pebbles will be present on the screen;
   tempcount = int(random(0.7, 3));
-  // now a loop based on that random number, to place the pebbles on screen
   for (let k = 0; k < tempcount; k++) {
-    randomScalar[k] = int(random(120, 180)); // scale
-    tempID[k] = int(random(1, 7)); // which pebble iteration
+    randomScalar[k] = int(random(120, 180));
+    tempID[k] = int(random(1, 7));
     tempX[k] = int(random(0, width - randomScalar[k]));
     tempY[k] = int(random(0, height - randomScalar[k]));
-    pLayer.image(pebble[tempID[k]], tempX[k], tempY[k], randomScalar[k], randomScalar[k]);
+    pLayer.image(
+      pebble[tempID[k]],
+      tempX[k],
+      tempY[k],
+      randomScalar[k],
+      randomScalar[k]
+    );
   }
 
   display();
@@ -254,104 +252,12 @@ function reset() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  sizeWindow();
 
-  // removeElements();
-  writeTextUI();
+  const { dimensions, resizedLayers } = handleResize([fg, pLayer]);
+  [fg, pLayer] = resizedLayers;
+  ({ vMax } = dimensions);
+
   display();
-  //checkFS();
 }
 
-function checkFS(){
-  console.log("checking");
-  if (!fullscreen()){
-  addFS();
-}
-}
-
-
-function sizeWindow() {
-  // canvas.width = window.innerWidth;
-  // canvas.height =  window.innerHeight;
-  image(background, 0, 0, width, height);
-  if (width < height) {
-    currentOrientation = "portrait";
-  } else {
-    currentOrientation = "landscape";
-  }
-  if (currentOrientation === storedOrientation) {
-    stretchWindow();
-  } else {
-
-    if (window.orientation < storedOrientationDegrees) {
-      direction = 1;
-    } else {
-      direction = -1;
-    }
-
-    if (abs(window.orientation - storedOrientationDegrees) == 270){
-      direction = -direction;
-    }
-
-    rotateWindow(direction);
-
-    storedOrientationDegrees = window.orientation;
-
-  }
-  storedOrientation = currentOrientation;
-  segLength = width / 15;
-  calcDimensions();
-  textLayer.resizeCanvas(windowWidth, windowHeight);
-  //bLayer.tint(255, 190);
-  driftX = width / 2;
-  driftY = 0;
-
-}
-
-function stretchWindow() {
-  var newfg = createGraphics(windowWidth, windowHeight);
-  newfg.image(fg, 0, 0, windowWidth, windowHeight);
-  fg.resizeCanvas(windowWidth, windowHeight);
-  fg = newfg;
-
-  var newpLayer = createGraphics(windowWidth, windowHeight);
-  newpLayer.image(pLayer, 0, 0, windowWidth, windowHeight);
-  pLayer.resizeCanvas(windowWidth, windowHeight);
-  pLayer = newpLayer;
-}
-
-function rotateWindow(direction) {
-  var newfg = createGraphics(windowWidth, windowHeight);
-  newfg.push();
-  newfg.translate(width / 2, height / 2);
-  newfg.rotate((PI / 2) * direction);
-  newfg.translate(-height / 2, -width / 2);
-  newfg.image(fg, 0, 0, windowHeight, windowWidth);
-  newfg.pop()
-  fg.resizeCanvas(windowWidth, windowHeight);
-  fg = newfg;
-
-  var newpLayer = createGraphics(windowWidth, windowHeight);
-  newpLayer.push();
-  newpLayer.translate(width / 2, height / 2);
-  newpLayer.rotate((PI / 2) * direction);
-  newpLayer.translate(-height / 2, -width / 2);
-  newpLayer.image(pLayer, 0, 0, windowHeight, windowWidth);
-  newpLayer.pop()
-  pLayer.resizeCanvas(windowWidth, windowHeight);
-  pLayer = newpLayer;
-
-  // TODO: properly detect the orientation
-  rotateDirection = rotateDirection * -1;
-}
-
-//startSimulation and pauseSimulation defined elsewhere
-function handleVisibilityChange() {
-  if (document.hidden) {
-    audio.stop();
-  } else {
-    audio.loop(1);
-  }
-}
-
-document.addEventListener("visibilitychange", handleVisibilityChange, false);
+window.addEventListener("resize", windowResized);
