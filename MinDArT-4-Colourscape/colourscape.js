@@ -131,7 +131,6 @@ function reset() {
   setProperties(0, 0);
   paintLayer.clear();
   traceLayer.clear();
-  if (!bool) invertTracing();
   render();
 }
 
