@@ -10,13 +10,24 @@
     <title>MinDArT : Week 5 - Dotscape</title>
 
     <link rel="stylesheet" href="../css/styles.css">
-    
-    <script src="../libraries/p5.min.js"></script>
+    <link rel="manifest" href="/manifest.json">
 
+    <script src="../libraries/p5.min.js"></script>
     <script src="../functions.js"></script>
     <script src="../shared/resize.js"></script>
     <script src="../shared/audio.js"></script>
     <script src="dotscape.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/dist/sw.js').then(registration => {
+            console.log('ServiceWorker registration successful');
+          }).catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
   </head>
 
   <body class="u-theme-grey" data-app-name="dotscape">

@@ -1,58 +1,72 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="mobile-web-app-capable" content="yes">
-  
-  <title>MinDArT : Week 8 - Symmetryscape</title>
 
-  <link rel="stylesheet" href="../css/styles.css">
-  
-  <script src="../libraries/p5.min.js"></script>
-  <script src="../functions.js"></script>
-  <script src="../shared/resize.js"></script>
-  <script src="../shared/audio.js"></script>
-  <script src="symmetryscape.js"></script>
-</head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
 
-<body class="symmetryscape u-theme-teal" data-app-name="symmetryscape">
-  <dialog class="loading-screen" data-element="loading-dialog" open>
-    <div class="loading-screen__inner">
-      <div class="loading-screen__loading" id="p5_loading" >
-        <img src="../assets/symmetryscape-icon-white.png">
-        <p class="loading-screen__text">Loading...</p>
+    <title>MinDArT : Week 8 - Symmetryscape</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="../libraries/p5.min.js"></script>
+    <script src="../functions.js"></script>
+    <script src="../shared/resize.js"></script>
+    <script src="../shared/audio.js"></script>
+    <script src="symmetryscape.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/dist/sw.js').then(registration => {
+            console.log('ServiceWorker registration successful');
+          }).catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
+  </head>
+
+  <body class="symmetryscape u-theme-teal" data-app-name="symmetryscape">
+    <dialog class="loading-screen" data-element="loading-dialog" open>
+      <div class="loading-screen__inner">
+        <div class="loading-screen__loading" id="p5_loading">
+          <img src="../assets/symmetryscape-icon-white.png">
+          <p class="loading-screen__text">Loading...</p>
+        </div>
+        <button class="loading-screen__start" data-element="start-button">
+          Touch here to begin
+        </button>
       </div>
-      <button class="loading-screen__start" data-element="start-button">
-        Touch here to begin
-      </button>
-    </div>
-  </dialog>
-  
-  <div data-element="canvas-container"></div>
-  
-  <div class="interface">
-    <div class="toolbar" data-element="toolbar">
-      <button class="btn btn--white" onclick="eraser()" data-brush="0">Erase</button>
-      <div class="btn-group--split">
-        <button class="btn btn--white" onclick="switchToDrawMode()" data-element="draw-mode-button">Draw</button>
-        <button class="btn" onclick="changeBrush(1)" data-brush="1"></button>
-        <button class="btn" onclick="changeBrush(2)" data-brush="2"></button>
-        <button class="btn" onclick="changeBrush(3)" data-brush="3"></button>
-        <button class="btn" onclick="changeBrush(4)" data-brush="4"></button>
-        <button class="btn" onclick="changeBrush(5)" data-brush="5"></button>
-        <button class="btn" onclick="changeBrush(6)" data-brush="6"></button>
+    </dialog>
+
+    <div data-element="canvas-container"></div>
+
+    <div class="interface">
+      <div class="toolbar" data-element="toolbar">
+        <button class="btn btn--white" onclick="eraser()" data-brush="0">Erase</button>
+        <div class="btn-group--split">
+          <button class="btn btn--white" onclick="switchToDrawMode()" data-element="draw-mode-button">Draw</button>
+          <button class="btn" onclick="changeBrush(1)" data-brush="1"></button>
+          <button class="btn" onclick="changeBrush(2)" data-brush="2"></button>
+          <button class="btn" onclick="changeBrush(3)" data-brush="3"></button>
+          <button class="btn" onclick="changeBrush(4)" data-brush="4"></button>
+          <button class="btn" onclick="changeBrush(5)" data-brush="5"></button>
+          <button class="btn" onclick="changeBrush(6)" data-brush="6"></button>
+        </div>
+      </div>
+
+      <div class="app-controls" data-element="app-controls">
+        <a href="/" class="btn btn--theme">Main Menu</a>
+        <button class="btn btn--theme" data-element="reset-button">New</button>
+        <button class="btn btn--theme" data-element="save-button">Save</button>
       </div>
     </div>
-    
-    <div class="app-controls" data-element="app-controls">
-      <a href="/" class="btn btn--theme">Main Menu</a>
-      <button class="btn btn--theme" data-element="reset-button">New</button>
-      <button class="btn btn--theme" data-element="save-button">Save</button>
-    </div>
-  </div>
 
-</body>
+  </body>
   <!-- Bottom left action buttons, initially hidden on load -->
   <div id="myDIV" class="bottom-left">
     <button id="id-erase" class="btn button-white" onclick="eraser()">Erase</button>
@@ -64,6 +78,6 @@
     <button id="colourFive" class="btn btn_mid" onclick="changeBrush(5)"></button>
     <button id="colourSix" class="btn btn_flatleft" onclick="changeBrush(6)"></button>
   </div>
-</body>
+  </body>
 
 </html>

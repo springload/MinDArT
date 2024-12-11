@@ -8,6 +8,7 @@
     }
   ],
   "routes": [
+    { "src": "/dist/sw.js", "headers": { "cache-control": "no-cache" }, "dest": "/dist/sw.js" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]

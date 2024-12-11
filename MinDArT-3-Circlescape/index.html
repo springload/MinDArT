@@ -9,13 +9,24 @@
     <title>MinDArT : Week 3 - Circlescape</title>
 
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="manifest" href="/manifest.json">
 
     <script language="javascript" type="text/javascript" src="../libraries/p5.js"></script>
-
     <script src="../functions.js"></script>
     <script src="../shared/resize.js"></script>
     <script src="../shared/audio.js"></script>
     <script language="javascript" type="text/javascript" src="circlescape.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/dist/sw.js').then(registration => {
+            console.log('ServiceWorker registration successful');
+          }).catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
   </head>
 
   <body class="u-theme-yellow" data-app-name="circlescape">
