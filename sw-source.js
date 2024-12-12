@@ -1,7 +1,7 @@
 import { Serwist } from "serwist";
-import { CacheFirst, NetworkFirst } from "serwist/strategies";
-import { ExpirationPlugin } from "serwist/expiration";
-import { CacheableResponsePlugin } from "serwist/cacheable-response";
+import { CacheFirst, NetworkFirst } from "@serwist/strategies";
+import { ExpirationPlugin } from "@serwist/expiration";
+import { CacheableResponsePlugin } from "@serwist/cacheable-response";
 
 const sw = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
