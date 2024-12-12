@@ -19,7 +19,10 @@
     <script type="module">
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/dist/sw.js', { type: 'module' }).then(registration => {
+          navigator.serviceWorker.register('/sw.js', { 
+        type: 'module',
+        scope: '/'
+      }).then(registration => {
             console.log('ServiceWorker registration successful');
           }).catch(err => {
             console.log('ServiceWorker registration failed: ', err);

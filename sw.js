@@ -12,12 +12,8 @@ const sw = new Serwist({
 
   runtimeCaching: [
     {
-      urlPattern: ({ request }) =>
-        request.destination === "image" ||
-        request.destination === "script" ||
-        request.destination === "style" ||
-        request.destination === "font" ||
-        request.destination === "audio",
+      // Match any request that ends with these file extensions
+      urlPattern: /\.(?:png|jpg|jpeg|svg|gif|mp3|js|css|woff2)$/,
       handler: "CacheFirst",
       options: {
         cacheName: "mindart-assets",
@@ -28,6 +24,17 @@ const sw = new Serwist({
         },
         cacheableResponse: {
           statuses: [0, 200],
+        },
+      },
+    },
+    // Add a route for HTML navigation requests
+    {
+      urlPattern: ({ request }) => request.mode === "navigate",
+      handler: "NetworkFirst",
+      options: {
+        cacheName: "mindart-pages",
+        expiration: {
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         },
       },
     },

@@ -2,19 +2,18 @@ import * as esbuild from "esbuild";
 import { injectManifest } from "@serwist/build";
 
 async function build() {
-  // First, build the service worker
   await esbuild.build({
     entryPoints: ["sw.js"],
     bundle: true,
-    outfile: "dist/sw.js",
+    outfile: "sw.js", // Changed from 'dist/sw.js'
     format: "esm",
     platform: "browser",
     target: ["chrome70", "firefox78", "safari13", "edge79"],
   });
 
   const result = await injectManifest({
-    swSrc: "dist/sw.js",
-    swDest: "dist/sw.js",
+    swSrc: "sw.js",
+    swDest: "sw.js",
     globDirectory: ".",
     globPatterns: [
       // HTML files
@@ -24,7 +23,7 @@ async function build() {
       "*.js",
       "MinDArT-*/*.js",
       "shared/*.js",
-      "libraries/*.min.js", // only minified versions
+      "libraries/*.min.js",
       // CSS files
       "css/**/*.css",
       // Assets
@@ -45,7 +44,6 @@ async function build() {
       "package*.json",
       "README.md",
     ],
-    maximumFileSizeToCacheInBytes: 6 * 1024 * 1024, // p5.js is currently 4.5MB — adding some headroom
   });
 
   if (result.warnings.length > 0) {
