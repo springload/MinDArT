@@ -1,4 +1,3 @@
-// esbuild.config.js
 import * as esbuild from "esbuild";
 import { injectManifest } from "@serwist/build";
 
@@ -47,6 +46,24 @@ async function build() {
       "sw-final.js",
       "package*.json",
       "README.md",
+    ],
+    manifestTransforms: [
+      // Add a custom transform to set size information
+      async (manifestEntries) => {
+        const manifest = manifestEntries.map((entry) => {
+          // For HTML, JS, and CSS files, ensure we set the proper size
+          if (entry.url.match(/\.(js|html|css)$/)) {
+            return {
+              ...entry,
+              size: entry.size || 0, // If size isn't set, default to 0
+              revision: entry.revision || null, // Keep revision if it exists
+            };
+          }
+          return entry;
+        });
+
+        return { manifest, warnings: [] };
+      },
     ],
   });
 

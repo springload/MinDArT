@@ -10,34 +10,55 @@ const sw = new Serwist({
   clientsClaim: true,
   precacheOptions: {
     cleanupOutdatedCaches: true,
-    fetchOptions: {
-      credentials: "same-origin",
-    },
-    matchOptions: {
-      ignoreSearch: true,
-    },
+    plugins: [
+      {
+        // Debug plugin for precaching
+        precacheWillUpdate: async ({ request, response }) => {
+          console.log("Precaching:", request.url);
+          console.log("Headers:", [...response.headers.entries()]);
+          return response;
+        },
+      },
+    ],
   },
 });
 
-// Use CacheFirst for all files
+// Runtime caching for any files not in precache
 sw.registerRoute(
   new Route(
     ({ url }) =>
       url.pathname.match(/\.(js|html|css|png|jpg|jpeg|svg|gif|mp3|woff2)$/),
     new CacheFirst({
-      cacheName: "mindart-all",
+      cacheName: "mindart-runtime",
       plugins: [
         new ExpirationPlugin({
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          maxAgeSeconds: 30 * 24 * 60 * 60,
           maxEntries: 500,
           purgeOnQuotaError: true,
         }),
         new CacheableResponsePlugin({
           statuses: [0, 200],
         }),
+        {
+          // Debug plugin for runtime caching
+          cacheWillUpdate: async ({ request, response }) => {
+            console.log("Runtime caching:", request.url);
+            console.log("Headers:", [...response.headers.entries()]);
+            return response;
+          },
+        },
       ],
     })
   )
 );
 
 sw.addEventListeners();
+
+// Additional debugging
+self.addEventListener("install", (event) => {
+  console.log("Service Worker installing.");
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("Service Worker activating.");
+});
