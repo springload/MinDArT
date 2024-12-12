@@ -2,3 +2,5 @@ node_modules*
 .vscode*
 .vercel
 dist/
+sw.js
+sw-final.js

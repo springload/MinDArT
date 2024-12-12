@@ -1,20 +1,21 @@
+// esbuild.config.js
 import * as esbuild from "esbuild";
 import { injectManifest } from "@serwist/build";
 
 async function build() {
+  // First, build to intermediate file
   await esbuild.build({
-    entryPoints: ["sw.js"],
+    entryPoints: ["sw-source.js"],
     bundle: true,
     outfile: "sw.js",
     format: "esm",
     platform: "browser",
     target: ["chrome70", "firefox78", "safari13", "edge79"],
-    allowOverwrite: true,
   });
 
   const result = await injectManifest({
-    swSrc: "sw.js",
-    swDest: "sw.js",
+    swSrc: "sw.js", // The bundled output
+    swDest: "sw-final.js", // The final destination
     globDirectory: ".",
     globPatterns: [
       // HTML files
@@ -41,7 +42,9 @@ async function build() {
       "docs/**/*",
       "james_notes/**/*",
       "esbuild.config.js",
+      "sw-source.js",
       "sw.js",
+      "sw-final.js",
       "package*.json",
       "README.md",
     ],
