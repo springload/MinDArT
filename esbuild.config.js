@@ -5,10 +5,11 @@ async function build() {
   await esbuild.build({
     entryPoints: ["sw.js"],
     bundle: true,
-    outfile: "sw.js", // Changed from 'dist/sw.js'
+    outfile: "sw.js",
     format: "esm",
     platform: "browser",
     target: ["chrome70", "firefox78", "safari13", "edge79"],
+    allowOverwrite: true,
   });
 
   const result = await injectManifest({
