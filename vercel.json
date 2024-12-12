@@ -8,17 +8,19 @@
     }
   ],
   "routes": [
-    { 
-      "src": "/dist/sw.js", 
-      "headers": { "cache-control": "no-cache" }, 
-      "dest": "/dist/sw.js" 
-    },
     {
       "src": "/(.*)\\.js$",
       "headers": {
         "Content-Type": "application/javascript",
-        "Cache-Control": "public, max-age=31536000, immutable"
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "Access-Control-Allow-Origin": "*",
+        "Content-Encoding": "identity"
       }
+    },
+    {
+      "src": "/dist/sw.js",
+      "headers": { "cache-control": "no-cache" },
+      "dest": "/dist/sw.js"
     },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
