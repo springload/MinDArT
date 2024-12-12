@@ -14,11 +14,10 @@ const sw = new Serwist({
 });
 
 // Register asset route
-// (exclude JS files)
 sw.registerRoute(
   new Route(
     ({ url }) => {
-      return url.pathname.match(/\.(png|jpg|jpeg|svg|gif|mp3|css|woff2)$/);
+      return url.pathname.match(/\.(png|jpg|jpeg|svg|gif|mp3|woff2)$/);
     },
     new CacheFirst({
       cacheName: "mindart-assets",
@@ -65,6 +64,27 @@ sw.registerRoute(
     }
   )
 );
+
+// Handle HTML and CSS files
+sw.registerRoute(
+  new Route(
+    ({ url }) => url.pathname.match(/\.(html|css)$/),
+    async ({ request }) => {
+      try {
+        const networkResponse = await fetch(request);
+        const cache = await caches.open("mindart-markup");
+        const responseToCache = networkResponse.clone();
+        await cache.put(request, responseToCache);
+        return networkResponse;
+      } catch (error) {
+        const cachedResponse = await caches.match(request);
+        if (cachedResponse) return cachedResponse;
+        throw error;
+      }
+    }
+  )
+);
+
 // Register navigation route
 sw.registerRoute(
   new Route(
