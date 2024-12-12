@@ -1,4 +1,7 @@
 import { Serwist } from "serwist";
+import { CacheFirst, NetworkFirst } from "serwist/strategies";
+import { ExpirationPlugin } from "serwist/expiration";
+import { CacheableResponsePlugin } from "serwist/cacheable-response";
 
 const sw = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
@@ -12,15 +15,15 @@ const sw = new Serwist({
 // Register routes after initialization
 sw.registerRoute(
   new RegExp("\\.(png|jpg|jpeg|svg|gif|mp3|js|css|woff2)$"),
-  new sw.strategies.CacheFirst({
+  new CacheFirst({
     cacheName: "mindart-assets",
     plugins: [
-      new sw.expiration.ExpirationPlugin({
+      new ExpirationPlugin({
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         maxEntries: 500,
         purgeOnQuotaError: true,
       }),
-      new sw.cacheableResponse.CacheableResponsePlugin({
+      new CacheableResponsePlugin({
         statuses: [0, 200],
       }),
     ],
@@ -29,10 +32,10 @@ sw.registerRoute(
 
 sw.registerRoute(
   ({ request }) => request.mode === "navigate",
-  new sw.strategies.NetworkFirst({
+  new NetworkFirst({
     cacheName: "mindart-pages",
     plugins: [
-      new sw.expiration.ExpirationPlugin({
+      new ExpirationPlugin({
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
       }),
     ],
