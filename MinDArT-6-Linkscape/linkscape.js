@@ -109,16 +109,32 @@ function addPin() {
   document.querySelector("canvas").classList.add("adding-pin");
 }
 
-function touchdown() {
+function touchdown(event) {
+  if (isClickOnButton(event)) {
+    return false;
+  }
+
   if (isAddingPin) {
-    vt.push(createVector(winMouseX, winMouseY));
+    let pinX = winMouseX;
+    let pinY = winMouseY;
+
+    if (event.type === "touchstart") {
+      const touch = event.touches[0];
+      const rect = event.target.getBoundingClientRect();
+      pinX = touch.clientX - rect.left;
+      pinY = touch.clientY - rect.top;
+    }
+
+    vt.push(createVector(pinX, pinY));
     vtCount.push(0);
     vtStored.push([]);
     isAddingPin = false;
     document.querySelector("canvas").classList.remove("adding-pin");
     render();
+
     return false;
   }
+
   if (!isDragging) {
     for (let i = 0; i < x.length; i++) {
       if (dist(winMouseX, winMouseY, x[i][0], y[i][0]) < 45) {
@@ -147,6 +163,7 @@ function touchdown() {
       }
     }
   }
+
   return false;
 }
 
