@@ -14,37 +14,57 @@ const sw = new Serwist({
 });
 
 // Register asset route
+// (exclude JS files)
 sw.registerRoute(
   new Route(
-    ({ url }) => url.pathname.endsWith(".js"),
-    new NetworkFirst({
-      cacheName: "mindart-scripts",
+    ({ url }) => {
+      return url.pathname.match(/\.(png|jpg|jpeg|svg|gif|mp3|css|woff2)$/);
+    },
+    new CacheFirst({
+      cacheName: "mindart-assets",
       plugins: [
+        new ExpirationPlugin({
+          maxAgeSeconds: 30 * 24 * 60 * 60,
+          maxEntries: 500,
+          purgeOnQuotaError: true,
+        }),
         new CacheableResponsePlugin({
           statuses: [0, 200],
         }),
-        {
-          // Add a custom cacheWillUpdate plugin
-          cacheWillUpdate: async ({ response }) => {
-            // Clone the response before caching
-            const clonedResponse = response.clone();
-
-            // Ensure we have the full body
-            const body = await clonedResponse.blob();
-
-            // Create a new response with the full body
-            return new Response(body, {
-              headers: response.headers,
-              status: response.status,
-              statusText: response.statusText,
-            });
-          },
-        },
       ],
     })
   )
 );
 
+// Special handling for JavaScript files
+sw.registerRoute(
+  new Route(
+    ({ url }) => url.pathname.endsWith(".js"),
+    async ({ request }) => {
+      try {
+        // Try network first
+        const networkResponse = await fetch(request);
+        const cache = await caches.open("mindart-scripts");
+
+        // Clone the response before consuming it
+        const responseToCache = networkResponse.clone();
+
+        // Cache the response
+        await cache.put(request, responseToCache);
+
+        // Return the original response
+        return networkResponse;
+      } catch (error) {
+        // If network fails, try cache
+        const cachedResponse = await caches.match(request);
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        throw error;
+      }
+    }
+  )
+);
 // Register navigation route
 sw.registerRoute(
   new Route(
