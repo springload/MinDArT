@@ -109,45 +109,49 @@ function addPin() {
   document.querySelector("canvas").classList.add("adding-pin");
 }
 
+function getEventCoords(event) {
+  if (event.type.startsWith("touch")) {
+    const touch = event.touches[0];
+    const rect = event.target.getBoundingClientRect();
+    return {
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    };
+  }
+  return {
+    x: winMouseX,
+    y: winMouseY,
+  };
+}
+
 function touchdown(event) {
   if (isClickOnButton(event)) {
     return false;
   }
 
+  const { x, y } = getEventCoords(event);
+
   if (isAddingPin) {
-    let pinX = winMouseX;
-    let pinY = winMouseY;
-
-    if (event.type === "touchstart") {
-      const touch = event.touches[0];
-      const rect = event.target.getBoundingClientRect();
-      pinX = touch.clientX - rect.left;
-      pinY = touch.clientY - rect.top;
-    }
-
-    vt.push(createVector(pinX, pinY));
+    vt.push(createVector(x, y));
     vtCount.push(0);
     vtStored.push([]);
     isAddingPin = false;
     document.querySelector("canvas").classList.remove("adding-pin");
     render();
-
     return false;
   }
 
   if (!isDragging) {
     for (let i = 0; i < x.length; i++) {
-      if (dist(winMouseX, winMouseY, x[i][0], y[i][0]) < 45) {
+      if (dist(x, y, x[i][0], y[i][0]) < 45) {
         selected = [i, 0];
         isDragging = true;
-      } else if (
-        dist(winMouseX, winMouseY, x[i][segNum - 1], y[i][segNum - 1]) < 45
-      ) {
+      } else if (dist(x, y, x[i][segNum - 1], y[i][segNum - 1]) < 45) {
         selected = [i, segNum - 1];
         isDragging = true;
       } else {
         for (let j = 0; j < x[i].length; j++) {
-          if (dist(winMouseX, winMouseY, x[i][j], y[i][j]) < 45) {
+          if (dist(x, y, x[i][j], y[i][j]) < 45) {
             selected = [i, j];
             if (j < 30) {
               selected[1] = 1;
@@ -163,11 +167,13 @@ function touchdown(event) {
       }
     }
   }
-
   return false;
 }
 
-function moved() {
+function moved(event) {
+  event.preventDefault(); // Prevent scrolling on touch devices
+  const { x, y } = getEventCoords(event);
+
   vtStored = [];
 
   if (dotsActive) {
@@ -178,7 +184,7 @@ function moved() {
   }
 
   if (isDragging) {
-    dragCalc(selected, winMouseX, winMouseY);
+    dragCalc(selected, x, y);
   }
 
   render();
