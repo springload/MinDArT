@@ -1,313 +1,409 @@
-let brush = [];
-let longEdge, shortEdge, circleRad, vMax, wmax, hmax;
-let drawLayer;
-let brushSelected = 0;
-let faderStart;
-let xCo = [];
-let yCo = [];
-let velo = [];
-let brushBool = 0;
-let intX, intY;
-let centeringActive = 0;
-let centerX, centerY;
-let ellipseAnimated = 0;
-let justSetCenter = false; // prevents drawing on the same click/touch as setting the center
-let selectedPalette = 0;
-let counter = -1; // resets to 0 via the restart function.
-let rotArray = [6, 7, 8, 10, 12, 20, 50];
-let palettes = [
-  ["#D97398", "#A65398", "#263F73", "#5679A6"], // 5
-  // ['#192819','#2c4928','#719b25','#cbe368'], // 5
-  ["#F2F2F2", "#F2913D", "#223240", "#F24B0F"],
-  ["#6D808C", "#FFFFFF", "#D9AA8F", "#F2CAB3"], // 4
-  ["#3C5E73", "#F2BBBB", "#FFFFFF", "#F24444"], // 4
-  ["#F27ECA", "#9726A6", "#8F49F2", "#6C2EF2"], // 5
-  ["#BF4B8B", "#3981BF", "#1F628C", "#D92929"], // adidas-Telstar-50-anniversary // 4
-  ["#F2B705", "#F27EA9", "#05AFF2", "#F29F05", "#F2541B"], // Lettering-Series-XXII-1 // 5
-  ["#A60321", "#D9043D", "#F29F05", "#D8BA7A"], // 4
-  ["#F24452", "#5CE3F2", "#F2E205", "#F2CB05", "#F29D35"], // People-of-The-Internet // 5
-  ["#2d3157", "#34c1bb", "#badccc", "#ffda4d"], // 4
-  ["#CCCCCC", "#F2F2F2", "#B3B3B3", "#E6E6E6"], // 5
-  ["#F2F2F2", "#A6A6A6", "#0D0D0D", "#202020"], // Unchained// 5
-];
+import {
+  colorAlpha,
+  clearActiveButtonState,
+  isClickOnButton,
+  addInteractionHandlers,
+} from "../functions.js";
+import { calcViewportDimensions, handleResize } from "../shared/resize.js";
 
-async function preload() {
-  bg = loadImage("assets/paper.jpg");
-}
+/**
+ * Creates a fully encapsulated Rotationscape sketch
+ * @param {p5} p5 - The p5 instance to use for sketch creation
+ * @returns {Object} An object with sketch lifecycle methods
+ */
+export function createRotationscape(p5) {
+  const ROTATION_MODES = [6, 7, 8, 10, 12, 20, 50];
+  const PALETTES = [
+    ["#D97398", "#A65398", "#263F73", "#5679A6"],
+    ["#F2F2F2", "#F2913D", "#223240", "#F24B0F"],
+    ["#6D808C", "#FFFFFF", "#D9AA8F", "#F2CAB3"],
+    ["#3C5E73", "#F2BBBB", "#FFFFFF", "#F24444"],
+    ["#F27ECA", "#9726A6", "#8F49F2", "#6C2EF2"],
+    ["#BF4B8B", "#3981BF", "#1F628C", "#D92929"],
+    ["#F2B705", "#F27EA9", "#05AFF2", "#F29F05", "#F2541B"],
+    ["#A60321", "#D9043D", "#F29F05", "#D8BA7A"],
+    ["#F24452", "#5CE3F2", "#F2E205", "#F2CB05", "#F29D35"],
+    ["#2d3157", "#34c1bb", "#badccc", "#ffda4d"],
+    ["#CCCCCC", "#F2F2F2", "#B3B3B3", "#E6E6E6"],
+    ["#F2F2F2", "#A6A6A6", "#0D0D0D", "#202020"],
+  ];
+  const BACKGROUND_IMAGE = "assets/paper.jpg";
 
-async function setup() {
-  await initAudio("7_Rotation");
-  // add JS functionality to existing HTML elements
-  setupLoadingScreen(start);
-  initializeAppControls(restart);
-  initializeToolbarButtons();
-  // Create canvas and attach to container
-  const mainCanvas = createCanvas(windowWidth, windowHeight);
-  mainCanvas.parent(
-    document.querySelector('[data-element="canvas-container"]')
-  );
+  const state = {
+    // Core drawing state
+    bg: null,
+    drawLayer: null,
+    selectedBrush: 1,
+    lastDrawingBrush: 0,
 
-  pixelDensity(1); // Ignores retina displays
-  drawLayer = createGraphics(windowWidth, windowHeight);
-  drawLayer.colorMode(RGB, 255, 255, 255, 1000);
-  drawLayer.strokeCap(PROJECT);
-}
+    // Animation and effects
+    faderStart: 600,
+    brushBool: 0,
+    ellipseAnimated: 0,
+    justSetCenter: false,
 
-function start() {
-  counter = -1;
-  playSoundtrack();
-  restart();
-}
+    // Viewport dimensions
+    longEdge: 0,
+    shortEdge: 0,
+    circleRad: 0,
+    vMax: 0,
 
-function restart() {
-  clearActiveButtonState();
-  counter++;
-  selectedPalette++;
-  if (selectedPalette > palettes.length - 1) {
-    selectedPalette = 0;
-  }
-  setSwatchColors();
+    // Center point tracking
+    centerX: 0,
+    centerY: 0,
+    centeringActive: false,
 
-  fill(0);
-  ({ width, height, vMax } = calcViewportDimensions());
-  rotationDimensionCalc();
-  intX = width / 5;
-  intY = height / 2;
+    // Pattern configuration
+    selectedPalette: 0,
+    counter: -1,
+  };
 
-  if (counter >= rotArray.length) {
-    counter = 0;
+  // Lifecycle Methods
+  function preload() {
+    state.bg = p5.loadImage(BACKGROUND_IMAGE);
   }
 
-  drawState = 1;
-  drawLayer.clear();
+  async function setup() {
+    setupToolbarActions();
+    // Create canvas
+    const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
+    canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
-  changeBrush(1);
+    p5.pixelDensity(1);
 
-  render();
-}
+    // Create graphics layer
+    state.drawLayer = p5.createGraphics(p5.width, p5.height);
+    state.drawLayer.colorMode(p5.RGB, 255, 255, 255, 1000);
+    state.drawLayer.strokeCap(p5.PROJECT);
 
-function rotationDimensionCalc() {
-  if (width > height) {
-    longEdge = width;
-    shortEdge = height;
-    circleRad = shortEdge * 0.45;
-  } else {
-    longEdge = height;
-    shortEdge = width;
-    circleRad = shortEdge * 0.45;
-  }
-  centerX = width / 2;
-  centerY = height / 2;
-}
-
-function handlePointerStart(e) {
-  if (e && isClickOnButton(e)) {
-    return false;
+    state.vMax = calcViewportDimensions().vMax;
   }
 
-  faderStart = 600;
-
-  if (centeringActive) {
-    center();
-    justSetCenter = true; // Prevent immediate drawing
-    return false;
+  function start() {
+    state.counter = -1;
+    reset();
   }
 
-  return false;
-}
-function touchstart(e) {
-  return handlePointerStart(e);
-}
-function mousePressed(e) {
-  return handlePointerStart(e);
-}
-
-function handlePointerEnd(e) {
-  if (justSetCenter) {
-    justSetCenter = false;
-    return false;
-  }
-}
-function mouseReleased(e) {
-  return handlePointerEnd(e);
-}
-function touchend(e) {
-  return handlePointerEnd(e);
-}
-
-function handleDrag(e) {
-  if (e && isClickOnButton(e)) {
-    return false;
-  }
-
-  if (centeringActive || justSetCenter) {
-    // Don't draw if we're picking a new center or have just set the center
-    return false;
-  }
-
-  makeDrawing(winMouseX, winMouseY, pwinMouseX, pwinMouseY);
-  render();
-
-  return false;
-}
-function touchMoved(e) {
-  return handleDrag(e);
-}
-function mouseDragged(e) {
-  return handleDrag(e);
-}
-
-function makeDrawing(_x, _y, pX, pY) {
-  qtyRot = rotArray[counter];
-
-  if (brushSelected < 6) {
-    for (let i = 0; i < qtyRot; i++) {
-      drawLayer.push();
-      drawLayer.translate(centerX, centerY);
-      drawLayer.rotate(((2 * PI) / qtyRot) * i);
-      drawLayer.translate(-centerX, -centerY);
-      brushIt(_x, _y, pX, pY);
-      drawLayer.pop();
+  function draw() {
+    if (state.ellipseAnimated > 5) {
+      // Only draw if opacity is meaningful
+      render();
+      state.ellipseAnimated -= 5;
+      p5.fill(255, state.ellipseAnimated);
+      p5.noStroke();
+      p5.ellipse(
+        state.centerX,
+        state.centerY,
+        (255 - state.ellipseAnimated) / 4,
+        (255 - state.ellipseAnimated) / 4
+      );
+    } else if (state.ellipseAnimated > 0) {
+      // When we get below threshold, just set to 0 without drawing
+      state.ellipseAnimated = 0;
+      render(); // Final render without the circle
     }
-  } else {
-    brushIt(_x, _y, pX, pY);
-  }
-}
-
-function brushIt(_x, _y, pX, pY) {
-  if (brushSelected === 0) {
-    drawLayer.strokeWeight(constrain(abs(_y + _x - (pX + pY)), 3, 4)); // for line work
-    drawLayer.line(_x, _y, pX, pY);
-  } else if (brushSelected === 1) {
-    if (faderStart <= 0) {
-      brushBool = 0;
-    }
-    if (faderStart >= 1000) {
-      brushBool = 1;
-    }
-    if (brushBool === 0) {
-      faderStart += 20;
-    }
-    if (brushBool === 1) {
-      faderStart -= 20;
-    }
-    drawLayer.stroke(
-      colorAlpha(palettes[selectedPalette][1], 0.25 + faderStart / 2000)
-    );
-
-    drawLayer.line(_x, _y, pX, pY);
   }
 
-  if (brushSelected === 2) {
-    for (i = 0; i < 10; i++) {
-      let randX = randomGaussian(-5, 5);
-      let randY = randomGaussian(-5, 5);
-      drawLayer.line(_x + randX, _y + randY, pX + randX, pY + randY);
-    }
-  } else if (brushSelected === 3) {
-    for (i = 0; i < 4; i++) {
-      drawLayer.point(_x + randomGaussian(-4, 4), _y + randomGaussian(-4, 4));
-    }
-  } else if (brushSelected === 4) {
-    drawLayer.strokeWeight(constrain(abs(_y + _x - (pX + pY)), 30, 40)); // for line work
-    drawLayer.line(_x, _y, pX, pY);
-  } else if (brushSelected === 6) {
-    // eraser
-    drawLayer.blendMode(REMOVE);
-    drawLayer.noStroke();
-    drawLayer.fill(255, 127);
-    drawLayer.circle(_x, _y, 50);
-    drawLayer.blendMode(BLEND);
-  }
-}
+  function reset() {
+    clearActiveButtonState();
 
-function reCenter(e) {
-  if (e) {
-    e.stopPropagation();
-  }
-  centeringActive = true;
-  clearActiveButtonState();
-  return false;
-}
+    // Cycle through counters and palettes
+    state.counter = (state.counter + 1) % ROTATION_MODES.length;
+    state.selectedPalette = (state.selectedPalette + 1) % PALETTES.length;
 
-function center() {
-  centeringActive = false;
-  centerX = mouseX;
-  centerY = mouseY;
-  ellipseAnimated = 255;
-  clearActiveButtonState();
-}
+    setSwatchColors();
 
-function draw() {
-  if (ellipseAnimated > 0) {
+    // Calculate dimensions
+    const { vMax } = calcViewportDimensions();
+    state.vMax = vMax;
+    rotationDimensionCalc();
+
+    // Reset drawing state
+    state.drawLayer.clear();
+    changeBrush(1);
     render();
-    ellipseAnimated -= 5;
-    fill(255, ellipseAnimated);
-    ellipse(
-      centerX,
-      centerY,
-      (255 - ellipseAnimated) / 4,
-      (255 - ellipseAnimated) / 4
+  }
+
+  function rotationDimensionCalc() {
+    if (p5.width > p5.height) {
+      state.longEdge = p5.width;
+      state.shortEdge = p5.height;
+      state.circleRad = state.shortEdge * 0.45;
+    } else {
+      state.longEdge = p5.height;
+      state.shortEdge = p5.width;
+      state.circleRad = state.shortEdge * 0.45;
+    }
+    state.centerX = p5.width / 2;
+    state.centerY = p5.height / 2;
+  }
+
+  function makeDrawing(currentX, currentY, previousX, previousY) {
+    const qtyRot = ROTATION_MODES[state.counter];
+
+    if (state.selectedBrush > 0) {
+      for (let i = 0; i < qtyRot; i++) {
+        state.drawLayer.push();
+        state.drawLayer.translate(state.centerX, state.centerY);
+        state.drawLayer.rotate((p5.TWO_PI / qtyRot) * i);
+        state.drawLayer.translate(-state.centerX, -state.centerY);
+        brushIt(currentX, currentY, previousX, previousY);
+        state.drawLayer.pop();
+      }
+    } else {
+      brushIt(currentX, currentY, previousX, previousY);
+    }
+  }
+
+  function brushIt(currentX, currentY, previousX, previousY) {
+    switch (state.selectedBrush) {
+      case 0:
+        handleEraser(currentX, currentY);
+        break;
+
+      case 1:
+        handleSimpleLineBrush(currentX, currentY, previousX, previousY);
+        break;
+
+      case 2:
+        handleFaderBrush(currentX, currentY, previousX, previousY);
+        break;
+
+      case 3:
+        handleScatterBrush(currentX, currentY, previousX, previousY);
+        break;
+
+      case 4:
+        handleDotBrush(currentX, currentY);
+        break;
+
+      case 5:
+        handleThickLineBrush(currentX, currentY, previousX, previousY);
+        break;
+
+      default:
+        console.warn("Invalid brush selected:", state.selectedBrush);
+        break;
+    }
+  }
+
+  function handleEraser(currentX, currentY) {
+    state.drawLayer.erase();
+    state.drawLayer.noStroke();
+    state.drawLayer.ellipse(currentX, currentY, state.vMax * 4, state.vMax * 4);
+    state.drawLayer.noErase();
+  }
+
+  function handleSimpleLineBrush(currentX, currentY, previousX, previousY) {
+    state.drawLayer.strokeWeight(
+      p5.constrain(p5.abs(currentY + currentX - (previousX + previousY)), 3, 4)
     );
-  }
-}
-
-function render() {
-  image(bg, 0, 0, width, height);
-  image(drawLayer, 0, 0, width, height);
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  const { dimensions } = handleResize();
-  ({ width, height, vMax } = dimensions);
-  rotationDimensionCalc();
-  drawLayer.strokeCap(SQUARE);
-  render();
-}
-
-// Set the button colours
-function setSwatchColors() {
-  swatchButtons = document.querySelectorAll('[data-element="swatch"]');
-  swatchButtons.forEach((swatch, index) => {
-    swatch.style.backgroundColor = palettes[selectedPalette][index];
-  });
-}
-
-function eraser(e) {
-  if (e) {
-    e.stopPropagation();
-  }
-  clearActiveButtonState();
-  brushSelected = 6;
-}
-
-function changeBrush(brushSel, e) {
-  if (e) {
-    e.stopPropagation();
-  }
-  brushSelected = brushSel - 1;
-  strokeAssign();
-}
-
-function strokeAssign() {
-  if (brushSelected === 0) {
-    drawLayer.stroke(palettes[selectedPalette][0]);
-  } else if (brushSelected === 1) {
-    drawLayer.strokeWeight(12); // for line work
+    state.drawLayer.line(currentX, currentY, previousX, previousY);
   }
 
-  if (brushSelected === 2) {
-    drawLayer.strokeWeight(2); // for line work
-    drawLayer.stroke(colorAlpha(palettes[selectedPalette][2], 0.6));
-  } else if (brushSelected === 3) {
-    drawLayer.strokeWeight(8);
-    drawLayer.stroke(colorAlpha(palettes[selectedPalette][3], 0.55));
-  } else if (brushSelected === 4) {
-    drawLayer.stroke(colorAlpha(palettes[selectedPalette][4], 0.5));
-  } else if (brushSelected === 5) {
-    // nothing
-  }
-}
+  function handleFaderBrush(currentX, currentY, previousX, previousY) {
+    if (state.faderStart <= 0) state.brushBool = 0;
+    if (state.faderStart >= 1000) state.brushBool = 1;
 
-window.addEventListener("resize", windowResized);
+    state.faderStart += state.brushBool === 0 ? 20 : -20;
+
+    state.drawLayer.stroke(
+      colorAlpha(
+        p5,
+        PALETTES[state.selectedPalette][1],
+        0.25 + state.faderStart / 2000
+      )
+    );
+    state.drawLayer.line(currentX, currentY, previousX, previousY);
+  }
+
+  function handleScatterBrush(currentX, currentY, previousX, previousY) {
+    for (let i = 0; i < 10; i++) {
+      const randX = p5.randomGaussian(-5, 5);
+      const randY = p5.randomGaussian(-5, 5);
+      state.drawLayer.line(
+        currentX + randX,
+        currentY + randY,
+        previousX + randX,
+        previousY + randY
+      );
+    }
+  }
+
+  function handleDotBrush(currentX, currentY) {
+    for (let i = 0; i < 4; i++) {
+      state.drawLayer.point(
+        currentX + p5.randomGaussian(-4, 4),
+        currentY + p5.randomGaussian(-4, 4)
+      );
+    }
+  }
+
+  function handleThickLineBrush(currentX, currentY, previousX, previousY) {
+    state.drawLayer.strokeWeight(
+      p5.constrain(
+        p5.abs(currentY + currentX - (previousX + previousY)),
+        30,
+        40
+      )
+    );
+    state.drawLayer.line(currentX, currentY, previousX, previousY);
+  }
+
+  function reCenter(e) {
+    if (e) e.stopPropagation();
+    state.centeringActive = true;
+  }
+
+  function center() {
+    state.centeringActive = false;
+    state.centerX = p5.mouseX;
+    state.centerY = p5.mouseY;
+    state.ellipseAnimated = 255;
+    clearActiveButtonState();
+    render();
+  }
+
+  function render() {
+    p5.image(state.bg, 0, 0, p5.width, p5.height);
+    p5.image(state.drawLayer, 0, 0, p5.width, p5.height);
+  }
+
+  function windowResized() {
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+    const { dimensions, resizedLayers } = handleResize(p5, [
+      state.bg,
+      state.drawLayer,
+    ]);
+
+    [state.bg, state.drawLayer] = resizedLayers;
+    state.vMax = dimensions.vMax;
+
+    rotationDimensionCalc();
+    state.drawLayer.strokeCap(p5.SQUARE);
+    render();
+  }
+
+  function setupToolbarActions() {
+    const toolbar = document.querySelector('[data-element="toolbar"]');
+    if (!toolbar) return;
+
+    const brushButtons = toolbar.querySelectorAll("[data-brush]");
+    brushButtons.forEach((button) => {
+      addInteractionHandlers(button, (event) => {
+        const brushNumber = parseInt(button.dataset.brush);
+        changeBrush(brushNumber, event);
+      });
+    });
+
+    const newCenterButton = toolbar.querySelector(
+      '[data-element="new-center-button"]'
+    );
+    if (newCenterButton) {
+      addInteractionHandlers(newCenterButton, (event) => {
+        reCenter(event);
+      });
+    }
+  }
+
+  function setSwatchColors() {
+    const swatchButtons = document.querySelectorAll('[data-element="swatch"]');
+    swatchButtons.forEach((swatch, index) => {
+      swatch.style.backgroundColor = PALETTES[state.selectedPalette][index];
+    });
+  }
+
+  function changeBrush(brushSel, e) {
+    if (e) e.stopPropagation();
+
+    state.selectedBrush = brushSel;
+    strokeAssign();
+  }
+
+  function strokeAssign() {
+    const currentPalette = PALETTES[state.selectedPalette];
+
+    switch (state.selectedBrush) {
+      case 0:
+        // Empty case - no stroke settings for eraser
+        break;
+
+      case 1:
+        state.drawLayer.stroke(currentPalette[0]);
+        break;
+
+      case 2:
+        state.drawLayer.strokeWeight(12);
+        break;
+
+      case 3:
+        state.drawLayer.strokeWeight(2);
+        state.drawLayer.stroke(colorAlpha(p5, currentPalette[2], 0.6));
+        break;
+
+      case 4:
+        state.drawLayer.strokeWeight(8);
+        state.drawLayer.stroke(colorAlpha(p5, currentPalette[3], 0.55));
+        break;
+
+      case 5:
+        state.drawLayer.stroke(colorAlpha(p5, currentPalette[4], 0.5));
+        break;
+
+      default:
+        console.warn("Invalid brush selected:", state.selectedBrush);
+        break;
+    }
+  }
+
+  // Event handlers
+  function handlePointerStart(e) {
+    if (e && isClickOnButton(e)) return false;
+
+    state.faderStart = 600;
+
+    if (state.centeringActive) {
+      center();
+      state.justSetCenter = true;
+      return false;
+    }
+
+    return false;
+  }
+
+  function handlePointerEnd() {
+    if (state.justSetCenter) {
+      state.justSetCenter = false;
+      return false;
+    }
+  }
+
+  function handleMove(currentX, currentY, previousX, previousY, event) {
+    if (event && isClickOnButton(event)) return false;
+
+    if (state.centeringActive || state.justSetCenter) {
+      return false;
+    }
+
+    makeDrawing(currentX, currentY, previousX, previousY);
+    render();
+
+    return false;
+  }
+
+  return {
+    preload,
+    setup,
+    draw,
+    start,
+    reset,
+    makeDrawing,
+    render,
+    windowResized,
+    handlePointerStart,
+    handlePointerEnd,
+    handleMove,
+    reCenter,
+    changeBrush,
+  };
+}

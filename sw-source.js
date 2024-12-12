@@ -4,16 +4,24 @@ import { ExpirationPlugin } from "@serwist/expiration";
 import { CacheableResponsePlugin } from "@serwist/cacheable-response";
 import { Route } from "@serwist/routing";
 
-// Debug helper
-function logResponseDetails(phase, request, response) {
-  console.group(`${phase} - ${request.url}`);
-  console.log("Content-Type:", response.headers.get("Content-Type"));
-  console.log("Content-Length:", response.headers.get("Content-Length"));
-  console.log("Content-Encoding:", response.headers.get("Content-Encoding"));
-  console.log("Cache-Control:", response.headers.get("Cache-Control"));
-  console.log("All Headers:", [...response.headers.entries()]);
-  console.groupEnd();
-}
+// Debug helpers at global scope
+self.debugCache = async function () {
+  const cache = await caches.open(
+    "serwist-precache-v2-https://mindart-nine.vercel.app/"
+  );
+  const keys = await cache.keys();
+  for (const request of keys) {
+    const response = await cache.match(request);
+    console.group("Cache entry:", request.url);
+    console.log("Type:", response.headers.get("Content-Type"));
+    console.log("Length:", response.headers.get("Content-Length"));
+    console.log("Encoding:", response.headers.get("Content-Encoding"));
+    const clone = response.clone();
+    const body = await clone.blob();
+    console.log("Actual blob size:", body.size);
+    console.groupEnd();
+  }
+};
 
 const sw = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
@@ -21,93 +29,37 @@ const sw = new Serwist({
   clientsClaim: true,
   precacheOptions: {
     cleanupOutdatedCaches: true,
-    plugins: [
-      {
-        precacheWillUpdate: async ({ request, response }) => {
-          console.log("Precaching started for:", request.url);
-          logResponseDetails("Before Precache", request, response);
-
-          // Clone and log the response before returning
-          const clone = response.clone();
-          const body = await clone.blob();
-          console.log("Body size:", body.size);
-
-          const newResponse = new Response(body, {
-            headers: new Headers({
-              "Content-Type": response.headers.get("Content-Type"),
-              "Content-Length": body.size.toString(),
-              ...Object.fromEntries(response.headers.entries()),
-            }),
-            status: response.status,
-            statusText: response.statusText,
-          });
-
-          logResponseDetails("After Precache Transform", request, newResponse);
-          return newResponse;
-        },
-      },
-    ],
   },
 });
 
-// Runtime caching as fallback
-sw.registerRoute(
-  new Route(
-    ({ url }) => true,
-    new CacheFirst({
-      cacheName: "mindart-runtime",
-      plugins: [
-        new ExpirationPlugin({
-          maxAgeSeconds: 30 * 24 * 60 * 60,
-          maxEntries: 500,
-          purgeOnQuotaError: true,
-        }),
-        new CacheableResponsePlugin({
-          statuses: [0, 200],
-        }),
-        {
-          cacheWillUpdate: async ({ request, response }) => {
-            console.log("Runtime caching started for:", request.url);
-            logResponseDetails("Runtime Cache", request, response);
-            return response;
-          },
-        },
-      ],
-    })
-  )
-);
-
-// Additional event debugging
+// Debug the precaching process
 self.addEventListener("install", (event) => {
-  console.log("Service Worker installing.");
+  console.log("[DEBUG] Service Worker installing");
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      console.log("Current caches:", cacheNames);
-    })
+    (async () => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for precaching
+        console.log("[DEBUG] Checking cache contents after install");
+        await self.debugCache();
+      } catch (err) {
+        console.error("[DEBUG] Install error:", err);
+      }
+    })()
   );
 });
 
 self.addEventListener("activate", (event) => {
-  console.log("Service Worker activating.");
+  console.log("[DEBUG] Service Worker activating");
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      console.log("Active caches after activation:", cacheNames);
-
-      // Log the contents of each cache
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          return caches.open(cacheName).then((cache) => {
-            return cache.keys().then((requests) => {
-              console.group(`Cache contents for ${cacheName}:`);
-              requests.forEach((request) => {
-                console.log(request.url);
-              });
-              console.groupEnd();
-            });
-          });
-        })
-      );
-    })
+    (async () => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for activation
+        console.log("[DEBUG] Checking cache contents after activate");
+        await self.debugCache();
+      } catch (err) {
+        console.error("[DEBUG] Activate error:", err);
+      }
+    })()
   );
 });
 

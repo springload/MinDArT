@@ -7,7 +7,7 @@ let rotateDirection = -1; // Used during orientation changes
  * Calculates key viewport dimensions
  * @returns {Object} Object containing width, height, vMin, and vMax values
  */
-function calcViewportDimensions() {
+export function calcViewportDimensions() {
   const width = window.innerWidth;
   const height = window.innerHeight;
   const isLandscape = width > height;
@@ -22,38 +22,39 @@ function calcViewportDimensions() {
  * @param {p5.Graphics} buffer - The graphics buffer to clean up
  * @returns {null} Returns null to allow garbage collection
  */
-function cleanupGraphics(buffer) {
-  // Instead of trying to remove the buffer, we'll just return null
-  // The garbage collector will handle the cleanup
+export function cleanupGraphics(buffer) {
   return null;
 }
 
 /**
  * Creates a new graphics layer with resized dimensions and optionally rotates content
+ * @param {p5} p5 - The p5 instance
  * @param {p5.Graphics|p5.Image} layer - The graphics layer to resize
  * @param {number} width - New width
  * @param {number} height - New height
- * @param {boolean} rotate - Whether to rotate the content (for orientation changes)
+ * @param {boolean} rotate - Whether to rotate the content
  * @param {number} direction - Direction of rotation (1 or -1)
  * @returns {p5.Graphics} New resized graphics layer
  */
-function resizeGraphicsLayer(
+export function resizeGraphicsLayer(
+  p5,
   layer,
   width,
   height,
   rotate = false,
   direction = 1
 ) {
-  // Create a new graphics buffer with the new dimensions
-  const newLayer = createGraphics(width, height);
+  const newLayer = p5.createGraphics(width, height);
 
-  // Handle different types of layers (p5.Image vs p5.Graphics)
-  if (layer instanceof p5.Image) {
+  // A p5.Image has loadPixels but no strokeWeight
+  // A p5.Graphics has both loadPixels and strokeWeight
+  const isImage = layer.loadPixels && !layer.strokeWeight;
+  if (isImage) {
     if (rotate) {
       // Apply rotation transformation for orientation changes
       newLayer.push();
       newLayer.translate(width / 2, height / 2);
-      newLayer.rotate((PI / 2) * direction);
+      newLayer.rotate((p5.PI / 2) * direction);
       newLayer.translate(-height / 2, -width / 2);
       newLayer.image(layer, 0, 0, height, width);
       newLayer.pop();
@@ -61,12 +62,11 @@ function resizeGraphicsLayer(
       // Simple resize without rotation
       newLayer.image(layer, 0, 0, width, height);
     }
-  } else if (layer instanceof p5.Graphics) {
-    // Same handling for p5.Graphics objects
+  } else {
     if (rotate) {
       newLayer.push();
       newLayer.translate(width / 2, height / 2);
-      newLayer.rotate((PI / 2) * direction);
+      newLayer.rotate((p5.PI / 2) * direction);
       newLayer.translate(-height / 2, -width / 2);
       newLayer.image(layer, 0, 0, height, width);
       newLayer.pop();
@@ -75,51 +75,43 @@ function resizeGraphicsLayer(
     }
   }
 
-  // Clean up the old layer to prevent memory leaks
   layer = cleanupGraphics(layer);
-
   return newLayer;
 }
 
 /**
  * Main resize handler - manages orientation changes and layer resizing
+ * @param {p5} p5 - The p5 instance
  * @param {Array} layers - Array of graphics layers to resize
  * @returns {Object} Object containing new dimensions, resized layers, and orientation info
  */
-function handleResize(layers = []) {
-  // Get new viewport dimensions
+export function handleResize(p5, layers = []) {
   const dimensions = calcViewportDimensions();
   const { width, height } = dimensions;
 
-  // Check if orientation has changed
   const currentOrientation = width < height ? "portrait" : "landscape";
   const orientationChanged = currentOrientation !== storedOrientation;
 
   let direction = 1;
   if (orientationChanged) {
-    // Determine rotation direction based on orientation change
     if (window.orientation < storedOrientationDegrees) {
       direction = 1;
     } else {
       direction = -1;
     }
 
-    // Handle edge case for 270-degree rotation
     if (Math.abs(window.orientation - storedOrientationDegrees) === 270) {
       direction = -direction;
     }
 
-    // Update stored orientation values
     storedOrientationDegrees = window.orientation;
     rotateDirection *= -1;
   }
 
-  // Resize all provided graphics layers
   const resizedLayers = layers.map((layer) =>
-    resizeGraphicsLayer(layer, width, height, orientationChanged, direction)
+    resizeGraphicsLayer(p5, layer, width, height, orientationChanged, direction)
   );
 
-  // Store current orientation for next comparison
   storedOrientation = currentOrientation;
 
   return {
