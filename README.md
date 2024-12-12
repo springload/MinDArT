@@ -1,5 +1,6 @@
 # DevMinDArT
 
+
 # UPDATING THE PACKAGE
 1. Update 'manifest.json'
   - "Start_URL", "Short Name", Icons "src" 
