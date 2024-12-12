@@ -4,6 +4,17 @@ import { ExpirationPlugin } from "@serwist/expiration";
 import { CacheableResponsePlugin } from "@serwist/cacheable-response";
 import { Route } from "@serwist/routing";
 
+// Debug helper
+function logResponseDetails(phase, request, response) {
+  console.group(`${phase} - ${request.url}`);
+  console.log("Content-Type:", response.headers.get("Content-Type"));
+  console.log("Content-Length:", response.headers.get("Content-Length"));
+  console.log("Content-Encoding:", response.headers.get("Content-Encoding"));
+  console.log("Cache-Control:", response.headers.get("Cache-Control"));
+  console.log("All Headers:", [...response.headers.entries()]);
+  console.groupEnd();
+}
+
 const sw = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
@@ -12,22 +23,37 @@ const sw = new Serwist({
     cleanupOutdatedCaches: true,
     plugins: [
       {
-        // Debug plugin for precaching
         precacheWillUpdate: async ({ request, response }) => {
-          console.log("Precaching:", request.url);
-          console.log("Headers:", [...response.headers.entries()]);
-          return response;
+          console.log("Precaching started for:", request.url);
+          logResponseDetails("Before Precache", request, response);
+
+          // Clone and log the response before returning
+          const clone = response.clone();
+          const body = await clone.blob();
+          console.log("Body size:", body.size);
+
+          const newResponse = new Response(body, {
+            headers: new Headers({
+              "Content-Type": response.headers.get("Content-Type"),
+              "Content-Length": body.size.toString(),
+              ...Object.fromEntries(response.headers.entries()),
+            }),
+            status: response.status,
+            statusText: response.statusText,
+          });
+
+          logResponseDetails("After Precache Transform", request, newResponse);
+          return newResponse;
         },
       },
     ],
   },
 });
 
-// Runtime caching for any files not in precache
+// Runtime caching as fallback
 sw.registerRoute(
   new Route(
-    ({ url }) =>
-      url.pathname.match(/\.(js|html|css|png|jpg|jpeg|svg|gif|mp3|woff2)$/),
+    ({ url }) => true,
     new CacheFirst({
       cacheName: "mindart-runtime",
       plugins: [
@@ -40,10 +66,9 @@ sw.registerRoute(
           statuses: [0, 200],
         }),
         {
-          // Debug plugin for runtime caching
           cacheWillUpdate: async ({ request, response }) => {
-            console.log("Runtime caching:", request.url);
-            console.log("Headers:", [...response.headers.entries()]);
+            console.log("Runtime caching started for:", request.url);
+            logResponseDetails("Runtime Cache", request, response);
             return response;
           },
         },
@@ -52,13 +77,38 @@ sw.registerRoute(
   )
 );
 
-sw.addEventListeners();
-
-// Additional debugging
+// Additional event debugging
 self.addEventListener("install", (event) => {
   console.log("Service Worker installing.");
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      console.log("Current caches:", cacheNames);
+    })
+  );
 });
 
 self.addEventListener("activate", (event) => {
   console.log("Service Worker activating.");
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      console.log("Active caches after activation:", cacheNames);
+
+      // Log the contents of each cache
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          return caches.open(cacheName).then((cache) => {
+            return cache.keys().then((requests) => {
+              console.group(`Cache contents for ${cacheName}:`);
+              requests.forEach((request) => {
+                console.log(request.url);
+              });
+              console.groupEnd();
+            });
+          });
+        })
+      );
+    })
+  );
 });
+
+sw.addEventListeners();
