@@ -17,7 +17,7 @@
     <script src="../shared/audio.js"></script>
     <script src="brushes.js"></script>
     <script src="colourscape.js"></script>  
-    <script>
+    <script type="module">
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/dist/sw.js', { type: 'module' }).then(registration => {

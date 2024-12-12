@@ -19,7 +19,7 @@
     <script src="../shared/resize.js"></script>
     <script src="../shared/audio.js"></script>
     <script src="touchscape.js"></script>
-    <script>
+    <script type="module">
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/dist/sw.js', { type: 'module' }).then(registration => {
