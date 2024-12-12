@@ -2901,7 +2901,8 @@ var sw = new Serwist({
   },
   runtimeCaching: [
     {
-      urlPattern: /\.(?:png|jpg|jpeg|svg|gif|mp3|js|css|woff2)$/,
+      // Use new RegExp instead of RegExp literal
+      urlPattern: new RegExp("\\.(png|jpg|jpeg|svg|gif|mp3|js|css|woff2)$"),
       handler: "CacheFirst",
       options: {
         cacheName: "mindart-assets",
@@ -2917,7 +2918,8 @@ var sw = new Serwist({
       }
     },
     {
-      urlPattern: ({ request }) => request.mode === "navigate",
+      // Use proper RouteMatchCallback type
+      urlPattern: ({ url, request }) => request.mode === "navigate" && !url.pathname.startsWith("/_"),
       handler: "NetworkFirst",
       options: {
         cacheName: "mindart-pages",
