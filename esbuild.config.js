@@ -1,64 +1,62 @@
-import { Serwist } from "@serwist/sw";
+import * as esbuild from "esbuild";
+import { injectManifest } from "@serwist/build";
 
-// self.__SW_MANIFEST is a special placeholder that will be replaced during build
-// with an array of URLs and other metadata about files that should be precached.
-// The injectManifest function in our build process handles this replacement.
-const sw = new Serwist({
-  // This array will be populated with the list of files to precache
-  // It comes from the glob patterns we defined in our build config
-  precacheEntries: self.__SW_MANIFEST,
+async function build() {
+  // First, build the service worker
+  await esbuild.build({
+    entryPoints: ["sw.js"],
+    bundle: true,
+    outfile: "dist/sw.js",
+    format: "esm",
+    platform: "browser",
+    target: ["chrome70", "firefox78", "safari13", "edge79"],
+  });
 
-  // skipWaiting: true means the new service worker will activate immediately
-  // rather than waiting for all tabs using the old version to close
-  skipWaiting: true,
+  const result = await injectManifest({
+    swSrc: "dist/sw.js",
+    swDest: "dist/sw.js",
+    globDirectory: ".",
+    globPatterns: [
+      // HTML files
+      "*.html",
+      "MinDArT-*/*.html",
+      // JavaScript files
+      "*.js",
+      "MinDArT-*/*.js",
+      "shared/*.js",
+      "libraries/*.min.js", // only minified versions
+      // CSS files
+      "css/**/*.css",
+      // Assets
+      "assets/**/*.{png,jpg,svg}",
+      "MinDArT-*/assets/**/*.{png,jpg}",
+      // Fonts
+      "css/fonts/*.woff2",
+      // Sound files
+      "sound/*.mp3",
+    ],
+    globIgnores: [
+      "node_modules/**/*",
+      "dist/**/*",
+      "docs/**/*",
+      "james_notes/**/*",
+      "esbuild.config.js",
+      "sw.js",
+      "package*.json",
+      "README.md",
+    ],
+    maximumFileSizeToCacheInBytes: 6 * 1024 * 1024, // p5.js is currently 4.5MB — adding some headroom
+  });
 
-  // clientsClaim: true means the service worker will take control of all pages
-  // within scope immediately, rather than waiting for them to be reloaded
-  clientsClaim: true,
+  if (result.warnings.length > 0) {
+    console.warn("Warnings during service worker build:", result.warnings);
+  }
+  console.log(
+    `Precache manifest generated: ${result.count} files, totaling ${result.size} bytes`
+  );
+}
 
-  // Options specific to precaching behavior
-  precacheOptions: {
-    // This will remove any cached files that are no longer in the manifest
-    // when a new service worker is activated
-    cleanupOutdatedCaches: true,
-  },
-
-  // runtimeCaching defines how to handle requests that aren't in the precache
-  runtimeCaching: [
-    {
-      // urlPattern is a function that returns true for URLs that should use this strategy
-      // Here we're checking the request's destination property to determine the type of resource
-      urlPattern: ({ request }) =>
-        request.destination === "image" ||
-        request.destination === "script" ||
-        request.destination === "style" ||
-        request.destination === "font" ||
-        request.destination === "audio",
-      // 'CacheFirst' means we'll try to get the resource from the cache first
-      // Only if it's not in the cache will we fetch it from the network
-      // This is good for assets that don't change often
-      handler: "CacheFirst",
-      options: {
-        // Name of the cache where runtime-cached resources will be stored
-        // This is separate from the precache storage
-        cacheName: "mindart-assets",
-        expiration: {
-          // How long items should stay in the runtime cache
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-          maxEntries: 500, // Limit number of entries to prevent unlimited cache growth
-          purgeOnQuotaError: true, // Automatically cleanup if we hit storage limits
-        },
-        cacheableResponse: {
-          statuses: [0, 200], // Only cache successful responses (and opaque responses)
-        },
-      },
-    },
-  ],
+build().catch(function (err) {
+  console.error("Build failed:", err);
+  process.exit(1);
 });
-
-// Register event listeners for the service worker
-// This sets up handlers for install, activate, and fetch events
-// - install: precaches all the files in the manifest
-// - activate: cleans up old caches
-// - fetch: handles intercepting and responding to network requests
-sw.addEventListeners();

@@ -6,6 +6,7 @@
     "build": "node esbuild.config.js",
     "start": "dhost ."
   },
+  "type": "module",
   "dependencies": {
     "@serwist/build": "^9.0.11",
     "@serwist/precaching": "^9.0.11",

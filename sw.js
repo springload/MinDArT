@@ -1,13 +1,15 @@
-import { Serwist } from "@serwist/sw";
+import { Serwist } from "serwist";
 
-// self.__SW_MANIFEST will be replaced with the precache manifest during build
 const sw = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
+
   skipWaiting: true,
   clientsClaim: true,
+
   precacheOptions: {
     cleanupOutdatedCaches: true,
   },
+
   runtimeCaching: [
     {
       urlPattern: ({ request }) =>
@@ -21,6 +23,11 @@ const sw = new Serwist({
         cacheName: "mindart-assets",
         expiration: {
           maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          maxEntries: 500,
+          purgeOnQuotaError: true,
+        },
+        cacheableResponse: {
+          statuses: [0, 200],
         },
       },
     },
