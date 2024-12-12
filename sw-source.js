@@ -16,20 +16,30 @@ const sw = new Serwist({
 // Register asset route
 sw.registerRoute(
   new Route(
-    ({ url }) => {
-      return url.pathname.match(/\.(png|jpg|jpeg|svg|gif|mp3|js|css|woff2)$/);
-    },
-    new CacheFirst({
-      cacheName: "mindart-assets",
+    ({ url }) => url.pathname.endsWith(".js"),
+    new NetworkFirst({
+      cacheName: "mindart-scripts",
       plugins: [
-        new ExpirationPlugin({
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-          maxEntries: 500,
-          purgeOnQuotaError: true,
-        }),
         new CacheableResponsePlugin({
           statuses: [0, 200],
         }),
+        {
+          // Add a custom cacheWillUpdate plugin
+          cacheWillUpdate: async ({ response }) => {
+            // Clone the response before caching
+            const clonedResponse = response.clone();
+
+            // Ensure we have the full body
+            const body = await clonedResponse.blob();
+
+            // Create a new response with the full body
+            return new Response(body, {
+              headers: response.headers,
+              status: response.status,
+              statusText: response.statusText,
+            });
+          },
+        },
       ],
     })
   )
