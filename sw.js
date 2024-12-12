@@ -578,6 +578,17 @@ function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) 
   });
   return openPromise;
 }
+function deleteDB(name, { blocked } = {}) {
+  const request = indexedDB.deleteDatabase(name);
+  if (blocked) {
+    request.addEventListener("blocked", (event) => blocked(
+      // Casting due to https://github.com/microsoft/TypeScript-DOM-lib-generator/pull/1405
+      event.oldVersion,
+      event
+    ));
+  }
+  return wrap(request).then(() => void 0);
+}
 var readMethods = ["get", "getKey", "getAll", "getAllKeys", "count"];
 var writeMethods = ["put", "add", "delete", "clear"];
 var cachedMethods = /* @__PURE__ */ new Map();
@@ -2890,6 +2901,489 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
   }
 };
 var isSafari = typeof navigator !== "undefined" && /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+var CacheableResponse = class {
+  constructor(config = {}) {
+    __publicField(this, "_statuses");
+    __publicField(this, "_headers");
+    if (true) {
+      if (!(config.statuses || config.headers)) {
+        throw new SerwistError("statuses-or-headers-required", {
+          moduleName: "serwist",
+          className: "CacheableResponse",
+          funcName: "constructor"
+        });
+      }
+      if (config.statuses) {
+        finalAssertExports.isArray(config.statuses, {
+          moduleName: "serwist",
+          className: "CacheableResponse",
+          funcName: "constructor",
+          paramName: "config.statuses"
+        });
+      }
+      if (config.headers) {
+        finalAssertExports.isType(config.headers, "object", {
+          moduleName: "serwist",
+          className: "CacheableResponse",
+          funcName: "constructor",
+          paramName: "config.headers"
+        });
+      }
+    }
+    this._statuses = config.statuses;
+    if (config.headers) {
+      this._headers = new Headers(config.headers);
+    }
+  }
+  isResponseCacheable(response) {
+    if (true) {
+      finalAssertExports.isInstance(response, Response, {
+        moduleName: "serwist",
+        className: "CacheableResponse",
+        funcName: "isResponseCacheable",
+        paramName: "response"
+      });
+    }
+    let cacheable = true;
+    if (this._statuses) {
+      cacheable = this._statuses.includes(response.status);
+    }
+    if (this._headers && cacheable) {
+      for (const [headerName, headerValue] of this._headers.entries()) {
+        if (response.headers.get(headerName) !== headerValue) {
+          cacheable = false;
+          break;
+        }
+      }
+    }
+    if (true) {
+      if (!cacheable) {
+        logger.groupCollapsed(`The request for '${getFriendlyURL(response.url)}' returned a response that does not meet the criteria for being cached.`);
+        logger.groupCollapsed("View cacheability criteria here.");
+        logger.log(`Cacheable statuses: ${JSON.stringify(this._statuses)}`);
+        logger.log(`Cacheable headers: ${JSON.stringify(this._headers, null, 2)}`);
+        logger.groupEnd();
+        const logFriendlyHeaders = {};
+        response.headers.forEach((value, key) => {
+          logFriendlyHeaders[key] = value;
+        });
+        logger.groupCollapsed("View response status and headers here.");
+        logger.log(`Response status: ${response.status}`);
+        logger.log(`Response headers: ${JSON.stringify(logFriendlyHeaders, null, 2)}`);
+        logger.groupEnd();
+        logger.groupCollapsed("View full response details here.");
+        logger.log(response.headers);
+        logger.log(response);
+        logger.groupEnd();
+        logger.groupEnd();
+      }
+    }
+    return cacheable;
+  }
+};
+var CacheableResponsePlugin = class {
+  constructor(config) {
+    __publicField(this, "_cacheableResponse");
+    __publicField(this, "cacheWillUpdate", async ({ response }) => {
+      if (this._cacheableResponse.isResponseCacheable(response)) {
+        return response;
+      }
+      return null;
+    });
+    this._cacheableResponse = new CacheableResponse(config);
+  }
+};
+var DB_NAME = "serwist-expiration";
+var CACHE_OBJECT_STORE = "cache-entries";
+var normalizeURL = (unNormalizedUrl) => {
+  const url = new URL(unNormalizedUrl, location.href);
+  url.hash = "";
+  return url.href;
+};
+var CacheTimestampsModel = class {
+  constructor(cacheName) {
+    __publicField(this, "_cacheName");
+    __publicField(this, "_db", null);
+    this._cacheName = cacheName;
+  }
+  _getId(url) {
+    return `${this._cacheName}|${normalizeURL(url)}`;
+  }
+  _upgradeDb(db) {
+    const objStore = db.createObjectStore(CACHE_OBJECT_STORE, {
+      keyPath: "id"
+    });
+    objStore.createIndex("cacheName", "cacheName", {
+      unique: false
+    });
+    objStore.createIndex("timestamp", "timestamp", {
+      unique: false
+    });
+  }
+  _upgradeDbAndDeleteOldDbs(db) {
+    this._upgradeDb(db);
+    if (this._cacheName) {
+      void deleteDB(this._cacheName);
+    }
+  }
+  async setTimestamp(url, timestamp) {
+    url = normalizeURL(url);
+    const entry = {
+      id: this._getId(url),
+      cacheName: this._cacheName,
+      url,
+      timestamp
+    };
+    const db = await this.getDb();
+    const tx = db.transaction(CACHE_OBJECT_STORE, "readwrite", {
+      durability: "relaxed"
+    });
+    await tx.store.put(entry);
+    await tx.done;
+  }
+  async getTimestamp(url) {
+    const db = await this.getDb();
+    const entry = await db.get(CACHE_OBJECT_STORE, this._getId(url));
+    return entry == null ? void 0 : entry.timestamp;
+  }
+  async expireEntries(minTimestamp, maxCount) {
+    const db = await this.getDb();
+    let cursor = await db.transaction(CACHE_OBJECT_STORE, "readwrite").store.index("timestamp").openCursor(null, "prev");
+    const urlsDeleted = [];
+    let entriesNotDeletedCount = 0;
+    while (cursor) {
+      const result = cursor.value;
+      if (result.cacheName === this._cacheName) {
+        if (minTimestamp && result.timestamp < minTimestamp || maxCount && entriesNotDeletedCount >= maxCount) {
+          cursor.delete();
+          urlsDeleted.push(result.url);
+        } else {
+          entriesNotDeletedCount++;
+        }
+      }
+      cursor = await cursor.continue();
+    }
+    return urlsDeleted;
+  }
+  async getDb() {
+    if (!this._db) {
+      this._db = await openDB(DB_NAME, 1, {
+        upgrade: this._upgradeDbAndDeleteOldDbs.bind(this)
+      });
+    }
+    return this._db;
+  }
+};
+var CacheExpiration = class {
+  constructor(cacheName, config = {}) {
+    __publicField(this, "_isRunning", false);
+    __publicField(this, "_rerunRequested", false);
+    __publicField(this, "_maxEntries");
+    __publicField(this, "_maxAgeSeconds");
+    __publicField(this, "_matchOptions");
+    __publicField(this, "_cacheName");
+    __publicField(this, "_timestampModel");
+    if (true) {
+      finalAssertExports.isType(cacheName, "string", {
+        moduleName: "serwist",
+        className: "CacheExpiration",
+        funcName: "constructor",
+        paramName: "cacheName"
+      });
+      if (!(config.maxEntries || config.maxAgeSeconds)) {
+        throw new SerwistError("max-entries-or-age-required", {
+          moduleName: "serwist",
+          className: "CacheExpiration",
+          funcName: "constructor"
+        });
+      }
+      if (config.maxEntries) {
+        finalAssertExports.isType(config.maxEntries, "number", {
+          moduleName: "serwist",
+          className: "CacheExpiration",
+          funcName: "constructor",
+          paramName: "config.maxEntries"
+        });
+      }
+      if (config.maxAgeSeconds) {
+        finalAssertExports.isType(config.maxAgeSeconds, "number", {
+          moduleName: "serwist",
+          className: "CacheExpiration",
+          funcName: "constructor",
+          paramName: "config.maxAgeSeconds"
+        });
+      }
+    }
+    this._maxEntries = config.maxEntries;
+    this._maxAgeSeconds = config.maxAgeSeconds;
+    this._matchOptions = config.matchOptions;
+    this._cacheName = cacheName;
+    this._timestampModel = new CacheTimestampsModel(cacheName);
+  }
+  async expireEntries() {
+    if (this._isRunning) {
+      this._rerunRequested = true;
+      return;
+    }
+    this._isRunning = true;
+    const minTimestamp = this._maxAgeSeconds ? Date.now() - this._maxAgeSeconds * 1e3 : 0;
+    const urlsExpired = await this._timestampModel.expireEntries(minTimestamp, this._maxEntries);
+    const cache = await self.caches.open(this._cacheName);
+    for (const url of urlsExpired) {
+      await cache.delete(url, this._matchOptions);
+    }
+    if (true) {
+      if (urlsExpired.length > 0) {
+        logger.groupCollapsed(`Expired ${urlsExpired.length} ${urlsExpired.length === 1 ? "entry" : "entries"} and removed ${urlsExpired.length === 1 ? "it" : "them"} from the '${this._cacheName}' cache.`);
+        logger.log(`Expired the following ${urlsExpired.length === 1 ? "URL" : "URLs"}:`);
+        for (const url of urlsExpired) {
+          logger.log(`    ${url}`);
+        }
+        logger.groupEnd();
+      } else {
+        logger.debug("Cache expiration ran and found no entries to remove.");
+      }
+    }
+    this._isRunning = false;
+    if (this._rerunRequested) {
+      this._rerunRequested = false;
+      void this.expireEntries();
+    }
+  }
+  async updateTimestamp(url) {
+    if (true) {
+      finalAssertExports.isType(url, "string", {
+        moduleName: "serwist",
+        className: "CacheExpiration",
+        funcName: "updateTimestamp",
+        paramName: "url"
+      });
+    }
+    await this._timestampModel.setTimestamp(url, Date.now());
+  }
+  async isURLExpired(url) {
+    if (!this._maxAgeSeconds) {
+      if (true) {
+        throw new SerwistError("expired-test-without-max-age", {
+          methodName: "isURLExpired",
+          paramName: "maxAgeSeconds"
+        });
+      }
+      return false;
+    }
+    const timestamp = await this._timestampModel.getTimestamp(url);
+    const expireOlderThan = Date.now() - this._maxAgeSeconds * 1e3;
+    return timestamp !== void 0 ? timestamp < expireOlderThan : true;
+  }
+  async delete() {
+    this._rerunRequested = false;
+    await this._timestampModel.expireEntries(Number.POSITIVE_INFINITY);
+  }
+};
+var registerQuotaErrorCallback = (callback) => {
+  if (true) {
+    finalAssertExports.isType(callback, "function", {
+      moduleName: "@serwist/core",
+      funcName: "register",
+      paramName: "callback"
+    });
+  }
+  quotaErrorCallbacks.add(callback);
+  if (true) {
+    logger.log("Registered a callback to respond to quota errors.", callback);
+  }
+};
+var ExpirationPlugin = class {
+  constructor(config = {}) {
+    __publicField(this, "_config");
+    __publicField(this, "_cacheExpirations");
+    if (true) {
+      if (!(config.maxEntries || config.maxAgeSeconds)) {
+        throw new SerwistError("max-entries-or-age-required", {
+          moduleName: "serwist",
+          className: "ExpirationPlugin",
+          funcName: "constructor"
+        });
+      }
+      if (config.maxEntries) {
+        finalAssertExports.isType(config.maxEntries, "number", {
+          moduleName: "serwist",
+          className: "ExpirationPlugin",
+          funcName: "constructor",
+          paramName: "config.maxEntries"
+        });
+      }
+      if (config.maxAgeSeconds) {
+        finalAssertExports.isType(config.maxAgeSeconds, "number", {
+          moduleName: "serwist",
+          className: "ExpirationPlugin",
+          funcName: "constructor",
+          paramName: "config.maxAgeSeconds"
+        });
+      }
+      if (config.maxAgeFrom) {
+        finalAssertExports.isType(config.maxAgeFrom, "string", {
+          moduleName: "serwist",
+          className: "ExpirationPlugin",
+          funcName: "constructor",
+          paramName: "config.maxAgeFrom"
+        });
+      }
+    }
+    this._config = config;
+    this._cacheExpirations = /* @__PURE__ */ new Map();
+    if (!this._config.maxAgeFrom) {
+      this._config.maxAgeFrom = "last-fetched";
+    }
+    if (this._config.purgeOnQuotaError) {
+      registerQuotaErrorCallback(() => this.deleteCacheAndMetadata());
+    }
+  }
+  _getCacheExpiration(cacheName) {
+    if (cacheName === cacheNames.getRuntimeName()) {
+      throw new SerwistError("expire-custom-caches-only");
+    }
+    let cacheExpiration = this._cacheExpirations.get(cacheName);
+    if (!cacheExpiration) {
+      cacheExpiration = new CacheExpiration(cacheName, this._config);
+      this._cacheExpirations.set(cacheName, cacheExpiration);
+    }
+    return cacheExpiration;
+  }
+  cachedResponseWillBeUsed({ event, cacheName, request, cachedResponse }) {
+    if (!cachedResponse) {
+      return null;
+    }
+    const isFresh = this._isResponseDateFresh(cachedResponse);
+    const cacheExpiration = this._getCacheExpiration(cacheName);
+    const isMaxAgeFromLastUsed = this._config.maxAgeFrom === "last-used";
+    const done = (async () => {
+      if (isMaxAgeFromLastUsed) {
+        await cacheExpiration.updateTimestamp(request.url);
+      }
+      await cacheExpiration.expireEntries();
+    })();
+    try {
+      event.waitUntil(done);
+    } catch (error) {
+      if (true) {
+        if (event instanceof FetchEvent) {
+          logger.warn(`Unable to ensure service worker stays alive when updating cache entry for '${getFriendlyURL(event.request.url)}'.`);
+        }
+      }
+    }
+    return isFresh ? cachedResponse : null;
+  }
+  _isResponseDateFresh(cachedResponse) {
+    const isMaxAgeFromLastUsed = this._config.maxAgeFrom === "last-used";
+    if (isMaxAgeFromLastUsed) {
+      return true;
+    }
+    const now = Date.now();
+    if (!this._config.maxAgeSeconds) {
+      return true;
+    }
+    const dateHeaderTimestamp = this._getDateHeaderTimestamp(cachedResponse);
+    if (dateHeaderTimestamp === null) {
+      return true;
+    }
+    return dateHeaderTimestamp >= now - this._config.maxAgeSeconds * 1e3;
+  }
+  _getDateHeaderTimestamp(cachedResponse) {
+    if (!cachedResponse.headers.has("date")) {
+      return null;
+    }
+    const dateHeader = cachedResponse.headers.get("date");
+    const parsedDate = new Date(dateHeader);
+    const headerTime = parsedDate.getTime();
+    if (Number.isNaN(headerTime)) {
+      return null;
+    }
+    return headerTime;
+  }
+  async cacheDidUpdate({ cacheName, request }) {
+    if (true) {
+      finalAssertExports.isType(cacheName, "string", {
+        moduleName: "serwist",
+        className: "Plugin",
+        funcName: "cacheDidUpdate",
+        paramName: "cacheName"
+      });
+      finalAssertExports.isInstance(request, Request, {
+        moduleName: "serwist",
+        className: "Plugin",
+        funcName: "cacheDidUpdate",
+        paramName: "request"
+      });
+    }
+    const cacheExpiration = this._getCacheExpiration(cacheName);
+    await cacheExpiration.updateTimestamp(request.url);
+    await cacheExpiration.expireEntries();
+  }
+  async deleteCacheAndMetadata() {
+    for (const [cacheName, cacheExpiration] of this._cacheExpirations) {
+      await self.caches.delete(cacheName);
+      await cacheExpiration.delete();
+    }
+    this._cacheExpirations = /* @__PURE__ */ new Map();
+  }
+};
+var CacheFirst = class extends Strategy {
+  async _handle(request, handler) {
+    const logs = [];
+    if (true) {
+      finalAssertExports.isInstance(request, Request, {
+        moduleName: "serwist",
+        className: this.constructor.name,
+        funcName: "makeRequest",
+        paramName: "request"
+      });
+    }
+    let response = await handler.cacheMatch(request);
+    let error = void 0;
+    if (!response) {
+      if (true) {
+        logs.push(`No response found in the '${this.cacheName}' cache. Will respond with a network request.`);
+      }
+      try {
+        response = await handler.fetchAndCachePut(request);
+      } catch (err) {
+        if (err instanceof Error) {
+          error = err;
+        }
+      }
+      if (true) {
+        if (response) {
+          logs.push("Got response from network.");
+        } else {
+          logs.push("Unable to get a response from the network.");
+        }
+      }
+    } else {
+      if (true) {
+        logs.push(`Found a cached response in the '${this.cacheName}' cache.`);
+      }
+    }
+    if (true) {
+      logger.groupCollapsed(messages2.strategyStart(this.constructor.name, request));
+      for (const log of logs) {
+        logger.log(log);
+      }
+      messages2.printFinalResponse(response);
+      logger.groupEnd();
+    }
+    if (!response) {
+      throw new SerwistError("no-response", {
+        url: request.url,
+        error
+      });
+    }
+    return response;
+  }
+};
+
+// node_modules/serwist/dist/index.legacy.js
+var MAX_RETENTION_TIME3 = 60 * 48;
 
 // sw-source.js
 var sw = new Serwist({
@@ -2898,37 +3392,41 @@ var sw = new Serwist({
   clientsClaim: true,
   precacheOptions: {
     cleanupOutdatedCaches: true
-  },
-  runtimeCaching: [
-    {
-      // Use new RegExp instead of RegExp literal
-      urlPattern: new RegExp("\\.(png|jpg|jpeg|svg|gif|mp3|js|css|woff2)$"),
-      handler: "CacheFirst",
-      options: {
-        cacheName: "mindart-assets",
-        expiration: {
+  }
+});
+sw.registerRoute(
+  new Route(
+    ({ url }) => {
+      return url.pathname.match(/\.(png|jpg|jpeg|svg|gif|mp3|js|css|woff2)$/);
+    },
+    new CacheFirst({
+      cacheName: "mindart-assets",
+      plugins: [
+        new ExpirationPlugin({
           maxAgeSeconds: 30 * 24 * 60 * 60,
           // 30 days
           maxEntries: 500,
           purgeOnQuotaError: true
-        },
-        cacheableResponse: {
+        }),
+        new CacheableResponsePlugin({
           statuses: [0, 200]
-        }
-      }
-    },
-    {
-      // Use proper RouteMatchCallback type
-      urlPattern: ({ url, request }) => request.mode === "navigate" && !url.pathname.startsWith("/_"),
-      handler: "NetworkFirst",
-      options: {
-        cacheName: "mindart-pages",
-        expiration: {
+        })
+      ]
+    })
+  )
+);
+sw.registerRoute(
+  new Route(
+    ({ request }) => request.mode === "navigate",
+    new NetworkFirst({
+      cacheName: "mindart-pages",
+      plugins: [
+        new ExpirationPlugin({
           maxAgeSeconds: 30 * 24 * 60 * 60
           // 30 days
-        }
-      }
-    }
-  ]
-});
+        })
+      ]
+    })
+  )
+);
 sw.addEventListeners();
