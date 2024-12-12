@@ -1,8 +1,25 @@
 import { Serwist } from "serwist";
-import { CacheFirst, NetworkFirst } from "@serwist/strategies";
+import { CacheFirst } from "@serwist/strategies";
 import { ExpirationPlugin } from "@serwist/expiration";
 import { CacheableResponsePlugin } from "@serwist/cacheable-response";
 import { Route } from "@serwist/routing";
+
+self.__SW_MANIFEST;
+
+// Utility function to handle response cloning and body reading
+async function cloneAndCacheResponse(response, cache, request) {
+  // Create a new response with decompressed body
+  const blob = await response.blob();
+  const newResponse = new Response(blob, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: new Headers(response.headers),
+  });
+
+  // Cache the new response
+  await cache.put(request, newResponse.clone());
+  return newResponse;
+}
 
 const sw = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
@@ -13,7 +30,31 @@ const sw = new Serwist({
   },
 });
 
-// Register asset route
+// Handle JS, HTML, and CSS files with explicit decompression
+sw.registerRoute(
+  new Route(
+    ({ url }) => url.pathname.match(/\.(js|html|css)$/),
+    async ({ request }) => {
+      try {
+        // Try network first
+        const networkResponse = await fetch(request);
+        const cache = await caches.open("mindart-content");
+
+        // Clone and cache the response with decompressed body
+        return await cloneAndCacheResponse(networkResponse, cache, request);
+      } catch (error) {
+        // If network fails, try cache
+        const cachedResponse = await caches.match(request);
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        throw error;
+      }
+    }
+  )
+);
+
+// Register other asset route
 sw.registerRoute(
   new Route(
     ({ url }) => {
@@ -29,71 +70,6 @@ sw.registerRoute(
         }),
         new CacheableResponsePlugin({
           statuses: [0, 200],
-        }),
-      ],
-    })
-  )
-);
-
-// Special handling for JavaScript files
-sw.registerRoute(
-  new Route(
-    ({ url }) => url.pathname.endsWith(".js"),
-    async ({ request }) => {
-      try {
-        // Try network first
-        const networkResponse = await fetch(request);
-        const cache = await caches.open("mindart-scripts");
-
-        // Clone the response before consuming it
-        const responseToCache = networkResponse.clone();
-
-        // Cache the response
-        await cache.put(request, responseToCache);
-
-        // Return the original response
-        return networkResponse;
-      } catch (error) {
-        // If network fails, try cache
-        const cachedResponse = await caches.match(request);
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        throw error;
-      }
-    }
-  )
-);
-
-// Handle HTML and CSS files
-sw.registerRoute(
-  new Route(
-    ({ url }) => url.pathname.match(/\.(html|css)$/),
-    async ({ request }) => {
-      try {
-        const networkResponse = await fetch(request);
-        const cache = await caches.open("mindart-markup");
-        const responseToCache = networkResponse.clone();
-        await cache.put(request, responseToCache);
-        return networkResponse;
-      } catch (error) {
-        const cachedResponse = await caches.match(request);
-        if (cachedResponse) return cachedResponse;
-        throw error;
-      }
-    }
-  )
-);
-
-// Register navigation route
-sw.registerRoute(
-  new Route(
-    ({ request }) => request.mode === "navigate",
-    new NetworkFirst({
-      cacheName: "mindart-pages",
-      plugins: [
-        new ExpirationPlugin({
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         }),
       ],
     })
