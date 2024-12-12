@@ -4,8 +4,6 @@ import { ExpirationPlugin } from "@serwist/expiration";
 import { CacheableResponsePlugin } from "@serwist/cacheable-response";
 import { Route } from "@serwist/routing";
 
-self.__SW_MANIFEST;
-
 // Utility function to handle response cloning and body reading
 async function cloneAndCacheResponse(response, cache, request) {
   // Create a new response with decompressed body
