@@ -60,55 +60,23 @@ function setupLoadingScreen(onStart) {
  * @returns {Object} Object containing references to control elements
  */
 function initializeAppControls(resetCallback) {
-  const { appName } = document.body.dataset;
-  const appControls = document.querySelector('[data-element="app-controls"]');
+  const appControls = document.querySelector("app-controls");
+
   if (!appControls) {
     console.warn(
-      'No element with [data-element="app-controls"] found. App controls not initialized.'
+      "No app-controls element found. App controls not initialized."
     );
     return;
   }
 
-  // Add click sounds to navigation links
-  const links = appControls.querySelectorAll("a");
-  links.forEach(addClickSound);
-
-  // Configure buttons with their handlers
-  const buttonConfigs = [
-    {
-      name: "reset-button",
-      handler:
-        resetCallback || (() => console.warn("No reset callback provided")),
-    },
-    {
-      name: "save-button",
-      handler: () => {
-        save(`${appName}${month()}${day()}${hour()}${second()}.jpg`);
-      },
-    },
-  ];
-
-  // Initialize each button with its handler and click sound
-  const [resetButton, saveButton] = buttonConfigs.reduce(
-    (acc, { name, handler }) => {
-      const element = appControls.querySelector(`[data-element="${name}"]`);
-      if (!element) {
-        console.warn(
-          `${name} not found - missing element with data-element="${name}"`
-        );
-        return acc;
-      }
-      addClickSound(element);
-      element.addEventListener("click", handler);
-      return [...acc, element];
-    },
-    []
-  );
+  if (resetCallback) {
+    appControls.addEventListener("reset", resetCallback);
+  }
 
   return {
-    resetButton,
-    saveButton,
-    container: document.querySelector('[data-element="app-controls"]'),
+    resetButton: appControls.querySelector('[data-element="reset-button"]'),
+    saveButton: appControls.querySelector('[data-element="save-button"]'),
+    container: appControls,
   };
 }
 

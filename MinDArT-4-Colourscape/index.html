@@ -22,6 +22,7 @@
     <script src="../shared/resize.js"></script>
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
+    <script src="../components/app-controls.js"></script>
     <script src="brushes.js"></script>
     <script src="colourscape.js"></script>  
     <script type="module">
@@ -56,11 +57,7 @@
         <button id="draw" class="btn btn--white" onclick="switchToTrace()">Draw</button>
       </div>
       
-      <div class="app-controls" data-element="app-controls">
-        <a href="/" class="btn btn--theme">Main Menu</a>
-        <button class="btn btn--theme" data-element="reset-button">New</button>
-        <button class="btn btn--theme" data-element="save-button">Save</button>
-      </div>
+      <app-controls app-name="colourscape"></app-controls>
     </div>
     
   </body>

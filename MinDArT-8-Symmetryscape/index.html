@@ -23,6 +23,7 @@
     <script src="../shared/resize.js"></script>
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
+    <script src="../components/app-controls.js"></script>
     <script src="symmetryscape.js"></script>
     <script type="module">
       if ('serviceWorker' in navigator) {
@@ -59,25 +60,9 @@
         </div>
       </div>
 
-      <div class="app-controls" data-element="app-controls">
-        <a href="/" class="btn btn--theme">Main Menu</a>
-        <button class="btn btn--theme" data-element="reset-button">New</button>
-        <button class="btn btn--theme" data-element="save-button">Save</button>
-      </div>
+      <app-controls app-name="symmetryscape"></app-controls>
     </div>
 
-  </body>
-  <!-- Bottom left action buttons, initially hidden on load -->
-  <div id="myDIV" class="bottom-left">
-    <button id="id-erase" class="btn button-white" onclick="eraser()">Erase</button>
-    <button id="id-paint" class="btn btn_flatright">Draw</button>
-    <button id="colourOne" class="btn btn_mid" onclick="changeBrush(1)"></button>
-    <button id="colourTwo" class="btn btn_mid" onclick="changeBrush(2)"></button>
-    <button id="colourThree" class="btn btn_mid" onclick="changeBrush(3)"></button>
-    <button id="colourFour" class="btn btn_mid" onclick="changeBrush(4)"></button>
-    <button id="colourFive" class="btn btn_mid" onclick="changeBrush(5)"></button>
-    <button id="colourSix" class="btn btn_flatleft" onclick="changeBrush(6)"></button>
-  </div>
   </body>
 
 </html>
