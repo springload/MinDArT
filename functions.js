@@ -45,21 +45,13 @@ function hasActiveClass(el) {
  * @param {Function} onStart - Callback function to execute when start button is clicked
  */
 function setupLoadingScreen(onStart) {
-  const dialog = document.querySelector('[data-element="loading-dialog"]');
-  const startButton = dialog.querySelector('[data-element="start-button"]');
+  const loadingDialog = document.querySelector("loading-dialog");
 
-  if (!dialog || !startButton) {
-    throw new Error("Loading manager: Required elements not found");
+  if (!loadingDialog) {
+    throw new Error("Loading dialog not found");
   }
 
-  addClickSound(startButton);
-
-  startButton.addEventListener("click", () => {
-    dialog.close();
-    onStart();
-  });
-  // This is called after `preload` has finished, so now that p5 assets are loaded, we can show the start button
-  startButton.style.display = "block";
+  loadingDialog.addEventListener("start", onStart);
 }
 
 /**

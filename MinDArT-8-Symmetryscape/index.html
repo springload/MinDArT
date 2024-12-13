@@ -22,6 +22,7 @@
     <script src="../functions.js"></script>
     <script src="../shared/resize.js"></script>
     <script src="../shared/audio.js"></script>
+    <script src="../components/loading-dialog.js"></script>
     <script src="symmetryscape.js"></script>
     <script type="module">
       if ('serviceWorker' in navigator) {
@@ -40,17 +41,7 @@
   </head>
 
   <body class="symmetryscape u-theme-teal" data-app-name="symmetryscape">
-    <dialog class="loading-screen" data-element="loading-dialog" open>
-      <div class="loading-screen__inner">
-        <div class="loading-screen__loading" id="p5_loading">
-          <img src="../assets/symmetryscape-icon-white.png">
-          <p class="loading-screen__text">Loading...</p>
-        </div>
-        <button class="loading-screen__start" data-element="start-button">
-          Touch here to begin
-        </button>
-      </div>
-    </dialog>
+    <loading-dialog app-name="symmetryscape"></loading-dialog>
 
     <div data-element="canvas-container"></div>
 
