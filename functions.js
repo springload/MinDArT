@@ -151,14 +151,15 @@ function setupCanvasEventListeners() {
     '[data-element="canvas-container"]'
   );
   const canvas = canvasContainer.querySelector("canvas");
-  canvas.addEventListener("touchmove", moved, { passive: false }); // passive: false prevents scroll on touch
+  canvas.addEventListener("touchmove", moved, { passive: false });
   canvas.addEventListener("mousemove", moved);
   canvas.addEventListener("touchstart", touchdown);
   canvas.addEventListener("mousedown", touchdown);
   canvas.addEventListener("touchend", touchstop);
   canvas.addEventListener("touchleave", touchstop);
+  canvas.addEventListener("touchcancel", touchstop); // Add touchcancel
   canvas.addEventListener("mouseup", touchstop);
-  canvas.addEventListener("mouseup", touchstop);
+  canvas.addEventListener("mouseleave", touchstop); // Add mouseleave
 }
 
 /**

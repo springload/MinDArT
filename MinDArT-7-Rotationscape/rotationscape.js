@@ -213,10 +213,11 @@ function brushIt(_x, _y, pX, pY) {
     drawLayer.line(_x, _y, pX, pY);
   } else if (brushSelected === 6) {
     // eraser
-    drawLayer.blendMode(BLEND);
+    drawLayer.blendMode(REMOVE);
     drawLayer.noStroke();
-    drawLayer.fill(127, 80);
+    drawLayer.fill(255, 255);
     drawLayer.ellipse(_x, _y, vMax * 4, vMax * 4);
+    drawLayer.blendMode(BLEND);
   }
 }
 

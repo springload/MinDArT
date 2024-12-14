@@ -244,10 +244,11 @@ function changeBrush(brushSel, e) {
 function brushIt(_x, _y, pX, pY) {
   if (brushSelected === 0) {
     // eraser
-    drawLayer.blendMode(BLEND);
+    drawLayer.blendMode(REMOVE);
     drawLayer.noStroke();
     drawLayer.fill(127, 80);
     drawLayer.ellipse(_x, _y, vMax * 4, vMax * 4);
+    drawLayer.blendMode(BLEND);
     return;
   }
 

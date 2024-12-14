@@ -114,13 +114,13 @@ function getEventCoords(event) {
     const touch = event.touches[0];
     const rect = event.target.getBoundingClientRect();
     return {
-      x: touch.clientX - rect.left,
-      y: touch.clientY - rect.top,
+      eventX: touch.clientX - rect.left,
+      eventY: touch.clientY - rect.top,
     };
   }
   return {
-    x: winMouseX,
-    y: winMouseY,
+    eventX: winMouseX,
+    eventY: winMouseY,
   };
 }
 
@@ -129,10 +129,10 @@ function touchdown(event) {
     return false;
   }
 
-  const { x, y } = getEventCoords(event);
+  const { eventX, eventY } = getEventCoords(event);
 
   if (isAddingPin) {
-    vt.push(createVector(x, y));
+    vt.push(createVector(eventX, eventY));
     vtCount.push(0);
     vtStored.push([]);
     isAddingPin = false;
@@ -143,15 +143,19 @@ function touchdown(event) {
 
   if (!isDragging) {
     for (let i = 0; i < x.length; i++) {
-      if (dist(x, y, x[i][0], y[i][0]) < 45) {
+      if (dist(eventX, eventY, x[i][0], y[i][0]) < 45) {
         selected = [i, 0];
         isDragging = true;
-      } else if (dist(x, y, x[i][segNum - 1], y[i][segNum - 1]) < 45) {
+        break; // Add break to prevent checking other strings
+      } else if (
+        dist(eventX, eventY, x[i][segNum - 1], y[i][segNum - 1]) < 45
+      ) {
         selected = [i, segNum - 1];
         isDragging = true;
+        break; // Add break to prevent checking other strings
       } else {
         for (let j = 0; j < x[i].length; j++) {
-          if (dist(x, y, x[i][j], y[i][j]) < 45) {
+          if (dist(eventX, eventY, x[i][j], y[i][j]) < 45) {
             selected = [i, j];
             if (j < 30) {
               selected[1] = 1;
@@ -164,6 +168,7 @@ function touchdown(event) {
             break;
           }
         }
+        if (isDragging) break; // Exit outer loop if we found a match
       }
     }
   }
@@ -172,7 +177,7 @@ function touchdown(event) {
 
 function moved(event) {
   event.preventDefault(); // Prevent scrolling on touch devices
-  const { x, y } = getEventCoords(event);
+  const { eventX, eventY } = getEventCoords(event);
 
   vtStored = [];
 
@@ -184,15 +189,16 @@ function moved(event) {
   }
 
   if (isDragging) {
-    dragCalc(selected, x, y);
+    dragCalc(selected, eventX, eventY);
   }
 
   render();
   return false;
 }
 
-function touchstop() {
+function touchstop(event) {
   isDragging = false;
+  selected = [0, 0]; // Reset selection
 }
 
 function dragCalc(sel, mouseX, mouseY) {
