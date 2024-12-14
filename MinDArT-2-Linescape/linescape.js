@@ -1,25 +1,38 @@
-// counters
-let xCount = 0,
-  yCount = 0,
-  counter = 0;
-let fromCol, toCol;
-let store = [];
-let arr = [];
-let arrLineCol = [];
-let ccc;
+// Configuration and state
+const colours = [
+  ["#F2B705", "#701036"],
+  ["#0D0D0D", "#0D0D0D"],
+  ["#F2B077", "#023E73"],
+  ["#D94929", "#590902"],
+  ["#F2B705", "#02735E"],
+  ["#F2B705", "#011F26"],
+  ["#F2B705", "#A6600A"],
+  ["#F2B705", "#1450A4"],
+  ["#F2B705", "#363432"],
+];
 
-// dimensions
+// State variables
+let colorPairIndex = 0;
+let currentRgbColor;
+let currentSwatch = 0;
+let swatch = [];
+
+// Dimension variables
 let vMax, hMax, wMax, vW, vH;
 let brushSizeBaseline = 60;
 
-// strokes
+// Grid state
+let xCount = 0,
+  yCount = 0,
+  counter = 0;
+let store = [];
+let arr = [];
+let arrLineCol = [];
+
+// Stroke settings
 let strokeBaseline = 0;
 
-//UI elements
-let newTextureButton;
-let slider1, slider2, slider3;
-
-// distance vector calculator
+// Motion tracking
 let smoothDist = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
@@ -27,6 +40,7 @@ const reducer = (accumulator, currentValue) => accumulator + currentValue;
 let velocity = 0;
 let img, direction;
 
+// P5.js lifecycle functions
 function preload() {
   // nothing to load
 }
@@ -45,6 +59,64 @@ async function setup() {
   );
 
   pixelDensity(1);
+}
+
+// Core Drawing Functions
+
+function redrawIt() {
+  background(255);
+  for (let y = 0; y < yCount; y++) {
+    strokeWeight((1 / yCount) * y * 4.5);
+    stroke(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 90);
+    fill(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 100);
+    beginShape();
+    let vvW = -10 * vW;
+    let vvH = -10 * vH;
+    for (let x = 0; x < xCount; x++) {
+      curveVertex(arr[x][y].x, arr[x][y].y);
+    }
+
+    // curveVertex(windowWidth, windowHeight);
+    // curveVertex(0, windowHeight);
+
+    endShape();
+  }
+}
+
+function touchMoved() {
+  store = [];
+  // calculate all points within a distance, then sort...
+  for (let x = 0; x < xCount; x++) {
+    for (let y = 0; y < yCount; y++) {
+      let d = dist(mouseX, mouseY, arr[x][y].x, arr[x][y].y);
+      if (d < brushSizeBaseline) {
+        store.push([d, x, y]);
+      }
+    }
+  }
+
+  store.sort((a, b) => b[0] - a[0]);
+
+  for (let i = 0; i < store.length; i++) {
+    let _d = store[i][0];
+    let _x = store[i][1];
+    let _y = store[i][2];
+    let temp = createVector(mouseX, mouseY);
+    _d = _d / (vMax * 0.2);
+    arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
+  }
+
+  // If a swatch is active, apply color
+  if (store.length > 0) {
+    currentRgbColor = hexToRgb(colours[colorPairIndex][currentSwatch]);
+    arrLineCol[store[store.length - 1][2]] = [
+      currentRgbColor.levels[0],
+      currentRgbColor.levels[1],
+      currentRgbColor.levels[2],
+    ];
+  }
+
+  redrawIt();
 }
 
 function start() {
@@ -75,8 +147,12 @@ function setupArrays() {
 
   // make col array
   for (let j = 0; j < yCount; j++) {
-    ccc = hexToRgb(colours[cc][1], 0.5);
-    arrLineCol[j] = [ccc.levels[0], ccc.levels[1], ccc.levels[2]];
+    currentRgbColor = hexToRgb(colours[colorPairIndex][1], 0.5);
+    arrLineCol[j] = [
+      currentRgbColor.levels[0],
+      currentRgbColor.levels[1],
+      currentRgbColor.levels[2],
+    ];
   }
 
   // x and y may need to be swapped
@@ -94,6 +170,24 @@ function setupArrays() {
   redrawIt();
 }
 
+// UI and control functions
+function initializeSwatches() {
+  updateSwatchColors();
+  initializeToolbarButtons();
+}
+
+function switchSwatch(el) {
+  currentSwatch = parseInt(el.dataset.swatch);
+}
+
+function updateSwatchColors() {
+  const elements = document.querySelectorAll('[data-element="swatch"]');
+  elements.forEach((el) => {
+    el.style.backgroundColor =
+      colours[colorPairIndex][parseInt(el.dataset.swatch)];
+  });
+}
+
 function next() {
   clearActiveButtonState();
   yCount = int((yCount *= 1.3));
@@ -104,9 +198,9 @@ function next() {
     setupDefaults();
   }
 
-  cc++;
-  if (cc > colours.length - 1) {
-    cc = 0;
+  colorPairIndex++;
+  if (colorPairIndex > colours.length - 1) {
+    colorPairIndex = 0;
   }
 
   updateSwatchColors();
@@ -116,66 +210,7 @@ function next() {
   redrawIt();
 }
 
-function touchMoved() {
-  store = [];
-  // calculate all points within a distance, then sort...
-  for (let x = 0; x < xCount; x++) {
-    for (let y = 0; y < yCount; y++) {
-      let d = dist(mouseX, mouseY, arr[x][y].x, arr[x][y].y);
-      if (d < brushSizeBaseline) {
-        store.push([d, x, y]);
-      }
-    }
-  }
-
-  store.sort((a, b) => b[0] - a[0]);
-
-  for (let i = 0; i < store.length; i++) {
-    let _d = store[i][0];
-    let _x = store[i][1];
-    let _y = store[i][2];
-    let temp = createVector(mouseX, mouseY);
-    _d = _d / (vMax * 0.2);
-    arr[_x][_y] = p5.Vector.lerp(arr[_x][_y], temp, 1 / _d);
-  }
-
-  // If a swatch is active, apply color
-  if (store.length > 0) {
-    ccc = hexToRgb(colours[cc][currentSwatch]);
-    arrLineCol[store[store.length - 1][2]] = [
-      ccc.levels[0],
-      ccc.levels[1],
-      ccc.levels[2],
-    ];
-  }
-
-  redrawIt();
-}
-
-function updateSize() {
-  curveTightness(slider1.value() / 100);
-}
-
-function redrawIt() {
-  background(255);
-  for (let y = 0; y < yCount; y++) {
-    strokeWeight((1 / yCount) * y * 4.5);
-    stroke(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 90);
-    fill(arrLineCol[y][0], arrLineCol[y][1], arrLineCol[y][2], 100);
-    beginShape();
-    let vvW = -10 * vW;
-    let vvH = -10 * vH;
-    for (let x = 0; x < xCount; x++) {
-      curveVertex(arr[x][y].x, arr[x][y].y);
-    }
-
-    // curveVertex(windowWidth, windowHeight);
-    // curveVertex(0, windowHeight);
-
-    endShape();
-  }
-}
-
+// Window and resize handling
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 
