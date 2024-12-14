@@ -23,6 +23,7 @@
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
+    <script src="../components/drawing-toolbar.js"></script>
     <script src="brushes.js"></script>
     <script src="colourscape.js"></script>  
     <script type="module">
@@ -47,16 +48,7 @@
     <div data-element="canvas-container"></div>
     
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <button id="erasedraw" class="btn btn--white" onclick="drawErase()">Erase Draw</button>
-        <button id="erasepaint" class="btn btn--white" onclick="paintErase()">Erase Paint</button>
-        <div class="btn-group--split">
-          <button id="warm" class="btn btn--leftsplit btn--warm-stripes" onclick="paintWarm()"></button>
-          <button id="cool" class="btn btn--rightsplit btn--cool-stripes" onclick="paintCool()"></button>
-        </div>
-        <button id="draw" class="btn btn--white" onclick="switchToTrace()">Draw</button>
-      </div>
-      
+      <drawing-toolbar app-name="colourscape"></drawing-toolbar>
       <app-controls app-name="colourscape"></app-controls>
     </div>
     

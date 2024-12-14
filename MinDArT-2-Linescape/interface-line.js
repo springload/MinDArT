@@ -25,9 +25,8 @@ function switchSwatch(el) {
 }
 
 function updateSwatchColors() {
-  const swatches = document.querySelectorAll('[data-element="swatch"]');
-  swatches.forEach((swatch) => {
-    const index = parseInt(swatch.dataset.swatch);
-    swatch.style.backgroundColor = colours[cc][index];
+  const elements = document.querySelectorAll('[data-element="swatch"]');
+  elements.forEach((el) => {
+    el.style.backgroundColor = colours[cc][parseInt(el.dataset.swatch)];
   });
 }

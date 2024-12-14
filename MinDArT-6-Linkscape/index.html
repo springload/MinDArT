@@ -24,6 +24,7 @@
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
+    <script src="../components/drawing-toolbar.js"></script>
     <script src="linkscape.js"></script>
     <script type="module">
       if ('serviceWorker' in navigator) {
@@ -47,23 +48,7 @@
     <div data-element="canvas-container"></div>
     
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <button class="btn btn--white" onclick="addLine()" data-element="add-string-button">
-          <svg class="icon" viewBox="0 0 48 48">
-            <path stroke-width="6" d="M6 24 h36M24 6 v36"/>
-          </svg>
-          Add a string
-        </button>
-        <button class="btn btn--white" onclick="addPin()" data-element="add-pin-button">
-          <svg class="icon" viewBox="0 0 48 52" stroke-width="6">
-            <path d="M24 31v13" />
-            <circle cx="24" cy="14.5" r="10" />
-            <path stroke-width="3" d="M20 14.5c0-2 2-4 4-4"/>
-          </svg>
-          Add a pin
-        </button>
-      </div>
-
+      <drawing-toolbar app-name="linkscape"></drawing-toolbar>
       <app-controls app-name="linkscape"></app-controls>
     </div>
     

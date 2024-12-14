@@ -24,6 +24,7 @@
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
+    <script src="../components/drawing-toolbar.js"></script>
     <script src="symmetryscape.js"></script>
     <script type="module">
       if ('serviceWorker' in navigator) {
@@ -47,19 +48,7 @@
     <div data-element="canvas-container"></div>
 
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <button class="btn btn--white" onclick="eraser()" data-brush="0">Erase</button>
-        <div class="btn-group--split">
-          <button class="btn btn--white" onclick="switchToDrawMode()" data-element="draw-mode-button">Draw</button>
-          <button class="btn" onclick="changeBrush(1)" data-brush="1"></button>
-          <button class="btn" onclick="changeBrush(2)" data-brush="2"></button>
-          <button class="btn" onclick="changeBrush(3)" data-brush="3"></button>
-          <button class="btn" onclick="changeBrush(4)" data-brush="4"></button>
-          <button class="btn" onclick="changeBrush(5)" data-brush="5"></button>
-          <button class="btn" onclick="changeBrush(6)" data-brush="6"></button>
-        </div>
-      </div>
-
+      <drawing-toolbar app-name="symmetryscape"></drawing-toolbar>
       <app-controls app-name="symmetryscape"></app-controls>
     </div>
 

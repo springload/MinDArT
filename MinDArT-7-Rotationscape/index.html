@@ -26,6 +26,7 @@
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
+    <script src="../components/drawing-toolbar.js"></script>
     <script src="rotationscape.js"></script>
     <script type="module">
       if ('serviceWorker' in navigator) {
@@ -49,17 +50,7 @@
     <div data-element="canvas-container"></div>
 
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <div class="btn-group--split">
-          <button class="btn btn--leftsplit" onclick="eraser()">Erase</button>
-          <button class="btn btn--square" onclick="changeBrush(1)" data-element="swatch"></button>
-          <button class="btn btn--square" onclick="changeBrush(2)" data-element="swatch"></button>
-          <button class="btn btn--square" onclick="changeBrush(3)" data-element="swatch"></button>
-          <button class="btn btn--square" onclick="changeBrush(4)" data-element="swatch"></button>
-          <button class="btn btn--rightsplit" onclick="reCenter()">Pick new centre</button>
-        </div>
-      </div>
-
+      <drawing-toolbar app-name="rotationscape"></drawing-toolbar>
       <app-controls app-name="rotationscape"></app-controls>
     </div>
 

@@ -26,6 +26,7 @@
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
+    <script src="../components/drawing-toolbar.js"></script>
     <script src="touchscape.js"></script>
     <script type="module">
       if ('serviceWorker' in navigator) {
@@ -49,20 +50,7 @@
     <div data-element="canvas-container"></div>
 
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <button class="btn btn--white" onclick="rake(0)">Erase</button>
-        <button class="btn btn--white" onclick="rake(1)">
-          <svg class="brush" viewBox="0 0 120 70"><path d="m32.8 23.4h54.4m0 11.6h-54.4m0 11.6h54.4" /></svg>
-        </button>
-        <button class="btn btn--white" onclick="rake(2)">
-          <svg class="brush" viewBox="0 0 120 70"><path d="M32.8 17.2h54.4m0 7.1h-54.4m0 7.1h54.4m0 7.1h-54.4m0 7.1h54.4m0 7.1 h-54.4" /></svg>
-        </button>
-        <button class="btn btn--white" onclick="rake(3)">
-          <svg class="brush" viewBox="0 0 120 70"><path
-            d="M32.8 11.7h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4" /></svg>
-        </button>
-      </div>
-      
+      <drawing-toolbar app-name="touchscape"></drawing-toolbar>
       <app-controls app-name="touchscape"></app-controls>
     </div>
     

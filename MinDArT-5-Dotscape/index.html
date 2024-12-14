@@ -24,6 +24,7 @@
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
+    <script src="../components/drawing-toolbar.js"></script>
     <script src="dotscape.js"></script>
     <script type="module">
       if ('serviceWorker' in navigator) {
@@ -47,10 +48,7 @@
     <div data-element="canvas-container"></div>
     
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <button class="btn btn--white" onclick="restart()">Restart</button>
-      </div>
-      
+      <drawing-toolbar app-name="dotscape"></drawing-toolbar>
       <app-controls app-name="dotscape"></app-controls>
     </div>
     

@@ -23,6 +23,7 @@
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
+    <script src="../components/drawing-toolbar.js"></script>
     <script src="interface-line.js"></script>
     <script src="linescape.js"></script>
     <script type="module">
@@ -47,13 +48,7 @@
     <div data-element="canvas-container"></div>
     
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <div class="btn-group--split">
-          <button class="btn btn--leftsplit active" data-element="swatch" data-swatch="0" onclick="switchSwatch(this)"></button>
-          <button class="btn btn--rightsplit" data-element="swatch" data-swatch="1" onclick="switchSwatch(this)" ></button>
-        </div>
-      </div>
-      
+      <drawing-toolbar app-name="linescape"></drawing-toolbar>
       <app-controls app-name="linescape"></app-controls>
     </div>
     

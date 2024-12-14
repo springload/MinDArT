@@ -23,6 +23,7 @@
     <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
+    <script src="../components/drawing-toolbar.js"></script>
     <script language="javascript" type="text/javascript" src="circlescape.js"></script>
     <script type="module">
       if ('serviceWorker' in navigator) {
@@ -46,12 +47,7 @@
     <div data-element="canvas-container"></div>
     
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <button class="btn btn--white" onclick="eraseToggle()">Erase</button>
-        <button class="btn btn--white btn--leftsplit" onclick="drawSmall()">Draw small</button>
-        <button class="btn btn--white btn--rightsplit" onclick="drawBig()">Draw big</button>
-      </div>
-
+      <drawing-toolbar app-name="circlescape"></drawing-toolbar>
       <app-controls app-name="circlescape"></app-controls>
   </body>
 </html>
