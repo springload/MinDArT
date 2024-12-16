@@ -71,7 +71,7 @@ export function createSymmetryscape(p5) {
     state.symmetryAxisLayer = p5.createGraphics(p5.width, p5.height);
     state.vMax = calcViewportDimensions().vMax;
     // Initialize app controls and toolbar
-    initializeAppControls(restart);
+    initializeAppControls(reset);
     initializeToolbarButtons();
     setupToolbarEvents();
     setSwatchColors();
@@ -84,7 +84,7 @@ export function createSymmetryscape(p5) {
     initializeState();
   }
 
-  function restart() {
+  function reset() {
     clearActiveButtonState();
 
     // Cycle through palettes and symmetry modes
@@ -126,7 +126,7 @@ export function createSymmetryscape(p5) {
     render();
   }
 
-  function makeDrawing(currentX, currentY, previousX, previousY) {
+  function handleMove(currentX, currentY, previousX, previousY, _event) {
     const symmetryModes = [
       () => {
         brushIt(currentX, currentY, previousX, previousY);
@@ -174,6 +174,7 @@ export function createSymmetryscape(p5) {
 
     const currentSymmetryMode = symmetryModes[state.counter];
     if (currentSymmetryMode) currentSymmetryMode();
+    render();
   }
 
   function brushIt(_x, _y, pX, pY) {
@@ -264,7 +265,6 @@ export function createSymmetryscape(p5) {
     state.vMax = calcViewportDimensions().vMax;
 
     [state.bg, state.drawLayer, state.symmetryAxisLayer] = resizedLayers;
-    (state.brushSelectedstate.brushSelected !== 0) !== 0;
     state.drawLayer.strokeCap(p5.PROJECT);
     render();
   }
@@ -362,8 +362,8 @@ export function createSymmetryscape(p5) {
     preload,
     setup,
     start,
-    restart,
-    makeDrawing,
+    reset,
+    handleMove,
     render,
     windowResized,
     changeBrush,

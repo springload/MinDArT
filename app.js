@@ -1,32 +1,52 @@
 import { isClickOnButton } from "./functions.js";
 import { createSymmetryscape } from "./MinDArT-8-Symmetryscape/symmetryscape.js";
+// import { createRotationscape } from "./MinDArT-7-Rotationscape/rotationscape.js";
 
+// Factory for creating the appropriate drawing app based on app name
+function createDrawingApp(p5, appName) {
+  const creators = {
+    symmetryscape: createSymmetryscape,
+    // rotationscape: createRotationscape,
+  };
+
+  const creator = creators[appName];
+  if (!creator) {
+    throw new Error(`No drawing app found for ${appName}`);
+  }
+
+  return creator(p5);
+}
+
+// Initialize p5 with the appropriate drawing app
 new p5((p5) => {
-  const appName = "symmetryscape";
-  let symmetryscape;
+  const appName = document.body.dataset.appName;
+  let drawingApp;
   let prevTouchX = null;
   let prevTouchY = null;
 
   p5.preload = () => {
-    symmetryscape = createSymmetryscape(p5);
-    symmetryscape.preload();
+    drawingApp = createDrawingApp(p5, appName);
+    drawingApp.preload();
   };
 
   p5.setup = () => {
-    symmetryscape.setup();
+    drawingApp.setup();
 
+    // add event listeners for events from interface buttons
     const loadingDialog = document.querySelector("loading-dialog");
+    const appControls = document.querySelector("app-controls");
+    if (!loadingDialog || !appControls) {
+      throw new Error("Loading dialog or app controls were not found");
+    }
     // Listen for 'Touch button to start' event
     loadingDialog.addEventListener("app-start", () => {
-      symmetryscape.start();
+      drawingApp.start();
     });
-    const appControls = document.querySelector("app-controls");
 
     // Listen for reset event from 'New' button
     appControls.addEventListener("app-reset", () => {
-      symmetryscape.restart();
+      drawingApp.reset();
     });
-
     // Listen for event from 'Save' button and save an image of the drawing
     appControls.addEventListener("app-save", () => {
       p5.save(
@@ -35,8 +55,28 @@ new p5((p5) => {
     });
   };
 
+  // Mouse event handlers
+  p5.mousePressed = (event) => {
+    return drawingApp.handlePointerStart?.(event) ?? false;
+  };
+
+  p5.mouseReleased = (event) => {
+    return drawingApp.handlePointerEnd?.(event) ?? false;
+  };
+
   p5.mouseDragged = (event) => {
-    handleDrawing(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY, event);
+    handlePointerMove(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY, event);
+  };
+
+  // Touch event handlers
+  p5.touchStarted = (event) => {
+    prevTouchX = null;
+    prevTouchY = null;
+    return drawingApp.handlePointerStart?.(event) ?? false;
+  };
+
+  p5.touchEnded = (event) => {
+    return drawingApp.handlePointerEnd?.(event) ?? false;
   };
 
   p5.touchMoved = (event) => {
@@ -53,33 +93,22 @@ new p5((p5) => {
       prevTouchX = currentX;
       prevTouchY = currentY;
 
-      handleDrawing(currentX, currentY, previousX, previousY, event);
+      handlePointerMove(currentX, currentY, previousX, previousY, event);
     }
 
-    // Prevent default touch behavior
     return false;
   };
 
-  // Reset tracking when touch starts
-  p5.touchStarted = () => {
-    prevTouchX = null;
-    prevTouchY = null;
-  };
-
-  function handleDrawing(currentX, currentY, previousX, previousY, event) {
-    // Check if interaction is over a button
-    if (isClickOnButton(event)) {
-      // don't draw anything
-      return;
+  function handlePointerMove(currentX, currentY, previousX, previousY, event) {
+    // Let the drawing app handle the interaction if it's not on a button
+    if (!isClickOnButton(event)) {
+      if (drawingApp.handleMove) {
+        drawingApp.handleMove(currentX, currentY, previousX, previousY, event);
+      }
     }
-
-    symmetryscape.makeDrawing(currentX, currentY, previousX, previousY);
-
-    // Ensure rendering happens
-    symmetryscape.render();
   }
 
   p5.windowResized = () => {
-    symmetryscape.windowResized();
+    drawingApp.windowResized();
   };
 }, document.querySelector('[data-element="canvas-container"]'));
