@@ -3,18 +3,12 @@ class AppControls extends HTMLElement {
     super();
   }
 
-  static get observedAttributes() {
-    return ["app-name"];
-  }
-
   connectedCallback() {
     this.render();
     this.setupEventListeners();
   }
 
   render() {
-    const appName = this.getAttribute("app-name");
-
     this.innerHTML = `
       <div class="app-controls" data-element="app-controls">
         <a href="/" class="btn btn--theme">Main Menu</a>
@@ -36,20 +30,15 @@ class AppControls extends HTMLElement {
       }
     });
 
-    // Handle save functionality
-    if (saveButton && window.save) {
-      saveButton.addEventListener("click", () => {
-        const appName = document.body.dataset.appName;
-        window.save(
-          `${appName}${window.month()}${window.day()}${window.hour()}${window.second()}.jpg`
-        );
+    if (resetButton) {
+      resetButton.addEventListener("click", () => {
+        this.dispatchEvent(new CustomEvent("app-reset"));
       });
     }
 
-    // Dispatch a custom event when reset is clicked
-    if (resetButton) {
-      resetButton.addEventListener("click", () => {
-        this.dispatchEvent(new CustomEvent("reset"));
+    if (saveButton) {
+      saveButton.addEventListener("click", () => {
+        this.dispatchEvent(new CustomEvent("app-save"));
       });
     }
   }

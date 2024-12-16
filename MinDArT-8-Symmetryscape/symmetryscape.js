@@ -1,320 +1,372 @@
-let brush = [];
-let longEdge, shortEdge, circleRad, vMax, wmax, hmax;
-let drawLayer, symmetryAxisLayer;
-let brushSelected = 0; // eraser
-let lastDrawingBrush = 0;
-let faderStart;
-let xCo = [];
-let yCo = [];
-let velo = [];
-let brushBool = 0;
-let intX, intY;
-let selectedPalette = 0;
-let counter = -1;
-let palettes = [
-  ["#000000", "#444444", "#888888", "#a1a1a1", "#c2c2c2", "#ffffff"],
-  ["#F2F2F2", "#F2913D", "#223240", "#F24B0F"],
-  ["#6D808C", "#FFFFFF", "#D9AA8F", "#F2CAB3"],
-  ["#3C5E73", "#F2BBBB", "#FFFFFF", "#F24444"],
-];
+import {
+  colorAlpha,
+  clearActiveButtonState,
+  setupLoadingScreen,
+  initializeAppControls,
+  initializeToolbarButtons,
+  hasActiveClass,
+} from "../functions.js";
+import { calcViewportDimensions, handleResize } from "../shared/resize.js";
+import { initAudio, playSoundtrack } from "../shared/audio.js";
 
-function preload() {
-  bg = loadImage("assets/paper.jpg");
-}
+/**
+ * Creates a fully encapsulated Symmetryscape sketch
+ * @param {p5} p5 - The p5 instance to use for sketch creation
+ * @returns {Object} An object with sketch lifecycle methods
+ */
+export function createSymmetryscape(p5) {
+  const PALETTES = [
+    ["#000000", "#444444", "#888888", "#a1a1a1", "#c2c2c2", "#ffffff"],
+    ["#F2F2F2", "#F2913D", "#223240", "#F24B0F"],
+    ["#6D808C", "#FFFFFF", "#D9AA8F", "#F2CAB3"],
+    ["#3C5E73", "#F2BBBB", "#FFFFFF", "#F24444"],
+  ];
+  const SYMMETRY_MODES = 4;
+  const BACKGROUND_IMAGE = "assets/paper.jpg";
 
-async function setup() {
-  await initAudio("8_Symmetry");
-  // add JS functionality to existing HTML elements
-  setupLoadingScreen(start);
-  initializeAppControls(restart);
-  initializeToolbarButtons();
-  // Create canvas and attach to container
-  const mainCanvas = createCanvas(windowWidth, windowHeight);
-  mainCanvas.parent(
-    document.querySelector('[data-element="canvas-container"]')
-  );
-  pixelDensity(1); // Ignores retina displays
-  drawLayer = createGraphics(width, height);
-  drawLayer.colorMode(RGB, 255, 255, 255, 1000);
-  drawLayer.strokeCap(PROJECT);
-  symmetryAxisLayer = createGraphics(width, height);
-  setSwatchColors();
-}
+  const state = {
+    // Layers
+    bg: null,
+    drawLayer: null,
+    symmetryAxisLayer: null,
 
-function start() {
-  counter = 0;
-  selectedPalette = 0;
-  playSoundtrack();
-  initializeState();
-}
+    // Drawing configuration
+    selectedPalette: 0,
+    brushSelected: 0,
+    lastDrawingBrush: 0,
 
-function initializeState() {
-  clearActiveButtonState();
-  setSwatchColors();
+    // Symmetry tracking
+    counter: -1,
 
-  fill(0);
-  dimensionCalc();
-  intX = width / 5;
-  intY = height / 2;
+    // Viewport and dimension tracking
+    width: 0,
+    height: 0,
+    vMax: 0,
+    longEdge: 0,
+    shortEdge: 0,
+    circleRad: 0,
+  };
 
-  drawState = 1;
-  drawLayer.clear();
-  symmetryAxisLayer.clear();
-
-  // Set initial symmetry lines
-  if (counter === 1 || counter === 2) {
-    symmetryAxisLayer.strokeWeight(1);
-    symmetryAxisLayer.stroke(210);
-    symmetryAxisLayer.line(0, height / 2, width, height / 2);
+  // Lifecycle methods
+  function preload() {
+    state.bg = p5.loadImage(BACKGROUND_IMAGE);
   }
 
-  if (counter === 0 || counter === 2) {
-    symmetryAxisLayer.strokeWeight(1);
-    symmetryAxisLayer.stroke(210);
-    symmetryAxisLayer.line(width / 2, 0, width / 2, height);
+  async function setup() {
+    // Setup audio and loading screen
+    await initAudio("8_Symmetry");
+    setupLoadingScreen(start);
+
+    // Create canvas
+    const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
+    canvas.parent(document.querySelector('[data-element="canvas-container"]'));
+
+    p5.pixelDensity(1);
+
+    // Create graphics layers
+    state.drawLayer = p5.createGraphics(p5.width, p5.height);
+    state.drawLayer.colorMode(p5.RGB, 255, 255, 255, 1000);
+    state.drawLayer.strokeCap(p5.PROJECT);
+
+    state.symmetryAxisLayer = p5.createGraphics(p5.width, p5.height);
+    state.vMax = calcViewportDimensions().vMax;
+    // Initialize app controls and toolbar
+    initializeAppControls(restart);
+    initializeToolbarButtons();
+    setupToolbarEvents();
+    setSwatchColors();
   }
 
-  if (counter === 3) {
-    symmetryAxisLayer.strokeWeight(1);
-    symmetryAxisLayer.stroke(210);
-    symmetryAxisLayer.line(0, 0, width, height);
-    symmetryAxisLayer.line(width, 0, 0, height);
+  function start() {
+    state.counter = 0;
+    state.selectedPalette = 0;
+    playSoundtrack();
+    initializeState();
   }
 
-  changeBrush(1);
-  render();
-}
+  function restart() {
+    clearActiveButtonState();
 
-function restart() {
-  clearActiveButtonState();
-  counter++;
-  selectedPalette++;
-  if (selectedPalette >= palettes.length) {
-    selectedPalette = 0;
-  }
-  if (counter >= 4) {
-    counter = 0;
+    // Cycle through palettes and symmetry modes
+    state.counter = (state.counter + 1) % SYMMETRY_MODES;
+    state.selectedPalette = (state.selectedPalette + 1) % PALETTES.length;
+
+    initializeState();
+    setSwatchColors();
   }
 
-  initializeState();
-}
+  function initializeState() {
+    state.drawLayer.clear();
+    state.symmetryAxisLayer.clear();
 
-function dimensionCalc() {
-  ({ width, height, vMax } = calcViewportDimensions());
-  wmax = width / 100;
-  hmax = height / 100;
-  if (width > height) {
-    longEdge = width;
-    shortEdge = height;
-    circleRad = shortEdge * 0.45;
-  } else {
-    longEdge = height;
-    shortEdge = width;
-    circleRad = shortEdge * 0.45;
+    // Dynamic symmetry line arrangement, based on counter
+    state.symmetryAxisLayer.strokeWeight(1);
+    state.symmetryAxisLayer.stroke(210);
+
+    const symmetryLines = [
+      () => {
+        state.symmetryAxisLayer.line(p5.width / 2, 0, p5.width / 2, p5.height);
+        state.symmetryAxisLayer.line(0, p5.height / 2, p5.width, p5.height / 2);
+      },
+      () => {
+        state.symmetryAxisLayer.line(0, p5.height / 2, p5.width, p5.height / 2);
+      },
+      () => {
+        state.symmetryAxisLayer.line(0, 0, p5.width, p5.height);
+        state.symmetryAxisLayer.line(p5.width, 0, 0, p5.height);
+      },
+    ];
+
+    // Draw symmetry lines if a mode exists
+    const currentSymmetryMode = symmetryLines[state.counter];
+    if (currentSymmetryMode) currentSymmetryMode();
+
+    // Reset brush
+    changeBrush(1);
+    render();
   }
-}
 
-function handlePointerStart(e) {
-  if (e && isClickOnButton(e)) {
-    return false;
+  function makeDrawing(currentX, currentY, previousX, previousY) {
+    const symmetryModes = [
+      () => {
+        brushIt(currentX, currentY, previousX, previousY);
+        brushIt(p5.width - currentX, currentY, p5.width - previousX, previousY);
+      },
+      () => {
+        brushIt(currentX, currentY, previousX, previousY);
+        brushIt(
+          currentX,
+          p5.height - currentY,
+          previousX,
+          p5.height - previousY
+        );
+      },
+      () => {
+        [
+          [currentX, currentY],
+          [p5.width - currentX, currentY],
+          [currentX, p5.height - currentY],
+          [p5.width - currentX, p5.height - currentY],
+        ].forEach(([x, y]) => {
+          brushIt(
+            x,
+            y,
+            x === currentX ? previousX : p5.width - previousX,
+            y === currentY
+              ? previousY
+              : y > currentY
+              ? p5.height - previousY
+              : previousY
+          );
+        });
+      },
+      () => {
+        state.drawLayer.push();
+        [0, 0.5, 1, 1.5].forEach((angle) => {
+          state.drawLayer.translate(p5.width / 2, p5.height / 2);
+          state.drawLayer.rotate(p5.PI * angle);
+          state.drawLayer.translate(-p5.width / 2, -p5.height / 2);
+          brushIt(currentX, currentY, previousX, previousY);
+        });
+        state.drawLayer.pop();
+      },
+    ];
+
+    const currentSymmetryMode = symmetryModes[state.counter];
+    if (currentSymmetryMode) currentSymmetryMode();
   }
-  faderStart = 600;
-  return false;
-}
 
-function touchstart(e) {
-  return handlePointerStart(e);
-}
+  function brushIt(_x, _y, pX, pY) {
+    if (state.brushSelected === 0) {
+      // Eraser mode
+      state.drawLayer.erase();
+      state.drawLayer.noStroke();
+      state.drawLayer.ellipse(_x, _y, state.vMax * 4, state.vMax * 4);
+      state.drawLayer.noErase();
 
-function mousePressed(e) {
-  return handlePointerStart(e);
-}
+      return;
+    }
 
-function handleDrag(e) {
-  if (e && isClickOnButton(e)) {
-    return false;
-  }
-  makeDrawing(winMouseX, winMouseY, pwinMouseX, pwinMouseY);
-  render();
-  return false;
-}
-
-function touchMoved(e) {
-  return handleDrag(e);
-}
-
-function mouseDragged(e) {
-  return handleDrag(e);
-}
-
-function makeDrawing(currentX, currentY, previousX, previousY) {
-  if (counter === 0) {
-    brushIt(currentX, currentY, previousX, previousY);
-    brushIt(width - currentX, currentY, width - previousX, previousY);
-  } else if (counter === 1) {
-    brushIt(currentX, currentY, previousX, previousY);
-    brushIt(currentX, height - currentY, previousX, height - previousY);
-  } else if (counter === 2) {
-    brushIt(currentX, currentY, previousX, previousY);
-    brushIt(width - currentX, currentY, width - previousX, previousY);
-    brushIt(currentX, height - currentY, previousX, height - previousY);
-    brushIt(
-      width - currentX,
-      height - currentY,
-      width - previousX,
-      height - previousY
+    const colorIndex = Math.min(
+      state.brushSelected - 1,
+      PALETTES[state.selectedPalette].length - 1
     );
-  } else if (counter === 3) {
-    drawLayer.push();
-    brushIt(currentX, currentY, previousX, previousY);
-    drawLayer.translate(width / 2, height / 2);
-    drawLayer.rotate(PI * 0.5);
-    drawLayer.translate(-width / 2, -height / 2);
-    brushIt(currentX, currentY, previousX, previousY);
-    drawLayer.translate(width / 2, height / 2);
-    drawLayer.rotate(PI * 1);
-    drawLayer.translate(-width / 2, -height / 2);
-    brushIt(currentX, currentY, previousX, previousY);
-    drawLayer.translate(width / 2, height / 2);
-    drawLayer.rotate(PI * 1.5);
-    drawLayer.translate(-width / 2, -height / 2);
-    brushIt(currentX, currentY, previousX, previousY);
-    drawLayer.pop();
+    const currentColor = PALETTES[state.selectedPalette][colorIndex];
+
+    const brushStyles = [
+      () => {
+        // Thin line with dynamic weight
+        // Changes line thickness based on movement speed/direction
+        state.drawLayer.strokeWeight(
+          p5.constrain(p5.abs(_y + _x - (pX + pY)), 3, 5)
+        );
+        state.drawLayer.stroke(colorAlpha(p5, currentColor, 0.8));
+        state.drawLayer.line(pX, pY, _x, _y);
+      },
+      () => {
+        // Similar to first style, but with a broader stroke
+        state.drawLayer.strokeWeight(
+          p5.constrain(p5.abs(_y + _x - (pX + pY)), 14, 15)
+        );
+        state.drawLayer.stroke(colorAlpha(p5, currentColor, 0.6));
+        state.drawLayer.line(pX, pY, _x, _y);
+      },
+      () => {
+        // Scattered line with Gaussian distribution
+        // Creates a scattered, almost spray-paint like effect
+        state.drawLayer.strokeWeight(
+          p5.constrain(p5.abs(_y + _x - (pX + pY)), 8, 10)
+        );
+        state.drawLayer.stroke(colorAlpha(p5, currentColor, 0.5));
+
+        // Draw multiple lines with random offsets
+        for (let i = 0; i < 10; i++) {
+          let randX = p5.randomGaussian(-6, 6);
+          let randY = p5.randomGaussian(-6, 6);
+          state.drawLayer.line(pX + randX, pY + randY, _x + randX, _y + randY);
+        }
+      },
+      () => {
+        // Dense point scatter
+        // Creates a stippling or pointillist effect
+        state.drawLayer.strokeWeight(4);
+        state.drawLayer.stroke(colorAlpha(p5, currentColor, 0.4));
+
+        // Draw 60 random points around the current drawing point
+        for (let i = 0; i < 60; i++) {
+          state.drawLayer.point(
+            _x + p5.randomGaussian(-10, 10),
+            _y + p5.randomGaussian(-10, 10)
+          );
+        }
+      },
+    ];
+
+    const currentBrushStyle = brushStyles[state.brushSelected - 1];
+    if (currentBrushStyle) currentBrushStyle();
   }
-}
 
-function render() {
-  image(bg, 0, 0, width, height);
-  image(drawLayer, 0, 0, width, height);
-  image(symmetryAxisLayer, 0, 0, width, height);
-}
-
-function eraser(e) {
-  if (e) {
-    e.stopPropagation();
+  function render() {
+    p5.clear();
+    p5.image(state.bg, 0, 0, p5.width, p5.height);
+    p5.image(state.drawLayer, 0, 0, p5.width, p5.height);
+    p5.image(state.symmetryAxisLayer, 0, 0, p5.width, p5.height);
   }
-  clearActiveButtonState();
-  lastDrawingBrush = brushSelected;
-  brushSelected = 0;
-}
 
-function switchToDrawMode(e) {
-  if (e) {
-    e.stopPropagation();
+  function windowResized() {
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+
+    const { resizedLayers } = handleResize([
+      state.bg,
+      state.drawLayer,
+      state.symmetryAxisLayer,
+    ]);
+    state.vMax = calcViewportDimensions().vMax;
+
+    [state.bg, state.drawLayer, state.symmetryAxisLayer] = resizedLayers;
+    (state.brushSelectedstate.brushSelected !== 0) !== 0;
+    state.drawLayer.strokeCap(p5.PROJECT);
+    render();
   }
-  clearActiveButtonState();
 
-  const toolbar = document.querySelector('[data-element="toolbar"]');
-  const drawButton = toolbar.querySelector('[data-element="draw-mode-button"]');
+  function setupToolbarEvents() {
+    const toolbar = document.querySelector('[data-element="toolbar"]');
+    if (!toolbar) return;
 
-  if (brushSelected === 0) {
-    brushSelected = lastDrawingBrush || 1; // Default to brush 1 if no last brush
+    // Handle brush selection buttons
+    const brushButtons = toolbar.querySelectorAll("[data-brush]");
+    brushButtons.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        // Parse the brush number from the data attribute
+        const brushNumber = parseInt(button.dataset.brush, 10);
 
-    // Set active state on the restored brush button
-    const brushButton = toolbar?.querySelector(
-      `[data-brush="${brushSelected}"]`
+        // Call changeBrush with the brush number and event
+        changeBrush(brushNumber, event);
+      });
+    });
+
+    // Handle draw mode button
+    const drawModeButton = toolbar.querySelector(
+      '[data-element="draw-mode-button"]'
+    );
+    if (drawModeButton) {
+      drawModeButton.addEventListener("click", (event) => {
+        switchToDrawMode(event);
+      });
+    }
+  }
+
+  function switchToDrawMode(e) {
+    if (e) {
+      e.stopPropagation();
+    }
+    clearActiveButtonState();
+
+    const toolbar = document.querySelector('[data-element="toolbar"]');
+    const drawButton = toolbar.querySelector(
+      '[data-element="draw-mode-button"]'
     );
 
-    if (brushButton) {
-      brushButton.classList.add("active");
-    }
-    if (hasActiveClass(drawButton)) {
-      drawButton?.classList.remove("active");
-    }
-  }
-}
+    if (state.brushSelected === 0) {
+      state.brushSelected = state.lastDrawingBrush || 1; // Default to brush 1 if no last brush
 
-function changeBrush(brushSel, e) {
-  if (e) {
-    e.stopPropagation();
-  }
-  brushSelected = brushSel;
-  if (brushSelected !== 0) {
-    lastDrawingBrush = brushSelected;
-  }
-  clearActiveButtonState();
-
-  const toolbar = document.querySelector('[data-element="toolbar"]');
-  const selectedButton = toolbar?.querySelector(`[data-brush="${brushSel}"]`);
-  if (selectedButton) {
-    selectedButton.classList.add("active");
-  }
-}
-
-function brushIt(_x, _y, pX, pY) {
-  if (brushSelected === 0) {
-    // eraser
-    drawLayer.blendMode(REMOVE);
-    drawLayer.noStroke();
-    drawLayer.fill(127, 80);
-    drawLayer.ellipse(_x, _y, vMax * 4, vMax * 4);
-    drawLayer.blendMode(BLEND);
-    return;
-  }
-
-  // Get the color for the current brush (subtract 1 since brush 0 is eraser)
-  const colorIndex = Math.min(
-    brushSelected - 1,
-    palettes[selectedPalette].length - 1
-  );
-  const currentColor = palettes[selectedPalette][colorIndex];
-
-  if (brushSelected === 1) {
-    drawLayer.strokeWeight(constrain(abs(_y + _x - (pX + pY)), 3, 5));
-    drawLayer.stroke(colorAlpha(currentColor, 0.8));
-    drawLayer.line(pX, pY, _x, _y);
-  } else if (brushSelected === 2) {
-    drawLayer.strokeWeight(constrain(abs(_y + _x - (pX + pY)), 14, 15));
-    drawLayer.stroke(colorAlpha(currentColor, 0.6));
-    drawLayer.line(pX, pY, _x, _y);
-  } else if (brushSelected === 3) {
-    drawLayer.strokeWeight(constrain(abs(_y + _x - (pX + pY)), 8, 10));
-    drawLayer.stroke(colorAlpha(currentColor, 0.5));
-    for (let i = 0; i < 10; i++) {
-      let randX = randomGaussian(-6, 6);
-      let randY = randomGaussian(-6, 6);
-      drawLayer.line(pX + randX, pY + randY, _x + randX, _y + randY);
-    }
-  } else if (brushSelected === 4) {
-    drawLayer.strokeWeight(4);
-    drawLayer.stroke(colorAlpha(currentColor, 0.4));
-    for (let i = 0; i < 60; i++) {
-      drawLayer.point(
-        _x + randomGaussian(-10, 10),
-        _y + randomGaussian(-10, 10)
+      // Set active state on the restored brush button
+      const brushButton = toolbar?.querySelector(
+        `[data-brush="${state.brushSelected}"]`
       );
+
+      if (brushButton) {
+        brushButton.classList.add("active");
+      }
+      if (hasActiveClass(drawButton)) {
+        drawButton?.classList.remove("active");
+      }
     }
-  } else {
-    // Default brush style for any additional colors
-    drawLayer.strokeWeight(constrain(abs(_y + _x - (pX + pY)), 6, 8));
-    drawLayer.stroke(colorAlpha(currentColor, 0.6));
-    drawLayer.line(pX, pY, _x, _y);
   }
-}
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  const { resizedLayers } = handleResize([bg, drawLayer, symmetryAxisLayer]);
-  [bg, drawLayer, symmetryAxisLayer] = resizedLayers;
+  function setSwatchColors() {
+    const { selectedPalette } = state;
+    const allBrushes = Array.from(document.querySelectorAll("[data-brush]"));
+    const swatchButtons = allBrushes.slice(1); // remove the eraser (brush 0) from the selection
+    const currentPaletteLength = PALETTES[selectedPalette].length;
 
-  drawLayer.strokeCap(PROJECT);
-  dimensionCalc();
-  render();
-}
+    swatchButtons.forEach((swatch, index) => {
+      if (index < currentPaletteLength) {
+        swatch.style.backgroundColor = PALETTES[selectedPalette][index];
+        swatch.classList.remove("u-hide"); // Show button if it's within palette length
+      } else {
+        swatch.classList.add("u-hide"); // Hide button if it's beyond palette length
+      }
+    });
+  }
 
-function setSwatchColors() {
-  const allBrushes = Array.from(document.querySelectorAll("[data-brush]"));
-  const swatchButtons = allBrushes.slice(1); // remove the eraser from the selection
-  const currentPaletteLength = palettes[selectedPalette].length;
+  function changeBrush(brushSel, event) {
+    if (event) event.stopPropagation();
 
-  swatchButtons.forEach((swatch, index) => {
-    if (index < currentPaletteLength) {
-      swatch.style.backgroundColor = palettes[selectedPalette][index];
-      swatch.classList.remove("u-hide"); // Show button if it's within palette length
-    } else {
-      swatch.classList.add("u-hide"); // Hide button if it's beyond palette length
+    state.brushSelected = brushSel;
+    if (state.brushSelected !== 0) {
+      state.lastDrawingBrush = state.brushSelected;
     }
-  });
-}
 
-window.addEventListener("resize", windowResized);
+    clearActiveButtonState();
+
+    const toolbar = document.querySelector('[data-element="toolbar"]');
+    const selectedButton = toolbar?.querySelector(`[data-brush="${brushSel}"]`);
+    if (selectedButton) {
+      selectedButton.classList.add("active");
+    }
+  }
+
+  // Public API
+  return {
+    preload,
+    setup,
+    start,
+    restart,
+    makeDrawing,
+    render,
+    windowResized,
+    changeBrush,
+    state, // Exposing state for potential debugging
+  };
+}

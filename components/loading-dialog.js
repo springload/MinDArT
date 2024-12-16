@@ -33,15 +33,20 @@ class LoadingDialog extends HTMLElement {
     if (!dialog || !startButton) {
       throw new Error("Loading dialog: Required elements not found");
     }
-
-    startButton.addEventListener("click", () => {
+    const handleInteraction = () => {
       // Play click sound if available
       if (window.playClick) {
         window.playClick();
       }
-
       dialog.close();
-      this.dispatchEvent(new CustomEvent("start"));
+      this.dispatchEvent(new CustomEvent("app-start"));
+    };
+
+    startButton.addEventListener("click", handleInteraction);
+    startButton.addEventListener("touchend", (e) => {
+      // Prevent the mouse event from firing
+      e.preventDefault();
+      handleInteraction();
     });
 
     // Show start button when p5.js has finished loading

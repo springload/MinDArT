@@ -19,13 +19,14 @@
     <link rel="manifest" href="/manifest.json">
 
     <script src="../libraries/p5.min.js"></script>
-    <script src="../functions.js"></script>
-    <script src="../shared/resize.js"></script>
-    <script src="../shared/audio.js"></script>
+    <script type="module" src="../functions.js"></script>
+    <script type="module" src="../shared/resize.js"></script>
+    <script type="module" src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
     <script src="../components/drawing-toolbar.js"></script>
-    <script src="symmetryscape.js"></script>
+    <script type="module" src="../MinDArT-8-Symmetryscape/symmetryscape.js"></script>
+    <script type="module" src="../app.js"></script>
     <script type="module">
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

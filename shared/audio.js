@@ -10,7 +10,7 @@ let audioInitialized = false;
  * @param {string} activityName - Name/number of the activity scene
  * Loads audio files but defers AudioContext creation until user interaction
  */
-async function initAudio(activityName) {
+export async function initAudio(activityName) {
   // Load both sounds first - this doesn't require AudioContext
   await Promise.all([
     loadSound("click", "../sound/click.mp3"),
@@ -32,7 +32,7 @@ async function initAudio(activityName) {
  * This needs to be called after a user gesture due to browser autoplay policies
  * The gain node allows us to control the soundtrack volume independently
  */
-function initializeAudioContext() {
+export function initializeAudioContext() {
   if (audioInitialized) return;
 
   // The AudioContext is the main entry point for working with Web Audio API
@@ -67,7 +67,7 @@ async function loadSound(key, url) {
  * Creates a new buffer source node each time (required by Web Audio API)
  * Initializes audio context if this is the first user interaction
  */
-function playClick() {
+export function playClick() {
   if (!audioInitialized) {
     initializeAudioContext();
   }
@@ -88,7 +88,7 @@ function playClick() {
  * Stops any currently playing soundtrack first
  * Initializes audio context if this is the first user interaction
  */
-function playSoundtrack() {
+export function playSoundtrack() {
   if (!audioInitialized) {
     initializeAudioContext();
   }
@@ -134,7 +134,7 @@ function resumeSoundtrack() {
  * @param {HTMLElement|HTMLElement[]} elements - Button(s) to add click sound to
  * Click sound will only play if the button isn't disabled
  */
-function addClickSound(elements) {
+export function addClickSound(elements) {
   const elementArray = Array.isArray(elements) ? elements : [elements];
 
   elementArray.forEach((element) => {

@@ -7,7 +7,7 @@ let rotateDirection = -1; // Used during orientation changes
  * Calculates key viewport dimensions
  * @returns {Object} Object containing width, height, vMin, and vMax values
  */
-function calcViewportDimensions() {
+export function calcViewportDimensions() {
   const width = window.innerWidth;
   const height = window.innerHeight;
   const isLandscape = width > height;
@@ -22,7 +22,7 @@ function calcViewportDimensions() {
  * @param {p5.Graphics} buffer - The graphics buffer to clean up
  * @returns {null} Returns null to allow garbage collection
  */
-function cleanupGraphics(buffer) {
+export function cleanupGraphics(buffer) {
   // Instead of trying to remove the buffer, we'll just return null
   // The garbage collector will handle the cleanup
   return null;
@@ -37,7 +37,7 @@ function cleanupGraphics(buffer) {
  * @param {number} direction - Direction of rotation (1 or -1)
  * @returns {p5.Graphics} New resized graphics layer
  */
-function resizeGraphicsLayer(
+export function resizeGraphicsLayer(
   layer,
   width,
   height,
@@ -86,7 +86,7 @@ function resizeGraphicsLayer(
  * @param {Array} layers - Array of graphics layers to resize
  * @returns {Object} Object containing new dimensions, resized layers, and orientation info
  */
-function handleResize(layers = []) {
+export function handleResize(layers = []) {
   // Get new viewport dimensions
   const dimensions = calcViewportDimensions();
   const { width, height } = dimensions;

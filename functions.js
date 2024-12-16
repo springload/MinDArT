@@ -1,8 +1,10 @@
+import { addClickSound } from "./shared/audio.js";
+
 /**
  * Enables/disables app links based on the current week number since program start.
  * Used to progressively unlock content over time
  */
-function showOnlyCurrentLinks() {
+export function showOnlyCurrentLinks() {
   // set programme start date (mm/dd/yyyy)
   const startDate = new Date("02/19/2024");
   const dayInMilliseconds = 86400000;
@@ -31,12 +33,12 @@ function showOnlyCurrentLinks() {
 // Interface utility functions for managing button states and interactions
 
 // Remove 'active' class from all buttons
-function clearActiveButtonState() {
+export function clearActiveButtonState() {
   const activeButtons = document.querySelectorAll(".btn.active");
   activeButtons.forEach((button) => button.classList.remove("active"));
 }
 
-function hasActiveClass(el) {
+export function hasActiveClass(el) {
   return Boolean(el && el.classList.contains("active"));
 }
 
@@ -44,7 +46,7 @@ function hasActiveClass(el) {
  * Sets up the loading screen with start button functionality
  * @param {Function} onStart - Callback function to execute when start button is clicked
  */
-function setupLoadingScreen(onStart) {
+export function setupLoadingScreen(onStart) {
   const loadingDialog = document.querySelector("loading-dialog");
 
   if (!loadingDialog) {
@@ -59,7 +61,7 @@ function setupLoadingScreen(onStart) {
  * @param {Function} resetCallback - Function to call when reset button is clicked
  * @returns {Object} Object containing references to control elements
  */
-function initializeAppControls(resetCallback) {
+export function initializeAppControls(resetCallback) {
   const appControls = document.querySelector("app-controls");
 
   if (!appControls) {
@@ -83,7 +85,7 @@ function initializeAppControls(resetCallback) {
 /**
  * Initializes toolbar buttons with click sounds and active state management
  */
-function initializeToolbarButtons() {
+export function initializeToolbarButtons() {
   const toolbar = document.querySelector('[data-element="toolbar"]');
   if (toolbar) {
     const btns = Array.from(toolbar.querySelectorAll(".btn"));
@@ -128,7 +130,7 @@ function initializeToolbarButtons() {
 // Color utility functions
 
 // Convert hex color to RGB color object
-function hexToRgb(hex) {
+export function hexToRgb(hex) {
   hex = hex.replace("#", "");
   var bigint = parseInt(hex, 16);
   var r = (bigint >> 16) & 255;
@@ -138,15 +140,15 @@ function hexToRgb(hex) {
 }
 
 // Apply alpha channel to a color
-function colorAlpha(aColor, alpha) {
-  var c = color(aColor);
-  return color("rgba(" + [red(c), green(c), blue(c), alpha].join(",") + ")");
+export function colorAlpha(p5, aColor, alpha) {
+  const c = p5.color(aColor);
+  return p5.color(p5.red(c), p5.green(c), p5.blue(c), alpha * 255);
 }
 
 /**
  * Sets up canvas event listeners for touch and mouse interactions
  */
-function setupCanvasEventListeners() {
+export function setupCanvasEventListeners() {
   const canvasContainer = document.querySelector(
     '[data-element="canvas-container"]'
   );
@@ -167,7 +169,7 @@ function setupCanvasEventListeners() {
  * @param {Event} e - The event to check
  * @returns {boolean} True if click was on a button/interface element
  */
-function isClickOnButton(e) {
+export function isClickOnButton(e) {
   return (
     e.target.closest(".btn") !== null || e.target.closest(".interface") !== null
   );
