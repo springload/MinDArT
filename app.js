@@ -1,12 +1,12 @@
 import { isClickOnButton } from "./functions.js";
 import { createSymmetryscape } from "./MinDArT-8-Symmetryscape/symmetryscape.js";
-// import { createRotationscape } from "./MinDArT-7-Rotationscape/rotationscape.js";
+import { createRotationscape } from "./MinDArT-7-Rotationscape/rotationscape.js";
 
 // Factory for creating the appropriate drawing app based on app name
 function createDrawingApp(p5, appName) {
   const creators = {
     symmetryscape: createSymmetryscape,
-    // rotationscape: createRotationscape,
+    rotationscape: createRotationscape,
   };
 
   const creator = creators[appName];
@@ -53,6 +53,10 @@ new p5((p5) => {
         `${appName}${p5.month()}${p5.day()}${p5.hour()}${p5.second()}.jpg`
       );
     });
+  };
+
+  p5.draw = () => {
+    return drawingApp?.draw ? drawingApp.draw() : false;
   };
 
   // Mouse event handlers

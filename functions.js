@@ -169,8 +169,9 @@ export function setupCanvasEventListeners() {
  * @param {Event} e - The event to check
  * @returns {boolean} True if click was on a button/interface element
  */
-export function isClickOnButton(e) {
+export function isClickOnButton(event) {
   return (
-    e.target.closest(".btn") !== null || e.target.closest(".interface") !== null
+    event.target.closest(".btn") !== null ||
+    event.target.closest(".interface") !== null
   );
 }

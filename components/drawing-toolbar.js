@@ -177,22 +177,22 @@ class DrawingToolbar extends HTMLElement {
               {
                 dataElement: "swatch",
                 class: "btn--square",
-                onClick: "changeBrush(1)",
+                dataBrush: "1",
               },
               {
                 dataElement: "swatch",
                 class: "btn--square",
-                onClick: "changeBrush(2)",
+                dataBrush: "2",
               },
               {
                 dataElement: "swatch",
                 class: "btn--square",
-                onClick: "changeBrush(3)",
+                dataBrush: "3",
               },
               {
                 dataElement: "swatch",
                 class: "btn--square",
-                onClick: "changeBrush(4)",
+                dataBrush: "4",
               },
             ],
             wrapperClass: "btn-group--split",
@@ -200,7 +200,7 @@ class DrawingToolbar extends HTMLElement {
               {
                 type: "button",
                 text: "Erase",
-                onClick: "eraser()",
+                dataBrush: "0",
                 class: "btn--leftsplit",
               },
             ],
@@ -208,7 +208,7 @@ class DrawingToolbar extends HTMLElement {
               {
                 type: "button",
                 text: "Pick new centre",
-                onClick: "reCenter()",
+                dataElement: "new-center-button",
                 class: "btn--rightsplit",
               },
             ],

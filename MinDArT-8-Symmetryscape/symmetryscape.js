@@ -32,7 +32,7 @@ export function createSymmetryscape(p5) {
 
     // Drawing configuration
     selectedPalette: 0,
-    brushSelected: 0,
+    selectedBrush: 0,
     lastDrawingBrush: 0,
 
     // Symmetry tracking
@@ -70,10 +70,9 @@ export function createSymmetryscape(p5) {
 
     state.symmetryAxisLayer = p5.createGraphics(p5.width, p5.height);
     state.vMax = calcViewportDimensions().vMax;
-    // Initialize app controls and toolbar
-    initializeAppControls(reset);
+    // Initialize toolbar with click sounds and active state toggle
     initializeToolbarButtons();
-    setupToolbarEvents();
+    setupToolbarActions();
     setSwatchColors();
   }
 
@@ -178,7 +177,7 @@ export function createSymmetryscape(p5) {
   }
 
   function brushIt(_x, _y, pX, pY) {
-    if (state.brushSelected === 0) {
+    if (state.selectedBrush === 0) {
       // Eraser mode
       state.drawLayer.erase();
       state.drawLayer.noStroke();
@@ -189,7 +188,7 @@ export function createSymmetryscape(p5) {
     }
 
     const colorIndex = Math.min(
-      state.brushSelected - 1,
+      state.selectedBrush - 1,
       PALETTES[state.selectedPalette].length - 1
     );
     const currentColor = PALETTES[state.selectedPalette][colorIndex];
@@ -243,7 +242,8 @@ export function createSymmetryscape(p5) {
       },
     ];
 
-    const currentBrushStyle = brushStyles[state.brushSelected - 1];
+    const currentBrushStyle =
+      brushStyles[Math.min(state.selectedBrush - 1, brushStyles.length - 1)];
     if (currentBrushStyle) currentBrushStyle();
   }
 
@@ -269,7 +269,7 @@ export function createSymmetryscape(p5) {
     render();
   }
 
-  function setupToolbarEvents() {
+  function setupToolbarActions() {
     const toolbar = document.querySelector('[data-element="toolbar"]');
     if (!toolbar) return;
 
@@ -307,12 +307,12 @@ export function createSymmetryscape(p5) {
       '[data-element="draw-mode-button"]'
     );
 
-    if (state.brushSelected === 0) {
-      state.brushSelected = state.lastDrawingBrush || 1; // Default to brush 1 if no last brush
+    if (state.selectedBrush === 0) {
+      state.selectedBrush = state.lastDrawingBrush || 1; // Default to brush 1 if no last brush
 
       // Set active state on the restored brush button
       const brushButton = toolbar?.querySelector(
-        `[data-brush="${state.brushSelected}"]`
+        `[data-brush="${state.selectedBrush}"]`
       );
 
       if (brushButton) {
@@ -343,9 +343,9 @@ export function createSymmetryscape(p5) {
   function changeBrush(brushSel, event) {
     if (event) event.stopPropagation();
 
-    state.brushSelected = brushSel;
-    if (state.brushSelected !== 0) {
-      state.lastDrawingBrush = state.brushSelected;
+    state.selectedBrush = brushSel;
+    if (state.selectedBrush !== 0) {
+      state.lastDrawingBrush = state.selectedBrush;
     }
 
     clearActiveButtonState();

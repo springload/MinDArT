@@ -1,5 +1,3 @@
-<!-- Rotationscape (Version: 1) -->
-
 <!DOCTYPE html>
 <html>
 
@@ -14,34 +12,17 @@
 
     <link rel="apple-touch-icon" href="assets/mindArt_Logo_152.png">
     <link rel="apple-touch-icon" sizes="152x152" href="assets/mindArt_Logo_152.png">
-    <link rel="apple-touch-icon" sizes="384x384" href="assets/mindArt_Logo_384.png">
+    <!-- <link rel="apple-touch-icon" sizes="384x384" href="assets/mindArt_Logo_384.png"> -->
     <title>MinDArT : Week 7 - Rotationscape</title>
 
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="manifest" href="/manifest.json">
     
     <script src="../libraries/p5.min.js"></script>
-    <script src="../functions.js"></script>
-    <script src="../shared/resize.js"></script>
-    <script src="../shared/audio.js"></script>
     <script src="../components/loading-dialog.js"></script>
     <script src="../components/app-controls.js"></script>
     <script src="../components/drawing-toolbar.js"></script>
-    <script src="rotationscape.js"></script>
-    <script type="module">
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw-final.js', { 
-        type: 'module',
-        scope: '/'
-      }).then(registration => {
-            console.log('ServiceWorker registration successful');
-          }).catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
-    </script>
+    <script type="module" src="../app.js"></script>
   </head>
 
   <body class="u-theme-orange" data-app-name="rotationscape">
