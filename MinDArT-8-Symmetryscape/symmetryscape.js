@@ -2,7 +2,6 @@ import {
   colorAlpha,
   clearActiveButtonState,
   setupLoadingScreen,
-  initializeAppControls,
   initializeToolbarButtons,
   hasActiveClass,
 } from "../functions.js";
@@ -257,7 +256,7 @@ export function createSymmetryscape(p5) {
   function windowResized() {
     p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
 
-    const { resizedLayers } = handleResize([
+    const { resizedLayers } = handleResize(p5, [
       state.bg,
       state.drawLayer,
       state.symmetryAxisLayer,

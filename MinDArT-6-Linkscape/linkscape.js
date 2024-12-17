@@ -378,7 +378,7 @@ export function createLinkscape(p5) {
 
   function windowResized() {
     p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
-    const { dimensions, resizedLayers } = handleResize([
+    const { dimensions, resizedLayers } = handleResize(p5, [
       state.lineLayer,
       state.paintLayer,
     ]);

@@ -144,7 +144,7 @@ class DrawingToolbar extends HTMLElement {
           {
             type: "button",
             text: "Restart",
-            onClick: "restart()",
+            dataElement: "restart-button",
             class: "btn--white",
           },
         ],
