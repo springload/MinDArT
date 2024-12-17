@@ -153,15 +153,15 @@ export function setupCanvasEventListeners() {
     '[data-element="canvas-container"]'
   );
   const canvas = canvasContainer.querySelector("canvas");
-  canvas.addEventListener("touchmove", moved, { passive: false });
-  canvas.addEventListener("mousemove", moved);
+  canvas.addEventListener("touchmove", handleMove, { passive: false });
+  canvas.addEventListener("mousemove", handleMove);
   canvas.addEventListener("touchstart", touchdown);
   canvas.addEventListener("mousedown", touchdown);
   canvas.addEventListener("touchend", touchstop);
   canvas.addEventListener("touchleave", touchstop);
-  canvas.addEventListener("touchcancel", touchstop); // Add touchcancel
+  canvas.addEventListener("touchcancel", touchstop);
   canvas.addEventListener("mouseup", touchstop);
-  canvas.addEventListener("mouseleave", touchstop); // Add mouseleave
+  canvas.addEventListener("mouseleave", touchstop);
 }
 
 /**
@@ -170,6 +170,10 @@ export function setupCanvasEventListeners() {
  * @returns {boolean} True if click was on a button/interface element
  */
 export function isClickOnButton(event) {
+  // is event is a valid DOM event with target property?
+  if (!event || !event.target || typeof event.target.closest !== "function") {
+    return false;
+  }
   return (
     event.target.closest(".btn") !== null ||
     event.target.closest(".interface") !== null

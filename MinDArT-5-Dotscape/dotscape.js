@@ -151,7 +151,7 @@ function touchstop() {
   render();
 }
 
-function moved(ev) {
+function handleMove(ev) {
   if (!isMousedown) return;
 
   preventDefault(ev);

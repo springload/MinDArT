@@ -154,7 +154,6 @@ class DrawingToolbar extends HTMLElement {
           {
             type: "button",
             text: "Add a string",
-            onClick: "addLine()",
             dataElement: "add-string-button",
             icon: "plus",
             class: "btn--white",
@@ -162,7 +161,6 @@ class DrawingToolbar extends HTMLElement {
           {
             type: "button",
             text: "Add a pin",
-            onClick: "addPin()",
             dataElement: "add-pin-button",
             icon: "pin",
             class: "btn--white",

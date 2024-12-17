@@ -142,7 +142,7 @@ function touchstop(ev) {
     .map(() => []);
 }
 
-function moved(ev) {
+function handleMove(ev) {
   if (!isMousedown) return;
   ev.preventDefault();
 
