@@ -103,38 +103,33 @@ class DrawingToolbar extends HTMLElement {
         items: [
           {
             type: "button",
-            id: "erasedraw",
             text: "Erase Draw",
-            onClick: "drawErase()",
+            dataElement: "erase-draw-button",
             class: "btn--white",
           },
           {
             type: "button",
-            id: "erasepaint",
             text: "Erase Paint",
-            onClick: "paintErase()",
+            dataElement: "erase-paint-button",
             class: "btn--white",
           },
           {
             type: "paint-group",
             buttons: [
               {
-                id: "warm",
-                onClick: "paintWarm()",
+                dataElement: "paint-warm-button",
                 class: "btn--leftsplit btn--warm-stripes",
               },
               {
-                id: "cool",
-                onClick: "paintCool()",
+                dataElement: "paint-cool-button",
                 class: "btn--rightsplit btn--cool-stripes",
               },
             ],
           },
           {
             type: "button",
-            id: "draw",
+            dataElement: "draw-button",
             text: "Draw",
-            onClick: "switchToTrace()",
             class: "btn--white",
           },
         ],

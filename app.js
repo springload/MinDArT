@@ -1,4 +1,5 @@
 import { isClickOnButton } from "./functions.js";
+import { createColourscape } from "./MinDArT-4-Colourscape/colourscape.js";
 import { createDotscape } from "./MinDArT-5-Dotscape/dotscape.js";
 import { createLinkscape } from "./MinDArT-6-Linkscape/linkscape.js";
 import { createRotationscape } from "./MinDArT-7-Rotationscape/rotationscape.js";
@@ -7,6 +8,7 @@ import { createSymmetryscape } from "./MinDArT-8-Symmetryscape/symmetryscape.js"
 // Factory for creating the appropriate drawing app based on app name
 function createDrawingApp(p5, appName) {
   const creators = {
+    colourscape: createColourscape,
     dotscape: createDotscape,
     linkscape: createLinkscape,
     rotationscape: createRotationscape,

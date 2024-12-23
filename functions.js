@@ -46,15 +46,6 @@ export function hasActiveClass(el) {
  * Sets up the loading screen with start button functionality
  * @param {Function} onStart - Callback function to execute when start button is clicked
  */
-export function setupLoadingScreen(onStart) {
-  const loadingDialog = document.querySelector("loading-dialog");
-
-  if (!loadingDialog) {
-    throw new Error("Loading dialog not found");
-  }
-
-  loadingDialog.addEventListener("start", onStart);
-}
 
 /**
  * Initializes common app controls (main menu, reset, save)
@@ -130,13 +121,14 @@ export function initializeToolbarButtons() {
 // Color utility functions
 
 // Convert hex color to RGB color object
-export function hexToRgb(hex) {
+export function hexToRgb(p5, hex) {
   hex = hex.replace("#", "");
+
   var bigint = parseInt(hex, 16);
   var r = (bigint >> 16) & 255;
   var g = (bigint >> 8) & 255;
   var b = bigint & 255;
-  return color(r, g, b);
+  return p5.color(r, g, b);
 }
 
 // Apply alpha channel to a color

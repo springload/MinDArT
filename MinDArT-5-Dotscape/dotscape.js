@@ -1,5 +1,4 @@
 import {
-  setupLoadingScreen,
   initializeAppControls,
   initializeToolbarButtons,
 } from "../functions.js";
@@ -124,7 +123,6 @@ export function createDotscape(p5) {
 
   async function setup() {
     await initAudio("5_Dot");
-    setupLoadingScreen(start);
     initializeAppControls();
     initializeToolbarButtons();
     setupToolbarActions();

@@ -48,7 +48,6 @@ function preload() {
 async function setup() {
   await initAudio("2_Line");
   // add JS functionality to existing HTML elements
-  setupLoadingScreen(start);
   initializeAppControls(next);
   initializeSwatches();
 

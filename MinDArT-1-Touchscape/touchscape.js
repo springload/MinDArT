@@ -74,7 +74,6 @@ function preload() {
 async function setup() {
   await initAudio("1_Touch");
   // add JS functionality to existing HTML elements
-  setupLoadingScreen(start);
   initializeAppControls(reset);
   initializeToolbarButtons();
   // set up p5 for drawing

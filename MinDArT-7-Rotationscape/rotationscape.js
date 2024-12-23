@@ -1,7 +1,6 @@
 import {
   colorAlpha,
   clearActiveButtonState,
-  setupLoadingScreen,
   initializeToolbarButtons,
   isClickOnButton,
 } from "../functions.js";
@@ -68,7 +67,6 @@ export function createRotationscape(p5) {
   async function setup() {
     // Setup audio and loading screen
     await initAudio("7_Rotation");
-    setupLoadingScreen(start);
 
     // Create canvas
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);

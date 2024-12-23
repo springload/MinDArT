@@ -45,7 +45,6 @@ function preload() {
 async function setup() {
   await initAudio("3_Circle");
   // add JS functionality to existing HTML elements
-  setupLoadingScreen(start);
   initializeAppControls(restart);
   initializeToolbarButtons();
 

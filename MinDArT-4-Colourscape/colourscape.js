@@ -1,324 +1,308 @@
-// Asset configuration
-let bg;
-let brush = [];
+import {
+  clearActiveButtonState,
+  initializeToolbarButtons,
+  hexToRgb,
+} from "../functions.js";
+import { calcViewportDimensions, handleResize } from "../shared/resize.js";
+import { initAudio, playSoundtrack } from "../shared/audio.js";
 
-// Color palettes and configuration
-const cloudHSB = [
-  [180, 47, 25],
-  [178, 23, 55],
-  [170, 15, 75],
-  [164, 12, 95],
-  [176, 45, 19],
-];
+export function createColourscape(p5) {
+  const colourSwatch = [
+    ["#F2A97E", "#F28D77", "#BF7E7E", "#7E708C", "#49538C"],
+    ["#F2A74B", "#F2995E", "#D95F43", "#734663", "#2A1A40"],
+    ["#F21905", "#A60303", "#027373", "#025159", "#025159"],
+    ["#CFCFCF", "#88898C", "#565759", "#0D0D0D", "#00010D"],
+    ["#91AA9D", "#D1DBBD", "#91AA9D", "#3E606F", "#193441"],
+  ];
 
-const sunsetHSB = [
-  [11, 53, 96],
-  [13, 83, 91],
-  [2, 90, 100],
-  [334, 81, 91],
-  [300, 67, 99],
-];
+  const state = {
+    // Assets
+    bg: null,
+    brush: [],
 
-const colourSwatch = [
-  ["#F2A97E", "#F28D77", "#BF7E7E", "#7E708C", "#49538C"],
-  ["#F2A74B", "#F2995E", "#D95F43", "#734663", "#2A1A40"],
-  ["#F21905", "#A60303", "#027373", "#025159", "#025159"],
-  ["#CFCFCF", "#88898C", "#565759", "#0D0D0D", "#00010D"],
-  ["#91AA9D", "#D1DBBD", "#91AA9D", "#3E606F", "#193441"],
-];
+    // Layers
+    paintLayer: null,
+    traceLayer: null,
 
-// Color state
-let colHue, colSat, colBri;
-const colHueMin = 0,
-  colHueMax = 360;
-const colSatMin = 0,
-  colSatMax = 255;
-const colBriMin = 0,
-  colBriMax = 255;
-let colOpacity = 0.4;
-let colourBool = 0;
-let colourLevel = 0;
+    // Drawing state
+    started: false,
+    bool: true,
+    brushTemp: 0,
+    eraseState: 0,
+    eraserVersion: 0,
+    colourBool: false,
+    colourLevel: 0,
 
-// Brush mechanics
-let angle1, segLength;
-let scalar = 30;
-let tempwinMouseX = 0;
-let tempwinMouseY = 0;
-let tempX = 100;
-let tempY = 100;
-let dx, dy;
-const rotateDrift = 0.6;
-const scatterAmount = 2;
+    // Brush mechanics
+    angle1: 0,
+    segLength: 0,
+    scalar: 30,
+    tempwinMouseX: 0,
+    tempwinMouseY: 0,
+    tempX: 100,
+    tempY: 100,
+    dx: 0,
+    dy: 0,
 
-// Time delay for brush
-let milliCounter;
-let milliTrack = 0;
-const milliComp = 5;
+    // Time tracking
+    milliCounter: 0,
+    milliTrack: 0,
+  };
 
-// Canvas layers
-let paintLayer, traceLayer;
-let introLayer;
+  const ROTATATE_DRIFT = 0.6;
+  const SCATTER_AMOUNT = 2;
+  const MILLI_COMP = 5;
 
-// Application state
-let started = 0;
-let bool = 1;
-let brushTemp = 0;
-let buttonText1state = 0;
-let buttonText2state = 0;
-let vMax;
-let startState = 0;
-let alphaErase;
-let eraseState = 0;
-let saveState = 1;
-let buttonTEST;
-let eraserVersion = 0; // erase paint = 0, erase trace = 1
-
-// Automated drawing state
-let autoX = 0,
-  autoY = 0,
-  pautoX = 0,
-  pautoY = 0;
-
-// Drawing modes
-function paintWarm() {
-  eraseState = 0;
-  eraserVersion = 0;
-  colourBool = false;
-  bool = 1;
-}
-
-function paintCool() {
-  eraseState = 0;
-  eraserVersion = 0;
-  colourBool = true;
-  bool = 1;
-}
-
-function switchToTrace() {
-  bool = 0;
-  eraseState = 0;
-  eraserVersion = 0;
-  traceLayer.strokeWeight(8);
-  traceLayer.stroke(255, 0, 255, 0.8);
-}
-
-// Eraser functions
-function paintErase() {
-  eraseState = 1;
-  eraserVersion = true;
-}
-
-function drawErase() {
-  eraseState = 1;
-  eraserVersion = false;
-}
-
-function eraseDrawing() {
-  if (eraserVersion) {
-    paintLayer.noStroke();
-    paintLayer.strokeWeight(45);
-    paintLayer.stroke(255, 255, 255, 125);
-    paintLayer.line(mouseX, mouseY, pmouseX, pmouseY);
-  } else {
-    traceLayer.blendMode(BLEND);
-    traceLayer.strokeWeight(45);
-    traceLayer.stroke(255, 0, 0, 0.4);
-    traceLayer.line(mouseX, mouseY, pmouseX, pmouseY);
-    traceLayer.blendMode(LIGHTEST);
+  function preload() {
+    state.bg = p5.loadImage("assets/paper.jpg");
+    state.brush = Array.from({ length: 15 }, (_, i) =>
+      p5.loadImage(`assets/Cloud${i}.png`)
+    );
   }
-}
 
-// p5.js lifecycle functions
-function preload() {
-  bg = loadImage("assets/paper.jpg");
-  for (let i = 0; i < 15; i++) {
-    brush[i] = loadImage("assets/Cloud" + i + ".png");
+  async function setup() {
+    await initAudio("4_Colour");
+    initializeToolbarButtons();
+    setupToolbarActions();
+
+    const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
+    canvas.parent(document.querySelector('[data-element="canvas-container"]'));
+
+    state.paintLayer = p5.createGraphics(p5.width, p5.height);
+    state.traceLayer = p5.createGraphics(p5.width, p5.height);
+
+    p5.pixelDensity(1);
+    setLayerProperties();
   }
-}
 
-async function setup() {
-  await initAudio("4_Colour");
-  setupLoadingScreen(start);
-  initializeAppControls(reset);
-  initializeToolbarButtons();
-
-  const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
-  mainCanvas.parent(
-    document.querySelector('[data-element="canvas-container"]')
-  );
-  paintLayer = createGraphics(width, height);
-  traceLayer = createGraphics(width, height);
-
-  pixelDensity(1);
-
-  colHue = random(colHueMin, colHueMax);
-  colSat = random(colSatMin, colSatMax);
-  strokeWeight(4);
-  stroke(255, 0, 255);
-
-  setLayerProperties();
-}
-
-// Layer configuration
-function setLayerProperties() {
-  imageMode(CENTER);
-  blendMode(BLEND);
-  traceLayer.blendMode(LIGHTEST);
-  colorMode(RGB, 255, 255, 255, 1);
-  paintLayer.colorMode(RGB, 255, 255, 255, 255);
-  traceLayer.colorMode(HSB, 360, 100, 100, 1);
-  traceLayer.strokeWeight(8);
-  traceLayer.stroke(255, 0, 255, 0.8);
-}
-
-// Core drawing functions
-function makeDrawing(_x, _y, pX, pY) {
-  milliCounter = millis();
-  if (bool) {
-    if (milliCounter > milliTrack + milliComp) {
-      if (!colourBool) {
-        let selectedNum = Math.floor(random(0, 2));
-        currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
-      } else {
-        let selectedNum = Math.floor(random(3, 5));
-        currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
-      }
-
-      dx = _x - tempX;
-      dy = _y - tempY;
-      angle1 = atan2(dy, dx) + random(-rotateDrift, rotateDrift);
-      tempX = _x - (cos(angle1) * segLength) / 2;
-      tempY = _y - (sin(angle1) * segLength) / 2;
-      scalar = constrain(
-        70 * (random(3, abs(_x - pX)) / windowWidth),
-        0.2,
-        1.2
-      );
-      segment(tempX, tempY, angle1, brush[brushTemp], scalar);
-      milliTrack = milliCounter;
-    }
-  } else {
-    traceLayer.line(_x, _y, pX, pY);
+  function setLayerProperties() {
+    p5.imageMode(p5.CENTER);
+    p5.blendMode(p5.BLEND);
+    state.traceLayer.blendMode(p5.LIGHTEST);
+    p5.colorMode(p5.RGB, 255, 255, 255, 1);
+    state.paintLayer.colorMode(p5.RGB, 255, 255, 255, 255);
+    state.traceLayer.colorMode(p5.HSB, 360, 100, 100, 1);
+    state.traceLayer.strokeWeight(8);
+    state.traceLayer.stroke(255, 0, 255, 0.8);
   }
-}
 
-// Brush segment drawing
-function segment(rakeX, rakeY, a, rake, scalar) {
-  currentColour.setAlpha(0.5);
-  paintLayer.tint(currentColour);
-  paintLayer.push();
-  paintLayer.imageMode(CENTER);
-  paintLayer.translate(
-    rakeX +
-      randomGaussian(
-        -scatterAmount * (0.1 * scalar),
-        scatterAmount * (0.1 * scalar)
-      ),
-    rakeY +
-      randomGaussian(
-        -scatterAmount * (0.1 * scalar),
-        scatterAmount * (0.1 * scalar)
-      )
-  );
-  paintLayer.scale(scalar);
-  paintLayer.rotate(a);
-  paintLayer.image(rake, 0, 0, 200, 200);
-  paintLayer.imageMode(CORNER);
-  paintLayer.pop();
-}
-
-// Input handlers
-function touchStarted() {
-  if (!started) {
-    start();
+  function start() {
+    playSoundtrack();
+    reset();
+    state.started = true;
   }
-  setProperties(winMouseX, winMouseY);
-}
 
-function touchMoved() {
-  if (started) {
-    if (eraseState === 0) {
-      makeDrawing(winMouseX, winMouseY, pwinMouseX, pwinMouseY);
-    } else {
-      eraseDrawing();
-    }
+  function reset() {
+    state.colourLevel = (state.colourLevel + 1) % 5;
+    calcViewportDimensions();
+    drawErase();
+    clearActiveButtonState();
+
+    backdrop();
+    state.segLength = p5.windowWidth / 40;
+    setProperties(0, 0);
+    state.paintLayer.clear();
+    state.traceLayer.clear();
     render();
   }
-  return false;
-}
 
-// Rendering functions
-function render() {
-  blendMode(BLEND);
-  backdrop();
-  blendMode(DARKEST);
-  image(paintLayer, width / 2, height / 2);
-  blendMode(LIGHTEST);
-  image(traceLayer, width / 2, height / 2);
-}
+  function segment(rakeX, rakeY, a, rake, scalar) {
+    // Use the color selected in makeDrawing instead of hardcoded magenta
+    state.paintLayer.tint(state.currentColour);
+    state.paintLayer.push();
+    state.paintLayer.imageMode(p5.CENTER);
+    state.paintLayer.translate(
+      rakeX +
+        p5.randomGaussian(
+          -SCATTER_AMOUNT * (0.1 * scalar),
+          SCATTER_AMOUNT * (0.1 * scalar)
+        ),
+      rakeY +
+        p5.randomGaussian(
+          -SCATTER_AMOUNT * (0.1 * scalar),
+          SCATTER_AMOUNT * (0.1 * scalar)
+        )
+    );
+    state.paintLayer.scale(scalar);
+    state.paintLayer.rotate(a);
+    state.paintLayer.image(rake, 0, 0, 200, 200);
+    state.paintLayer.imageMode(p5.CORNER);
+    state.paintLayer.pop();
+  }
 
-function backdrop() {
-  background(255);
-  noTint();
-  image(bg, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight);
-}
+  function makeDrawing(_x, _y, pX, pY) {
+    state.milliCounter = p5.millis();
+    if (state.bool) {
+      if (state.milliCounter > state.milliTrack + MILLI_COMP) {
+        // Select color based on warm/cool selection
+        state.selectedNum = !state.colourBool
+          ? Math.floor(p5.random(0, 2)) // Warm colors (first 2)
+          : Math.floor(p5.random(3, 5)); // Cool colors (last 2)
 
-// Utility functions
-function setProperties(_x, _y) {
-  tempwinMouseX = windowWidth / 2 - _x;
-  tempwinMouseY = windowHeight / 2 - _y;
-  brushTemp = int(random(0, brush.length - 1));
+        // Convert hex to RGB and store in state
+        state.currentColour = hexToRgb(
+          p5,
+          colourSwatch[state.colourLevel][state.selectedNum]
+        );
 
-  if (bool) {
-    if (!colourBool) {
-      let selectedNum = Math.floor(random(0, 2));
-      currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
+        state.dx = _x - state.tempX;
+        state.dy = _y - state.tempY;
+        state.angle1 =
+          p5.atan2(state.dy, state.dx) +
+          p5.random(-ROTATATE_DRIFT, ROTATATE_DRIFT);
+        state.tempX = _x - (p5.cos(state.angle1) * state.segLength) / 2;
+        state.tempY = _y - (p5.sin(state.angle1) * state.segLength) / 2;
+        state.scalar = p5.constrain(
+          70 * (p5.random(3, Math.abs(_x - pX)) / p5.windowWidth),
+          0.2,
+          1.2
+        );
+
+        segment(
+          state.tempX,
+          state.tempY,
+          state.angle1,
+          state.brush[state.brushTemp],
+          state.scalar
+        );
+
+        state.milliTrack = state.milliCounter;
+      }
     } else {
-      let selectedNum = Math.floor(random(3, 5));
-      currentColour = hexToRgb(colourSwatch[colourLevel][selectedNum]);
+      state.traceLayer.line(_x, _y, pX, pY);
     }
   }
+
+  function drawErase() {
+    state.eraseState = 1;
+    state.eraserVersion = false;
+  }
+
+  function eraseDrawing() {
+    if (state.eraserVersion) {
+      state.paintLayer.noStroke();
+      state.paintLayer.strokeWeight(45);
+      state.paintLayer.stroke(255, 255, 255, 125);
+      state.paintLayer.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
+    } else {
+      state.traceLayer.blendMode(p5.BLEND);
+      state.traceLayer.strokeWeight(45);
+      state.traceLayer.stroke(255, 0, 0, 0.4);
+      state.traceLayer.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
+      state.traceLayer.blendMode(p5.LIGHTEST);
+    }
+  }
+
+  function setProperties(_x, _y) {
+    state.tempwinMouseX = p5.windowWidth / 2 - _x;
+    state.tempwinMouseY = p5.windowHeight / 2 - _y;
+    state.brushTemp = Math.floor(p5.random(0, state.brush.length - 1));
+  }
+
+  function render() {
+    p5.blendMode(p5.BLEND);
+    backdrop();
+    p5.blendMode(p5.DARKEST);
+    p5.image(state.paintLayer, p5.width / 2, p5.height / 2);
+    p5.blendMode(p5.LIGHTEST);
+    p5.image(state.traceLayer, p5.width / 2, p5.height / 2);
+  }
+
+  function backdrop() {
+    p5.background(255);
+    p5.noTint();
+    p5.image(
+      state.bg,
+      p5.windowWidth / 2,
+      p5.windowHeight / 2,
+      p5.windowWidth,
+      p5.windowHeight
+    );
+  }
+
+  // Event Handlers
+  function handlePointerStart() {
+    setProperties(p5.winMouseX, p5.winMouseY);
+    return false;
+  }
+
+  function handleMove(currentX, currentY, previousX, previousY) {
+    if (state.started) {
+      if (state.eraseState === 0) {
+        makeDrawing(currentX, currentY, previousX, previousY);
+      } else {
+        eraseDrawing();
+      }
+      render();
+    }
+    return false;
+  }
+
+  function windowResized() {
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+    const { resizedLayers } = handleResize(p5, [
+      state.paintLayer,
+      state.traceLayer,
+    ]);
+    [state.paintLayer, state.traceLayer] = resizedLayers;
+    setLayerProperties();
+    render();
+  }
+
+  function setupToolbarActions() {
+    const toolbar = document.querySelector('[data-element="toolbar"]');
+    if (!toolbar) return;
+
+    toolbar
+      .querySelector('[data-element="paint-warm-button"]')
+      ?.addEventListener("click", () => {
+        state.eraseState = 0;
+        state.eraserVersion = 0;
+        state.colourBool = false;
+        state.bool = true;
+      });
+
+    toolbar
+      .querySelector('[data-element="paint-cool-button"]')
+      ?.addEventListener("click", () => {
+        state.eraseState = 0;
+        state.eraserVersion = 0;
+        state.colourBool = true;
+        state.bool = true;
+      });
+
+    toolbar
+      .querySelector('[data-element="draw-button"]')
+      ?.addEventListener("click", () => {
+        state.bool = false;
+        state.eraseState = 0;
+        state.eraserVersion = 0;
+        state.traceLayer.strokeWeight(8);
+        state.traceLayer.stroke(255, 0, 255, 0.8);
+      });
+
+    toolbar
+      .querySelector('[data-element="erase-paint-button"]')
+      ?.addEventListener("click", () => {
+        state.eraseState = 1;
+        state.eraserVersion = true;
+      });
+
+    toolbar
+      .querySelector('[data-element="erase-draw-button"]')
+      ?.addEventListener("click", () => {
+        state.eraseState = 1;
+        state.eraserVersion = false;
+      });
+  }
+
+  return {
+    preload,
+    setup,
+    start,
+    reset,
+    handlePointerStart,
+    handleMove,
+    windowResized,
+  };
 }
-
-function start() {
-  playSoundtrack();
-  reset();
-  started = 1;
-}
-
-function reset() {
-  colourLevel = (colourLevel + 1) % 5;
-  calcViewportDimensions();
-  drawErase();
-  clearActiveButtonState();
-
-  backdrop();
-  segLength = windowWidth / 40;
-  setProperties(0, 0);
-  paintLayer.clear();
-  traceLayer.clear();
-  render();
-}
-
-// Window handling
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-
-  const { dimensions, resizedLayers } = handleResize([paintLayer, traceLayer]);
-  [paintLayer, traceLayer] = resizedLayers;
-  ({ vMax } = dimensions);
-
-  setLayerProperties();
-  render();
-}
-
-// Automated drawing
-function autoDraw() {
-  pautoX = autoX;
-  pautoY = autoY;
-  autoX = autoX + random(-50, 55);
-  autoY = autoY + random(-20, 22);
-  makeDrawing(autoX % width, autoY % height, pautoX % width, pautoY % height);
-}
-
-window.addEventListener("resize", windowResized);

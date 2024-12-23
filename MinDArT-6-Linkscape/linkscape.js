@@ -1,6 +1,5 @@
 import {
   colorAlpha,
-  setupLoadingScreen,
   initializeAppControls,
   initializeToolbarButtons,
   isClickOnButton,
@@ -70,7 +69,6 @@ export function createLinkscape(p5) {
 
   async function setup() {
     await initAudio("6_Link");
-    setupLoadingScreen(start);
     initializeAppControls(reset);
     initializeToolbarButtons();
     setupToolbarActions();

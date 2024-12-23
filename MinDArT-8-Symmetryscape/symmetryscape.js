@@ -1,7 +1,6 @@
 import {
   colorAlpha,
   clearActiveButtonState,
-  setupLoadingScreen,
   initializeToolbarButtons,
   hasActiveClass,
 } from "../functions.js";
@@ -54,7 +53,6 @@ export function createSymmetryscape(p5) {
   async function setup() {
     // Setup audio and loading screen
     await initAudio("8_Symmetry");
-    setupLoadingScreen(start);
 
     // Create canvas
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
