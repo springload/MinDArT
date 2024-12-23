@@ -82,19 +82,19 @@ class DrawingToolbar extends HTMLElement {
           {
             type: "button",
             text: "Erase",
-            onClick: "eraseToggle()",
+            dataElement: "erase-button",
             class: "btn--white",
           },
           {
             type: "button",
             text: "Draw small",
-            onClick: "drawSmall()",
+            dataElement: "draw-small-button",
             class: "btn--white btn--leftsplit",
           },
           {
             type: "button",
             text: "Draw big",
-            onClick: "drawBig()",
+            dataElement: "draw-small-button",
             class: "btn--white btn--rightsplit",
           },
         ],
