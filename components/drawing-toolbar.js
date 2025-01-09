@@ -66,13 +66,11 @@ class DrawingToolbar extends HTMLElement {
               {
                 dataElement: "swatch",
                 dataSwatch: "0",
-                onClick: "switchSwatch(this)",
                 class: "btn--leftsplit active",
               },
               {
                 dataElement: "swatch",
                 dataSwatch: "1",
-                onClick: "switchSwatch(this)",
                 class: "btn--rightsplit",
               },
             ],
