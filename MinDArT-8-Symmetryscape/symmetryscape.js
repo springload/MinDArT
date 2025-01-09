@@ -5,7 +5,6 @@ import {
   addInteractionHandlers,
 } from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { playSoundtrack } from "../shared/audio.js";
 
 /**
  * Creates a fully encapsulated Symmetryscape sketch
@@ -344,7 +343,6 @@ export function createSymmetryscape(p5) {
     }
   }
 
-  // Public API
   return {
     preload,
     setup,
@@ -354,6 +352,5 @@ export function createSymmetryscape(p5) {
     render,
     windowResized,
     changeBrush,
-    state, // Exposing state for potential debugging
   };
 }

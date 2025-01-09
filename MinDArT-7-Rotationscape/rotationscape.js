@@ -2,9 +2,9 @@ import {
   colorAlpha,
   clearActiveButtonState,
   isClickOnButton,
+  addInteractionHandlers,
 } from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { playSoundtrack } from "../shared/audio.js";
 
 /**
  * Creates a fully encapsulated Rotationscape sketch
@@ -84,7 +84,6 @@ export function createRotationscape(p5) {
 
   function start() {
     state.counter = -1;
-    playSoundtrack();
     reset();
   }
 
@@ -186,7 +185,6 @@ export function createRotationscape(p5) {
         break;
 
       default:
-        // Optional: Handle invalid brush selections
         console.warn("Invalid brush selected:", state.selectedBrush);
         break;
     }
@@ -293,26 +291,22 @@ export function createRotationscape(p5) {
     const toolbar = document.querySelector('[data-element="toolbar"]');
     if (!toolbar) return;
 
-    // Handle brush selection buttons
     const brushButtons = toolbar.querySelectorAll("[data-brush]");
     brushButtons.forEach((button) => {
-      button.addEventListener("click", (event) => {
-        // Parse the brush number from the data attribute
-        const brushNumber = parseInt(button.dataset.brush, 10);
-
-        // Call changeBrush with the brush number and event
+      addInteractionHandlers(button, (event) => {
+        const brushNumber = parseInt(button.dataset.brush);
         changeBrush(brushNumber, event);
       });
-      // Handle 'pick new center' button
-      const newCenterButton = toolbar.querySelector(
-        '[data-element="new-center-button"]'
-      );
-      if (newCenterButton) {
-        newCenterButton.addEventListener("click", (event) => {
-          reCenter(event);
-        });
-      }
     });
+
+    const newCenterButton = toolbar.querySelector(
+      '[data-element="new-center-button"]'
+    );
+    if (newCenterButton) {
+      addInteractionHandlers(newCenterButton, (event) => {
+        reCenter(event);
+      });
+    }
   }
 
   function setSwatchColors() {
@@ -360,7 +354,6 @@ export function createRotationscape(p5) {
         break;
 
       default:
-        // Optional: Handle invalid brush selections
         console.warn("Invalid brush selected:", state.selectedBrush);
         break;
     }
@@ -401,7 +394,6 @@ export function createRotationscape(p5) {
     return false;
   }
 
-  // Public API
   return {
     preload,
     setup,
@@ -416,6 +408,5 @@ export function createRotationscape(p5) {
     handleMove,
     reCenter,
     changeBrush,
-    state, // Exposed for debugging
   };
 }
