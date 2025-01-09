@@ -1,6 +1,9 @@
-import { clearActiveButtonState, hexToRgb } from "../functions.js";
+import {
+  addInteractionHandlers,
+  clearActiveButtonState,
+  hexToRgb,
+} from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { playSoundtrack } from "../shared/audio.js";
 
 export function createColourscape(p5) {
   const colourSwatch = [
@@ -45,7 +48,7 @@ export function createColourscape(p5) {
     milliTrack: 0,
   };
 
-  const ROTATATE_DRIFT = 0.6;
+  const ROTATE_DRIFT = 0.6;
   const SCATTER_AMOUNT = 2;
   const MILLI_COMP = 5;
 
@@ -81,7 +84,6 @@ export function createColourscape(p5) {
   }
 
   function start() {
-    playSoundtrack();
     reset();
     state.started = true;
   }
@@ -142,8 +144,7 @@ export function createColourscape(p5) {
         state.dx = _x - state.tempX;
         state.dy = _y - state.tempY;
         state.angle1 =
-          p5.atan2(state.dy, state.dx) +
-          p5.random(-ROTATATE_DRIFT, ROTATATE_DRIFT);
+          p5.atan2(state.dy, state.dx) + p5.random(-ROTATE_DRIFT, ROTATE_DRIFT);
         state.tempX = _x - (p5.cos(state.angle1) * state.segLength) / 2;
         state.tempY = _y - (p5.sin(state.angle1) * state.segLength) / 2;
         state.scalar = p5.constrain(
@@ -247,47 +248,62 @@ export function createColourscape(p5) {
     const toolbar = document.querySelector('[data-element="toolbar"]');
     if (!toolbar) return;
 
-    toolbar
-      .querySelector('[data-element="paint-warm-button"]')
-      ?.addEventListener("click", () => {
-        state.eraseState = 0;
-        state.eraserVersion = 0;
-        state.colourBool = false;
-        state.bool = true;
-      });
+    const paintWarmButton = toolbar.querySelector(
+      '[data-element="paint-warm-button"]'
+    );
+    const paintCoolButton = toolbar.querySelector(
+      '[data-element="paint-cool-button"]'
+    );
+    const drawButton = toolbar.querySelector('[data-element="draw-button"]');
+    const erasePaintButton = toolbar.querySelector(
+      '[data-element="erase-paint-button"]'
+    );
+    const eraseDrawButton = toolbar.querySelector(
+      '[data-element="erase-draw-button"]'
+    );
 
-    toolbar
-      .querySelector('[data-element="paint-cool-button"]')
-      ?.addEventListener("click", () => {
-        state.eraseState = 0;
-        state.eraserVersion = 0;
-        state.colourBool = true;
-        state.bool = true;
-      });
+    if (
+      !paintWarmButton |
+      !paintCoolButton |
+      !drawButton |
+      !erasePaintButton |
+      !eraseDrawButton
+    ) {
+      console.error("toolbar button not found");
+      return;
+    }
 
-    toolbar
-      .querySelector('[data-element="draw-button"]')
-      ?.addEventListener("click", () => {
-        state.bool = false;
-        state.eraseState = 0;
-        state.eraserVersion = 0;
-        state.traceLayer.strokeWeight(8);
-        state.traceLayer.stroke(255, 0, 255, 0.8);
-      });
+    addInteractionHandlers(paintWarmButton, (event) => {
+      state.eraseState = 0;
+      state.eraserVersion = 0;
+      state.colourBool = false;
+      state.bool = true;
+    });
 
-    toolbar
-      .querySelector('[data-element="erase-paint-button"]')
-      ?.addEventListener("click", () => {
-        state.eraseState = 1;
-        state.eraserVersion = true;
-      });
+    addInteractionHandlers(paintCoolButton, (event) => {
+      state.eraseState = 0;
+      state.eraserVersion = 0;
+      state.colourBool = true;
+      state.bool = true;
+    });
 
-    toolbar
-      .querySelector('[data-element="erase-draw-button"]')
-      ?.addEventListener("click", () => {
-        state.eraseState = 1;
-        state.eraserVersion = false;
-      });
+    addInteractionHandlers(drawButton, (event) => {
+      state.bool = false;
+      state.eraseState = 0;
+      state.eraserVersion = 0;
+      state.traceLayer.strokeWeight(8);
+      state.traceLayer.stroke(255, 0, 255, 0.8);
+    });
+
+    addInteractionHandlers(erasePaintButton, (event) => {
+      state.eraseState = 1;
+      state.eraserVersion = true;
+    });
+
+    addInteractionHandlers(eraseDrawButton, (event) => {
+      state.eraseState = 1;
+      state.eraserVersion = false;
+    });
   }
 
   return {
