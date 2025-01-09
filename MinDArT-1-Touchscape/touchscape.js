@@ -72,10 +72,6 @@ function preload() {
 }
 
 async function setup() {
-  await initAudio("1_Touch");
-  // add JS functionality to existing HTML elements
-  initializeAppControls(reset);
-  initializeToolbarButtons();
   // set up p5 for drawing
   const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
   mainCanvas.parent(

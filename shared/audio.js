@@ -1,147 +1,127 @@
-// Keep track of audio context and audio buffers
 let audioContext;
-let sounds = new Map();
+let audioInitialized = false;
+let clickSound = null;
+let soundtrackBuffer = null;
 let currentSoundtrack = null;
 let soundtrackGain = null;
-let audioInitialized = false;
+let pendingSoundtrack = null;
 
 /**
- * Initialize the audio manager for a specific activity
- * @param {string} activityName - Name/number of the activity scene
- * Loads audio files but defers AudioContext creation until user interaction
+ * Prepare audio system by loading sounds, but not creating AudioContext
+ * Called on page load
  */
-export async function initAudio(activityName) {
-  // Load both sounds first - this doesn't require AudioContext
-  await Promise.all([
-    loadSound("click", "../sound/click.mp3"),
-    loadSound("soundtrack", `../sound/Scene${activityName}.mp3`),
-  ]);
-
-  // Handle page visibility changes to manage soundtrack playback
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      pauseSoundtrack();
-    } else {
-      resumeSoundtrack();
-    }
-  });
+export async function prepareAudio() {
+  try {
+    // Load click sound
+    const clickResponse = await fetch("../sound/click.mp3");
+    clickSound = await clickResponse.arrayBuffer();
+  } catch (error) {
+    console.warn("Failed to load click sound:", error);
+  }
 }
 
 /**
- * Initialize the Web Audio API context and set up the main gain node
- * This needs to be called after a user gesture due to browser autoplay policies
- * The gain node allows us to control the soundtrack volume independently
+ * Initialize audio context and set up the gain node
+ * Called from the loading dialog's start button
  */
 export function initializeAudioContext() {
   if (audioInitialized) return;
 
-  // The AudioContext is the main entry point for working with Web Audio API
-  // Some browsers use the webkit prefix
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-  // Create a gain node for controlling soundtrack volume
-  soundtrackGain = audioContext.createGain();
-  soundtrackGain.connect(audioContext.destination);
-  audioInitialized = true;
-}
-
-/**
- * Load an audio file and store it in the sounds Map
- * @param {string} key - Identifier for the sound (e.g., 'click', 'soundtrack')
- * @param {string} url - Path to the audio file
- * Stores the raw array buffer until we need to decode it
- */
-async function loadSound(key, url) {
   try {
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    // Store the raw buffer - we'll decode it when needed
-    sounds.set(key, arrayBuffer);
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    soundtrackGain = audioContext.createGain();
+    soundtrackGain.connect(audioContext.destination);
+    audioInitialized = true;
+
+    // If we have a pending soundtrack, load it now
+    if (pendingSoundtrack) {
+      loadSoundtrack(pendingSoundtrack);
+    }
   } catch (error) {
-    console.warn(`Failed to load sound: ${key}`, error);
+    console.warn("Failed to initialize audio context:", error);
   }
 }
 
-/**
- * Play the click sound
- * Creates a new buffer source node each time (required by Web Audio API)
- * Initializes audio context if this is the first user interaction
- */
 export function playClick() {
-  if (!audioInitialized) {
-    initializeAudioContext();
-  }
+  if (!audioInitialized || !clickSound) return;
 
-  if (!sounds.has("click")) return;
-
-  // Decode the audio data and create a new source node
-  audioContext.decodeAudioData(sounds.get("click").slice(0), (audioBuffer) => {
+  audioContext.decodeAudioData(clickSound.slice(0), (audioBuffer) => {
     const source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
     source.start();
   });
 }
+/**
+ * Load soundtrack for a specific activity
+ * @returns {Promise} Resolves when soundtrack is loaded
+ */
+export async function loadSoundtrack(appName) {
+  try {
+    if (currentSoundtrack) {
+      currentSoundtrack.stop();
+      currentSoundtrack = null;
+    }
+
+    const response = await fetch(`../sound/${appName}.mp3`);
+    soundtrackBuffer = await response.arrayBuffer();
+  } catch (error) {
+    console.warn(`Failed to load soundtrack for ${appName}:`, error);
+  }
+}
 
 /**
- * Play the background soundtrack
- * Stops any currently playing soundtrack first
- * Initializes audio context if this is the first user interaction
+ * Play the soundtrack
+ * @returns {Promise} Resolves when soundtrack starts playing
  */
 export function playSoundtrack() {
-  if (!audioInitialized) {
-    initializeAudioContext();
-  }
+  return new Promise((resolve, reject) => {
+    if (!audioInitialized || !soundtrackBuffer) {
+      reject(
+        new Error("Cannot play soundtrack - missing initialization or buffer")
+      );
+      return;
+    }
 
-  if (!sounds.has("soundtrack")) return;
-
-  if (currentSoundtrack) {
-    currentSoundtrack.stop();
-  }
-
-  // Decode the audio data and create a new source node
-  audioContext.decodeAudioData(sounds.get("soundtrack"), (audioBuffer) => {
-    currentSoundtrack = audioContext.createBufferSource();
-    currentSoundtrack.buffer = audioBuffer;
-    currentSoundtrack.loop = true;
-    currentSoundtrack.connect(soundtrackGain);
-    currentSoundtrack.start();
+    audioContext.decodeAudioData(
+      soundtrackBuffer.slice(0),
+      (audioBuffer) => {
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+        source.loop = true;
+        source.connect(soundtrackGain);
+        currentSoundtrack = source;
+        source.start();
+        resolve();
+      },
+      reject
+    );
   });
 }
 
 /**
- * Pause the soundtrack by suspending the audio context
- * This preserves the audio state while stopping playback
+ * Pause the current soundtrack
  */
-function pauseSoundtrack() {
+export function pauseSoundtrack() {
   if (audioContext?.state === "running") {
     audioContext.suspend();
   }
 }
 
 /**
- * Resume the soundtrack by resuming the audio context
- * This restores playback from where it was suspended
+ * Resume the current soundtrack
  */
-function resumeSoundtrack() {
+export function resumeSoundtrack() {
   if (audioContext?.state === "suspended") {
     audioContext.resume();
   }
 }
 
-/**
- * Add click sound to a button or set of buttons
- * @param {HTMLElement|HTMLElement[]} elements - Button(s) to add click sound to
- * Click sound will only play if the button isn't disabled
- */
-export function addClickSound(elements) {
-  const elementArray = Array.isArray(elements) ? elements : [elements];
-
-  elementArray.forEach((element) => {
-    element.addEventListener("click", (e) => {
-      if (!element.disabled) {
-        playClick();
-      }
-    });
-  });
-}
+// Set up visibility change handler for soundtrack
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    pauseSoundtrack();
+  } else {
+    resumeSoundtrack();
+  }
+});

@@ -46,9 +46,7 @@ function preload() {
 }
 
 async function setup() {
-  await initAudio("2_Line");
   // add JS functionality to existing HTML elements
-  initializeAppControls(next);
   initializeSwatches();
 
   // set up p5 for drawing
@@ -172,7 +170,6 @@ function setupArrays() {
 // UI and control functions
 function initializeSwatches() {
   updateSwatchColors();
-  initializeToolbarButtons();
 }
 
 function switchSwatch(el) {
@@ -187,7 +184,7 @@ function updateSwatchColors() {
   });
 }
 
-function next() {
+function reset() {
   clearActiveButtonState();
   yCount = int((yCount *= 1.3));
   xCount = int((xCount *= 0.95));

@@ -1,3 +1,5 @@
+import { playClick } from "../shared/audio.js";
+
 // DrawingToolbar extends HTMLElement to create a custom HTML element
 // This allows us to create <drawing-toolbar> tags that the browser recognizes
 class DrawingToolbar extends HTMLElement {
@@ -208,6 +210,7 @@ class DrawingToolbar extends HTMLElement {
           },
         ],
       },
+      // TODO: handle draw mode being clicked when already in draw mode
       symmetryscape: {
         items: [
           {
@@ -333,33 +336,39 @@ class DrawingToolbar extends HTMLElement {
   }
 
   setupEventListeners() {
-    // Add click sounds to all buttons
     const buttons = this.querySelectorAll(".btn");
-    buttons.forEach((button) => {
-      if (window.addClickSound) {
-        window.addClickSound(button);
+
+    const handleButtonInteraction = (button, e) => {
+      e.stopPropagation(); // don't pass the event on to the canvas
+      playClick();
+
+      // Special case for symmetryscape draw mode button
+      if (
+        this.getAttribute("app-name") === "symmetryscape" &&
+        button.dataset.element === "draw-mode-button"
+      ) {
+        // this button should be styled as active
+        return;
       }
 
-      // Handle active state for buttons that need it
+      // Update active state
       if (!["dotscape", "linkscape"].includes(this.getAttribute("app-name"))) {
-        button.addEventListener("click", (e) => {
-          e.stopPropagation();
-
-          // Special case for symmetryscape draw mode button
-          if (
-            this.getAttribute("app-name") === "symmetryscape" &&
-            button.dataset.element === "draw-mode-button"
-          ) {
-            return;
-          }
-
-          const current = this.querySelector(".active");
-          if (current) {
-            current.classList.remove("active");
-          }
-          button.classList.add("active");
-        });
+        const current = this.querySelector(".active");
+        if (current) {
+          current.classList.remove("active");
+        }
+        button.classList.add("active");
       }
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", (e) =>
+        handleButtonInteraction(button, e)
+      );
+      button.addEventListener("touchend", (e) => {
+        e.preventDefault(); // Prevent mouse event from firing
+        handleButtonInteraction(button, e);
+      });
     });
   }
 }

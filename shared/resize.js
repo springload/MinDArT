@@ -54,7 +54,7 @@ export function resizeGraphicsLayer(
       // Apply rotation transformation for orientation changes
       newLayer.push();
       newLayer.translate(width / 2, height / 2);
-      newLayer.rotate((PI / 2) * direction);
+      newLayer.rotate((p5.PI / 2) * direction);
       newLayer.translate(-height / 2, -width / 2);
       newLayer.image(layer, 0, 0, height, width);
       newLayer.pop();

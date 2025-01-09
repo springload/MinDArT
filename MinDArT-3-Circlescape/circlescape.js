@@ -1,10 +1,6 @@
-import {
-  clearActiveButtonState,
-  initializeToolbarButtons,
-  isClickOnButton,
-} from "../functions.js";
+import { clearActiveButtonState, isClickOnButton } from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { initAudio, playSoundtrack } from "../shared/audio.js";
+import { playSoundtrack } from "../shared/audio.js";
 
 export function createCirclescape(p5) {
   // Constants
@@ -61,15 +57,12 @@ export function createCirclescape(p5) {
   }
 
   async function setup() {
-    await initAudio("3_Circle");
-
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
     p5.pixelDensity(1);
     state.drawLayer = p5.createGraphics(p5.width, p5.height);
 
-    initializeToolbarButtons();
     setupToolbarActions();
 
     updateDimensions();

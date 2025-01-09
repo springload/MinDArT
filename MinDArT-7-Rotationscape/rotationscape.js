@@ -1,11 +1,10 @@
 import {
   colorAlpha,
   clearActiveButtonState,
-  initializeToolbarButtons,
   isClickOnButton,
 } from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { initAudio, playSoundtrack } from "../shared/audio.js";
+import { playSoundtrack } from "../shared/audio.js";
 
 /**
  * Creates a fully encapsulated Rotationscape sketch
@@ -65,9 +64,6 @@ export function createRotationscape(p5) {
   }
 
   async function setup() {
-    // Setup audio and loading screen
-    await initAudio("7_Rotation");
-
     // Create canvas
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
@@ -82,7 +78,7 @@ export function createRotationscape(p5) {
     state.vMax = calcViewportDimensions().vMax;
 
     // Initialize controls
-    initializeToolbarButtons();
+
     setupToolbarActions();
   }
 
@@ -265,8 +261,6 @@ export function createRotationscape(p5) {
   }
 
   function center() {
-    console.log("center");
-
     state.centeringActive = false;
     state.centerX = p5.mouseX;
     state.centerY = p5.mouseY;

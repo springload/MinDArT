@@ -1,9 +1,5 @@
-import {
-  initializeAppControls,
-  initializeToolbarButtons,
-} from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { initAudio, playSoundtrack } from "../shared/audio.js";
+import { playSoundtrack } from "../shared/audio.js";
 
 export function createDotscape(p5) {
   const BACKGROUND_IMAGE = "assets/paper.jpg";
@@ -122,9 +118,6 @@ export function createDotscape(p5) {
   }
 
   async function setup() {
-    await initAudio("5_Dot");
-    initializeAppControls();
-    initializeToolbarButtons();
     setupToolbarActions();
 
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);

@@ -1,10 +1,6 @@
-import {
-  clearActiveButtonState,
-  initializeToolbarButtons,
-  hexToRgb,
-} from "../functions.js";
+import { clearActiveButtonState, hexToRgb } from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { initAudio, playSoundtrack } from "../shared/audio.js";
+import { playSoundtrack } from "../shared/audio.js";
 
 export function createColourscape(p5) {
   const colourSwatch = [
@@ -61,8 +57,6 @@ export function createColourscape(p5) {
   }
 
   async function setup() {
-    await initAudio("4_Colour");
-    initializeToolbarButtons();
     setupToolbarActions();
 
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);

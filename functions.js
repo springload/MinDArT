@@ -1,5 +1,3 @@
-import { addClickSound } from "./shared/audio.js";
-
 /**
  * Enables/disables app links based on the current week number since program start.
  * Used to progressively unlock content over time
@@ -43,79 +41,16 @@ export function hasActiveClass(el) {
 }
 
 /**
- * Sets up the loading screen with start button functionality
- * @param {Function} onStart - Callback function to execute when start button is clicked
+ * Adds both click and touch handlers to an element
+ * @param {HTMLElement} element - The element to add handlers to
+ * @param {Function} handler - The event handler function
  */
-
-/**
- * Initializes common app controls (main menu, reset, save)
- * @param {Function} resetCallback - Function to call when reset button is clicked
- * @returns {Object} Object containing references to control elements
- */
-export function initializeAppControls(resetCallback) {
-  const appControls = document.querySelector("app-controls");
-
-  if (!appControls) {
-    console.warn(
-      "No app-controls element found. App controls not initialized."
-    );
-    return;
-  }
-
-  if (resetCallback) {
-    appControls.addEventListener("reset", resetCallback);
-  }
-
-  return {
-    resetButton: appControls.querySelector('[data-element="reset-button"]'),
-    saveButton: appControls.querySelector('[data-element="save-button"]'),
-    container: appControls,
-  };
-}
-
-/**
- * Initializes toolbar buttons with click sounds and active state management
- */
-export function initializeToolbarButtons() {
-  const toolbar = document.querySelector('[data-element="toolbar"]');
-  if (toolbar) {
-    const btns = Array.from(toolbar.querySelectorAll(".btn"));
-
-    btns.forEach((btn) => {
-      addClickSound(btn);
-
-      // Some apps only need click sounds, not active state management
-      if (
-        ["dotscape", "linkscape"].some(
-          (appName) => document.body.dataset.appName === appName
-        )
-      ) {
-        return;
-      }
-
-      btn.addEventListener("click", (e) => {
-        // Prevent event from reaching the canvas
-        e.stopPropagation();
-
-        const clicked = e.currentTarget;
-
-        // Special case for symmetryscape draw mode button, it shouldn't receive the active state
-        if (
-          document.body.dataset.appName === "symmetryscape" &&
-          clicked.dataset.element === "draw-mode-button"
-        ) {
-          return;
-        }
-
-        // Update active state
-        const current = document.querySelector(".active");
-        if (current) {
-          current.classList.remove("active");
-        }
-        clicked.classList.add("active");
-      });
-    });
-  }
+export function addInteractionHandlers(element, handler) {
+  element.addEventListener("click", handler);
+  element.addEventListener("touchend", (e) => {
+    e.preventDefault(); // Prevent mouse event from firing
+    handler(e);
+  });
 }
 
 // Color utility functions

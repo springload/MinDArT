@@ -1,11 +1,6 @@
-import {
-  colorAlpha,
-  initializeAppControls,
-  initializeToolbarButtons,
-  isClickOnButton,
-} from "../functions.js";
+import { colorAlpha, isClickOnButton } from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { initAudio, playSoundtrack } from "../shared/audio.js";
+import { playSoundtrack } from "../shared/audio.js";
 
 /**
  * Creates an encapsulated Linkscape sketch
@@ -68,9 +63,6 @@ export function createLinkscape(p5) {
   }
 
   async function setup() {
-    await initAudio("6_Link");
-    initializeAppControls(reset);
-    initializeToolbarButtons();
     setupToolbarActions();
 
     // Initialize dimensions

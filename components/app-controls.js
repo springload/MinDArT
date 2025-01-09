@@ -1,3 +1,6 @@
+import { addInteractionHandlers } from "../functions.js";
+import { playClick } from "../shared/audio.js";
+
 class AppControls extends HTMLElement {
   constructor() {
     super();
@@ -21,25 +24,24 @@ class AppControls extends HTMLElement {
   setupEventListeners() {
     const resetButton = this.querySelector('[data-element="reset-button"]');
     const saveButton = this.querySelector('[data-element="save-button"]');
-    const menuLink = this.querySelector("a");
 
-    // Add click sounds to all controls
-    [resetButton, saveButton, menuLink].forEach((element) => {
-      if (window.addClickSound && element) {
-        window.addClickSound(element);
-      }
-    });
+    const actions = {
+      reset: () => {
+        playClick();
+        this.dispatchEvent(new CustomEvent("app-reset"));
+      },
+      save: () => {
+        playClick();
+        this.dispatchEvent(new CustomEvent("app-save"));
+      },
+    };
 
     if (resetButton) {
-      resetButton.addEventListener("click", () => {
-        this.dispatchEvent(new CustomEvent("app-reset"));
-      });
+      addInteractionHandlers(resetButton, actions.reset);
     }
 
     if (saveButton) {
-      saveButton.addEventListener("click", () => {
-        this.dispatchEvent(new CustomEvent("app-save"));
-      });
+      addInteractionHandlers(saveButton, actions.save);
     }
   }
 }

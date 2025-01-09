@@ -5,6 +5,14 @@ import { createDotscape } from "./MinDArT-5-Dotscape/dotscape.js";
 import { createLinkscape } from "./MinDArT-6-Linkscape/linkscape.js";
 import { createRotationscape } from "./MinDArT-7-Rotationscape/rotationscape.js";
 import { createSymmetryscape } from "./MinDArT-8-Symmetryscape/symmetryscape.js";
+import {
+  loadSoundtrack,
+  playSoundtrack,
+  prepareAudio,
+} from "./shared/audio.js";
+
+// Initialize audio system when the SPA first loads
+prepareAudio().catch(console.error);
 
 // Factory for creating the appropriate drawing app based on app name
 function createDrawingApp(p5, appName) {
@@ -29,10 +37,17 @@ function createDrawingApp(p5, appName) {
 new p5((p5) => {
   const appName = document.body.dataset.appName;
   let drawingApp;
+  let soundtrackLoaded = false;
   let prevTouchX = null;
   let prevTouchY = null;
 
   p5.preload = () => {
+    loadSoundtrack(appName)
+      .then(() => {
+        soundtrackLoaded = true;
+      })
+      .catch(console.error);
+
     drawingApp = createDrawingApp(p5, appName);
     drawingApp.preload();
   };
@@ -40,22 +55,29 @@ new p5((p5) => {
   p5.setup = () => {
     drawingApp.setup();
 
-    // add event listeners for events from interface buttons
     const loadingDialog = document.querySelector("loading-dialog");
     const appControls = document.querySelector("app-controls");
+
     if (!loadingDialog || !appControls) {
       throw new Error("Loading dialog or app controls were not found");
     }
-    // Listen for 'Touch button to start' event
-    loadingDialog.addEventListener("app-start", () => {
+
+    loadingDialog.addEventListener("app-start", async () => {
+      // Play the soundtrack when the drawing app starts
+      if (soundtrackLoaded) {
+        try {
+          await playSoundtrack();
+        } catch (error) {
+          console.warn("Failed to play soundtrack:", error);
+        }
+      }
       drawingApp.start();
     });
 
-    // Listen for reset event from 'New' button
     appControls.addEventListener("app-reset", () => {
       drawingApp.reset();
     });
-    // Listen for event from 'Save' button and save an image of the drawing
+
     appControls.addEventListener("app-save", () => {
       p5.save(
         `${appName}${p5.month()}${p5.day()}${p5.hour()}${p5.second()}.jpg`

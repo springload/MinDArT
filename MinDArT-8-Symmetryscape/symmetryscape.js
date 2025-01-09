@@ -1,11 +1,11 @@
 import {
   colorAlpha,
   clearActiveButtonState,
-  initializeToolbarButtons,
   hasActiveClass,
+  addInteractionHandlers,
 } from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { initAudio, playSoundtrack } from "../shared/audio.js";
+import { playSoundtrack } from "../shared/audio.js";
 
 /**
  * Creates a fully encapsulated Symmetryscape sketch
@@ -51,9 +51,6 @@ export function createSymmetryscape(p5) {
   }
 
   async function setup() {
-    // Setup audio and loading screen
-    await initAudio("8_Symmetry");
-
     // Create canvas
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
@@ -67,8 +64,6 @@ export function createSymmetryscape(p5) {
 
     state.symmetryAxisLayer = p5.createGraphics(p5.width, p5.height);
     state.vMax = calcViewportDimensions().vMax;
-    // Initialize toolbar with click sounds and active state toggle
-    initializeToolbarButtons();
     setupToolbarActions();
     setSwatchColors();
   }
@@ -76,7 +71,6 @@ export function createSymmetryscape(p5) {
   function start() {
     state.counter = 0;
     state.selectedPalette = 0;
-    playSoundtrack();
     initializeState();
   }
 
@@ -270,24 +264,20 @@ export function createSymmetryscape(p5) {
     const toolbar = document.querySelector('[data-element="toolbar"]');
     if (!toolbar) return;
 
-    // Handle brush selection buttons
     const brushButtons = toolbar.querySelectorAll("[data-brush]");
     brushButtons.forEach((button) => {
-      button.addEventListener("click", (event) => {
-        // Parse the brush number from the data attribute
-        const brushNumber = parseInt(button.dataset.brush, 10);
-
-        // Call changeBrush with the brush number and event
+      addInteractionHandlers(button, (event) => {
+        const button = event.currentTarget;
+        const brushNumber = parseInt(button.dataset.brush);
         changeBrush(brushNumber, event);
       });
     });
 
-    // Handle draw mode button
     const drawModeButton = toolbar.querySelector(
       '[data-element="draw-mode-button"]'
     );
     if (drawModeButton) {
-      drawModeButton.addEventListener("click", (event) => {
+      addInteractionHandlers(drawModeButton, (event) => {
         switchToDrawMode(event);
       });
     }
