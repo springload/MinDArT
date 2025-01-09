@@ -1,5 +1,5 @@
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { playSoundtrack } from "../shared/audio.js";
+import { addInteractionHandlers } from "../functions.js";
 
 export function createDotscape(p5) {
   const BACKGROUND_IMAGE = "assets/paper.jpg";
@@ -141,12 +141,13 @@ export function createDotscape(p5) {
       '[data-element="restart-button"]'
     );
     if (restartButton) {
-      restartButton.addEventListener("click", restart);
+      addInteractionHandlers(restartButton, (event) => {
+        restart();
+      });
     }
   }
 
   function start() {
-    playSoundtrack();
     windowResized();
     reset();
   }

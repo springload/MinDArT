@@ -93,7 +93,7 @@ export function setupCanvasEventListeners() {
 
 /**
  * Checks if a click/touch event occurred on a button (so we can prevent propogation of that click to the canvas)
- * @param {Event} e - The event to check
+ * @param {Event} event - The event to check
  * @returns {boolean} True if click was on a button/interface element
  */
 export function isClickOnButton(event) {
