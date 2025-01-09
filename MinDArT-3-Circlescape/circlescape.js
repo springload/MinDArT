@@ -1,9 +1,10 @@
-import { clearActiveButtonState, isClickOnButton } from "../functions.js";
+import {
+  addInteractionHandlers,
+  clearActiveButtonState,
+} from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { playSoundtrack } from "../shared/audio.js";
 
 export function createCirclescape(p5) {
-  // Constants
   const MAX_VECTOR_COUNT = 100;
   const COLOR_PALETTES = [
     ["#345573", "#223240", "#F2913D", "#F24B0F"],
@@ -17,6 +18,7 @@ export function createCirclescape(p5) {
     ["#CCCCCC", "#F2F2F2", "#B3B3B3", "#E6E6E6"],
     ["#F2F2F2", "#A6A6A6", "#737373", "#0D0D0D"],
   ];
+
   const state = {
     // Drawing layers
     drawLayer: null,
@@ -57,13 +59,12 @@ export function createCirclescape(p5) {
   }
 
   async function setup() {
+    setupToolbarActions();
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
     p5.pixelDensity(1);
     state.drawLayer = p5.createGraphics(p5.width, p5.height);
-
-    setupToolbarActions();
 
     updateDimensions();
     resetVectorStore();
@@ -71,7 +72,6 @@ export function createCirclescape(p5) {
 
   function start() {
     state.started = true;
-    playSoundtrack();
     initializeStartVectors();
     reset();
   }
@@ -122,7 +122,7 @@ export function createCirclescape(p5) {
   }
 
   function handlePointerStart(event) {
-    if (!state.started || isClickOnButton(event)) return false;
+    if (!state.started) return false;
 
     state.dragTracker = 0;
     state.axis = p5.createVector(p5.mouseX, p5.mouseY);
@@ -137,7 +137,7 @@ export function createCirclescape(p5) {
   }
 
   function handleMove(currentX, currentY, previousX, previousY, event) {
-    if (!state.started || isClickOnButton(event)) return false;
+    if (!state.started) return false;
 
     updateDynamics(currentX, currentY, previousX, previousY);
 
@@ -152,7 +152,7 @@ export function createCirclescape(p5) {
   }
 
   function handlePointerEnd(event) {
-    if (!state.started || isClickOnButton(event)) return false;
+    if (!state.started) return false;
 
     // Reset vectors
     state.vectorStore = state.vectorStore.map(() => null);
@@ -250,7 +250,7 @@ export function createCirclescape(p5) {
   function windowResized() {
     p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
 
-    const { dimensions, resizedLayers } = handleResize(p5, [state.drawLayer]);
+    const { resizedLayers } = handleResize(p5, [state.drawLayer]);
 
     [state.drawLayer] = resizedLayers;
     updateDimensions();
@@ -263,33 +263,39 @@ export function createCirclescape(p5) {
     const toolbar = document.querySelector('[data-element="toolbar"]');
     if (!toolbar) return;
 
-    toolbar
-      .querySelector('[data-element="erase-button"]')
-      ?.addEventListener("click", () => {
-        state.eraserMode = true;
-        state.drawLayer.strokeCap(p5.ROUND);
-        state.drawLayer.blendMode(p5.BLEND);
-      });
+    const eraseButton = toolbar.querySelector('[data-element="erase-button"]');
+    const drawSmallButton = toolbar.querySelector(
+      '[data-element="draw-small-button"]'
+    );
+    const drawBigButton = toolbar.querySelector(
+      '[data-element="draw-big-button"]'
+    );
 
-    toolbar
-      .querySelector('[data-element="draw-small-button"]')
-      ?.addEventListener("click", () => {
-        state.eraserMode = false;
-        state.drawMultiplier = 0.5;
-        state.drawLayer.strokeCap(p5.SQUARE);
-        state.drawLayer.blendMode(p5.DIFFERENCE);
-        state.vectorStore = state.vectorStore.map(() => null);
-      });
+    if (!eraseButton | !drawSmallButton | !drawBigButton) {
+      console.error("toolbar button not found");
+    }
 
-    toolbar
-      .querySelector('[data-element="draw-big-button"]')
-      ?.addEventListener("click", () => {
-        state.eraserMode = false;
-        state.drawMultiplier = 2;
-        state.drawLayer.strokeCap(p5.SQUARE);
-        state.drawLayer.blendMode(p5.DIFFERENCE);
-        state.vectorStore = state.vectorStore.map(() => null);
-      });
+    addInteractionHandlers(eraseButton, (event) => {
+      state.eraserMode = true;
+      state.drawLayer.strokeCap(p5.ROUND);
+      state.drawLayer.blendMode(p5.BLEND);
+    });
+
+    addInteractionHandlers(drawSmallButton, (event) => {
+      state.eraserMode = false;
+      state.drawMultiplier = 0.5;
+      state.drawLayer.strokeCap(p5.SQUARE);
+      state.drawLayer.blendMode(p5.DIFFERENCE);
+      state.vectorStore = state.vectorStore.map(() => null);
+    });
+
+    addInteractionHandlers(drawBigButton, (event) => {
+      state.eraserMode = false;
+      state.drawMultiplier = 2;
+      state.drawLayer.strokeCap(p5.SQUARE);
+      state.drawLayer.blendMode(p5.DIFFERENCE);
+      state.vectorStore = state.vectorStore.map(() => null);
+    });
   }
 
   return {
@@ -301,6 +307,5 @@ export function createCirclescape(p5) {
     handlePointerEnd,
     handleMove,
     windowResized,
-    state,
   };
 }

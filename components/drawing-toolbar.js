@@ -96,7 +96,7 @@ class DrawingToolbar extends HTMLElement {
           {
             type: "button",
             text: "Draw big",
-            dataElement: "draw-small-button",
+            dataElement: "draw-big-button",
             class: "btn--white btn--rightsplit",
           },
         ],
