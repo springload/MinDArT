@@ -64,6 +64,7 @@ export function createRotationscape(p5) {
   }
 
   async function setup() {
+    setupToolbarActions();
     // Create canvas
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
@@ -76,10 +77,6 @@ export function createRotationscape(p5) {
     state.drawLayer.strokeCap(p5.PROJECT);
 
     state.vMax = calcViewportDimensions().vMax;
-
-    // Initialize controls
-
-    setupToolbarActions();
   }
 
   function start() {

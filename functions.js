@@ -20,11 +20,11 @@ export function showOnlyCurrentLinks() {
   const drawingAppLinks = homeGrid.querySelectorAll("[data-week]");
 
   // Enable/disable links based on their week number
-  // Links for future weeks are made unclickable using the 'inert' attribute
+  // Links for future weeks are made unclickable using the 'disabled' attribute
   drawingAppLinks.forEach((link) => {
     link.dataset.week <= currentWeekNumber
-      ? link.removeAttribute("inert")
-      : link.setAttribute("inert", true);
+      ? link.removeAttribute("disabled")
+      : link.setAttribute("disabled", true);
   });
 }
 

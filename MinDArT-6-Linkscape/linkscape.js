@@ -1,6 +1,9 @@
-import { colorAlpha, isClickOnButton } from "../functions.js";
+import {
+  addInteractionHandlers,
+  colorAlpha,
+  isClickOnButton,
+} from "../functions.js";
 import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { playSoundtrack } from "../shared/audio.js";
 
 /**
  * Creates an encapsulated Linkscape sketch
@@ -82,31 +85,26 @@ export function createLinkscape(p5) {
     const toolbar = document.querySelector('[data-element="toolbar"]');
     if (!toolbar) return;
 
-    // Setup add string button
     const addStringButton = toolbar.querySelector(
       '[data-element="add-string-button"]'
     );
     if (addStringButton) {
-      addStringButton.addEventListener("click", (event) => {
-        event.stopPropagation();
+      addInteractionHandlers(addStringButton, (event) => {
         addLine();
       });
     }
 
-    // Setup add pin button
     const addPinButton = toolbar.querySelector(
       '[data-element="add-pin-button"]'
     );
     if (addPinButton) {
-      addPinButton.addEventListener("click", (event) => {
-        event.stopPropagation();
+      addInteractionHandlers(addPinButton, (event) => {
         addPin();
       });
     }
   }
 
   function start() {
-    playSoundtrack();
     state.lineLayer.strokeWeight(1 * state.vMax);
     state.paintLayer.strokeWeight(1 * state.vMax);
     reset(true); // Pass flag indicating this is initial setup
@@ -129,7 +127,7 @@ export function createLinkscape(p5) {
     render();
 
     const button = document.querySelector('[data-element="add-string-button"]');
-    if (button) button.removeAttribute("inert");
+    if (button) button.removeAttribute("disabled");
   }
 
   function initialiseLine(l) {
@@ -164,7 +162,7 @@ export function createLinkscape(p5) {
       const button = document.querySelector(
         '[data-element="add-string-button"]'
       );
-      if (button) button.setAttribute("inert", true);
+      if (button) button.setAttribute("disabled", true);
     }
   }
 
@@ -389,6 +387,5 @@ export function createLinkscape(p5) {
     handleMove,
     addLine,
     addPin,
-    state, // Exposed for debugging
   };
 }
