@@ -31,28 +31,28 @@ class DrawingToolbar extends HTMLElement {
           {
             type: "button",
             text: "Erase",
-            onClick: "rake(0)",
+            dataBrush: 0,
             class: "btn--white",
           },
           {
             type: "button",
             icon: "brush",
             brushLines: 3,
-            onClick: "rake(1)",
+            dataBrush: 1,
             class: "btn--white",
           },
           {
             type: "button",
             icon: "brush",
             brushLines: 6,
-            onClick: "rake(2)",
+            dataBrush: 2,
             class: "btn--white",
           },
           {
             type: "button",
             icon: "brush",
             brushLines: 10,
-            onClick: "rake(3)",
+            dataBrush: 3,
             class: "btn--white",
           },
         ],
@@ -276,7 +276,7 @@ class DrawingToolbar extends HTMLElement {
     if (item.id) attrs.push(`id="${item.id}"`);
     if (item.onClick) attrs.push(`onclick="${item.onClick}"`);
     if (item.dataElement) attrs.push(`data-element="${item.dataElement}"`);
-    if (item.dataBrush) attrs.push(`data-brush="${item.dataBrush}"`);
+    if (item.dataBrush !== null) attrs.push(`data-brush="${item.dataBrush}"`);
     if (item.dataSwatch) attrs.push(`data-swatch="${item.dataSwatch}"`);
 
     const icon = item.icon ? this.renderIcon(item.icon, item.brushLines) : "";

@@ -1,4 +1,5 @@
 import { isClickOnButton } from "./functions.js";
+import { createTouchscape } from "./MinDArT-1-Touchscape/touchscape.js";
 import { createLinescape } from "./MinDArT-2-Linescape/linescape.js";
 import { createCirclescape } from "./MinDArT-3-Circlescape/circlescape.js";
 import { createColourscape } from "./MinDArT-4-Colourscape/colourscape.js";
@@ -18,6 +19,7 @@ prepareAudio().catch(console.error);
 // Factory for creating the appropriate drawing app based on app name
 function createDrawingApp(p5, appName) {
   const creators = {
+    touchscape: createTouchscape,
     linescape: createLinescape,
     circlescape: createCirclescape,
     colourscape: createColourscape,
