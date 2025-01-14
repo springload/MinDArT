@@ -2,7 +2,7 @@
  * Enables/disables app links based on the current week number since program start.
  * Used to progressively unlock content over time
  */
-function showOnlyCurrentLinks() {
+export function showOnlyCurrentLinks() {
   // set programme start date (mm/dd/yyyy)
   const startDate = new Date("02/19/2024");
   const dayInMilliseconds = 86400000;
@@ -20,154 +20,89 @@ function showOnlyCurrentLinks() {
   const drawingAppLinks = homeGrid.querySelectorAll("[data-week]");
 
   // Enable/disable links based on their week number
-  // Links for future weeks are made unclickable using the 'inert' attribute
+  // Links for future weeks are made unclickable using the 'disabled' attribute
   drawingAppLinks.forEach((link) => {
     link.dataset.week <= currentWeekNumber
-      ? link.removeAttribute("inert")
-      : link.setAttribute("inert", true);
+      ? link.removeAttribute("disabled")
+      : link.setAttribute("disabled", true);
   });
 }
 
 // Interface utility functions for managing button states and interactions
 
 // Remove 'active' class from all buttons
-function clearActiveButtonState() {
+export function clearActiveButtonState() {
   const activeButtons = document.querySelectorAll(".btn.active");
   activeButtons.forEach((button) => button.classList.remove("active"));
 }
 
-function hasActiveClass(el) {
+export function hasActiveClass(el) {
   return Boolean(el && el.classList.contains("active"));
 }
 
 /**
- * Sets up the loading screen with start button functionality
- * @param {Function} onStart - Callback function to execute when start button is clicked
+ * Adds both click and touch handlers to an element
+ * @param {HTMLElement} element - The element to add handlers to
+ * @param {Function} handler - The event handler function
  */
-function setupLoadingScreen(onStart) {
-  const loadingDialog = document.querySelector("loading-dialog");
-
-  if (!loadingDialog) {
-    throw new Error("Loading dialog not found");
-  }
-
-  loadingDialog.addEventListener("start", onStart);
-}
-
-/**
- * Initializes common app controls (main menu, reset, save)
- * @param {Function} resetCallback - Function to call when reset button is clicked
- * @returns {Object} Object containing references to control elements
- */
-function initializeAppControls(resetCallback) {
-  const appControls = document.querySelector("app-controls");
-
-  if (!appControls) {
-    console.warn(
-      "No app-controls element found. App controls not initialized."
-    );
-    return;
-  }
-
-  if (resetCallback) {
-    appControls.addEventListener("reset", resetCallback);
-  }
-
-  return {
-    resetButton: appControls.querySelector('[data-element="reset-button"]'),
-    saveButton: appControls.querySelector('[data-element="save-button"]'),
-    container: appControls,
-  };
-}
-
-/**
- * Initializes toolbar buttons with click sounds and active state management
- */
-function initializeToolbarButtons() {
-  const toolbar = document.querySelector('[data-element="toolbar"]');
-  if (toolbar) {
-    const btns = Array.from(toolbar.querySelectorAll(".btn"));
-
-    btns.forEach((btn) => {
-      addClickSound(btn);
-
-      // Some apps only need click sounds, not active state management
-      if (
-        ["dotscape", "linkscape"].some(
-          (appName) => document.body.dataset.appName === appName
-        )
-      ) {
-        return;
-      }
-
-      btn.addEventListener("click", (e) => {
-        // Prevent event from reaching the canvas
-        e.stopPropagation();
-
-        const clicked = e.currentTarget;
-
-        // Special case for symmetryscape draw mode button, it shouldn't receive the active state
-        if (
-          document.body.dataset.appName === "symmetryscape" &&
-          clicked.dataset.element === "draw-mode-button"
-        ) {
-          return;
-        }
-
-        // Update active state
-        const current = document.querySelector(".active");
-        if (current) {
-          current.classList.remove("active");
-        }
-        clicked.classList.add("active");
-      });
-    });
-  }
+export function addInteractionHandlers(element, handler) {
+  element.addEventListener("click", handler);
+  element.addEventListener("touchend", (e) => {
+    e.preventDefault(); // Prevent mouse event from firing
+    handler(e);
+  });
 }
 
 // Color utility functions
 
 // Convert hex color to RGB color object
-function hexToRgb(hex) {
+export function hexToRgb(p5, hex) {
   hex = hex.replace("#", "");
+
   var bigint = parseInt(hex, 16);
   var r = (bigint >> 16) & 255;
   var g = (bigint >> 8) & 255;
   var b = bigint & 255;
-  return color(r, g, b);
+  return p5.color(r, g, b);
 }
 
 // Apply alpha channel to a color
-function colorAlpha(aColor, alpha) {
-  var c = color(aColor);
-  return color("rgba(" + [red(c), green(c), blue(c), alpha].join(",") + ")");
+export function colorAlpha(p5, aColor, alpha) {
+  const c = p5.color(aColor);
+  return p5.color(p5.red(c), p5.green(c), p5.blue(c), alpha * 255);
 }
 
 /**
  * Sets up canvas event listeners for touch and mouse interactions
  */
-function setupCanvasEventListeners() {
+export function setupCanvasEventListeners() {
   const canvasContainer = document.querySelector(
     '[data-element="canvas-container"]'
   );
   const canvas = canvasContainer.querySelector("canvas");
-  canvas.addEventListener("touchmove", moved, { passive: false }); // passive: false prevents scroll on touch
-  canvas.addEventListener("mousemove", moved);
+  canvas.addEventListener("touchmove", handleMove, { passive: false });
+  canvas.addEventListener("mousemove", handleMove);
   canvas.addEventListener("touchstart", touchdown);
   canvas.addEventListener("mousedown", touchdown);
   canvas.addEventListener("touchend", touchstop);
   canvas.addEventListener("touchleave", touchstop);
+  canvas.addEventListener("touchcancel", touchstop);
   canvas.addEventListener("mouseup", touchstop);
-  canvas.addEventListener("mouseup", touchstop);
+  canvas.addEventListener("mouseleave", touchstop);
 }
 
 /**
  * Checks if a click/touch event occurred on a button (so we can prevent propogation of that click to the canvas)
- * @param {Event} e - The event to check
+ * @param {Event} event - The event to check
  * @returns {boolean} True if click was on a button/interface element
  */
-function isClickOnButton(e) {
+export function isClickOnButton(event) {
+  // is event is a valid DOM event with target property?
+  if (!event || !event.target || typeof event.target.closest !== "function") {
+    return false;
+  }
   return (
-    e.target.closest(".btn") !== null || e.target.closest(".interface") !== null
+    event.target.closest(".btn") !== null ||
+    event.target.closest(".interface") !== null
   );
 }

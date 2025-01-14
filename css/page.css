@@ -40,7 +40,7 @@ body {
     display: grid;
     place-content: center;
 
-    &:where([inert]) {
+    &:where([disabled]) {
       opacity: 20%;
     }
   }

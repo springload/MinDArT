@@ -17,28 +17,11 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="manifest" href="/manifest.json">
 
-    <script src="../libraries/p5.min-1.7.0.js"></script> 
-    <script src="../functions.js"></script>
-    <script src="../shared/resize.js"></script>
-    <script src="../shared/audio.js"></script>
-    <script src="../components/loading-dialog.js"></script>
-    <script src="../components/app-controls.js"></script>
-    <script src="brushes.js"></script>
-    <script src="colourscape.js"></script>  
-    <script type="module">
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw-final.js', { 
-        type: 'module',
-        scope: '/'
-      }).then(registration => {
-            console.log('ServiceWorker registration successful');
-          }).catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
-    </script>
+    <script src="../libraries/p5.min.js"></script> 
+    <script type="module" src="../components/loading-dialog.js"></script>
+    <script type="module" src="../components/app-controls.js"></script>
+    <script type="module" src="../components/drawing-toolbar.js"></script>
+    <script type="module" src="../app.js"></script>  
   </head>
 
   <body class="u-theme-red" data-app-name="colourscape">
@@ -47,16 +30,7 @@
     <div data-element="canvas-container"></div>
     
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <button id="erasedraw" class="btn btn--white" onclick="drawErase()">Erase Draw</button>
-        <button id="erasepaint" class="btn btn--white" onclick="paintErase()">Erase Paint</button>
-        <div class="btn-group--split">
-          <button id="warm" class="btn btn--leftsplit btn--warm-stripes" onclick="paintWarm()"></button>
-          <button id="cool" class="btn btn--rightsplit btn--cool-stripes" onclick="paintCool()"></button>
-        </div>
-        <button id="draw" class="btn btn--white" onclick="switchToTrace()">Draw</button>
-      </div>
-      
+      <drawing-toolbar app-name="colourscape"></drawing-toolbar>
       <app-controls app-name="colourscape"></app-controls>
     </div>
     

@@ -1,263 +1,298 @@
-// Configuration and state variables
-let isMousedown = false;
-let vMax;
-const appCol = "#469ede"; // 70, 158, 222
+import { addInteractionHandlers } from "../functions.js";
+import { calcViewportDimensions, handleResize } from "../shared/resize.js";
 
-// Data storage
-let pointStore;
-let lineStore;
+/**
+ * Creates an encapsulated Touchscape sketch
+ * @param {p5} p5 - The p5 instance to use for sketch creation
+ * @returns {Object} An object with sketch lifecycle methods
+ */
+export function createTouchscape(p5) {
+  const PEBBLE_COUNT = 7;
 
-// Drawing variables
-let x = 100,
-  y = 100,
-  vec = [],
-  px = [],
-  py = [],
-  pA = [],
-  angle1 = 0.0,
-  dragLength = 30;
+  const state = {
+    // Interaction state
+    isMousedown: false,
+    eraseActive: 0,
+    currentBrush: 0,
 
-// Brush configuration
-let r = 0;
-let qtyOfLines = 40;
-let brushWidth = 200;
-let strokeW = brushWidth / qtyOfLines;
-let opacity = 200;
+    // Drawing position
+    x: 100,
+    y: 100,
+    angle: 0.0,
+    dragLength: 30,
 
-// Assets and storage
-let gui_img = [];
-let pebble = [];
-let randomScalar = [];
-let tempID = [];
-let tempX = [];
-let tempY = [];
+    // Brush properties
+    qtyOfLines: 40,
+    brushWidth: 200,
+    strokeWidth: 200 / 40, // brushWidth / qtyOfLines
+    opacity: 200,
+    vectors: [], // Stores line positions
 
-// Graphics layers
-let fg, pLayer;
-let background, audio, click;
+    // Viewport
+    vMax: 0,
 
-let currentRake = 0;
+    // Assets
+    pebbles: [],
+    background: null,
 
-function rake(version) {
-  currentRake = version;
+    // Graphics layers
+    foreground: null,
+    pebbleLayer: null,
 
-  switch (version) {
-    case 0:
-      change(1, 200, 1);
-      eraseActive = 1;
-      break;
-    case 1:
-      change(5, 60, 100);
-      eraseActive = 0;
-      break;
-    case 2:
-      change(15, 100, 100);
-      eraseActive = 0;
-      break;
-    case 3:
-      change(60, 150, 100);
-      eraseActive = 0;
-      break;
-  }
-}
+    // Pebble decoration state
+    pebbleScalars: [],
+    pebbleIds: [],
+    pebbleX: [],
+    pebbleY: [],
+  };
 
-function preload() {
-  // Load assets
-  background = loadImage("assets/sand_01.jpg");
+  function preload() {
+    state.background = p5.loadImage("assets/sand_01.jpg");
 
-  // Load pebble assets
-  for (let i = 1; i < 8; i++) {
-    pebble[i] = loadImage(`assets/wpebble${i}.png`);
-  }
-}
-
-async function setup() {
-  await initAudio("1_Touch");
-  // add JS functionality to existing HTML elements
-  setupLoadingScreen(start);
-  initializeAppControls(reset);
-  initializeToolbarButtons();
-  // set up p5 for drawing
-  const mainCanvas = createCanvas(window.innerWidth, window.innerHeight);
-  mainCanvas.parent(
-    document.querySelector('[data-element="canvas-container"]')
-  );
-  initializeLayers();
-  setupGraphics();
-}
-
-function initializeLayers() {
-  fg = createGraphics(width, height);
-  pLayer = createGraphics(width, height);
-}
-
-function setupGraphics() {
-  fg.strokeWeight(strokeW);
-  fg.noFill();
-  fg.stroke(20, 100);
-
-  colorMode(HSB, 360, 100, 100, 1.0);
-
-  pixelDensity(1);
-}
-
-function start() {
-  playSoundtrack();
-  change();
-  ({ vMax } = calcViewportDimensions());
-
-  rake(currentRake);
-  reset();
-  counter = 0;
-
-  setupCanvasEventListeners();
-  initializeDataStores();
-}
-
-function initializeDataStores() {
-  pointStore = [];
-  lineStore = [];
-}
-
-function change(qty = qtyOfLines, width = brushWidth, opac = opacity) {
-  qtyOfLines = qty;
-  brushWidth = width;
-  opacity = opac;
-  vec = Array(qtyOfLines)
-    .fill()
-    .map(() => []);
-  strokeW = Math.ceil(brushWidth / qtyOfLines);
-  fg.strokeWeight(strokeW);
-}
-
-function touchdown(ev) {
-  isMousedown = true;
-  return false;
-}
-
-function touchstop(ev) {
-  isMousedown = false;
-  vec = Array(qtyOfLines)
-    .fill()
-    .map(() => []);
-}
-
-function moved(ev) {
-  if (!isMousedown) return;
-  ev.preventDefault();
-
-  const dx = mouseX - x;
-  const dy = mouseY - y;
-
-  angle1 = atan2(dy, dx);
-  x = mouseX - cos(angle1) * dragLength;
-  const x2 = 100 - cos(PI / 2);
-  y = mouseY - sin(angle1) * dragLength;
-  const y2 = 100 - sin(PI / 2);
-
-  makeArray(x, y, x2, y2, angle1);
-  display();
-
-  return false;
-}
-
-function makeArray(x, y, x2, y2, angle) {
-  var a = createVector(x, y);
-  var b = createVector(0, brushWidth / 2);
-  b.rotate(angle);
-  var c = p5.Vector.add(a, b);
-  a.sub(b);
-
-  for (var i = 0; i < qtyOfLines; i++) {
-    d = p5.Vector.lerp(
-      a,
-      c,
-      i / (qtyOfLines + 1) + random(0, (1 / qtyOfLines) * 0.2)
-    );
-    point(d.x, d.y);
-
-    vec[i].push(d);
-  }
-}
-
-function display() {
-  var bool = 0;
-  if (vec[0].length > 1) {
-    for (var i = 0; i < vec.length; i++) {
-      if (i === 0 || i === vec.length - 1 || i % 3 === 2) {
-        // if first line, last line or every 3rd line, then thin, else fat
-        fg.strokeWeight(strokeW / 2);
-      } else {
-        fg.strokeWeight(strokeW);
-      }
-
-      var n = vec[i];
-      if (i % 3 === 0) {
-        fg.stroke(40);
-      } else if (i % 3 === 1) {
-        fg.stroke(200);
-      } else if (i % 3 === 2) {
-        fg.stroke(0);
-      }
-
-      if (eraseActive) {
-        fg.noStroke();
-        fg.fill(127, 80);
-        fg.ellipse(mouseX, mouseY, vMax * 4, vMax * 4);
-      } else {
-        bool++;
-        fg.line(
-          n[n.length - 1].x,
-          n[n.length - 1].y,
-          n[n.length - 2].x,
-          n[n.length - 2].y
-        );
-      }
+    // Load pebble assets
+    state.pebbles = new Array(PEBBLE_COUNT + 1); // +1 since indexing starts at 1
+    for (let i = 1; i <= PEBBLE_COUNT; i++) {
+      state.pebbles[i] = p5.loadImage(`assets/wpebble${i}.png`);
     }
   }
-  blendMode(BLEND);
-  image(background, 0, 0, width, height);
-  blendMode(OVERLAY);
 
-  image(fg, 0, 0, width, height);
-  blendMode(BLEND);
-  noTint();
-  image(pLayer, 0, 0, width, height);
-}
+  async function setup() {
+    setupToolbarActions();
+    const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
+    canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
-function reset() {
-  blendMode(REPLACE);
-  image(background, 0, 0, width, height);
-  fg.clear();
-  pLayer.clear();
-  change(qtyOfLines, brushWidth, opacity);
+    initializeLayers();
+    setupGraphics();
 
-  tempcount = int(random(0.7, 3));
-  for (let k = 0; k < tempcount; k++) {
-    randomScalar[k] = int(random(120, 180));
-    tempID[k] = int(random(1, 7));
-    tempX[k] = int(random(0, width - randomScalar[k]));
-    tempY[k] = int(random(0, height - randomScalar[k]));
-    pLayer.image(
-      pebble[tempID[k]],
-      tempX[k],
-      tempY[k],
-      randomScalar[k],
-      randomScalar[k]
-    );
+    // Initialize state
+    updateBrushProperties();
+    const dimensions = calcViewportDimensions();
+    state.vMax = dimensions.vMax;
+
+    changeBrush(0); // Start with eraser selected
+    reset();
   }
 
-  display();
+  function setupToolbarActions() {
+    const toolbar = document.querySelector('[data-element="toolbar"]');
+    if (!toolbar) {
+      console.error("No toolbar found");
+      return;
+    }
+
+    const brushButtons = toolbar.querySelectorAll("[data-brush]");
+
+    brushButtons.forEach((button) => {
+      addInteractionHandlers(button, (event) => {
+        const brushNumber = parseInt(button.dataset.brush);
+        changeBrush(brushNumber);
+      });
+    });
+  }
+
+  function initializeLayers() {
+    state.foreground = p5.createGraphics(p5.width, p5.height);
+    state.pebbleLayer = p5.createGraphics(p5.width, p5.height);
+
+    // Set initial foreground properties
+    state.foreground.strokeWeight(state.strokeWidth);
+    state.foreground.noFill();
+    state.foreground.stroke(20, 100);
+  }
+
+  function setupGraphics() {
+    p5.colorMode(p5.HSB, 360, 100, 100, 1.0);
+    p5.pixelDensity(1);
+  }
+
+  function updateBrushProperties(
+    lines = state.qtyOfLines,
+    width = state.brushWidth,
+    opacity = state.opacity
+  ) {
+    state.qtyOfLines = lines;
+    state.brushWidth = width;
+    state.opacity = opacity;
+    state.vectors = Array(lines)
+      .fill()
+      .map(() => []);
+    state.strokeWidth = Math.ceil(width / lines);
+    state.foreground.strokeWeight(state.strokeWidth);
+  }
+
+  function changeBrush(version) {
+    state.currentBrush = version;
+
+    switch (version) {
+      case 0: // Eraser
+        state.eraseActive = 1;
+        updateBrushProperties(1, 200, 1);
+        state.foreground.fill(127, 80);
+        break;
+      case 1: // Fine brush
+        state.eraseActive = 0;
+        updateBrushProperties(5, 60, 100);
+        break;
+      case 2: // Medium brush
+        state.eraseActive = 0;
+        updateBrushProperties(15, 100, 100);
+        break;
+      case 3: // Thick brush
+        state.eraseActive = 0;
+        updateBrushProperties(60, 150, 100);
+        break;
+    }
+  }
+
+  function makeArray() {
+    const a = p5.createVector(state.x, state.y);
+    const b = p5.createVector(0, state.brushWidth / 2);
+    b.rotate(state.angle);
+    const pVector = p5.Vector || (p5.constructor && p5.constructor.Vector);
+    const c = pVector.add(a, b);
+    a.sub(b);
+
+    for (let i = 0; i < state.qtyOfLines; i++) {
+      const d = pVector.lerp(
+        a,
+        c,
+        i / (state.qtyOfLines + 1) + p5.random(0, (1 / state.qtyOfLines) * 0.2)
+      );
+      state.vectors[i].push(d);
+    }
+  }
+
+  function render() {
+    if (state.vectors[0].length > 1) {
+      for (let i = 0; i < state.vectors.length; i++) {
+        // Set line weight - thinner for first, last, and every third line
+        state.foreground.strokeWeight(
+          i === 0 || i === state.vectors.length - 1 || i % 3 === 2
+            ? state.strokeWidth / 2
+            : state.strokeWidth
+        );
+
+        // Set stroke color based on position
+        if (i % 3 === 0) {
+          state.foreground.stroke(40);
+        } else if (i % 3 === 1) {
+          state.foreground.stroke(200);
+        } else {
+          state.foreground.stroke(0);
+        }
+
+        const linePoints = state.vectors[i];
+        if (state.eraseActive) {
+          // For eraser, draw a large semi-transparent circle
+          state.foreground.noStroke();
+          state.foreground.fill(127, 80);
+          state.foreground.ellipse(
+            state.x,
+            state.y,
+            state.vMax * 4,
+            state.vMax * 4
+          );
+        } else {
+          // For drawing brushes, draw the line segments
+          const current = linePoints[linePoints.length - 1];
+          const previous = linePoints[linePoints.length - 2];
+          if (current && previous) {
+            state.foreground.line(current.x, current.y, previous.x, previous.y);
+          }
+        }
+      }
+    }
+
+    // Render layers with blend modes
+    p5.blendMode(p5.BLEND);
+    p5.image(state.background, 0, 0, p5.width, p5.height);
+    p5.blendMode(p5.OVERLAY);
+    p5.image(state.foreground, 0, 0, p5.width, p5.height);
+    p5.blendMode(p5.BLEND);
+    p5.noTint();
+    p5.image(state.pebbleLayer, 0, 0, p5.width, p5.height);
+  }
+
+  function handlePointerStart() {
+    state.isMousedown = true;
+    return false;
+  }
+
+  function handlePointerEnd() {
+    state.isMousedown = false;
+    state.vectors = Array(state.qtyOfLines)
+      .fill()
+      .map(() => []);
+    return false;
+  }
+
+  function handleMove(currentX, currentY) {
+    if (!state.isMousedown) return false;
+
+    const dx = currentX - state.x;
+    const dy = currentY - state.y;
+
+    state.angle = p5.atan2(dy, dx);
+    state.x = currentX - p5.cos(state.angle) * state.dragLength;
+    state.y = currentY - p5.sin(state.angle) * state.dragLength;
+
+    makeArray();
+    render();
+    return false;
+  }
+
+  function reset() {
+    p5.blendMode(p5.REPLACE);
+    p5.image(state.background, 0, 0, p5.width, p5.height);
+    state.foreground.clear();
+    state.pebbleLayer.clear();
+    updateBrushProperties();
+
+    // Add random pebbles
+    const pebbleCount = p5.int(p5.random(0.7, 3));
+    for (let k = 0; k < pebbleCount; k++) {
+      state.pebbleScalars[k] = p5.int(p5.random(120, 180));
+      state.pebbleIds[k] = p5.int(p5.random(1, PEBBLE_COUNT));
+      state.pebbleX[k] = p5.int(
+        p5.random(0, p5.width - state.pebbleScalars[k])
+      );
+      state.pebbleY[k] = p5.int(
+        p5.random(0, p5.height - state.pebbleScalars[k])
+      );
+
+      state.pebbleLayer.image(
+        state.pebbles[state.pebbleIds[k]],
+        state.pebbleX[k],
+        state.pebbleY[k],
+        state.pebbleScalars[k],
+        state.pebbleScalars[k]
+      );
+    }
+
+    render();
+  }
+
+  function windowResized() {
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+
+    const { dimensions, resizedLayers } = handleResize(p5, [
+      state.foreground,
+      state.pebbleLayer,
+    ]);
+    [state.foreground, state.pebbleLayer] = resizedLayers;
+    state.vMax = dimensions.vMax;
+
+    render();
+  }
+
+  return {
+    preload,
+    setup,
+    reset,
+    render,
+    handlePointerStart,
+    handlePointerEnd,
+    handleMove,
+    windowResized,
+  };
 }
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-
-  const { dimensions, resizedLayers } = handleResize([fg, pLayer]);
-  [fg, pLayer] = resizedLayers;
-  ({ vMax } = dimensions);
-
-  display();
-}
-
-window.addEventListener("resize", windowResized);

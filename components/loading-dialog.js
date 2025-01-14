@@ -1,3 +1,6 @@
+import { addInteractionHandlers } from "../functions.js";
+import { initializeAudioContext, playClick } from "../shared/audio.js";
+
 class LoadingDialog extends HTMLElement {
   constructor() {
     super();
@@ -34,17 +37,16 @@ class LoadingDialog extends HTMLElement {
       throw new Error("Loading dialog: Required elements not found");
     }
 
-    startButton.addEventListener("click", () => {
-      // Play click sound if available
-      if (window.playClick) {
-        window.playClick();
-      }
+    const handleStart = () => {
+      initializeAudioContext();
+      playClick();
 
       dialog.close();
-      this.dispatchEvent(new CustomEvent("start"));
-    });
+      this.dispatchEvent(new CustomEvent("app-start"));
+    };
 
-    // Show start button when p5.js has finished loading
+    addInteractionHandlers(startButton, handleStart);
+
     const checkLoading = setInterval(() => {
       if (!document.getElementById("p5_loading")) {
         startButton.style.display = "block";

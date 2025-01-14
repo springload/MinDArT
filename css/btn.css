@@ -26,7 +26,7 @@
 
   transition: 100ms linear color, 100ms linear background-color, 100ms linear border-color;
 
-  &:where([inert]) {
+  &:where([disabled]) {
     opacity: 0.2;
   }
 
