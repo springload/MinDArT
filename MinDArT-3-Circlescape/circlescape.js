@@ -24,7 +24,6 @@ export function createCirclescape(p5) {
     drawLayer: null,
 
     // Drawing state
-    started: false,
     selectedPalette: 0,
     colorIndex: 0,
     drawingMode: "big", // "big", "small", or "erase"
@@ -68,10 +67,6 @@ export function createCirclescape(p5) {
 
     updateDimensions();
     resetVectorStore();
-  }
-
-  function start() {
-    state.started = true;
     initializeStartVectors();
     reset();
   }
@@ -122,8 +117,6 @@ export function createCirclescape(p5) {
   }
 
   function handlePointerStart(event) {
-    if (!state.started) return false;
-
     state.dragTracker = 0;
     state.axis = p5.createVector(p5.mouseX, p5.mouseY);
     state.colorIndex = (state.colorIndex + 1) % 4;
@@ -137,8 +130,6 @@ export function createCirclescape(p5) {
   }
 
   function handleMove(currentX, currentY, previousX, previousY, event) {
-    if (!state.started) return false;
-
     updateDynamics(currentX, currentY, previousX, previousY);
 
     if (!state.eraserMode) {
@@ -152,8 +143,6 @@ export function createCirclescape(p5) {
   }
 
   function handlePointerEnd(event) {
-    if (!state.started) return false;
-
     // Reset vectors
     state.vectorStore = state.vectorStore.map(() => null);
     return false;
@@ -301,8 +290,8 @@ export function createCirclescape(p5) {
   return {
     preload,
     setup,
-    start,
     reset,
+    render,
     handlePointerStart,
     handlePointerEnd,
     handleMove,

@@ -50,27 +50,27 @@ export function createSymmetryscape(p5) {
   }
 
   async function setup() {
-    // Create canvas
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
     p5.pixelDensity(1);
 
-    // Create graphics layers
+    // Create and initialize graphics layers
     state.drawLayer = p5.createGraphics(p5.width, p5.height);
     state.drawLayer.colorMode(p5.RGB, 255, 255, 255, 1000);
     state.drawLayer.strokeCap(p5.PROJECT);
 
     state.symmetryAxisLayer = p5.createGraphics(p5.width, p5.height);
     state.vMax = calcViewportDimensions().vMax;
+
     setupToolbarActions();
     setSwatchColors();
-  }
 
-  function start() {
+    // Initialize state and render initial view
     state.counter = 0;
     state.selectedPalette = 0;
     initializeState();
+    render();
   }
 
   function reset() {
@@ -346,7 +346,6 @@ export function createSymmetryscape(p5) {
   return {
     preload,
     setup,
-    start,
     reset,
     handleMove,
     render,

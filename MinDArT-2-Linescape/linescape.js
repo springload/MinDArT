@@ -59,9 +59,6 @@ export function createLinescape(p5) {
 
     p5.pixelDensity(1);
     updateSwatchColors();
-  }
-
-  function start() {
     setupToolbarActions();
 
     // Initialize dimensions
@@ -119,10 +116,10 @@ export function createLinescape(p5) {
         state.pointGrid[i][j] = p5.createVector(_x, _y);
       }
     }
-    redraw();
+    render();
   }
 
-  function redraw() {
+  function render() {
     p5.background(255);
     for (let y = 0; y < state.yCount; y++) {
       p5.strokeWeight((1 / state.yCount) * y * 4.5);
@@ -195,7 +192,7 @@ export function createLinescape(p5) {
       ];
     }
 
-    redraw();
+    render();
   }
 
   function reset() {
@@ -214,7 +211,7 @@ export function createLinescape(p5) {
     setupArrays();
     p5.background(255, 255);
     p5.blendMode(p5.BLEND);
-    redraw();
+    render();
   }
 
   function windowResized() {
@@ -237,7 +234,7 @@ export function createLinescape(p5) {
       }
     }
 
-    redraw();
+    render();
   }
 
   function setupToolbarActions() {
@@ -260,8 +257,8 @@ export function createLinescape(p5) {
   return {
     preload,
     setup,
-    start,
     reset,
+    render,
     handleMove,
     windowResized,
   };

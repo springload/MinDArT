@@ -24,7 +24,6 @@ export function createColourscape(p5) {
     traceLayer: null,
 
     // Drawing state
-    started: false,
     bool: true,
     brushTemp: 0,
     eraseState: 0,
@@ -65,11 +64,22 @@ export function createColourscape(p5) {
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
+    // Create and initialize layers
     state.paintLayer = p5.createGraphics(p5.width, p5.height);
     state.traceLayer = p5.createGraphics(p5.width, p5.height);
 
     p5.pixelDensity(1);
     setLayerProperties();
+
+    // Initialize state and render initial view
+    state.colourLevel = 0;
+    calcViewportDimensions();
+    drawErase();
+    state.segLength = p5.windowWidth / 40;
+    setProperties(0, 0);
+
+    backdrop();
+    render();
   }
 
   function setLayerProperties() {
@@ -81,11 +91,6 @@ export function createColourscape(p5) {
     state.traceLayer.colorMode(p5.HSB, 360, 100, 100, 1);
     state.traceLayer.strokeWeight(8);
     state.traceLayer.stroke(255, 0, 255, 0.8);
-  }
-
-  function start() {
-    reset();
-    state.started = true;
   }
 
   function reset() {
@@ -222,15 +227,12 @@ export function createColourscape(p5) {
   }
 
   function handleMove(currentX, currentY, previousX, previousY) {
-    if (state.started) {
-      if (state.eraseState === 0) {
-        makeDrawing(currentX, currentY, previousX, previousY);
-      } else {
-        eraseDrawing();
-      }
-      render();
+    if (state.eraseState === 0) {
+      makeDrawing(currentX, currentY, previousX, previousY);
+    } else {
+      eraseDrawing();
     }
-    return false;
+    render();
   }
 
   function windowResized() {
@@ -309,8 +311,8 @@ export function createColourscape(p5) {
   return {
     preload,
     setup,
-    start,
     reset,
+    render,
     handlePointerStart,
     handleMove,
     windowResized,

@@ -63,6 +63,14 @@ export function createTouchscape(p5) {
 
     initializeLayers();
     setupGraphics();
+
+    // Initialize state
+    updateBrushProperties();
+    const dimensions = calcViewportDimensions();
+    state.vMax = dimensions.vMax;
+
+    changeBrush(0); // Start with eraser selected
+    reset();
   }
 
   function setupToolbarActions() {
@@ -154,7 +162,7 @@ export function createTouchscape(p5) {
     }
   }
 
-  function display() {
+  function render() {
     if (state.vectors[0].length > 1) {
       for (let i = 0; i < state.vectors.length; i++) {
         // Set line weight - thinner for first, last, and every third line
@@ -229,7 +237,7 @@ export function createTouchscape(p5) {
     state.y = currentY - p5.sin(state.angle) * state.dragLength;
 
     makeArray();
-    display();
+    render();
     return false;
   }
 
@@ -261,16 +269,7 @@ export function createTouchscape(p5) {
       );
     }
 
-    display();
-  }
-
-  function start() {
-    updateBrushProperties();
-    const dimensions = calcViewportDimensions();
-    state.vMax = dimensions.vMax;
-
-    changeBrush(0); // Start with eraser selected
-    reset();
+    render();
   }
 
   function windowResized() {
@@ -283,14 +282,14 @@ export function createTouchscape(p5) {
     [state.foreground, state.pebbleLayer] = resizedLayers;
     state.vMax = dimensions.vMax;
 
-    display();
+    render();
   }
 
   return {
     preload,
     setup,
-    start,
     reset,
+    render,
     handlePointerStart,
     handlePointerEnd,
     handleMove,

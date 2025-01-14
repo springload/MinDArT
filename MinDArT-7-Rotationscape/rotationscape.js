@@ -65,21 +65,18 @@ export function createRotationscape(p5) {
 
   async function setup() {
     setupToolbarActions();
-    // Create canvas
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
     p5.pixelDensity(1);
 
-    // Create graphics layer
+    // Create and initialize graphics layer
     state.drawLayer = p5.createGraphics(p5.width, p5.height);
     state.drawLayer.colorMode(p5.RGB, 255, 255, 255, 1000);
     state.drawLayer.strokeCap(p5.PROJECT);
 
     state.vMax = calcViewportDimensions().vMax;
-  }
 
-  function start() {
     state.counter = -1;
     reset();
   }
@@ -395,7 +392,6 @@ export function createRotationscape(p5) {
     preload,
     setup,
     draw,
-    start,
     reset,
     makeDrawing,
     render,

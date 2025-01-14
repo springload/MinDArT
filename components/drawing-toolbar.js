@@ -276,7 +276,8 @@ class DrawingToolbar extends HTMLElement {
     if (item.id) attrs.push(`id="${item.id}"`);
     if (item.onClick) attrs.push(`onclick="${item.onClick}"`);
     if (item.dataElement) attrs.push(`data-element="${item.dataElement}"`);
-    if (item.dataBrush !== null) attrs.push(`data-brush="${item.dataBrush}"`);
+    if (item.dataBrush !== null && item.dataBrush !== undefined)
+      attrs.push(`data-brush="${item.dataBrush}"`);
     if (item.dataSwatch) attrs.push(`data-swatch="${item.dataSwatch}"`);
 
     const icon = item.icon ? this.renderIcon(item.icon, item.brushLines) : "";

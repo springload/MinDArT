@@ -46,18 +46,20 @@ new p5((p5) => {
   let prevTouchY = null;
 
   p5.preload = () => {
-    loadSoundtrack(appName)
-      .then(() => {
+    // Load soundtrack and app assets in parallel
+    Promise.all([
+      loadSoundtrack(appName).then(() => {
         soundtrackLoaded = true;
-      })
-      .catch(console.error);
-
-    drawingApp = createDrawingApp(p5, appName);
-    drawingApp.preload();
+      }),
+      (async () => {
+        drawingApp = createDrawingApp(p5, appName);
+        await drawingApp.preload();
+      })(),
+    ]).catch(console.error);
   };
 
-  p5.setup = () => {
-    drawingApp.setup();
+  p5.setup = async () => {
+    await drawingApp.setup();
 
     const loadingDialog = document.querySelector("loading-dialog");
     const appControls = document.querySelector("app-controls");
@@ -66,8 +68,10 @@ new p5((p5) => {
       throw new Error("Loading dialog or app controls were not found");
     }
 
+    // Start rendering the initial state while dialog is still showing
+    drawingApp.render();
+
     loadingDialog.addEventListener("app-start", async () => {
-      // Play the soundtrack when the drawing app starts
       if (soundtrackLoaded) {
         try {
           await playSoundtrack();
@@ -75,7 +79,6 @@ new p5((p5) => {
           console.warn("Failed to play soundtrack:", error);
         }
       }
-      drawingApp.start();
     });
 
     appControls.addEventListener("app-reset", () => {

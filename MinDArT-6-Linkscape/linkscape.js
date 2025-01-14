@@ -72,13 +72,15 @@ export function createLinkscape(p5) {
     const dimensions = calcViewportDimensions();
     Object.assign(state, dimensions);
 
-    // Create canvas and attach to container
     const canvas = p5.createCanvas(state.width, state.height);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
-    // Create graphics layers
     state.lineLayer = p5.createGraphics(state.width, state.height);
     state.paintLayer = p5.createGraphics(state.width, state.height);
+
+    state.lineLayer.strokeWeight(1 * state.vMax);
+    state.paintLayer.strokeWeight(1 * state.vMax);
+    reset(true); // Pass flag indicating this is initial setup
   }
 
   function setupToolbarActions() {
@@ -102,12 +104,6 @@ export function createLinkscape(p5) {
         addPin();
       });
     }
-  }
-
-  function start() {
-    state.lineLayer.strokeWeight(1 * state.vMax);
-    state.paintLayer.strokeWeight(1 * state.vMax);
-    reset(true); // Pass flag indicating this is initial setup
   }
 
   function reset(isInitialSetup = false) {
@@ -378,7 +374,6 @@ export function createLinkscape(p5) {
   return {
     preload,
     setup,
-    start,
     reset,
     render,
     windowResized,

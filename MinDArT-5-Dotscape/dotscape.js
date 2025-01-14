@@ -119,7 +119,6 @@ export function createDotscape(p5) {
 
   async function setup() {
     setupToolbarActions();
-
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
@@ -131,6 +130,9 @@ export function createDotscape(p5) {
     p5.colorMode(p5.HSB, 360, 100, 100, 100);
     state.lineLayer.colorMode(p5.HSB, 360, 100, 100, 100);
     state.permaLine.colorMode(p5.HSB, 360, 100, 100, 100);
+
+    windowResized();
+    reset();
   }
 
   function setupToolbarActions() {
@@ -145,11 +147,6 @@ export function createDotscape(p5) {
         restart();
       });
     }
-  }
-
-  function start() {
-    windowResized();
-    reset();
   }
 
   function reset() {
@@ -498,13 +495,11 @@ export function createDotscape(p5) {
   return {
     preload,
     setup,
-    start,
     reset,
     render,
     windowResized,
     handlePointerStart,
     handlePointerEnd,
     handleMove,
-    restart,
   };
 }
