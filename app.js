@@ -1,3 +1,7 @@
+import "../components/loading-dialog.js";
+import "../components/app-controls.js";
+import "../components/drawing-toolbar.js";
+
 import { isClickOnButton } from "./functions.js";
 import { createTouchscape } from "./MinDArT-1-Touchscape/touchscape.js";
 import { createLinescape } from "./MinDArT-2-Linescape/linescape.js";
