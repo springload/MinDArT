@@ -54,7 +54,7 @@ export function createColourscape(p5) {
   function preload() {
     state.bg = p5.loadImage("assets/paper.jpg");
     state.brush = Array.from({ length: 15 }, (_, i) =>
-      p5.loadImage(`assets/Cloud${i}.png`)
+      p5.loadImage(`assets/4-colourscape_Cloud${i}.png`)
     );
   }
 

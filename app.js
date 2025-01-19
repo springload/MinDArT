@@ -3,14 +3,14 @@ import "../components/app-controls.js";
 import "../components/drawing-toolbar.js";
 
 import { isClickOnButton } from "./functions.js";
-import { createTouchscape } from "./MinDArT-1-Touchscape/touchscape.js";
-import { createLinescape } from "./MinDArT-2-Linescape/linescape.js";
-import { createCirclescape } from "./MinDArT-3-Circlescape/circlescape.js";
-import { createColourscape } from "./MinDArT-4-Colourscape/colourscape.js";
-import { createDotscape } from "./MinDArT-5-Dotscape/dotscape.js";
-import { createLinkscape } from "./MinDArT-6-Linkscape/linkscape.js";
-import { createRotationscape } from "./MinDArT-7-Rotationscape/rotationscape.js";
-import { createSymmetryscape } from "./MinDArT-8-Symmetryscape/symmetryscape.js";
+import { createTouchscape } from "./apps/1-touchscape.js";
+import { createLinescape } from "./apps/2-linescape.js";
+import { createCirclescape } from "./apps/3-circlescape.js";
+import { createColourscape } from "./apps/4-colourscape.js";
+import { createDotscape } from "./apps/5-dotscape.js";
+import { createLinkscape } from "./apps/6-linkscape.js";
+import { createRotationscape } from "./apps/7-rotationscape.js";
+import { createSymmetryscape } from "./apps/8-symmetryscape.js";
 import {
   loadSoundtrack,
   playSoundtrack,

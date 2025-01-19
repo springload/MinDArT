@@ -61,8 +61,8 @@ export function createLinkscape(p5) {
   };
 
   function preload() {
-    state.texture = p5.loadImage("assets/texture.png");
-    state.pin = p5.loadImage("assets/pin.png");
+    state.texture = p5.loadImage("assets/6-linkscape_texture.png");
+    state.pin = p5.loadImage("assets/6-linkscape_pin.png");
   }
 
   async function setup() {

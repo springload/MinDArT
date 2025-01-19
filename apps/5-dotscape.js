@@ -2,7 +2,7 @@ import { calcViewportDimensions, handleResize } from "../shared/resize.js";
 import { addInteractionHandlers } from "../functions.js";
 
 export function createDotscape(p5) {
-  const BACKGROUND_IMAGE = "assets/paper.jpg";
+  const BACKGROUND_IMAGE = "assets/5-dotscape_paper.jpg";
   const PRIMARY_COLORS = [360, 60, 240]; // RGB in HSB terms
 
   const state = {

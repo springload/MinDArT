@@ -47,12 +47,13 @@ export function createTouchscape(p5) {
   };
 
   function preload() {
-    state.background = p5.loadImage("assets/sand_01.jpg");
+    // Updated asset paths
+    state.background = p5.loadImage("assets/1-touchscape_sand_01.jpg");
 
-    // Load pebble assets
-    state.pebbles = new Array(PEBBLE_COUNT + 1); // +1 since indexing starts at 1
+    // Load pebble assets with updated paths
+    state.pebbles = new Array(PEBBLE_COUNT + 1);
     for (let i = 1; i <= PEBBLE_COUNT; i++) {
-      state.pebbles[i] = p5.loadImage(`assets/wpebble${i}.png`);
+      state.pebbles[i] = p5.loadImage(`assets/1-touchscape_pebble${i}.png`);
     }
   }
 
