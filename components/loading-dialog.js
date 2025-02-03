@@ -17,10 +17,11 @@ class LoadingDialog extends HTMLElement {
     const iconHtml = appName
       ? `<img src="${iconPath}" alt="${appName} icon">`
       : "";
+    console.log("loading-dialog", { appName, iconHtml });
 
     this.innerHTML = `
       <dialog class="loading-screen" data-element="loading-dialog" open>
-        <div class="loading-screen__inner test">
+        <div class="loading-screen__inner">
           <div class="loading-screen__loading" id="p5_loading">
             ${iconHtml}
             <p class="loading-screen__text">Loading...</p>

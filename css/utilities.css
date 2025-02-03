@@ -1,41 +1,41 @@
-.u-theme-grey {
+.u-theme--grey {
   --theme-bg: var(--color-grey-60);
   --theme-button-bg: var(--color-grey-90);
 }
 
-.u-theme-red {
+.u-theme--red {
   --theme-bg: var(--color-red-60);
   --theme-button-bg: var(--color-red-80);
 }
 
-.u-theme-orange {
+.u-theme--orange {
   --theme-bg: var(--color-orange-70);
   --theme-button-bg: var(--color-orange-90);
 }
 
-.u-theme-yellow {
+.u-theme--yellow {
   --theme-bg: var(--color-yellow-80);
   --theme-button-bg: var(--color-yellow-90);
 }
 
-.u-theme-green {
+.u-theme--green {
   --theme-bg: var(--color-green-80);
   --theme-button-bg: var(--color-green-90);
 }
 
-.u-theme-teal {
+.u-theme--teal {
   --theme-bg: var(--color-teal-70);
   --theme-button-bg: var(--color-teal-90);
 
 }
 
-.u-theme-blue {
+.u-theme--blue {
   --theme-bg: var(--color-blue-70);
   --theme-button-bg: var(--color-blue-90);
 
 }
 
-.u-theme-slate {
+.u-theme--slate {
   --theme-bg: var(--color-slate-30);
   --theme-button-bg: var(--color-slate-80);
 }
