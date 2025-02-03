@@ -26,28 +26,28 @@
       <main>
         <img class="logo" src="assets/mindart.png" alt="MinDArT logo">
         <div class="grid" data-element="home-grid">
-          <a href="#" data-app="touchscape" data-week="1">
+          <a href="?app=touchscape" data-app="touchscape" data-week="1">
             <img src="assets/touchscape-icon.png" alt="Week 1 - Touchscape">
           </a>
-          <a href="#" data-app="linescape" data-week="2">
+          <a href="?app=linescape" data-app="linescape" data-week="2">
             <img src="assets/linescape-icon.png" alt="Week 2 - Linescape">
           </a>
-          <a href="#" data-app="circlescape" data-week="3">
+          <a href="?app=circlescape" data-app="circlescape" data-week="3">
             <img src="assets/circlescape-icon.png" alt="Week 3 - Circlescape">
           </a>
-          <a href="#" data-app="colourscape" data-week="4">
+          <a href="?app=colourscape" data-app="colourscape" data-week="4">
             <img src="assets/colourscape-icon.png" alt="Week 4 - Colourscape">
           </a>
-          <a href="#" data-app="dotscape" data-week="5">
+          <a href="?app=dotscape" data-app="dotscape" data-week="5">
             <img src="assets/dotscape-icon.png" alt="Week 5 - Dotscape">
           </a>
-          <a href="#" data-app="linkscape" data-week="6">
+          <a href="?app=linkscape" data-app="linkscape" data-week="6">
             <img src="assets/linkscape-icon.png" alt="Week 6 - Linkscape">
           </a>
-          <a href="#" data-app="rotationscape" data-week="7">
+          <a href="?app=rotationscape" data-app="rotationscape" data-week="7">
             <img src="assets/rotationscape-icon.png" alt="Week 7 - Rotationscape">
           </a>
-          <a href="#" data-app="symmetryscape" data-week="8">
+          <a href="?app=symmetryscape" data-app="symmetryscape" data-week="8">
             <img src="assets/symmetryscape-icon.png" alt="Week 8 - Symmetryscape">
           </a>
         </div>
@@ -64,5 +64,16 @@
         <app-controls app-name=""></app-controls>
       </div>
     </div>
+
+    <script type="module">
+      import { initializeRouter } from './spa.js';
+      import { showOnlyCurrentLinks } from './functions.js';
+      
+      initializeRouter();
+      
+      showOnlyCurrentLinks();
+      
+      import './app.js';
+    </script>
   </body>
 </html>

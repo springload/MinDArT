@@ -20,140 +20,159 @@ import {
 // Initialize audio system when the SPA first loads
 prepareAudio().catch(console.error);
 
-// Factory for creating the appropriate drawing app based on app name
-function createDrawingApp(p5, appName) {
-  const creators = {
-    touchscape: createTouchscape,
-    linescape: createLinescape,
-    circlescape: createCirclescape,
-    colourscape: createColourscape,
-    dotscape: createDotscape,
-    linkscape: createLinkscape,
-    rotationscape: createRotationscape,
-    symmetryscape: createSymmetryscape,
-  };
+let p5Instance = null;
 
-  const creator = creators[appName];
-  if (!creator) {
-    throw new Error(`No drawing app found for ${appName}`);
-  }
-
-  return creator(p5);
+function getCurrentAppName() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("app");
 }
 
-// Initialize p5 with the appropriate drawing app
-new p5((p5) => {
-  const appName = document.body.dataset.appName;
-  let drawingApp;
-  let soundtrackLoaded = false;
-  let prevTouchX = null;
-  let prevTouchY = null;
-
-  p5.preload = () => {
-    // Load soundtrack and app assets in parallel
-    Promise.all([
-      loadSoundtrack(appName).then(() => {
-        soundtrackLoaded = true;
-      }),
-      (async () => {
-        drawingApp = createDrawingApp(p5, appName);
-        await drawingApp.preload();
-      })(),
-    ]).catch(console.error);
-  };
-
-  p5.setup = async () => {
-    await drawingApp.setup();
-
-    const loadingDialog = document.querySelector("loading-dialog");
-    const appControls = document.querySelector("app-controls");
-
-    if (!loadingDialog || !appControls) {
-      throw new Error("Loading dialog or app controls were not found");
-    }
-
-    // Start rendering the initial state while dialog is still showing
-    drawingApp.render();
-
-    loadingDialog.addEventListener("app-start", async () => {
-      if (soundtrackLoaded) {
-        try {
-          await playSoundtrack();
-        } catch (error) {
-          console.warn("Failed to play soundtrack:", error);
-        }
-      }
-    });
-
-    appControls.addEventListener("app-reset", () => {
-      drawingApp.reset();
-    });
-
-    appControls.addEventListener("app-save", () => {
-      p5.save(
-        `${appName}${p5.month()}${p5.day()}${p5.hour()}${p5.second()}.jpg`
-      );
-    });
-  };
-
-  p5.draw = () => {
-    return drawingApp?.draw ? drawingApp.draw() : false;
-  };
-
-  // Mouse event handlers
-  p5.mousePressed = (event) => {
-    return drawingApp.handlePointerStart?.(event) ?? false;
-  };
-
-  p5.mouseReleased = (event) => {
-    return drawingApp.handlePointerEnd?.(event) ?? false;
-  };
-
-  p5.mouseDragged = (event) => {
-    handlePointerMove(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY, event);
-  };
-
-  // Touch event handlers
-  p5.touchStarted = (event) => {
-    prevTouchX = null;
-    prevTouchY = null;
-    return drawingApp.handlePointerStart?.(event) ?? false;
-  };
-
-  p5.touchEnded = (event) => {
-    return drawingApp.handlePointerEnd?.(event) ?? false;
-  };
-
-  p5.touchMoved = (event) => {
-    if (p5.touches.length > 0) {
-      const touch = p5.touches[0];
-
-      // Use stored previous coordinates if available, otherwise use current position
-      const currentX = touch.x;
-      const currentY = touch.y;
-      const previousX = prevTouchX !== null ? prevTouchX : currentX;
-      const previousY = prevTouchY !== null ? prevTouchY : currentY;
-
-      // Update previous touch position for next iteration
-      prevTouchX = currentX;
-      prevTouchY = currentY;
-
-      handlePointerMove(currentX, currentY, previousX, previousY, event);
-    }
-
-    return false;
-  };
-
-  function handlePointerMove(currentX, currentY, previousX, previousY, event) {
-    // Let the drawing app handle the interaction if it's not on a button
-    if (!isClickOnButton(event)) {
-      if (drawingApp.handleMove) {
-        drawingApp.handleMove(currentX, currentY, previousX, previousY, event);
-      }
-    }
+function initializeP5() {
+  if (p5Instance) {
+    p5Instance.remove();
   }
 
-  p5.windowResized = () => {
-    drawingApp.windowResized();
-  };
-}, document.querySelector('[data-element="canvas-container"]'));
+  p5Instance = new p5((p5) => {
+    let drawingApp;
+    let soundtrackLoaded = false;
+    let prevTouchX = null;
+    let prevTouchY = null;
+
+    p5.preload = () => {
+      const appName = getCurrentAppName();
+      if (!appName) return;
+
+      // Load soundtrack and app assets in parallel
+      Promise.all([
+        loadSoundtrack(appName).then(() => {
+          soundtrackLoaded = true;
+        }),
+        (async () => {
+          drawingApp = createDrawingApp(p5, appName);
+          await drawingApp.preload();
+        })(),
+      ]).catch(console.error);
+    };
+
+    p5.setup = async () => {
+      const appName = getCurrentAppName();
+      if (!appName || !drawingApp) return;
+
+      await drawingApp.setup();
+
+      const loadingDialog = document.querySelector("loading-dialog");
+      const appControls = document.querySelector("app-controls");
+
+      if (!loadingDialog || !appControls) {
+        throw new Error("Loading dialog or app controls were not found");
+      }
+
+      drawingApp.render();
+
+      loadingDialog.addEventListener("app-start", async () => {
+        if (soundtrackLoaded) {
+          try {
+            await playSoundtrack();
+          } catch (error) {
+            console.warn("Failed to play soundtrack:", error);
+          }
+        }
+      });
+
+      appControls.addEventListener("app-reset", () => {
+        drawingApp.reset();
+      });
+
+      appControls.addEventListener("app-save", () => {
+        p5.save(
+          `${appName}${p5.month()}${p5.day()}${p5.hour()}${p5.second()}.jpg`
+        );
+      });
+    };
+
+    p5.draw = () => {
+      return drawingApp?.draw ? drawingApp.draw() : false;
+    };
+
+    // Mouse event handlers
+    p5.mousePressed = (event) => {
+      return drawingApp.handlePointerStart?.(event) ?? false;
+    };
+
+    p5.mouseReleased = (event) => {
+      return drawingApp.handlePointerEnd?.(event) ?? false;
+    };
+
+    p5.mouseDragged = (event) => {
+      handlePointerMove(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY, event);
+    };
+
+    // Touch event handlers
+    p5.touchStarted = (event) => {
+      prevTouchX = null;
+      prevTouchY = null;
+      return drawingApp.handlePointerStart?.(event) ?? false;
+    };
+
+    p5.touchEnded = (event) => {
+      return drawingApp.handlePointerEnd?.(event) ?? false;
+    };
+
+    p5.touchMoved = (event) => {
+      if (p5.touches.length > 0) {
+        const touch = p5.touches[0];
+
+        // Use stored previous coordinates if available, otherwise use current position
+        const currentX = touch.x;
+        const currentY = touch.y;
+        const previousX = prevTouchX !== null ? prevTouchX : currentX;
+        const previousY = prevTouchY !== null ? prevTouchY : currentY;
+
+        // Update previous touch position for next iteration
+        prevTouchX = currentX;
+        prevTouchY = currentY;
+
+        handlePointerMove(currentX, currentY, previousX, previousY, event);
+      }
+
+      return false;
+    };
+
+    function handlePointerMove(
+      currentX,
+      currentY,
+      previousX,
+      previousY,
+      event
+    ) {
+      // Let the drawing app handle the interaction if it's not on a button
+      if (!isClickOnButton(event)) {
+        if (drawingApp.handleMove) {
+          drawingApp.handleMove(
+            currentX,
+            currentY,
+            previousX,
+            previousY,
+            event
+          );
+        }
+      }
+    }
+
+    p5.windowResized = () => {
+      drawingApp.windowResized();
+    };
+  }, document.querySelector('[data-element="canvas-container"]'));
+}
+
+window.addEventListener("popstate", () => {
+  const appName = getCurrentAppName();
+  if (appName) {
+    initializeP5();
+  }
+});
+
+// Initial check for app parameter
+if (getCurrentAppName()) {
+  initializeP5();
+}

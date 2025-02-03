@@ -12,13 +12,17 @@ class LoadingDialog extends HTMLElement {
   }
 
   render() {
-    const appName = this.getAttribute("app-name") || "";
+    const appName = this.getAttribute("app-name");
+    const iconPath = appName ? `../assets/${appName}-icon-white.png` : "";
+    const iconHtml = appName
+      ? `<img src="${iconPath}" alt="${appName} icon">`
+      : "";
 
     this.innerHTML = `
       <dialog class="loading-screen" data-element="loading-dialog" open>
         <div class="loading-screen__inner test">
           <div class="loading-screen__loading" id="p5_loading">
-            <img src="../assets/${appName}-icon-white.png" alt="${appName} icon">
+            ${iconHtml}
             <p class="loading-screen__text">Loading...</p>
           </div>
           <button class="loading-screen__start" data-element="start-button">
