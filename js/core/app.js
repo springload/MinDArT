@@ -1,3 +1,5 @@
+import p5 from "p5";
+
 import "../components/loading-dialog.js";
 import "../components/app-controls.js";
 import "../components/drawing-toolbar.js";

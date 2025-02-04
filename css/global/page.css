@@ -44,6 +44,10 @@ body {
       opacity: 20%;
     }
   }
+
+  :where(img) {
+    aspect-ratio: 60.5 / 81.8;
+  }
 }
 
 .interface {

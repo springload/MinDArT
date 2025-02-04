@@ -16,7 +16,7 @@ export function createSymmetryscape(p5) {
     ["#3C5E73", "#F2BBBB", "#FFFFFF", "#F24444"],
   ];
   const SYMMETRY_MODES = 4;
-  const BACKGROUND_IMAGE = "assets/8-symmetryscape_paper.jpg";
+  const BACKGROUND_IMAGE = "assets/8-symmetryscape_paper.webp";
 
   const state = {
     // Layers

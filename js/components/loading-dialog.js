@@ -22,7 +22,7 @@ class LoadingDialog extends HTMLElement {
 
   render() {
     const appName = this.getAttribute("app-name");
-    const iconPath = appName ? `../assets/${appName}-icon-white.png` : "";
+    const iconPath = appName ? `../assets/${appName}-icon-white.webp` : "";
     const iconHtml = appName
       ? `<img src="${iconPath}" alt="${appName} icon">`
       : "";

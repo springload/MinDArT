@@ -1,21 +1,8 @@
-let componentsRegistered = false;
-
-async function registerComponents() {
-  if (componentsRegistered) return;
-
-  // Import and register components
-  await Promise.all([
-    import("../components/loading-dialog.js"),
-    import("../components/app-controls.js"),
-    import("../components/drawing-toolbar.js"),
-  ]);
-
-  componentsRegistered = true;
-}
+import "../components/loading-dialog.js";
+import "../components/app-controls.js";
+import "../components/drawing-toolbar.js";
 
 async function init() {
-  await registerComponents();
-
   const homeView = document.querySelector('[data-element="home-view"]');
   const appView = document.querySelector('[data-element="app-view"]');
 
