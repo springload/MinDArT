@@ -16,19 +16,15 @@ export default defineConfig({
       output: {
         // Improve chunking strategy
         manualChunks: (id) => {
-          // Put p5.js in its own chunk
           if (id.includes("p5")) {
             return "p5";
           }
-          // Group app files together
           if (id.includes("/apps/")) {
             return "drawing-apps";
           }
-          // Group components together
           if (id.includes("/components/")) {
             return "components";
           }
-          // Group utils together
           if (id.includes("/utils/")) {
             return "utils";
           }
@@ -39,11 +35,14 @@ export default defineConfig({
           if (/\.(mp3|wav)$/.test(name ?? "")) {
             return "sound/[name][extname]";
           }
-          if (/\.(png|jpe?g|svg)$/.test(name ?? "")) {
-            return "assets/[name][extname]";
+          if (/\.(png|jpe?g|svg|webp)$/.test(name ?? "")) {
+            return "assets/[name]-[hash][extname]";
           }
           if (/\.css$/.test(name ?? "")) {
             return "css/[name]-[hash][extname]";
+          }
+          if (/\.(woff2?)$/.test(name ?? "")) {
+            return "assets/[name]-[hash][extname]";
           }
           return "assets/[name]-[hash][extname]";
         },
@@ -59,10 +58,21 @@ export default defineConfig({
   plugins: [
     serwist({
       swSrc: "./sw.js",
-      swDest: "./dist/sw.js",
+      swDest: "dist/sw.js",
       globDirectory: "dist",
-      globPatterns: ["**/*.{html,js,css,png,webp,jpg,mp3,woff2}"],
-      disable: process.env.NODE_ENV === "development",
+      globPatterns: ["**/*.{html,js,css,png,jpg,webp,mp3,woff2}"],
+      // Don't disable in development - let's keep service worker functionality for testing
+      disable: false,
+      // Additional configuration for better service worker handling
+      injectRegister: "auto",
+      manifestEntries: undefined, // Let Serwist generate the manifest automatically
+      // This ensures the service worker is properly built
+      buildPluginContext: {
+        // Add service worker as an entry point
+        input: {
+          sw: "/sw.js",
+        },
+      },
     }),
   ],
 
