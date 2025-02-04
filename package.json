@@ -3,22 +3,20 @@
   "version": "1.2.17",
   "description": "mind art progressive web app",
   "scripts": {
-    "build": "node esbuild.config.js",
-    "start": "dhost ."
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "type": "module",
   "dependencies": {
     "@serwist/build": "^9.0.11",
-    "@serwist/cacheable-response": "^9.0.11",
-    "@serwist/expiration": "^9.0.11",
     "@serwist/precaching": "^9.0.11",
-    "@serwist/routing": "^9.0.11",
-    "@serwist/strategies": "^9.0.11",
     "@serwist/sw": "^9.0.11",
+    "p5": "^1.11.3",
     "serwist": "^9.0.11"
   },
   "devDependencies": {
-    "dhost": "^0.3.5",
-    "esbuild": "^0.24.0"
+    "@serwist/vite": "^9.0.11",
+    "vite": "^5.4.14"
   }
 }

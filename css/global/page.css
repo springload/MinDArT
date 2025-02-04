@@ -1,0 +1,83 @@
+body {
+  /* prevent selection of text */
+  -webkit-touch-callout: none;
+  user-select: none;
+
+  /* prevent flash of color on tap */
+  -webkit-tap-highlight-color: transparent;
+
+  font-family: var(--font-avenir);
+  /* TODO: font-weight was set as 900, but that weight isn't in the repo */
+
+  &:where(:not(.home)) {
+    overflow: hidden;
+  }
+}
+
+.main {
+  padding: 1rem;
+}
+
+.logo {
+  margin-inline: auto;
+  margin-block: 1rem;
+  width: max(200px, 30%);
+}
+
+.grid {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  /* keep it to max 4 columns */
+  max-width: 1120px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+
+  :where(a) {
+    padding-inline: 5%;
+    align-self: center;
+    justify-self: center;
+    display: grid;
+    place-content: center;
+
+    &:where([disabled]) {
+      opacity: 20%;
+    }
+  }
+
+  :where(img) {
+    aspect-ratio: 60.5 / 81.8;
+  }
+}
+
+.interface {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  padding-inline: 20px;
+  padding-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  /* prevent the interface from receiving clicks meant for the canvas (pointer-events is turned back on in .btn, so we can still click buttons)  */
+  pointer-events: none;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.app-controls {
+  /* align right if there isn't a toolbar */
+  margin-left: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+:where(canvas).adding-pin {
+  cursor: crosshair;
+}
