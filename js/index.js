@@ -5,15 +5,15 @@ window.p5 = p5; // Make it globally available
 // Import app code
 import { initializeRouter } from "./core/router.js";
 import { showOnlyCurrentLinks } from "./utils/dom.js";
-import { registerServiceWorker } from "./register-sw.js";
+import { registerSW } from "virtual:pwa-register";
 
 // Initialize the app
 initializeRouter();
 showOnlyCurrentLinks();
 
-// Only register service worker in production
+// Register service worker with auto-update behavior
 if (import.meta.env.PROD) {
-  registerServiceWorker();
+  registerSW({ immediate: true });
 }
 
 // Import app module
