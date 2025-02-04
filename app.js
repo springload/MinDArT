@@ -20,6 +20,27 @@ import {
 // Initialize audio system when the SPA first loads
 prepareAudio().catch(console.error);
 
+// Factory for creating the appropriate drawing app based on app name
+function createDrawingApp(p5, appName) {
+  const creators = {
+    touchscape: createTouchscape,
+    linescape: createLinescape,
+    circlescape: createCirclescape,
+    colourscape: createColourscape,
+    dotscape: createDotscape,
+    linkscape: createLinkscape,
+    rotationscape: createRotationscape,
+    symmetryscape: createSymmetryscape,
+  };
+
+  const creator = creators[appName];
+  if (!creator) {
+    throw new Error(`No drawing app found for ${appName}`);
+  }
+
+  return creator(p5);
+}
+
 let p5Instance = null;
 
 function getCurrentAppName() {

@@ -6,8 +6,6 @@ class LoadingDialog extends HTMLElement {
     return ["app-name"];
   }
 
-  #eventListenersInitialized = false;
-
   constructor() {
     super();
   }
@@ -32,10 +30,7 @@ class LoadingDialog extends HTMLElement {
     this.innerHTML = `
       <dialog class="loading-screen" data-element="loading-dialog" open>
         <div class="loading-screen__inner">
-          <div class="loading-screen__loading" id="p5_loading">
             ${iconHtml}
-            <p class="loading-screen__text">Loading...</p>
-          </div>
           <button class="loading-screen__start" data-element="start-button">
             Touch here to begin
           </button>
@@ -43,11 +38,7 @@ class LoadingDialog extends HTMLElement {
       </dialog>
     `;
 
-    // Set up event listeners after render if not already done
-    if (!this.#eventListenersInitialized) {
       this.setupEventListeners();
-      this.#eventListenersInitialized = true;
-    }
   }
 
   setupEventListeners() {
@@ -66,13 +57,6 @@ class LoadingDialog extends HTMLElement {
     };
 
     addInteractionHandlers(startButton, handleStart);
-
-    const checkLoading = setInterval(() => {
-      if (!document.getElementById("p5_loading")) {
-        startButton.style.display = "block";
-        clearInterval(checkLoading);
-      }
-    }, 100);
   }
 }
 
