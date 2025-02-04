@@ -7,14 +7,12 @@ export default defineConfig({
     outDir: "dist",
     assetsDir: "assets",
     emptyOutDir: true,
-    // Increase the warning limit since p5.js is large
     chunkSizeWarningLimit: 1100,
     rollupOptions: {
       input: {
         main: "/index.html",
       },
       output: {
-        // Improve chunking strategy
         manualChunks: (id) => {
           if (id.includes("p5")) {
             return "p5";
@@ -61,18 +59,7 @@ export default defineConfig({
       swDest: "dist/sw.js",
       globDirectory: "dist",
       globPatterns: ["**/*.{html,js,css,png,jpg,webp,mp3,woff2}"],
-      // Don't disable in development - let's keep service worker functionality for testing
       disable: false,
-      // Additional configuration for better service worker handling
-      injectRegister: "auto",
-      manifestEntries: undefined, // Let Serwist generate the manifest automatically
-      // This ensures the service worker is properly built
-      buildPluginContext: {
-        // Add service worker as an entry point
-        input: {
-          sw: "/sw.js",
-        },
-      },
     }),
   ],
 
