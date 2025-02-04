@@ -1,5 +1,5 @@
-import { addInteractionHandlers } from "../functions.js";
-import { playClick } from "../shared/audio.js";
+import { addInteractionHandlers } from "../utils/events.js";
+import { playClick } from "../utils/audio.js";
 
 class AppControls extends HTMLElement {
   constructor() {

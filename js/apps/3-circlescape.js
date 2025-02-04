@@ -1,8 +1,6 @@
-import {
-  addInteractionHandlers,
-  clearActiveButtonState,
-} from "../functions.js";
-import { calcViewportDimensions, handleResize } from "../shared/resize.js";
+import { addInteractionHandlers } from "../utils/events.js";
+import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
+import { clearActiveButtonState } from "../utils/dom.js";
 
 export function createCirclescape(p5) {
   const MAX_VECTOR_COUNT = 100;

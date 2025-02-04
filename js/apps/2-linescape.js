@@ -1,9 +1,7 @@
-import {
-  addInteractionHandlers,
-  clearActiveButtonState,
-  hexToRgb,
-} from "../functions.js";
-import { calcViewportDimensions, handleResize } from "../shared/resize.js";
+import { addInteractionHandlers } from "../utils/events.js";
+import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
+import { clearActiveButtonState } from "../utils/dom.js";
+import { hexToRgb } from "../utils/color.js";
 
 /**
  * Creates a fully encapsulated Linescape sketch

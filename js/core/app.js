@@ -2,20 +2,20 @@ import "../components/loading-dialog.js";
 import "../components/app-controls.js";
 import "../components/drawing-toolbar.js";
 
-import { isClickOnButton } from "./functions.js";
-import { createTouchscape } from "./apps/1-touchscape.js";
-import { createLinescape } from "./apps/2-linescape.js";
-import { createCirclescape } from "./apps/3-circlescape.js";
-import { createColourscape } from "./apps/4-colourscape.js";
-import { createDotscape } from "./apps/5-dotscape.js";
-import { createLinkscape } from "./apps/6-linkscape.js";
-import { createRotationscape } from "./apps/7-rotationscape.js";
-import { createSymmetryscape } from "./apps/8-symmetryscape.js";
+import { isClickOnButton } from "../utils/events.js";
+import { createTouchscape } from "../apps/1-touchscape.js";
+import { createLinescape } from "../apps/2-linescape.js";
+import { createCirclescape } from "../apps/3-circlescape.js";
+import { createColourscape } from "../apps/4-colourscape.js";
+import { createDotscape } from "../apps/5-dotscape.js";
+import { createLinkscape } from "../apps/6-linkscape.js";
+import { createRotationscape } from "../apps/7-rotationscape.js";
+import { createSymmetryscape } from "../apps/8-symmetryscape.js";
 import {
   loadSoundtrack,
   playSoundtrack,
   prepareAudio,
-} from "./shared/audio.js";
+} from "../utils/audio.js";
 
 // Initialize audio system when the SPA first loads
 prepareAudio().catch(console.error);

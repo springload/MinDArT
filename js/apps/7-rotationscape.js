@@ -1,10 +1,8 @@
-import {
-  colorAlpha,
-  clearActiveButtonState,
-  isClickOnButton,
-  addInteractionHandlers,
-} from "../functions.js";
-import { calcViewportDimensions, handleResize } from "../shared/resize.js";
+import { addInteractionHandlers } from "../utils/events.js";
+import { colorAlpha } from "../utils/color.js";
+import { clearActiveButtonState } from "../utils/dom.js";
+import { isClickOnButton } from "../utils/events.js";
+import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 
 /**
  * Creates a fully encapsulated Rotationscape sketch

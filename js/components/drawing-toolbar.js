@@ -1,4 +1,4 @@
-import { playClick } from "../shared/audio.js";
+import { playClick } from "../utils/audio.js";
 
 // DrawingToolbar extends HTMLElement to create a custom HTML element
 // This allows us to create <drawing-toolbar> tags that the browser recognizes

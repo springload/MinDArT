@@ -5,9 +5,9 @@ async function registerComponents() {
 
   // Import and register components
   await Promise.all([
-    import("./components/loading-dialog.js"),
-    import("./components/app-controls.js"),
-    import("./components/drawing-toolbar.js"),
+    import("../components/loading-dialog.js"),
+    import("../components/app-controls.js"),
+    import("../components/drawing-toolbar.js"),
   ]);
 
   componentsRegistered = true;

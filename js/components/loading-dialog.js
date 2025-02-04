@@ -1,5 +1,5 @@
-import { addInteractionHandlers } from "../functions.js";
-import { initializeAudioContext, playClick } from "../shared/audio.js";
+import { addInteractionHandlers } from "../utils/events.js";
+import { initializeAudioContext, playClick } from "../utils/audio.js";
 
 class LoadingDialog extends HTMLElement {
   static get observedAttributes() {

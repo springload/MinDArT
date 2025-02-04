@@ -1,10 +1,7 @@
-import {
-  colorAlpha,
-  clearActiveButtonState,
-  hasActiveClass,
-  addInteractionHandlers,
-} from "../functions.js";
-import { calcViewportDimensions, handleResize } from "../shared/resize.js";
+import { addInteractionHandlers } from "../utils/events.js";
+import { colorAlpha } from "../utils/color.js";
+import { clearActiveButtonState, hasActiveClass } from "../utils/dom.js";
+import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 
 /**
  * Creates a fully encapsulated Symmetryscape sketch

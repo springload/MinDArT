@@ -1,9 +1,7 @@
-import {
-  addInteractionHandlers,
-  colorAlpha,
-  isClickOnButton,
-} from "../functions.js";
-import { calcViewportDimensions, handleResize } from "../shared/resize.js";
+import { addInteractionHandlers } from "../utils/events.js";
+import { colorAlpha } from "../utils/color.js";
+import { isClickOnButton } from "../utils/events.js";
+import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 
 /**
  * Creates an encapsulated Linkscape sketch

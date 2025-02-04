@@ -1,5 +1,5 @@
-import { calcViewportDimensions, handleResize } from "../shared/resize.js";
-import { addInteractionHandlers } from "../functions.js";
+import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
+import { addInteractionHandlers } from "../utils/events.js";
 
 export function createDotscape(p5) {
   const BACKGROUND_IMAGE = "assets/5-dotscape_paper.jpg";
