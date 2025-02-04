@@ -55,7 +55,11 @@ export default defineConfig({
 
   plugins: [
     serwist({
+      swSrc: "./sw.js",
+      swDest: "dist/sw.js",
+      globDirectory: "dist",
       globPatterns: ["**/*.{html,js,css,png,jpg,webp,mp3,woff2}"],
+      disable: false,
     }),
   ],
 
