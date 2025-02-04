@@ -17,8 +17,6 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="shortcut icon" href="mindArt_Logo.png">
     <!-- <link rel="manifest" href="/manifest.json"> -->
-
-    <script src="js/libraries/p5.min.js"></script>
   </head>
 
   <body>
@@ -63,14 +61,8 @@
       </div>
     </div>
 
-    <script type="module">
-      import { initializeRouter } from './js/core/router.js';
-      import { showOnlyCurrentLinks } from './js/utils/dom.js';
-      
-      initializeRouter();
-      showOnlyCurrentLinks();
-      
-      import './js/core/app.js';
-    </script>
+
+    <script src="js/libraries/p5.min.js"></script>
+    <script type="module" src="js/index.js"></script>
   </body>
 </html>

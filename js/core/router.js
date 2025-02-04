@@ -70,7 +70,6 @@ async function init() {
 
     // Initialize p5 whenever we navigate to an app view
     if (typeof window.initializeP5 === "function") {
-      console.log("[SPA] initializing p5 after navigation");
       window.initializeP5();
     }
   }
