@@ -2,13 +2,24 @@ import { addInteractionHandlers } from "../functions.js";
 import { initializeAudioContext, playClick } from "../shared/audio.js";
 
 class LoadingDialog extends HTMLElement {
+  static get observedAttributes() {
+    return ["app-name"];
+  }
+
+  #eventListenersInitialized = false;
+
   constructor() {
     super();
   }
 
   connectedCallback() {
     this.render();
-    this.setupEventListeners();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "app-name" && oldValue !== newValue && oldValue !== null) {
+      this.render();
+    }
   }
 
   render() {
@@ -17,7 +28,6 @@ class LoadingDialog extends HTMLElement {
     const iconHtml = appName
       ? `<img src="${iconPath}" alt="${appName} icon">`
       : "";
-    console.log("loading-dialog", { appName, iconHtml });
 
     this.innerHTML = `
       <dialog class="loading-screen" data-element="loading-dialog" open>
@@ -32,6 +42,12 @@ class LoadingDialog extends HTMLElement {
         </div>
       </dialog>
     `;
+
+    // Set up event listeners after render if not already done
+    if (!this.#eventListenersInitialized) {
+      this.setupEventListeners();
+      this.#eventListenersInitialized = true;
+    }
   }
 
   setupEventListeners() {
@@ -45,7 +61,6 @@ class LoadingDialog extends HTMLElement {
     const handleStart = () => {
       initializeAudioContext();
       playClick();
-
       dialog.close();
       this.dispatchEvent(new CustomEvent("app-start"));
     };
