@@ -13,7 +13,7 @@ let pendingSoundtrack = null;
 export async function prepareAudio() {
   try {
     // Load click sound
-    const clickResponse = await fetch("../sound/click.mp3");
+    const clickResponse = await fetch("/sound/click.mp3");
     clickSound = await clickResponse.arrayBuffer();
   } catch (error) {
     console.warn("Failed to load click sound:", error);
@@ -63,7 +63,7 @@ export async function loadSoundtrack(appName) {
       currentSoundtrack = null;
     }
 
-    const response = await fetch(`../sound/${appName}.mp3`);
+    const response = await fetch(`/sound/${appName}.mp3`);
     soundtrackBuffer = await response.arrayBuffer();
   } catch (error) {
     console.warn(`Failed to load soundtrack for ${appName}:`, error);
