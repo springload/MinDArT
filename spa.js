@@ -66,6 +66,7 @@ async function init() {
       loadingDialog.setAttribute("app-name", appName);
       drawingToolbar.setAttribute("app-name", appName);
       appControls.setAttribute("app-name", appName);
+    }
 
     // Initialize p5 whenever we navigate to an app view
     if (typeof window.initializeP5 === "function") {

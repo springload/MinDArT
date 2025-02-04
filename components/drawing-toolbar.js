@@ -19,7 +19,12 @@ class DrawingToolbar extends HTMLElement {
   // This is where we do initial setup, rendering, and event binding
   connectedCallback() {
     this.render();
-    this.setupEventListeners();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "app-name" && oldValue !== newValue && oldValue !== null) {
+      this.render();
+    }
   }
 
   // Get the toolbar configuration based on the app-name attribute
@@ -309,6 +314,14 @@ class DrawingToolbar extends HTMLElement {
   }
 
   render() {
+    const appName = this.getAttribute("app-name");
+
+    // Only render if we have an app name
+    if (!appName) {
+      this.innerHTML = "";
+      return;
+    }
+
     const config = this.getToolbarConfig();
 
     const toolbar = `
@@ -332,6 +345,7 @@ class DrawingToolbar extends HTMLElement {
     `;
 
     this.innerHTML = toolbar;
+    this.setupEventListeners();
   }
 
   setupEventListeners() {

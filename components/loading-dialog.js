@@ -30,7 +30,7 @@ class LoadingDialog extends HTMLElement {
     this.innerHTML = `
       <dialog class="loading-screen" data-element="loading-dialog" open>
         <div class="loading-screen__inner">
-            ${iconHtml}
+          ${iconHtml}
           <button class="loading-screen__start" data-element="start-button">
             Touch here to begin
           </button>
@@ -38,7 +38,7 @@ class LoadingDialog extends HTMLElement {
       </dialog>
     `;
 
-      this.setupEventListeners();
+    this.setupEventListeners();
   }
 
   setupEventListeners() {
