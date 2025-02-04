@@ -1,6 +1,3 @@
-import { defaultCache } from "@serwist/vite/worker";
-import { Serwist } from "serwist";
-
 const defaultCache = [
   {
     urlPattern: /\/$|\/\?/,
