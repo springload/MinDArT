@@ -1,15 +1,24 @@
-import { defaultCache } from "@serwist/vite/worker";
-import { Serwist } from "serwist";
-
-self.addEventListener("install", () => {
-  // Intentionally empty - Serwist will handle installation
-});
+const defaultCache = [
+  {
+    urlPattern: /\/$|\/\?/,
+    handler: "NetworkFirst",
+    options: {
+      cacheName: "html-cache",
+    },
+  },
+  {
+    urlPattern: /\.(?:js|css)$/i,
+    handler: "NetworkFirst",
+    options: {
+      cacheName: "static-resources",
+    },
+  },
+];
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   precacheOptions: {
     cleanupOutdatedCaches: true,
-    concurrency: 10,
   },
   skipWaiting: true,
   clientsClaim: true,
@@ -27,7 +36,7 @@ const serwist = new Serwist({
       },
     },
     {
-      urlPattern: /\.(mp3|wav)$/i,
+      urlPattern: /\.(?:mp3|wav)$/i,
       handler: "CacheFirst",
       options: {
         cacheName: "audio",
