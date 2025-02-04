@@ -32,11 +32,13 @@ async function init() {
       appView.classList.add("u-hide");
       document.body.removeAttribute("data-app-name");
       if (themeClass) document.body.classList.remove(themeClass);
+      document.body.classList.add("home");
       return;
     }
 
     homeView.classList.add("u-hide");
     appView.classList.remove("u-hide");
+    document.body.classList.remove("home");
     document.body.setAttribute("data-app-name", appName);
 
     const themeLookup = {
@@ -64,6 +66,11 @@ async function init() {
       loadingDialog.setAttribute("app-name", appName);
       drawingToolbar.setAttribute("app-name", appName);
       appControls.setAttribute("app-name", appName);
+
+    // Initialize p5 whenever we navigate to an app view
+    if (typeof window.initializeP5 === "function") {
+      console.log("[SPA] initializing p5 after navigation");
+      window.initializeP5();
     }
   }
 

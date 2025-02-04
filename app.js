@@ -186,14 +186,8 @@ function initializeP5() {
   }, document.querySelector('[data-element="canvas-container"]'));
 }
 
-window.addEventListener("popstate", () => {
-  const appName = getCurrentAppName();
-  if (appName) {
-    initializeP5();
-  }
-});
+window.initializeP5 = initializeP5;
 
-// Initial check for app parameter
 if (getCurrentAppName()) {
   initializeP5();
 }
