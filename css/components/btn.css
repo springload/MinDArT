@@ -87,9 +87,7 @@
   flex-wrap: wrap;
   gap: 4px;
 
-  :where(.symmetryscape) & {
-    gap: 0;
-  }
+
 
   :where(.btn) {
     border-color: var(--color-grey-40);
@@ -99,16 +97,9 @@
     min-width: unset;
     aspect-ratio: 1;
 
-    :where(.symmetryscape) & {
-      /* overlap borders */
-      margin-left: calc(-1 * var(--btn-border-width));
-
-      /* always show the full border of the active/hovered button, don't let it be overlapped */
-      &:where(.active, :hover, :active) {
-        isolation: isolate;
-      }
-    }
   }
+
+
 
   /* first button is rounded on the left */
   :where(.btn:first-child) {
@@ -116,11 +107,12 @@
     border-radius: 40px 0px 0px 40px;
     padding-left: 16px;
 
-    :where(.symmetryscape) & {
-      width: unset;
-      min-width: 100px;
-      margin-left: 0;
-    }
+  }
+
+  :where(.symmetryscape) :where(.btn:first-child) {
+    width: unset;
+    min-width: 100px;
+    margin-left: 0;
   }
 
   /* last (visible) button is rounded on the right */
@@ -128,16 +120,26 @@
     width: 140px;
     border-radius: 0px 40px 40px 0px;
     padding-right: 16px;
+  }
+}
 
-    :where(.symmetryscape) & {
-      width: unset;
-      min-width: 80px;
+:where(.symmetryscape) .btn-group--split {
+  gap: 0;
+
+  :where(.btn) {
+    /* overlap borders */
+    margin-left: calc(-1 * var(--btn-border-width));
+
+    /* always show the full border of the active/hovered button, don't let it be overlapped */
+    &:where(.active, :hover, :active) {
+      isolation: isolate;
     }
   }
 
-
-
-
+  :where(.btn:last-child, .btn:has(+ .u-hide)) {
+    width: unset;
+    min-width: 80px;
+  }
 }
 
 .active {

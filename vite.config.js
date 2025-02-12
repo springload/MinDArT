@@ -1,68 +1,58 @@
 import { defineConfig } from "vite";
-import { serwist } from "@serwist/vite";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   build: {
-    target: "esnext",
-    outDir: "dist",
-    assetsDir: "assets",
-    emptyOutDir: true,
-    chunkSizeWarningLimit: 1100,
-    rollupOptions: {
-      input: {
-        main: "/index.html",
-      },
-      output: {
-        manualChunks: (id) => {
-          if (id.includes("p5")) {
-            return "p5";
-          }
-          if (id.includes("/apps/")) {
-            return "drawing-apps";
-          }
-          if (id.includes("/components/")) {
-            return "components";
-          }
-          if (id.includes("/utils/")) {
-            return "utils";
-          }
-        },
-        chunkFileNames: "js/[name]-[hash].js",
-        entryFileNames: "js/[name]-[hash].js",
-        assetFileNames: ({ name }) => {
-          if (/\.(mp3|wav)$/.test(name ?? "")) {
-            return "sound/[name][extname]";
-          }
-          if (/\.(png|jpe?g|svg|webp)$/.test(name ?? "")) {
-            return "assets/[name]-[hash][extname]";
-          }
-          if (/\.css$/.test(name ?? "")) {
-            return "css/[name]-[hash][extname]";
-          }
-          if (/\.(woff2?)$/.test(name ?? "")) {
-            return "assets/[name]-[hash][extname]";
-          }
-          return "assets/[name]-[hash][extname]";
-        },
-      },
-    },
+    chunkSizeWarningLimit: 1200,
+    sourcemap: true,
+    copyPublicDir: true,
   },
-
-  server: {
-    port: 3000,
-    open: true,
-  },
-
+  publicDir: "public",
   plugins: [
-    serwist({
-      swSrc: "./sw.js",
-      swDest: "dist/sw.js",
-      globDirectory: "dist",
-      globPatterns: ["**/*.{html,js,css}", "assets/**/*", "sound/**/*"],
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: [
+        "assets/*.webp",
+        "assets/*.png",
+        "sound/*.mp3",
+        "mindArt_Logo.png",
+      ],
+      manifest: {
+        name: "MinDArT",
+        short_name: "MinDArT",
+        description: "Mind art progressive web app, for offline use",
+        theme_color: "#ffffff",
+        background_color: "#ffffff",
+        display: "fullscreen",
+        icons: [
+          {
+            src: "assets/mindArt_Logo_96.png",
+            sizes: "96x96",
+            type: "image/png",
+          },
+          {
+            src: "assets/mindArt_Logo_152.png",
+            sizes: "152x152",
+            type: "image/png",
+          },
+          {
+            src: "assets/mindArt_Logo_384.png",
+            sizes: "384x384",
+            type: "image/png",
+          },
+          {
+            src: "assets/mindArt_Logo_384.png",
+            sizes: "384x384",
+            type: "image/png",
+            purpose: "maskable",
+          },
+        ],
+        start_url: "/",
+        scope: "/",
+      },
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,webp,png,mp3,woff2}"],
+      },
     }),
   ],
-
-  optimizeDeps: {
-    include: ["p5"],
-  },
 });

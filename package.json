@@ -9,14 +9,10 @@
   },
   "type": "module",
   "dependencies": {
-    "@serwist/build": "^9.0.11",
-    "@serwist/precaching": "^9.0.11",
-    "@serwist/sw": "^9.0.11",
-    "p5": "^1.11.3",
-    "serwist": "^9.0.11"
+    "p5": "^1.11.3"
   },
   "devDependencies": {
-    "@serwist/vite": "^9.0.11",
-    "vite": "^5.4.14"
+    "vite": "^5.4.14",
+    "vite-plugin-pwa": "^0.21.1"
   }
 }
