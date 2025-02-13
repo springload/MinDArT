@@ -25,7 +25,9 @@ export function createRotationscape(p5) {
     ["#CCCCCC", "#F2F2F2", "#B3B3B3", "#E6E6E6"],
     ["#F2F2F2", "#A6A6A6", "#0D0D0D", "#202020"],
   ];
-  const BACKGROUND_IMAGE = "images/7-rotationscape_paper.webp";
+  const BACKGROUND_IMAGE = `${
+    import.meta.env.BASE_URL
+  }images/7-rotationscape_paper.webp`;
 
   const state = {
     // Core drawing state

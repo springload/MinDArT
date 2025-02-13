@@ -63,7 +63,24 @@
       </div>
       <loading-dialog app-name=""></loading-dialog>
     </div>
-
+    
+    <script>
+      // Set base URL for assets
+      (function() {
+        const baseUrl = document.querySelector('base')?.getAttribute('href') || import.meta.env.BASE_URL || '/';
+        document.querySelectorAll('img[src], link[rel="icon"], link[rel="apple-touch-icon"]').forEach(el => {
+          const src = el.getAttribute('src') || el.getAttribute('href');
+          if (src && !src.startsWith('http') && !src.startsWith(baseUrl)) {
+            const newSrc = baseUrl + src.replace(/^\//, '');
+            if (el.hasAttribute('src')) {
+              el.setAttribute('src', newSrc);
+            } else {
+              el.setAttribute('href', newSrc);
+            }
+          }
+        });
+      })();
+    </script>
     <script type="module" src="./js/index.js"></script>
   </body>
 </html>

@@ -50,9 +50,13 @@ export function createColourscape(p5) {
   const MILLI_COMP = 5;
 
   function preload() {
-    state.bg = p5.loadImage("images/4-colourscape_paper.webp");
+    state.bg = p5.loadImage(
+      `${import.meta.env.BASE_URL}images/4-colourscape_paper.webp`
+    );
     state.brush = Array.from({ length: 15 }, (_, i) =>
-      p5.loadImage(`images/4-colourscape_Cloud${i}.webp`)
+      p5.loadImage(
+        `${import.meta.env.BASE_URL}images/4-colourscape_Cloud${i}.webp`
+      )
     );
   }
 

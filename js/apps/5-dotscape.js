@@ -2,7 +2,9 @@ import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 import { addInteractionHandlers } from "../utils/events.js";
 
 export function createDotscape(p5) {
-  const BACKGROUND_IMAGE = "images/5-dotscape_paper.webp";
+  const BACKGROUND_IMAGE = `${
+    import.meta.env.BASE_URL
+  }images/5-dotscape_paper.webp`;
   const PRIMARY_COLORS = [360, 60, 240]; // RGB in HSB terms
 
   const state = {

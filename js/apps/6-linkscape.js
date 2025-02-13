@@ -59,8 +59,12 @@ export function createLinkscape(p5) {
   };
 
   function preload() {
-    state.texture = p5.loadImage("images/6-linkscape_texture.webp");
-    state.pin = p5.loadImage("images/6-linkscape_pin.webp");
+    state.texture = p5.loadImage(
+      `${import.meta.env.BASE_URL}images/6-linkscape_texture.webp`
+    );
+    state.pin = p5.loadImage(
+      `${import.meta.env.BASE_URL}images/6-linkscape_pin.webp`
+    );
   }
 
   async function setup() {
