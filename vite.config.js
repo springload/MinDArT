@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { VitePWA } from "vite-plugin-pwa";
 
 // Transform HTML during build
 function htmlUrlPlugin() {
@@ -24,6 +25,52 @@ export default defineConfig({
       },
     },
   },
-  plugins: [htmlUrlPlugin()],
+  plugins: [
+    htmlUrlPlugin(),
+    VitePWA({
+      registerType: "autoUpdate",
+      injectRegister: "auto",
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,woff2,ico,png,svg,webp,mp3}"],
+        cleanupOutdatedCaches: true,
+      },
+      manifest: {
+        name: "MinDArT",
+        short_name: "MinDArT",
+        description: "Mind art progressive web app, for offline use",
+        theme_color: "#ffffff",
+        background_color: "#ffffff",
+        display: "standalone",
+        scope: "/MinDArT/",
+        start_url: "/MinDArT/",
+        orientation: "any",
+        icons: [
+          {
+            src: "images/mindArt_Logo_192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "images/mindArt_Logo_512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+          {
+            src: "images/mindArt_Logo_512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "images/mindArt_Logo_512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
+          },
+        ],
+        categories: ["art", "education", "health"],
+      },
+    }),
+  ],
   publicDir: "assets",
 });
