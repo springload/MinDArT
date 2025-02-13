@@ -1,5 +1,18 @@
 import { defineConfig } from "vite";
 
+// Transform HTML during build
+function htmlUrlPlugin() {
+  return {
+    name: "html-transform",
+    transformIndexHtml(html) {
+      return html.replace(
+        /(src|href)="\.?\/(images|sound)\//g,
+        `$1="/MinDArT/$2/`
+      );
+    },
+  };
+}
+
 export default defineConfig({
   base: "/MinDArT/",
   build: {
@@ -11,5 +24,6 @@ export default defineConfig({
       },
     },
   },
+  plugins: [htmlUrlPlugin()],
   publicDir: "assets",
 });
