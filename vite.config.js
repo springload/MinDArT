@@ -49,23 +49,23 @@ export default defineConfig({
         orientation: "any",
         icons: [
           {
-            src: "images/mindArt_Logo_192.png",
+            src: "images/mindart-logo_192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "images/mindArt_Logo_512.png",
+            src: "images/mindart-logo_512.png",
             sizes: "512x512",
             type: "image/png",
           },
           {
-            src: "images/mindArt_Logo_512.png",
+            src: "images/mindart-logo_512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "images/mindArt_Logo_mask.png",
+            src: "images/mindart-logo_mask.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
