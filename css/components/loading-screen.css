@@ -1,5 +1,8 @@
 .loading-screen {
   --fade-out-duration: 0.4s;
+  /* take up the full screen */
+  position: absolute;
+  inset: 0;
 
   /* reset browser defaults for <dialog> elements */
   border: none;

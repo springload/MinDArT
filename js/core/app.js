@@ -60,6 +60,7 @@ function initializeP5() {
     let soundtrackLoaded = false;
     let prevTouchX = null;
     let prevTouchY = null;
+    let isAppStarted = false;
 
     p5.preload = () => {
       const appName = getCurrentAppName();
@@ -93,6 +94,7 @@ function initializeP5() {
       drawingApp.render();
 
       loadingDialog.addEventListener("app-start", async () => {
+        isAppStarted = true;
         if (soundtrackLoaded) {
           try {
             await playSoundtrack();
@@ -119,29 +121,35 @@ function initializeP5() {
 
     // Mouse event handlers
     p5.mousePressed = (event) => {
+      if (!isAppStarted) return false;
       return drawingApp.handlePointerStart?.(event) ?? false;
     };
 
     p5.mouseReleased = (event) => {
+      if (!isAppStarted) return false;
       return drawingApp.handlePointerEnd?.(event) ?? false;
     };
 
     p5.mouseDragged = (event) => {
+      if (!isAppStarted) return false;
       handlePointerMove(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY, event);
     };
 
     // Touch event handlers
     p5.touchStarted = (event) => {
+      if (!isAppStarted) return false;
       prevTouchX = null;
       prevTouchY = null;
       return drawingApp.handlePointerStart?.(event) ?? false;
     };
 
     p5.touchEnded = (event) => {
+      if (!isAppStarted) return false;
       return drawingApp.handlePointerEnd?.(event) ?? false;
     };
 
     p5.touchMoved = (event) => {
+      if (!isAppStarted) return false;
       if (p5.touches.length > 0) {
         const touch = p5.touches[0];
 
@@ -168,6 +176,7 @@ function initializeP5() {
       previousY,
       event
     ) {
+      if (!isAppStarted) return false;
       // Let the drawing app handle the interaction if it's not on a button
       if (!isClickOnButton(event)) {
         if (drawingApp.handleMove) {
@@ -183,6 +192,7 @@ function initializeP5() {
     }
 
     p5.windowResized = () => {
+      if (!isAppStarted) return false;
       drawingApp.windowResized();
     };
   }, document.querySelector('[data-element="canvas-container"]'));
