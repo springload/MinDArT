@@ -24,6 +24,7 @@ class AppControls extends HTMLElement {
   setupEventListeners() {
     const resetButton = this.querySelector('[data-element="reset-button"]');
     const saveButton = this.querySelector('[data-element="save-button"]');
+    const homeLink = this.querySelector('a[href="/"]');
 
     const actions = {
       reset: () => {
@@ -34,6 +35,13 @@ class AppControls extends HTMLElement {
         playClick();
         this.dispatchEvent(new CustomEvent("app-save"));
       },
+      home: (e) => {
+        e.preventDefault();
+        playClick();
+        window.history.pushState({}, "", "/");
+        // This will trigger the router's updateView()
+        window.dispatchEvent(new PopStateEvent("popstate"));
+      },
     };
 
     if (resetButton) {
@@ -42,6 +50,10 @@ class AppControls extends HTMLElement {
 
     if (saveButton) {
       addInteractionHandlers(saveButton, actions.save);
+    }
+
+    if (homeLink) {
+      addInteractionHandlers(homeLink, actions.home);
     }
   }
 }
