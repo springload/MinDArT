@@ -2,6 +2,7 @@ import "../components/loading-dialog.js";
 import "../components/app-controls.js";
 import "../components/drawing-toolbar.js";
 import { stopSoundtrack } from "../utils/audio.js";
+import { addInteractionHandlers } from "../utils/events.js";
 
 async function init() {
   const homeView = document.querySelector('[data-element="home-view"]');
@@ -65,7 +66,7 @@ async function init() {
 
   const appLinks = document.querySelectorAll("[data-app]");
   appLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
+    addInteractionHandlers(link, (e) => {
       e.preventDefault();
       const appName = link.dataset.app;
       window.history.pushState({}, "", `?app=${appName}`);
