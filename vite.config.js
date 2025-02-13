@@ -62,7 +62,7 @@ export default defineConfig({
             purpose: "any",
           },
           {
-            src: "images/mindArt_Logo_512.png",
+            src: "images/mindArt_Logo_mask.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
