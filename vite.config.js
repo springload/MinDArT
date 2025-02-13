@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+import fs from "fs";
 
 // Transform HTML during build
 function htmlUrlPlugin() {
@@ -33,6 +34,8 @@ export default defineConfig({
       workbox: {
         globPatterns: ["**/*.{js,css,html,woff2,ico,png,svg,webp,mp3}"],
         cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
       },
       manifest: {
         name: "MinDArT",
