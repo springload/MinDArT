@@ -2,12 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ master ]
-  
-  # Allows running this workflow manually from the Actions tab
+    branches: [ main ]  
   workflow_dispatch:
 
-# Permissions of the GITHUB_TOKEN
 permissions:
   contents: read
   pages: write
@@ -15,6 +12,9 @@ permissions:
 
 jobs:
   build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
