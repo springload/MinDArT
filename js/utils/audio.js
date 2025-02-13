@@ -74,17 +74,23 @@ export async function loadSoundtrack(appName) {
   }
 }
 
-/**
- * Play the soundtrack
- * @returns {Promise} Resolves when soundtrack starts playing
- */
 export function playSoundtrack() {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     if (!audioInitialized || !soundtrackBuffer) {
+      console.error("[Audio] Cannot play - missing initialization or buffer");
       reject(
         new Error("Cannot play soundtrack - missing initialization or buffer")
       );
       return;
+    }
+
+    if (audioContext.state === "suspended") {
+      try {
+        await audioContext.resume();
+      } catch (error) {
+        reject(error);
+        return;
+      }
     }
 
     audioContext.decodeAudioData(
@@ -98,34 +104,22 @@ export function playSoundtrack() {
         source.start();
         resolve();
       },
-      reject
+      (error) => {
+        reject(error);
+      }
     );
   });
 }
 
-/**
- * Pause the current soundtrack
- */
-export function pauseSoundtrack() {
-  if (audioContext?.state === "running") {
+export function stopSoundtrack() {
+  if (currentSoundtrack) {
+    currentSoundtrack.stop();
+    currentSoundtrack = null;
+  }
+  if (soundtrackBuffer) {
+    soundtrackBuffer = null;
+  }
+  if (audioContext) {
     audioContext.suspend();
   }
 }
-
-/**
- * Resume the current soundtrack
- */
-export function resumeSoundtrack() {
-  if (audioContext?.state === "suspended") {
-    audioContext.resume();
-  }
-}
-
-// Set up visibility change handler for soundtrack
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    pauseSoundtrack();
-  } else {
-    resumeSoundtrack();
-  }
-});

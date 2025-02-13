@@ -1,6 +1,7 @@
 import "../components/loading-dialog.js";
 import "../components/app-controls.js";
 import "../components/drawing-toolbar.js";
+import { stopSoundtrack } from "../utils/audio.js";
 
 async function init() {
   const homeView = document.querySelector('[data-element="home-view"]');
@@ -15,6 +16,7 @@ async function init() {
     );
 
     if (!appName) {
+      stopSoundtrack();
       homeView.classList.remove("u-hide");
       appView.classList.add("u-hide");
       document.body.removeAttribute("data-app-name");
