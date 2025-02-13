@@ -93,7 +93,14 @@ function initializeP5() {
 
       drawingApp.render();
 
-      loadingDialog.addEventListener("app-start", async () => {
+      // Remove any existing app-start listeners to prevent duplicates
+      const existingListener = loadingDialog._appStartListener;
+      if (existingListener) {
+        loadingDialog.removeEventListener("app-start", existingListener);
+      }
+
+      // Create and store new listener
+      loadingDialog._appStartListener = async () => {
         isAppStarted = true;
         if (soundtrackLoaded) {
           try {
@@ -102,7 +109,12 @@ function initializeP5() {
             console.warn("Failed to play soundtrack:", error);
           }
         }
-      });
+      };
+
+      loadingDialog.addEventListener(
+        "app-start",
+        loadingDialog._appStartListener
+      );
 
       appControls.addEventListener("app-reset", () => {
         drawingApp.reset();
