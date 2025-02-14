@@ -1,0 +1,60 @@
+.update-dialog {
+
+  /* reset browser defaults for <dialog> elements */
+  border: none;
+  padding: 0;
+  margin-inline: auto;
+  margin-top: 1rem;
+
+  border-radius: 18px;
+
+  /* animate in from the top */
+  transition: transform 300ms ease-out;
+  transition-behavior: allow-discrete;
+
+  @starting-style {
+    transform: translateY(-100%);
+  }
+}
+
+
+.update-dialog__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.update-dialog__dismiss {
+  --accessible-tap-size: 44px;
+  --icon-size: 20px;
+  --button-padding: calc((var(--accessible-tap-size) - var(--icon-size)) / 2);
+
+  align-self: flex-end;
+  /* reset browser styles for buttons */
+  border: 0;
+  background: transparent;
+  appearance: none;
+  padding: 0;
+  cursor: pointer;
+
+  width: var(--accessible-tap-size);
+  aspect-ratio: 1;
+  padding: var(--button-padding);
+  /* extend the tappable region into the gutters of the dialog, so the X lines up with the rest of the content */
+  margin-top: calc(-1 * var(--button-padding));
+  margin-right: calc(-1 * var(--button-padding));
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: solid 2px var(--theme-bg, var(--color-blue-70));
+  }
+}
+
+.update-dialog__message {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}

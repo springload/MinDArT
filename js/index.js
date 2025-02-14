@@ -41,3 +41,4 @@ initializeRouter();
 showOnlyCurrentLinks();
 
 import "./core/app.js";
+import "./components/pwa-update-notifier.js";
