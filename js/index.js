@@ -1,10 +1,9 @@
 import "../css/styles.css";
-import p5 from "p5";
-window.p5 = p5;
-
 import { registerSW } from "virtual:pwa-register";
 import { initializeRouter } from "./core/router.js";
 import { showOnlyCurrentLinks } from "./utils/dom.js";
+import p5 from "p5";
+window.p5 = p5; // make p5.js globally available to all apps
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.ready.then((registration) => {
@@ -37,8 +36,14 @@ registerSW({
   },
 });
 
+// set up page routing
 initializeRouter();
+// set up home view
 showOnlyCurrentLinks();
-
+// initialize app code
 import "./core/app.js";
+
+// periodically check for PWA updates
+import { initPWAUpdater } from "./utils/pwa-update.js";
 import "./components/pwa-update-notifier.js";
+initPWAUpdater();
