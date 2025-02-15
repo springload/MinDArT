@@ -3,6 +3,7 @@ import "../components/app-controls.js";
 import "../components/drawing-toolbar.js";
 import { stopSoundtrack } from "../utils/audio.js";
 import { addInteractionHandlers } from "../utils/events.js";
+import { checkForUpdates } from "../utils/pwa-update.js";
 
 async function init() {
   const homeView = document.querySelector('[data-element="home-view"]');
@@ -17,6 +18,12 @@ async function init() {
     );
 
     if (!appName) {
+      // If we're returning to home view from an app view and we're online,
+      // check for updates
+      if (!appView.classList.contains("u-hide") && navigator.onLine) {
+        await checkForUpdates();
+      }
+
       stopSoundtrack();
       homeView.classList.remove("u-hide");
       appView.classList.add("u-hide");
