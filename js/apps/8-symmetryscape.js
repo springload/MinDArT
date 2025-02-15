@@ -4,9 +4,31 @@ import { clearActiveButtonState, hasActiveClass } from "../utils/dom.js";
 import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 
 /**
- * Creates a fully encapsulated Symmetryscape sketch
+ * Creates a fully encapsulated Symmetryscape sketch.
+ *
  * @param {p5} p5 - The p5 instance to use for sketch creation
- * @returns {Object} An object with sketch lifecycle methods
+ * @returns {{
+ *   preload: () => Promise<void>,
+ *   setup: () => Promise<void>,
+ *   reset: () => void,
+ *   handleMove: (
+ *     currentX: number,
+ *     currentY: number,
+ *     previousX: number,
+ *     previousY: number,
+ *     event?: Event
+ *   ) => void,
+ *   render: () => void,
+ *   windowResized: () => void,
+ *   changeBrush: (brushNumber: number, event?: Event) => void
+ * }} An object containing sketch lifecycle and interaction methods:
+ *   - preload: Loads background paper texture
+ *   - setup: Initializes canvas, graphics layers, and initial state
+ *   - reset: Cycles symmetry mode and color palette
+ *   - handleMove: Updates brush strokes with symmetrical mirroring
+ *   - render: Renders background, drawing layer and symmetry guides
+ *   - windowResized: Handles canvas and layer resizing
+ *   - changeBrush: Changes active brush type and color
  */
 export function createSymmetryscape(p5) {
   const PALETTES = [
@@ -266,7 +288,7 @@ export function createSymmetryscape(p5) {
     brushButtons.forEach((button) => {
       addInteractionHandlers(button, (event) => {
         const button = event.currentTarget;
-        const brushNumber = parseInt(button.dataset.brush);
+        const brushNumber = parseInt(button.getAttribute("data-brush"));
         changeBrush(brushNumber, event);
       });
     });

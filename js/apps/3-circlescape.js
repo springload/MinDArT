@@ -2,6 +2,35 @@ import { addInteractionHandlers } from "../utils/events.js";
 import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 import { clearActiveButtonState } from "../utils/dom.js";
 
+/**
+ * Creates a fully encapsulated Circlescape sketch
+ *
+ * @param {p5} p5 - The p5 instance to use for sketch creation
+ * @returns {{
+ *   preload: () => void,
+ *   setup: () => Promise<void>,
+ *   reset: () => void,
+ *   render: () => void,
+ *   handlePointerStart: (event: PointerEvent) => boolean,
+ *   handlePointerEnd: (event: PointerEvent) => boolean,
+ *   handleMove: (
+ *     currentX: number,
+ *     currentY: number,
+ *     previousX: number,
+ *     previousY: number,
+ *     event: PointerEvent
+ *   ) => boolean,
+ *   windowResized: () => void
+ * }} An object containing sketch lifecycle and interaction methods:
+ *   - preload: No-op function as sketch has no assets to preload
+ *   - setup: Initializes canvas, vector store, and UI handlers
+ *   - reset: Cycles color palette and resets drawing state
+ *   - render: Renders the current drawing layer with background
+ *   - handlePointerStart: Initializes vectors for new stroke
+ *   - handlePointerEnd: Resets vector store after stroke completion
+ *   - handleMove: Updates and renders brush strokes or eraser
+ *   - windowResized: Handles canvas and layer resizing
+ */
 export function createCirclescape(p5) {
   const MAX_VECTOR_COUNT = 100;
   const COLOR_PALETTES = [

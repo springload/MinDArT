@@ -1,34 +1,73 @@
 import { playClick } from "../utils/audio.js";
+import { addInteractionHandlers } from "../utils/events.js";
 
-// DrawingToolbar extends HTMLElement to create a custom HTML element
-// This allows us to create <drawing-toolbar> tags that the browser recognizes
+/**
+ * A web component that provides customizable drawing toolbars for different drawing applications.
+ * Renders different sets of controls based on the app-name attribute.
+ *
+ * @extends HTMLElement
+ * @customElement drawing-toolbar
+ */
 class DrawingToolbar extends HTMLElement {
-  // Specify which attributes should trigger attributeChangedCallback when modified
-  // Only 'app-name' is observed since config is handled through internal methods
+  /**
+   * Specifies which attributes should trigger attributeChangedCallback.
+   * (Only 'app-name' is observed, since config is handled through internal methods)
+   * @returns {string[]} Array of attribute names to observe
+   */
   static get observedAttributes() {
     return ["app-name"];
   }
 
-  // Constructor is called when an instance of the element is created
-  // Must call super() first to initialize the HTMLElement base class
+  /**
+   * Creates an instance of DrawingToolbar.
+   */
   constructor() {
     super();
   }
 
-  // Called when the element is added to the DOM
-  // This is where we do initial setup, rendering, and event binding
+  /**
+   * Called when the element is added to the document.
+   * Renders the toolbar based on the current app-name.
+   *
+   */
   connectedCallback() {
     this.render();
   }
 
+  /**
+   * Called when an observed attribute changes
+   * i.e. this re-renders the toolbar whenever app-name changes.
+   *
+   * @param {string} name - Name of the changed attribute
+   * @param {string|null} oldValue - Previous value
+   * @param {string|null} newValue - New value
+   */
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === "app-name" && oldValue !== newValue && oldValue !== null) {
       this.render();
     }
   }
 
-  // Get the toolbar configuration based on the app-name attribute
-  // This defines the structure and behavior of the toolbar for each app
+  /**
+   * Gets toolbar configuration for the current app.
+   * (defines the structure and behavior of the toolbar for each app)
+   * @returns {{items: Array<{
+   *   type: string,
+   *   text: string|undefined,
+   *   icon: string|undefined,
+   *   brushLines: number|undefined,
+   *   dataBrush: number|string|undefined,
+   *   dataElement: string|undefined,
+   *   dataSwatch: string|undefined,
+   *   class: string|undefined,
+   *   buttons: Array<Object>|undefined,
+   *   swatches: Array<Object>|undefined,
+   *   wrapperClass: string|undefined,
+   *   prefix: Array<Object>|undefined,
+   *   suffix: Array<Object>|undefined
+   * }>}} Toolbar configuration object
+   * @private
+   */
   getToolbarConfig() {
     const configs = {
       touchscape: {
@@ -249,7 +288,13 @@ class DrawingToolbar extends HTMLElement {
     return configs[this.getAttribute("app-name")] || { items: [] };
   }
 
-  // Returns SVG markup based on icon type and parameters
+  /**
+   * Renders SVG icons based on type and parameters.
+   * @param {string} icon - Icon type ('brush', 'plus', or 'pin')
+   * @param {number} [lines=0] - Number of brush lines to render
+   * @returns {string} SVG markup
+   * @private
+   */
   renderIcon(icon, lines = 0) {
     if (icon === "brush") {
       const spacing = 70 / (lines + 1);
@@ -275,7 +320,23 @@ class DrawingToolbar extends HTMLElement {
     return "";
   }
 
-  // Handles attributes, classes, icons, and text content
+  /**
+   * Renders a single button element.
+   * Handles attributes, classes, icons, and text content
+   * @param {{
+   *   id: string|undefined,
+   *   onClick: string|undefined,
+   *   dataElement: string|undefined,
+   *   dataBrush: number|string|undefined,
+   *   dataSwatch: string|undefined,
+   *   icon: string|undefined,
+   *   brushLines: number|undefined,
+   *   text: string|undefined,
+   *   class: string|undefined
+   * }} item - Button configuration object
+   * @returns {string} Button HTML markup
+   * @private
+   */
   renderButton(item) {
     const attrs = [];
     if (item.id) attrs.push(`id="${item.id}"`);
@@ -295,6 +356,17 @@ class DrawingToolbar extends HTMLElement {
     `;
   }
 
+  /**
+   * Renders a group of swatch buttons.
+   * @param {{
+   *   wrapperClass: string|undefined,
+   *   prefix: Array<Object>|undefined,
+   *   suffix: Array<Object>|undefined,
+   *   swatches: Array<Object>
+   * }} group - Swatch group configuration
+   * @returns {string} Swatch group HTML markup
+   * @private
+   */
   renderSwatchGroup(group) {
     const prefix =
       group.prefix?.map((item) => this.renderButton(item)).join("") || "";
@@ -313,6 +385,10 @@ class DrawingToolbar extends HTMLElement {
     `;
   }
 
+  /**
+   * Renders the complete toolbar based on current app-name.
+   * @private
+   */
   render() {
     const appName = this.getAttribute("app-name");
 
@@ -348,39 +424,38 @@ class DrawingToolbar extends HTMLElement {
     this.setupEventListeners();
   }
 
+  /**
+   * Sets up interaction handlers for toolbar buttons.
+   * Handles click sounds and active state management.
+   * @private
+   */
   setupEventListeners() {
     const buttons = this.querySelectorAll(".btn");
 
-    const handleButtonInteraction = (button, e) => {
-      e.stopPropagation(); // don't pass the event on to the canvas
-      playClick();
-
-      // Special case for symmetryscape draw mode button
-      if (
-        this.getAttribute("app-name") === "symmetryscape" &&
-        button.dataset.element === "draw-mode-button"
-      ) {
-        // this button should be styled as active
-        return;
-      }
-
-      // Update active state
-      if (!["dotscape", "linkscape"].includes(this.getAttribute("app-name"))) {
-        const current = this.querySelector(".active");
-        if (current) {
-          current.classList.remove("active");
-        }
-        button.classList.add("active");
-      }
-    };
-
     buttons.forEach((button) => {
-      button.addEventListener("click", (e) =>
-        handleButtonInteraction(button, e)
-      );
-      button.addEventListener("touchend", (e) => {
-        e.preventDefault(); // Prevent mouse event from firing
-        handleButtonInteraction(button, e);
+      addInteractionHandlers(button, (e) => {
+        e.stopPropagation(); // don't pass the event on to the canvas
+        playClick();
+
+        // Special case for symmetryscape draw mode button
+        if (
+          this.getAttribute("app-name") === "symmetryscape" &&
+          button.getAttribute("data-element") === "draw-mode-button"
+        ) {
+          // this button should not be styled as active - the current swatch will be instead
+          return;
+        }
+
+        // Update active state
+        if (
+          !["dotscape", "linkscape"].includes(this.getAttribute("app-name"))
+        ) {
+          const current = this.querySelector(".active");
+          if (current) {
+            current.classList.remove("active");
+          }
+          button.classList.add("active");
+        }
       });
     });
   }

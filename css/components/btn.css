@@ -30,7 +30,7 @@
     opacity: 0.2;
   }
 
-  &:has(svg.brush) {
+  &:where(:has(svg.brush)) {
     width: 120px;
     padding-inline: 0;
   }

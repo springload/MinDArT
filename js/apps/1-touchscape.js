@@ -2,9 +2,27 @@ import { addInteractionHandlers } from "../utils/events.js";
 import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 
 /**
- * Creates an encapsulated Touchscape sketch
+ * Creates an encapsulated Touchscape sketch that provides drawing functionality.
+ *
  * @param {p5} p5 - The p5 instance to use for sketch creation
- * @returns {Object} An object with sketch lifecycle methods
+ * @returns {{
+ *   preload: () => void,
+ *   setup: () => Promise<void>,
+ *   reset: () => void,
+ *   render: () => void,
+ *   handlePointerStart: () => boolean,
+ *   handlePointerEnd: () => boolean,
+ *   handleMove: (currentX: number, currentY: number) => boolean,
+ *   windowResized: () => void
+ * }} An object containing sketch lifecycle and interaction methods:
+ *   - preload: Loads required image assets
+ *   - setup: Initializes canvas, graphics layers, and UI handlers
+ *   - reset: Clears canvas and adds new random pebbles
+ *   - render: Renders all graphics layers with appropriate blend modes
+ *   - handlePointerStart: Handles start of drawing interaction
+ *   - handlePointerEnd: Handles end of drawing interaction
+ *   - handleMove: Updates drawing position and renders strokes
+ *   - windowResized: Handles canvas and layer resizing
  */
 export function createTouchscape(p5) {
   const PEBBLE_COUNT = 7;
@@ -89,7 +107,7 @@ export function createTouchscape(p5) {
 
     brushButtons.forEach((button) => {
       addInteractionHandlers(button, (event) => {
-        const brushNumber = parseInt(button.dataset.brush);
+        const brushNumber = parseInt(button.getAttribute("data-brush"));
         changeBrush(brushNumber);
       });
     });
