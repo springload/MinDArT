@@ -1,18 +1,56 @@
+/**
+ * Audio context instance for handling all audio operations
+ *  @type {AudioContext}
+ * */
 let audioContext;
+
+/**
+ * Flag indicating if audio system has been initialized
+ *  @type {boolean}
+ * */
 let audioInitialized = false;
+
+/**
+ * Buffer containing the click sound data
+ *  @type {ArrayBuffer|null}
+ * */
 let clickSound = null;
+
+/**
+ * Buffer containing the current soundtrack data
+ *  @type {ArrayBuffer|null}
+ * */
 let soundtrackBuffer = null;
+
+/**
+ * Currently playing soundtrack source node
+ *  @type {AudioBufferSourceNode|null}
+ * */
 let currentSoundtrack = null;
+
+/**
+ * Gain node for controlling soundtrack volume
+ *  @type {GainNode|null}
+ * */
 let soundtrackGain = null;
+
+/**
+ * Name of soundtrack to load after audio initialization
+ *  @type {string|null}
+ * */
 let pendingSoundtrack = null;
 
 /**
- * Prepare audio system by loading sounds, but not creating AudioContext
- * Called on page load
+ * Loads the sound file for the 'click' heard on button presses.
+ * This function is called on page load and loads the file without creating
+ * an AudioContext, to comply with browser autoplay policies.
+ *
+ * @async
+ * @returns {Promise<void>}
+ * @throws {Error} If sound files cannot be loaded
  */
-export async function prepareAudio() {
+export async function loadClick() {
   try {
-    // Load click sound
     const clickResponse = await fetch(
       `${import.meta.env.BASE_URL}sound/click.mp3`
     );
@@ -23,8 +61,11 @@ export async function prepareAudio() {
 }
 
 /**
- * Initialize audio context and set up the gain node
- * Called from the loading dialog's start button
+ * Initializes the Web Audio API context and sets up the audio graph.
+ * Called from the loading dialog's start button to comply with browser
+ * autoplay policies.
+ * @returns {void}
+ * @throws {Error} If audio context cannot be initialized
  */
 export function initializeAudioContext() {
   if (audioInitialized) return;
@@ -44,6 +85,11 @@ export function initializeAudioContext() {
   }
 }
 
+/**
+ * Plays a click sound effect on button presses.
+ *
+ * @returns {void}
+ */
 export function playClick() {
   if (!audioInitialized || !clickSound) return;
 
@@ -54,9 +100,16 @@ export function playClick() {
     source.start();
   });
 }
+
 /**
- * Load soundtrack for a specific activity
- * @returns {Promise} Resolves when soundtrack is loaded
+ * Loads a soundtrack for a specific drawing app.
+ * In the unlikely event that a soundtrack is currently playing,
+ * it will be stopped before loading the new one.
+ *
+ * @async
+ * @param {string} appName - The name of the application/activity to load soundtrack for
+ * @returns {Promise<void>} Resolves when the soundtrack is loaded
+ * @throws {Error} If the soundtrack file cannot be loaded
  */
 export async function loadSoundtrack(appName) {
   try {
@@ -74,6 +127,15 @@ export async function loadSoundtrack(appName) {
   }
 }
 
+/**
+ * Starts playing the currently loaded soundtrack in a loop.
+ * The soundtrack will only play if the audio system is initialized and a soundtrack is loaded.
+ *
+ * @async
+ * @returns {Promise<void>} Resolves when the soundtrack starts playing
+ * @throws {Error} If the soundtrack cannot be played due to missing initialization,
+ *                 missing buffer, or audio decoding errors
+ */
 export function playSoundtrack() {
   return new Promise(async (resolve, reject) => {
     if (!audioInitialized || !soundtrackBuffer) {
@@ -111,6 +173,12 @@ export function playSoundtrack() {
   });
 }
 
+/**
+ * Stops the currently playing soundtrack and suspends the audio context.
+ * This function cleans up all audio resources and puts the audio system in a suspended state.
+ *
+ * @returns {void}
+ */
 export function stopSoundtrack() {
   if (currentSoundtrack) {
     currentSoundtrack.stop();
