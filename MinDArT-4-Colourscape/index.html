@@ -1,45 +1,56 @@
  <!-- Colourscape (Version: 2) -->
 
 <!DOCTYPE html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="mobile-web-app-capable" content="yes">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
 
-  <title>MinDArT : Week 4 - Colourscape</title>
+    <title>MinDArT : Week 4 - Colourscape</title>
 
-  <link rel="stylesheet" href="../css/Fonts/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
 
-  <script src="../libraries/jquery-3.4.1.min.js"></script>
-  <link rel="stylesheet" href="stylesheet.css">
+    <script src="../libraries/p5.min-1.7.0.js"></script> 
 
-  <script src="../libraries/p5.min-1.7.0.js"></script> 
-  <!-- note: library updated to 1.7.0 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js" integrity="sha512-bcfltY+lNLlNxz38yBBm/HLaUB1gTV6I0e+fahbF9pS6roIdzUytozWdnFV8ZnM6cSAG5EbmO0ag0a/fLZSG4Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
-  <script src="../libraries/p5.sound.js"></script>
-
-  <script src="colourscape.js"></script>
-  <script src="eraseBrush.js"></script>
-  <script src="interface-v2.js"></script>
-  <script src="../functions.js"></script>
+    <script src="../functions.js"></script>
+    <script src="../shared/resize.js"></script>
+    <script src="../shared/audio.js"></script>
+    <script src="brushes.js"></script>
+    <script src="colourscape.js"></script>
   </head>
 
-<body>
-
-  <div id="p5_loading" class="loadingclass">
-    <img src="../assets/colour scape icon white.png" class="loadImage">
-    <div class="loading">
-      <p text-align="center">Loading...</p>
+  <body class="u-theme-red" data-app-name="colourscape">
+    <dialog class="loading-screen" data-element="loading-dialog" open>
+      <div class="loading-screen__inner">
+        <div class="loading-screen__loading" id="p5_loading" >
+          <img src="../assets/colourscape-icon-white.png">
+          <p class="loading-screen__text">Loading...</p>
+        </div>
+        <button class="loading-screen__start" data-element="start-button">
+          Touch here to begin
+        </button>
+      </div>
+    </dialog>
+    
+    <div data-element="canvas-container"></div>
+    
+    <div class="interface">
+      <div class="toolbar" data-element="toolbar">
+        <button id="erasedraw" class="btn btn--white" onclick="drawErase()">Erase Draw</button>
+        <button id="erasepaint" class="btn btn--white" onclick="paintErase()">Erase Paint</button>
+        <div class="btn-group--split">
+          <button id="warm" class="btn btn--leftsplit btn--warm-stripes" onclick="paintWarm()"></button>
+          <button id="cool" class="btn btn--rightsplit btn--cool-stripes" onclick="paintCool()"></button>
+        </div>
+        <button id="draw" class="btn btn--white" onclick="switchToTrace()">Draw</button>
+      </div>
+      
+      <div class="app-controls" data-element="app-controls">
+        <a href="/" class="btn btn--theme">Main Menu</a>
+        <button class="btn btn--theme" data-element="reset-button">New</button>
+        <button class="btn btn--theme" data-element="save-button">Save</button>
+      </div>
     </div>
-  </div>
-  <!-- Bottom left action buttons, initially hidden on load -->
-  <div id="myDIV" class="bottom-left">
-    <button id="id-erasedraw" class="btn button-white" onclick="drawErase()">Erase Draw</button>
-      <button id="id-erasepaint" class="btn button-white" onclick="paintErase()">Erase Paint</button>
-    <button id="id-warm" class="btn btn_leftsplit" onclick="paintWarm()"></button>
-    <button id="id-cool" class="btn btn_rightsplit" onclick="paintCool()"></button>
-    <button id="id-draw" class="btn button-white" onclick="switchToTrace()">Draw</button>
-  </div>
-
-</body>
-
+    
+  </body>
 </html>
