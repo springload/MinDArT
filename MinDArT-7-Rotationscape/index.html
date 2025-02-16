@@ -1,27 +1,50 @@
- <!-- Rotationscape (Version: 1) -->
+<!-- Rotationscape (Version: 1) -->
 
 <!DOCTYPE html>
 <html>
+
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
-    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MinDArT">
+
+    <link rel="apple-touch-icon" href="assets/mindArt_Logo_152.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/mindArt_Logo_152.png">
+    <link rel="apple-touch-icon" sizes="384x384" href="assets/mindArt_Logo_384.png">
     <title>MinDArT : Week 7 - Rotationscape</title>
 
     <link rel="stylesheet" href="../css/styles.css">
-
+    <link rel="manifest" href="/manifest.json">
+    
     <script src="../libraries/p5.min.js"></script>
     <script src="../functions.js"></script>
     <script src="../shared/resize.js"></script>
     <script src="../shared/audio.js"></script>
     <script src="rotationscape.js"></script>
+    <script type="module">
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw-final.js', { 
+        type: 'module',
+        scope: '/'
+      }).then(registration => {
+            console.log('ServiceWorker registration successful');
+          }).catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
   </head>
 
   <body class="u-theme-orange" data-app-name="rotationscape">
     <dialog class="loading-screen" data-element="loading-dialog" open>
       <div class="loading-screen__inner">
-        <div class="loading-screen__loading" id="p5_loading" >
+        <div class="loading-screen__loading" id="p5_loading">
           <img src="../assets/rotationscape-icon-white.png">
           <p class="loading-screen__text">Loading...</p>
         </div>
@@ -30,9 +53,9 @@
         </button>
       </div>
     </dialog>
-    
+
     <div data-element="canvas-container"></div>
-    
+
     <div class="interface">
       <div class="toolbar" data-element="toolbar">
         <div class="btn-group--split">
@@ -44,13 +67,13 @@
           <button class="btn btn--rightsplit" onclick="reCenter()">Pick new centre</button>
         </div>
       </div>
-      
       <div class="app-controls" data-element="app-controls">
         <a href="/" class="btn btn--theme">Main Menu</a>
         <button class="btn btn--theme" data-element="reset-button">New</button>
         <button class="btn btn--theme" data-element="save-button">Save</button>
       </div>
     </div>
-  
+
   </body>
+
 </html>

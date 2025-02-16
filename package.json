@@ -1,20 +1,24 @@
 {
   "name": "mindart_pwa",
   "version": "1.2.17",
-  "description": "mind art progressive web app, for offline use",
+  "description": "mind art progressive web app",
   "scripts": {
-    "build": "esbuild",
+    "build": "node esbuild.config.js",
     "start": "dhost ."
   },
+  "type": "module",
   "dependencies": {
-    "@material/button": "^14.0.0",
-    "esbuild": "^0.18.2",
-    "material-components-web": "^14.0.0",
-    "material-ui": "^0.20.2",
-    "update": "^0.4.2"
+    "@serwist/build": "^9.0.11",
+    "@serwist/cacheable-response": "^9.0.11",
+    "@serwist/expiration": "^9.0.11",
+    "@serwist/precaching": "^9.0.11",
+    "@serwist/routing": "^9.0.11",
+    "@serwist/strategies": "^9.0.11",
+    "@serwist/sw": "^9.0.11",
+    "serwist": "^9.0.11"
   },
   "devDependencies": {
     "dhost": "^0.3.5",
-    "esbuild": "^0.19.3"
+    "esbuild": "^0.24.0"
   }
 }
