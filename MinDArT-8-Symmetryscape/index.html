@@ -12,81 +12,29 @@
 
     <link rel="apple-touch-icon" href="assets/mindArt_Logo_152.png">
     <link rel="apple-touch-icon" sizes="152x152" href="assets/mindArt_Logo_152.png">
-    <link rel="apple-touch-icon" sizes="384x384" href="assets/mindArt_Logo_384.png">
+    <!-- <link rel="apple-touch-icon" sizes="384x384" href="assets/mindArt_Logo_384.png"> -->
     <title>MinDArT : Week 8 - Symmetryscape</title>
 
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="manifest" href="/manifest.json">
 
     <script src="../libraries/p5.min.js"></script>
-    <script src="../functions.js"></script>
-    <script src="../shared/resize.js"></script>
-    <script src="../shared/audio.js"></script>
-    <script src="symmetryscape.js"></script>
-    <script type="module">
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw-final.js', { 
-        type: 'module',
-        scope: '/'
-      }).then(registration => {
-            console.log('ServiceWorker registration successful');
-          }).catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
-    </script>
+    <script type="module" src="../components/loading-dialog.js"></script>
+    <script type="module" src="../components/app-controls.js"></script>
+    <script type="module" src="../components/drawing-toolbar.js"></script>
+    <script type="module" src="../app.js"></script>
   </head>
 
   <body class="symmetryscape u-theme-teal" data-app-name="symmetryscape">
-    <dialog class="loading-screen" data-element="loading-dialog" open>
-      <div class="loading-screen__inner">
-        <div class="loading-screen__loading" id="p5_loading">
-          <img src="../assets/symmetryscape-icon-white.png">
-          <p class="loading-screen__text">Loading...</p>
-        </div>
-        <button class="loading-screen__start" data-element="start-button">
-          Touch here to begin
-        </button>
-      </div>
-    </dialog>
+    <loading-dialog app-name="symmetryscape"></loading-dialog>
 
     <div data-element="canvas-container"></div>
 
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <button class="btn btn--white" onclick="eraser()" data-brush="0">Erase</button>
-        <div class="btn-group--split">
-          <button class="btn btn--white" onclick="switchToDrawMode()" data-element="draw-mode-button">Draw</button>
-          <button class="btn" onclick="changeBrush(1)" data-brush="1"></button>
-          <button class="btn" onclick="changeBrush(2)" data-brush="2"></button>
-          <button class="btn" onclick="changeBrush(3)" data-brush="3"></button>
-          <button class="btn" onclick="changeBrush(4)" data-brush="4"></button>
-          <button class="btn" onclick="changeBrush(5)" data-brush="5"></button>
-          <button class="btn" onclick="changeBrush(6)" data-brush="6"></button>
-        </div>
-      </div>
-
-      <div class="app-controls" data-element="app-controls">
-        <a href="/" class="btn btn--theme">Main Menu</a>
-        <button class="btn btn--theme" data-element="reset-button">New</button>
-        <button class="btn btn--theme" data-element="save-button">Save</button>
-      </div>
+      <drawing-toolbar app-name="symmetryscape"></drawing-toolbar>
+      <app-controls app-name="symmetryscape"></app-controls>
     </div>
 
-  </body>
-  <!-- Bottom left action buttons, initially hidden on load -->
-  <div id="myDIV" class="bottom-left">
-    <button id="id-erase" class="btn button-white" onclick="eraser()">Erase</button>
-    <button id="id-paint" class="btn btn_flatright">Draw</button>
-    <button id="colourOne" class="btn btn_mid" onclick="changeBrush(1)"></button>
-    <button id="colourTwo" class="btn btn_mid" onclick="changeBrush(2)"></button>
-    <button id="colourThree" class="btn btn_mid" onclick="changeBrush(3)"></button>
-    <button id="colourFour" class="btn btn_mid" onclick="changeBrush(4)"></button>
-    <button id="colourFive" class="btn btn_mid" onclick="changeBrush(5)"></button>
-    <button id="colourSix" class="btn btn_flatleft" onclick="changeBrush(6)"></button>
-  </div>
   </body>
 
 </html>

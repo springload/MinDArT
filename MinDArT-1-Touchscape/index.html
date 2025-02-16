@@ -21,61 +21,20 @@
     <link rel="manifest" href="/manifest.json">
     
     <script src="../libraries/p5.min.js"></script>
-    <script src="../functions.js"></script>
-    <script src="../shared/resize.js"></script>
-    <script src="../shared/audio.js"></script>
-    <script src="touchscape.js"></script>
-    <script type="module">
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw-final.js', { 
-        type: 'module',
-        scope: '/'
-      }).then(registration => {
-            console.log('ServiceWorker registration successful');
-          }).catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
-    </script>
+    <script type="module" src="../components/loading-dialog.js"></script>
+    <script type="module" src="../components/app-controls.js"></script>
+    <script type="module" src="../components/drawing-toolbar.js"></script>
+    <script type="module" src="../app.js"></script>
   </head>
 
   <body class="u-theme-blue" data-app-name="touchscape">
-    <dialog class="loading-screen" data-element="loading-dialog" open>
-      <div class="loading-screen__inner">
-        <div class="loading-screen__loading" id="p5_loading" >
-          <img src="../assets/touchscape-icon-white.png">
-          <p class="loading-screen__text">Loading...</p>
-        </div>
-        <button class="loading-screen__start" data-element="start-button">
-          Touch here to begin
-        </button>
-      </div>
-    </dialog>
+    <loading-dialog app-name="touchscape"></loading-dialog>
     
     <div data-element="canvas-container"></div>
 
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <button class="btn btn--white" onclick="rake(0)">Erase</button>
-        <button class="btn btn--white" onclick="rake(1)">
-          <svg class="brush" viewBox="0 0 120 70"><path d="m32.8 23.4h54.4m0 11.6h-54.4m0 11.6h54.4" /></svg>
-        </button>
-        <button class="btn btn--white" onclick="rake(2)">
-          <svg class="brush" viewBox="0 0 120 70"><path d="M32.8 17.2h54.4m0 7.1h-54.4m0 7.1h54.4m0 7.1h-54.4m0 7.1h54.4m0 7.1 h-54.4" /></svg>
-        </button>
-        <button class="btn btn--white" onclick="rake(3)">
-          <svg class="brush" viewBox="0 0 120 70"><path
-            d="M32.8 11.7h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4m0 5.2h54.4m0 5.2h-54.4" /></svg>
-        </button>
-      </div>
-      
-      <div class="app-controls" data-element="app-controls" >
-        <a href="/" class="btn btn--theme">Main Menu</a>
-        <button class="btn btn--theme" data-element="reset-button">New</button>
-        <button class="btn btn--theme" data-element="save-button">Save</button>
-      </div>
+      <drawing-toolbar app-name="touchscape"></drawing-toolbar>
+      <app-controls app-name="touchscape"></app-controls>
     </div>
     
   </body>

@@ -1,286 +1,386 @@
-let x = [],
-  y = [],
-  segNum = 250,
-  segLength = 4,
-  distGravity = 50;
+import {
+  addInteractionHandlers,
+  colorAlpha,
+  isClickOnButton,
+} from "../functions.js";
+import { calcViewportDimensions, handleResize } from "../shared/resize.js";
 
-let lineLayer, paintLayer;
-let texture, pin;
-let audio, click;
-let isDragging = false;
-let isAddingPin = false;
-let selected = [0, 0];
+/**
+ * Creates an encapsulated Linkscape sketch
+ * @param {p5} p5 - The p5 instance to use for sketch creation
+ * @returns {Object} An object with sketch lifecycle methods
+ */
+export function createLinkscape(p5) {
+  const PALETTES = [
+    ["#D97398", "#A65398", "#5679A6"],
+    ["#F2913D", "#F24B0F", "#5679A6"],
+    ["#a4fba6", "#4ae54a", "#0f9200"],
+    ["#F2F2F2", "#A6A6A6", "#737373"],
+    ["#597d94", "#FFFFFF", "#D9AA8F"],
+    ["#F2DFCE", "#FFFFFF", "#D9C3B0"],
+    ["#F24444", "#F2BBBB", "#FFFFFF"],
+    ["#BF4B8B", "#3981BF", "#D92929"],
+    ["#F24452", "#5CE3F2", "#F2E205"],
+    ["#CCCCCC", "#F2F2F2", "#B3B3B3"],
+  ];
 
-// Constraint parameters
-let vt = []; // Vector points for pin positions
-let vtCount = []; // Count of points affected by each pin
-let vtStored = []; // Store which segments are affected by pins
-let dotsActive = true;
+  const state = {
+    // Line segments
+    x: [],
+    y: [],
+    segNum: 250,
+    segLength: 4,
+    distGravity: 50,
 
-let levelVersion = 0;
-let levelMax = 9;
-const palettes = [
-  ["#D97398", "#A65398", "#5679A6"],
-  ["#F2913D", "#F24B0F", "#5679A6"],
-  ["#a4fba6", "#4ae54a", "#0f9200"],
-  ["#F2F2F2", "#A6A6A6", "#737373"],
-  ["#597d94", "#FFFFFF", "#D9AA8F"],
-  ["#F2DFCE", "#FFFFFF", "#D9C3B0"],
-  ["#F24444", "#F2BBBB", "#FFFFFF"],
-  ["#BF4B8B", "#3981BF", "#D92929"],
-  ["#F24452", "#5CE3F2", "#F2E205"],
-  ["#CCCCCC", "#F2F2F2", "#B3B3B3"],
-];
+    // Layers
+    lineLayer: null,
+    paintLayer: null,
+    texture: null,
+    pin: null,
 
-let width, height, vMin, vMax;
+    // Interaction state
+    isDragging: false,
+    isAddingPin: false,
+    selected: [0, 0],
 
-function preload() {
-  texture = loadImage("assets/texture.png");
-  pin = loadImage("assets/pin.png");
-}
+    // Constraint parameters
+    vt: [], // Vector points for pin positions
+    vtCount: [], // Count of points affected by each pin
+    vtStored: [], // Store which segments are affected by pins
+    dotsActive: true,
 
-async function setup() {
-  await initAudio("6_Link");
-  // add JS functionality to existing HTML elements
-  setupLoadingScreen(start);
-  initializeAppControls(reset);
-  initializeToolbarButtons();
-  // Initialize dimensions
-  ({ width, height, vMin, vMax } = calcViewportDimensions());
+    // Level tracking
+    levelVersion: 0,
+    levelMax: 9,
 
-  // Create canvas and attach to container
-  const mainCanvas = createCanvas(width, height);
-  mainCanvas.parent(
-    document.querySelector('[data-element="canvas-container"]')
-  );
+    // Viewport dimensions
+    width: 0,
+    height: 0,
+    vMin: 0,
+    vMax: 0,
+  };
 
-  // Create graphics layers
-  lineLayer = createGraphics(width, height);
-  paintLayer = createGraphics(width, height);
-}
-
-function start() {
-  playSoundtrack();
-  lineLayer.strokeWeight(1 * vMax);
-  paintLayer.strokeWeight(1 * vMax);
-  setupCanvasEventListeners();
-  reset();
-}
-
-function reset() {
-  paintLayer.clear();
-
-  x = [];
-  y = [];
-  vt = [];
-  vtCount = [];
-
-  levelVersion = (levelVersion + 1) % palettes.length;
-
-  initialiseLine(0);
-  isDragging = true;
-  render();
-}
-
-function initialiseLine(l) {
-  x[l] = [];
-  y[l] = [];
-
-  for (let i = 0; i < segNum; i++) {
-    y[l][i] = map(i, 0, segNum, -height, height / 6);
-    x[l][i] = map(i, 0, segNum, 0, (width / 4) * (1 + l));
+  function preload() {
+    state.texture = p5.loadImage("assets/texture.png");
+    state.pin = p5.loadImage("assets/pin.png");
   }
-}
 
-function addLine() {
-  if (x.length < 3) {
-    initialiseLine(x.length);
+  async function setup() {
+    setupToolbarActions();
+
+    // Initialize dimensions
+    const dimensions = calcViewportDimensions();
+    Object.assign(state, dimensions);
+
+    const canvas = p5.createCanvas(state.width, state.height);
+    canvas.parent(document.querySelector('[data-element="canvas-container"]'));
+
+    state.lineLayer = p5.createGraphics(state.width, state.height);
+    state.paintLayer = p5.createGraphics(state.width, state.height);
+
+    state.lineLayer.strokeWeight(1 * state.vMax);
+    state.paintLayer.strokeWeight(1 * state.vMax);
+    reset(true); // Pass flag indicating this is initial setup
+  }
+
+  function setupToolbarActions() {
+    const toolbar = document.querySelector('[data-element="toolbar"]');
+    if (!toolbar) return;
+
+    const addStringButton = toolbar.querySelector(
+      '[data-element="add-string-button"]'
+    );
+    if (addStringButton) {
+      addInteractionHandlers(addStringButton, (event) => {
+        addLine();
+      });
+    }
+
+    const addPinButton = toolbar.querySelector(
+      '[data-element="add-pin-button"]'
+    );
+    if (addPinButton) {
+      addInteractionHandlers(addPinButton, (event) => {
+        addPin();
+      });
+    }
+  }
+
+  function reset(isInitialSetup = false) {
+    state.paintLayer.clear();
+    state.x = [];
+    state.y = [];
+    state.vt = [];
+    state.vtCount = [];
+
+    // For user-triggered reset, increment first so we render with new palette
+    if (!isInitialSetup) {
+      state.levelVersion = (state.levelVersion + 1) % PALETTES.length;
+    }
+
+    initialiseLine(0);
+    state.isDragging = true;
     render();
-  }
 
-  if (x.length >= 3) {
     const button = document.querySelector('[data-element="add-string-button"]');
-    if (button) button.setAttribute("inert", true);
+    if (button) button.removeAttribute("disabled");
   }
-}
 
-function addPin() {
-  isAddingPin = true;
-  document.querySelector("canvas").classList.add("adding-pin");
-}
+  function initialiseLine(l) {
+    state.x[l] = [];
+    state.y[l] = [];
 
-function touchdown() {
-  if (isAddingPin) {
-    vt.push(createVector(winMouseX, winMouseY));
-    vtCount.push(0);
-    vtStored.push([]);
-    isAddingPin = false;
-    document.querySelector("canvas").classList.remove("adding-pin");
+    for (let i = 0; i < state.segNum; i++) {
+      state.y[l][i] = p5.map(
+        i,
+        0,
+        state.segNum,
+        -state.height,
+        state.height / 6
+      );
+      state.x[l][i] = p5.map(
+        i,
+        0,
+        state.segNum,
+        0,
+        (state.width / 4) * (1 + l)
+      );
+    }
+  }
+
+  function addLine() {
+    if (state.x.length < 3) {
+      initialiseLine(state.x.length);
+      render();
+    }
+
+    if (state.x.length >= 3) {
+      const button = document.querySelector(
+        '[data-element="add-string-button"]'
+      );
+      if (button) button.setAttribute("disabled", true);
+    }
+  }
+
+  function addPin() {
+    state.isAddingPin = true;
+    document.querySelector("canvas").classList.add("adding-pin");
+  }
+
+  function handlePointerStart(event) {
+    if (isClickOnButton(event)) return false;
+
+    const eventX = event.type.startsWith("touch")
+      ? event.touches[0].clientX - event.target.getBoundingClientRect().left
+      : p5.winMouseX;
+    const eventY = event.type.startsWith("touch")
+      ? event.touches[0].clientY - event.target.getBoundingClientRect().top
+      : p5.winMouseY;
+
+    if (state.isAddingPin) {
+      state.vt.push(p5.createVector(eventX, eventY));
+      state.vtCount.push(0);
+      state.vtStored.push([]);
+      state.isAddingPin = false;
+      document.querySelector("canvas").classList.remove("adding-pin");
+      render();
+      return false;
+    }
+
+    if (!state.isDragging) {
+      for (let i = 0; i < state.x.length; i++) {
+        if (p5.dist(eventX, eventY, state.x[i][0], state.y[i][0]) < 45) {
+          state.selected = [i, 0];
+          state.isDragging = true;
+          break;
+        } else if (
+          p5.dist(
+            eventX,
+            eventY,
+            state.x[i][state.segNum - 1],
+            state.y[i][state.segNum - 1]
+          ) < 45
+        ) {
+          state.selected = [i, state.segNum - 1];
+          state.isDragging = true;
+          break;
+        } else {
+          for (let j = 0; j < state.x[i].length; j++) {
+            if (p5.dist(eventX, eventY, state.x[i][j], state.y[i][j]) < 45) {
+              state.selected = [i, j];
+              if (j < 30) {
+                state.selected[1] = 1;
+              } else if (j > state.x[i].length - 30) {
+                state.selected[1] = state.segNum - 1;
+              } else {
+                state.selected[1] = j;
+              }
+              state.isDragging = true;
+              break;
+            }
+          }
+          if (state.isDragging) break;
+        }
+      }
+    }
+    return false;
+  }
+
+  function handleMove(currentX, currentY, previousX, previousY, event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    state.vtStored = [];
+
+    if (state.dotsActive) {
+      for (let i = 0; i < state.vt.length; i++) {
+        state.vtCount[i] = 0;
+        state.vtStored[i] = [];
+      }
+    }
+
+    if (state.isDragging) {
+      dragCalc(state.selected, currentX, currentY);
+    }
+
     render();
     return false;
   }
-  if (!isDragging) {
-    for (let i = 0; i < x.length; i++) {
-      if (dist(winMouseX, winMouseY, x[i][0], y[i][0]) < 45) {
-        selected = [i, 0];
-        isDragging = true;
-      } else if (
-        dist(winMouseX, winMouseY, x[i][segNum - 1], y[i][segNum - 1]) < 45
-      ) {
-        selected = [i, segNum - 1];
-        isDragging = true;
-      } else {
-        for (let j = 0; j < x[i].length; j++) {
-          if (dist(winMouseX, winMouseY, x[i][j], y[i][j]) < 45) {
-            selected = [i, j];
-            if (j < 30) {
-              selected[1] = 1;
-            } else if (j > x[i].length - 30) {
-              selected[1] = segNum - 1;
-            } else {
-              selected[1] = j;
-            }
-            isDragging = true;
+
+  function handlePointerEnd() {
+    state.isDragging = false;
+    state.selected = [0, 0];
+  }
+
+  function dragCalc(sel, mouseX, mouseY) {
+    dragSegment(sel, mouseX, mouseY);
+
+    let [i, j] = sel;
+    // Update following segments
+    for (let k = j; k < state.x[i].length - 1; k++) {
+      dragSegment([i, k + 1], state.x[i][k], state.y[i][k]);
+    }
+    // Update preceding segments
+    for (let k = j; k > 0; k--) {
+      dragSegment([i, k - 1], state.x[i][k], state.y[i][k]);
+    }
+  }
+
+  function dragSegment(sel, xin, yin) {
+    const [i, j] = sel;
+    const dx = xin - state.x[i][j];
+    const dy = yin - state.y[i][j];
+    const angle = p5.atan2(dy, dx);
+
+    state.x[i][j] = xin - p5.cos(angle) * state.segLength;
+    state.y[i][j] = yin - p5.sin(angle) * state.segLength;
+
+    if (state.dotsActive) {
+      for (let k = 0; k < state.vt.length; k++) {
+        let v1 = p5.createVector(state.x[i][j], state.y[i][j]);
+        let gate = true;
+
+        for (let elt of state.vtStored[k]) {
+          if (p5.abs(elt - j) < 20 && p5.abs(elt - j) > 6) {
+            gate = false;
             break;
+          }
+        }
+
+        if (gate) {
+          let d = v1.dist(state.vt[k]);
+          if (d < state.distGravity) {
+            state.vtStored[k].push(j);
+            state.x[i][j] = state.vt[k].x;
+            state.y[i][j] = state.vt[k].y;
+            state.vtCount[k]++;
           }
         }
       }
     }
   }
-  return false;
-}
 
-function moved() {
-  vtStored = [];
+  function render() {
+    state.lineLayer.clear();
+    state.paintLayer.clear();
 
-  if (dotsActive) {
-    for (let i = 0; i < vt.length; i++) {
-      vtCount[i] = 0;
-      vtStored[i] = [];
-    }
-  }
+    for (let i = 0; i < state.x.length; i++) {
+      const baseColor =
+        PALETTES[state.levelVersion][i % PALETTES[state.levelVersion].length];
+      const mainColor = colorAlpha(p5, baseColor, 0.9);
+      const shadowColor = colorAlpha(p5, baseColor, 0.3);
 
-  if (isDragging) {
-    dragCalc(selected, winMouseX, winMouseY);
-  }
-
-  render();
-  return false;
-}
-
-function touchstop() {
-  isDragging = false;
-}
-
-function dragCalc(sel, mouseX, mouseY) {
-  dragSegment(sel, mouseX, mouseY);
-
-  let [i, j] = sel;
-  // Update following segments
-  for (let k = j; k < x[i].length - 1; k++) {
-    dragSegment([i, k + 1], x[i][k], y[i][k]);
-  }
-  // Update preceding segments
-  for (let k = j; k > 0; k--) {
-    dragSegment([i, k - 1], x[i][k], y[i][k]);
-  }
-}
-
-function dragSegment(sel, xin, yin) {
-  const [i, j] = sel;
-  const dx = xin - x[i][j];
-  const dy = yin - y[i][j];
-  const angle = atan2(dy, dx);
-
-  x[i][j] = xin - cos(angle) * segLength;
-  y[i][j] = yin - sin(angle) * segLength;
-
-  if (dotsActive) {
-    for (let k = 0; k < vt.length; k++) {
-      let v1 = createVector(x[i][j], y[i][j]);
-      let gate = true;
-
-      for (let elt of vtStored[k]) {
-        if (abs(elt - j) < 20 && abs(elt - j) > 6) {
-          gate = false;
-          break;
-        }
+      // Draw main string
+      state.lineLayer.strokeWeight(0.6 * state.vMax);
+      state.lineLayer.stroke(mainColor);
+      state.lineLayer.noFill();
+      state.lineLayer.beginShape();
+      for (let j = 0; j < state.x[i].length; j++) {
+        state.lineLayer.curveVertex(state.x[i][j], state.y[i][j]);
       }
+      state.lineLayer.endShape();
 
-      if (gate) {
-        let d = p5.Vector.dist(v1, vt[k]);
-        if (d < distGravity) {
-          vtStored[k].push(j);
-          x[i][j] = vt[k].x;
-          y[i][j] = vt[k].y;
-          vtCount[k]++;
-        }
-      }
-    }
-  }
-}
-
-function render() {
-  lineLayer.clear();
-  paintLayer.clear();
-
-  for (let i = 0; i < x.length; i++) {
-    const baseColor = palettes[levelVersion][i % palettes[levelVersion].length];
-    const mainColor = colorAlpha(baseColor, 0.9);
-    const shadowColor = colorAlpha(baseColor, 0.3);
-
-    // Draw main string
-    lineLayer.strokeWeight(0.6 * vMax);
-    lineLayer.stroke(mainColor);
-    lineLayer.noFill();
-    lineLayer.beginShape();
-    for (let j = 0; j < x[i].length; j++) {
-      lineLayer.curveVertex(x[i][j], y[i][j]);
-    }
-    lineLayer.endShape();
-
-    // Draw endpoints
-    lineLayer.strokeWeight(1.2 * vMax);
-    lineLayer.point(x[i][0], y[i][0]);
-    lineLayer.point(x[i][x[i].length - 1], y[i][x[i].length - 1]);
-
-    // Draw shadow effect
-    paintLayer.strokeWeight(0.1 * vMax);
-    paintLayer.stroke(shadowColor);
-    paintLayer.noFill();
-    paintLayer.beginShape();
-    for (let j = 0; j < x[i].length; j++) {
-      paintLayer.curveVertex(x[i][j], y[i][j]);
-    }
-    paintLayer.endShape();
-  }
-
-  // Render final composition
-  background(45);
-  image(paintLayer, 0, 0, width, height);
-  image(lineLayer, 0, 0, width, height);
-
-  // Draw pins if active
-  if (dotsActive) {
-    const pinSize = vMax * 8;
-    for (let i = 0; i < vt.length; i++) {
-      image(
-        pin,
-        vt[i].x - pinSize / 2,
-        vt[i].y - pinSize / 1.8,
-        pinSize,
-        pinSize
+      // Draw endpoints
+      state.lineLayer.strokeWeight(1.2 * state.vMax);
+      state.lineLayer.point(state.x[i][0], state.y[i][0]);
+      state.lineLayer.point(
+        state.x[i][state.x[i].length - 1],
+        state.y[i][state.x[i].length - 1]
       );
+
+      // Draw shadow effect
+      state.paintLayer.strokeWeight(0.1 * state.vMax);
+      state.paintLayer.stroke(shadowColor);
+      state.paintLayer.noFill();
+      state.paintLayer.beginShape();
+      for (let j = 0; j < state.x[i].length; j++) {
+        state.paintLayer.curveVertex(state.x[i][j], state.y[i][j]);
+      }
+      state.paintLayer.endShape();
+    }
+
+    // Render final composition
+    p5.background(45);
+    p5.image(state.paintLayer, 0, 0, state.width, state.height);
+    p5.image(state.lineLayer, 0, 0, state.width, state.height);
+
+    // Draw pins if active
+    if (state.dotsActive) {
+      const pinSize = state.vMax * 8;
+      for (let i = 0; i < state.vt.length; i++) {
+        p5.image(
+          state.pin,
+          state.vt[i].x - pinSize / 2,
+          state.vt[i].y - pinSize / 1.8,
+          pinSize,
+          pinSize
+        );
+      }
     }
   }
-}
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  const { dimensions, resizedLayers } = handleResize([lineLayer, paintLayer]);
-  [lineLayer, paintLayer] = resizedLayers;
-  ({ width, height, vMin, vMax } = dimensions);
-  lineLayer.strokeWeight(2.2 * vMax);
-}
+  function windowResized() {
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+    const { dimensions, resizedLayers } = handleResize(p5, [
+      state.lineLayer,
+      state.paintLayer,
+    ]);
+    [state.lineLayer, state.paintLayer] = resizedLayers;
+    Object.assign(state, dimensions);
+    state.lineLayer.strokeWeight(2.2 * state.vMax);
+  }
 
-window.addEventListener("resize", windowResized);
+  return {
+    preload,
+    setup,
+    reset,
+    render,
+    windowResized,
+    handlePointerStart,
+    handlePointerEnd,
+    handleMove,
+    addLine,
+    addPin,
+  };
+}

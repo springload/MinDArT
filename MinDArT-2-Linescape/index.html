@@ -1,5 +1,3 @@
- <!-- Linescape (Version: 7) -->
-
 <!DOCTYPE html>
   <head>
     <meta charset="UTF-8">
@@ -17,56 +15,21 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="manifest" href="/manifest.json">
 
-    <script src="../libraries/p5.js"></script>
-    <script src="../functions.js"></script>
-    <script src="../shared/resize.js"></script>
-    <script src="../shared/audio.js"></script>
-    <script src="interface-line.js"></script>
-    <script src="linescape.js"></script>
-    <script type="module">
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw-final.js', { 
-        type: 'module',
-        scope: '/'
-      }).then(registration => {
-            console.log('ServiceWorker registration successful');
-          }).catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
-      }
-    </script>
+    <script src="../libraries/p5.min.js"></script> 
+    <script type="module" src="../components/loading-dialog.js"></script>
+    <script type="module" src="../components/app-controls.js"></script>
+    <script type="module" src="../components/drawing-toolbar.js"></script>
+    <script type="module" src="../app.js"></script>  
   </head>
 
   <body class="u-theme-green" data-app-name="linescape">
-    <dialog class="loading-screen" data-element="loading-dialog" open>
-      <div class="loading-screen__inner">
-        <div class="loading-screen__loading" id="p5_loading" >
-          <img src="../assets/linescape-icon-white.png">
-          <p class="loading-screen__text">Loading...</p>
-        </div>
-        <button class="loading-screen__start" data-element="start-button">
-          Touch here to begin
-        </button>
-      </div>
-    </dialog>
+    <loading-dialog app-name="linescape"></loading-dialog>
     
     <div data-element="canvas-container"></div>
     
     <div class="interface">
-      <div class="toolbar" data-element="toolbar">
-        <div class="btn-group--split">
-          <button class="btn btn--leftsplit active" data-element="swatch" data-swatch="0" onclick="switchSwatch(this)"></button>
-          <button class="btn btn--rightsplit" data-element="swatch" data-swatch="1" onclick="switchSwatch(this)" ></button>
-        </div>
-      </div>
-      
-      <div class="app-controls" data-element="app-controls">
-        <a href="/" class="btn btn--theme">Main Menu</a>
-        <button class="btn btn--theme" data-element="reset-button">New</button>
-        <button class="btn btn--theme" data-element="save-button">Save</button>
-      </div>
+      <drawing-toolbar app-name="linescape"></drawing-toolbar>
+      <app-controls app-name="linescape"></app-controls>
     </div>
     
   </body>
