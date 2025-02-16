@@ -4,4 +4,5 @@
 @import url('./global/page.css');
 @import url('./components/btn.css');
 @import url('./components/loading-screen.css');
+@import url('./components/update-dialog.css');
 @import url('./global/utilities.css');
