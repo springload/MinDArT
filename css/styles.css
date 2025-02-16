@@ -1,7 +1,7 @@
-@import url('./reset.css');
+@import url('./global/reset.css');
 @import url('./fonts/fonts.css');
-@import url('./variables.css');
-@import url('./page.css');
-@import url('./btn.css');
-@import url('./loading-screen.css');
-@import url('./utilities.css');
+@import url('./global/variables.css');
+@import url('./global/page.css');
+@import url('./components/btn.css');
+@import url('./components/loading-screen.css');
+@import url('./global/utilities.css');
