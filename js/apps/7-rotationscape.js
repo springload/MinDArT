@@ -5,9 +5,46 @@ import { isClickOnButton } from "../utils/events.js";
 import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 
 /**
- * Creates a fully encapsulated Rotationscape sketch
+ * Creates a fully encapsulated Rotationscape sketch.
+ *
  * @param {p5} p5 - The p5 instance to use for sketch creation
- * @returns {Object} An object with sketch lifecycle methods
+ * @returns {{
+ *   preload: () => Promise<void>,
+ *   setup: () => Promise<void>,
+ *   draw: () => void,
+ *   reset: () => void,
+ *   makeDrawing: (
+ *     currentX: number,
+ *     currentY: number,
+ *     previousX: number,
+ *     previousY: number
+ *   ) => void,
+ *   render: () => void,
+ *   windowResized: () => void,
+ *   handlePointerStart: (event: PointerEvent) => boolean,
+ *   handlePointerEnd: () => boolean,
+ *   handleMove: (
+ *     currentX: number,
+ *     currentY: number,
+ *     previousX: number,
+ *     previousY: number,
+ *     event: PointerEvent
+ *   ) => boolean,
+ *   reCenter: (event?: Event) => void,
+ *   changeBrush: (brushNumber: number, event?: Event) => void
+ * }} An object containing sketch lifecycle and interaction methods:
+ *   - preload: Loads background paper texture
+ *   - setup: Initializes canvas, graphics layer, and brush settings
+ *   - draw: Handles center point animation updates
+ *   - reset: Cycles rotation mode and color palette
+ *   - makeDrawing: Creates rotated brush strokes around center point
+ *   - render: Renders background and drawing layer
+ *   - windowResized: Handles canvas and layer resizing
+ *   - handlePointerStart: Initializes drawing or sets new center point
+ *   - handlePointerEnd: Handles completion of center point setting
+ *   - handleMove: Updates brush strokes with rotational symmetry
+ *   - reCenter: Activates center point placement mode
+ *   - changeBrush: Changes active brush type and stroke settings
  */
 export function createRotationscape(p5) {
   const ROTATION_MODES = [6, 7, 8, 10, 12, 20, 50];
@@ -288,7 +325,7 @@ export function createRotationscape(p5) {
     const brushButtons = toolbar.querySelectorAll("[data-brush]");
     brushButtons.forEach((button) => {
       addInteractionHandlers(button, (event) => {
-        const brushNumber = parseInt(button.dataset.brush);
+        const brushNumber = parseInt(button.getAttribute("data-brush"));
         changeBrush(brushNumber, event);
       });
     });

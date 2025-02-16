@@ -1,6 +1,35 @@
 import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 import { addInteractionHandlers } from "../utils/events.js";
 
+/**
+ * Creates a fully encapsulated Dotscape sketch.
+ *
+ * @param {p5} p5 - The p5 instance to use for sketch creation
+ * @returns {{
+ *   preload: () => Promise<void>,
+ *   setup: () => Promise<void>,
+ *   reset: () => void,
+ *   render: () => void,
+ *   windowResized: () => void,
+ *   handlePointerStart: (event: PointerEvent) => boolean,
+ *   handlePointerEnd: () => boolean,
+ *   handleMove: (
+ *     currentX: number,
+ *     currentY: number,
+ *     previousX: number,
+ *     previousY: number,
+ *     event: PointerEvent
+ *   ) => boolean
+ * }} An object containing sketch lifecycle and interaction methods:
+ *   - preload: Loads background paper texture
+ *   - setup: Initializes canvas, graphics layers, and color settings
+ *   - reset: Updates dimensions and starts new drawing stage
+ *   - render: Renders all layers with dots and interaction effects
+ *   - windowResized: Handles canvas resizing and grid recalculation
+ *   - handlePointerStart: Initializes color selection from dots
+ *   - handlePointerEnd: Finalizes line drawing and clears temp layer
+ *   - handleMove: Updates line drawing and handles dot connections
+ */
 export function createDotscape(p5) {
   const BACKGROUND_IMAGE = `${
     import.meta.env.BASE_URL

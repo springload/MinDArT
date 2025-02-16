@@ -1,8 +1,8 @@
 import p5 from "p5";
 
-import "../components/loading-dialog.js";
-import "../components/app-controls.js";
-import "../components/drawing-toolbar.js";
+import "../components/loadingDialog.js";
+import "../components/appControls.js";
+import "../components/drawingToolbar.js";
 
 import { isClickOnButton } from "../utils/events.js";
 import { createTouchscape } from "../apps/1-touchscape.js";
@@ -13,14 +13,10 @@ import { createDotscape } from "../apps/5-dotscape.js";
 import { createLinkscape } from "../apps/6-linkscape.js";
 import { createRotationscape } from "../apps/7-rotationscape.js";
 import { createSymmetryscape } from "../apps/8-symmetryscape.js";
-import {
-  loadSoundtrack,
-  playSoundtrack,
-  prepareAudio,
-} from "../utils/audio.js";
+import { loadSoundtrack, playSoundtrack, loadClick } from "../utils/audio.js";
 
 // Initialize audio system when the SPA first loads
-prepareAudio().catch(console.error);
+loadClick().catch(console.error);
 
 // Factory for creating the appropriate drawing app based on app name
 function createDrawingApp(p5, appName) {

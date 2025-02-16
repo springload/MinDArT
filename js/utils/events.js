@@ -1,7 +1,9 @@
 /**
- * Adds both click and touch handlers to an element
- * @param {HTMLElement} element - The element to add handlers to
- * @param {Function} handler - The event handler function
+ * Adds both click and touch handlers to an element for cross-device interaction.
+ * Prevents double-firing of events on touch devices.
+ *
+ * @param {HTMLElement} element - The DOM element to add handlers to
+ * @param {(event: Event) => void} handler - Event handler function to be called
  */
 export function addInteractionHandlers(element, handler) {
   element.addEventListener("click", handler);
@@ -12,7 +14,10 @@ export function addInteractionHandlers(element, handler) {
 }
 
 /**
- * Sets up canvas event listeners for touch and mouse interactions
+ * Sets up canvas event listeners for touch and mouse interactions.
+ * Attaches handlers for move, down, up, leave, and cancel events for both touch and mouse.
+ *
+ * @throws {Error} If canvas-container element is not found in the DOM
  */
 export function setupCanvasEventListeners() {
   const canvasContainer = document.querySelector(
@@ -31,13 +36,17 @@ export function setupCanvasEventListeners() {
 }
 
 /**
- * Checks if a click/touch event occurred on a button (so we can prevent propogation of that click to the canvas)
- * @param {Event} event - The event to check
- * @returns {boolean} True if click was on a button/interface element
+ * Checks if a click/touch event occurred on an interface element.
+ * Used to prevent canvas drawing when interacting with UI elements.
+ *
+ * @param {Event|undefined} event - The DOM event to check
+ * @returns {boolean} True if click was on a button or interface element, false otherwise
  */
 export function isClickOnButton(event) {
-  // is event is a valid DOM event with target property?
-  if (!event || !event.target || typeof event.target.closest !== "function") {
+  const isInvalidEvent = Boolean(
+    !event || !event.target || typeof event.target.closest !== "function"
+  );
+  if (isInvalidEvent) {
     return false;
   }
   return (

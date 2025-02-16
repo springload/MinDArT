@@ -3,6 +3,32 @@ import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 import { clearActiveButtonState } from "../utils/dom.js";
 import { hexToRgb } from "../utils/color.js";
 
+/**
+ * Creates a fully encapsulated Colourscape sketch
+ *
+ * @param {p5} p5 - The p5 instance to use for sketch creation
+ * @returns {{
+ *   preload: () => Promise<void>,
+ *   setup: () => Promise<void>,
+ *   reset: () => void,
+ *   render: () => void,
+ *   handlePointerStart: () => boolean,
+ *   handleMove: (
+ *     currentX: number,
+ *     currentY: number,
+ *     previousX: number,
+ *     previousY: number
+ *   ) => void,
+ *   windowResized: () => void
+ * }} An object containing sketch lifecycle and interaction methods:
+ *   - preload: Loads background texture and brush images
+ *   - setup: Initializes canvas, graphics layers, and UI handlers
+ *   - reset: Cycles color palette and clears drawing layers
+ *   - render: Renders all layers with appropriate blend modes
+ *   - handlePointerStart: Initializes brush properties for new stroke
+ *   - handleMove: Updates and renders brush strokes or eraser
+ *   - windowResized: Handles canvas and layer resizing
+ */
 export function createColourscape(p5) {
   const colourSwatch = [
     ["#F2A97E", "#F28D77", "#BF7E7E", "#7E708C", "#49538C"],

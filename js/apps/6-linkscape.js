@@ -4,9 +4,37 @@ import { isClickOnButton } from "../utils/events.js";
 import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
 
 /**
- * Creates an encapsulated Linkscape sketch
+ * Creates a fully encapsulated Linkscape sketch.
+ *
  * @param {p5} p5 - The p5 instance to use for sketch creation
- * @returns {Object} An object with sketch lifecycle methods
+ * @returns {{
+ *   preload: () => Promise<void>,
+ *   setup: () => Promise<void>,
+ *   reset: (isInitialSetup?: boolean) => void,
+ *   render: () => void,
+ *   windowResized: () => void,
+ *   handlePointerStart: (event: PointerEvent) => boolean,
+ *   handlePointerEnd: () => void,
+ *   handleMove: (
+ *     currentX: number,
+ *     currentY: number,
+ *     previousX: number,
+ *     previousY: number,
+ *     event: PointerEvent
+ *   ) => boolean,
+ *   addLine: () => void,
+ *   addPin: () => void
+ * }} An object containing sketch lifecycle and interaction methods:
+ *   - preload: Loads texture and pin images
+ *   - setup: Initializes canvas, graphics layers, and string segments
+ *   - reset: Resets string positions and changes color palette
+ *   - render: Renders strings with shadow effects and pins
+ *   - windowResized: Handles canvas and layer resizing
+ *   - handlePointerStart: Initializes string dragging or pin placement
+ *   - handlePointerEnd: Ends string dragging interaction
+ *   - handleMove: Updates string segment positions during drag
+ *   - addLine: Adds a new string to the simulation
+ *   - addPin: Activates pin placement mode
  */
 export function createLinkscape(p5) {
   const PALETTES = [

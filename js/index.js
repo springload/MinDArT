@@ -2,7 +2,7 @@ import "../css/styles.css";
 import { registerSW } from "virtual:pwa-register";
 import { initializeRouter } from "./core/router.js";
 import { showOnlyCurrentLinks } from "./utils/dom.js";
-import { initPWAUpdater } from "./utils/pwa-update.js";
+import { initPWAUpdater } from "./utils/pwa.js";
 import p5 from "p5";
 window.p5 = p5; // make p5.js globally available to all apps
 

@@ -1,11 +1,30 @@
-// Track the current screen orientation state
+/**
+ * Current screen orientation ('portrait' or 'landscape')
+ * @type {string|null}
+ */
 let storedOrientation = null;
+
+/**
+ * Last recorded orientation in degrees (0, 90, 180, or 270)
+ * @type {number}
+ */
 let storedOrientationDegrees = 0;
-let rotateDirection = -1; // Used during orientation changes
+
+/**
+ * Direction of rotation during orientation changes (1 or -1)
+ * @type {number}
+ */
+let rotateDirection = -1;
 
 /**
  * Calculates key viewport dimensions
- * @returns {Object} Object containing width, height, vMin, and vMax values
+ *
+ * @returns {{
+ *   width: number,
+ *   height: number,
+ *   vMin: number,
+ *   vMax: number
+ * }} Object containing viewport dimensions and calculated min/max values
  */
 export function calcViewportDimensions() {
   const width = window.innerWidth;
@@ -18,22 +37,25 @@ export function calcViewportDimensions() {
 }
 
 /**
- * Helps with memory management by cleaning up graphics buffers
+ * Helps with memory management by cleaning up graphics buffers.
+ * Allows p5.Graphics objects to be garbage collected.
+ *
  * @param {p5.Graphics} buffer - The graphics buffer to clean up
- * @returns {null} Returns null to allow garbage collection
+ * @returns {null} Returns null to release the reference
  */
 export function cleanupGraphics(buffer) {
   return null;
 }
 
 /**
- * Creates a new graphics layer with resized dimensions and optionally rotates content
+ * Creates a new graphics layer with resized dimensions and optional content rotation.
+ *
  * @param {p5} p5 - The p5 instance
- * @param {p5.Graphics|p5.Image} layer - The graphics layer to resize
- * @param {number} width - New width
- * @param {number} height - New height
- * @param {boolean} rotate - Whether to rotate the content
- * @param {number} direction - Direction of rotation (1 or -1)
+ * @param {p5.Graphics|p5.Image} layer - The graphics layer or image to resize
+ * @param {number} width - New width in pixels
+ * @param {number} height - New height in pixels
+ * @param {boolean} [rotate=false] - Whether to rotate the content during resize
+ * @param {number} [direction=1] - Direction of rotation (1 for clockwise, -1 for counter-clockwise)
  * @returns {p5.Graphics} New resized graphics layer
  */
 export function resizeGraphicsLayer(
@@ -80,10 +102,17 @@ export function resizeGraphicsLayer(
 }
 
 /**
- * Main resize handler - manages orientation changes and layer resizing
+ * Main resize handler that manages orientation changes and layer resizing.
+ * Tracks orientation changes and resizes/rotates all provided layers accordingly.
+ *
  * @param {p5} p5 - The p5 instance
- * @param {Array} layers - Array of graphics layers to resize
- * @returns {Object} Object containing new dimensions, resized layers, and orientation info
+ * @param {Array<p5.Graphics|p5.Image>} [layers=[]] - Array of graphics layers to resize
+ * @returns {{
+ *   dimensions: {width: number, height: number, vMin: number, vMax: number},
+ *   resizedLayers: Array<p5.Graphics>,
+ *   orientationChanged: boolean,
+ *   direction: number
+ * }} Object containing new dimensions, resized layers, and orientation info
  */
 export function handleResize(p5, layers = []) {
   const dimensions = calcViewportDimensions();
@@ -94,6 +123,7 @@ export function handleResize(p5, layers = []) {
 
   let direction = 1;
   if (orientationChanged) {
+    // TODO: orientation is deprecated, look into implementing this with Sensor APIs
     if (window.orientation < storedOrientationDegrees) {
       direction = 1;
     } else {

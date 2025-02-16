@@ -5,8 +5,22 @@ import { hexToRgb } from "../utils/color.js";
 
 /**
  * Creates a fully encapsulated Linescape sketch
+ *
  * @param {p5} p5 - The p5 instance to use for sketch creation
- * @returns {Object} An object with sketch lifecycle methods
+ * @returns {{
+ *   preload: () => void,
+ *   setup: () => Promise<void>,
+ *   reset: () => void,
+ *   render: () => void,
+ *   handleMove: (currentX: number, currentY: number, previousX: number, previousY: number) => void,
+ *   windowResized: () => void
+ * }} An object containing sketch lifecycle and interaction methods:
+ *   - preload: No-op function as sketch has no assets to preload
+ *   - setup: Initializes canvas, grid system, and UI handlers
+ *   - reset: Adjusts grid density and changes color palette
+ *   - render: Renders the current state of the line grid
+ *   - handleMove: Updates grid points based on pointer movement
+ *   - windowResized: Handles canvas resizing and point grid transformation
  */
 export function createLinescape(p5) {
   const COLOURS = [
@@ -239,7 +253,7 @@ export function createLinescape(p5) {
     const elements = document.querySelectorAll('[data-element="swatch"]');
     elements.forEach((el) => {
       addInteractionHandlers(el, () => {
-        state.currentSwatch = parseInt(el.dataset.swatch);
+        state.currentSwatch = parseInt(el.getAttribute("data-swatch"));
       });
     });
   }
@@ -248,7 +262,7 @@ export function createLinescape(p5) {
     const elements = document.querySelectorAll('[data-element="swatch"]');
     elements.forEach((el) => {
       el.style.backgroundColor =
-        COLOURS[state.colorPairIndex][parseInt(el.dataset.swatch)];
+        COLOURS[state.colorPairIndex][parseInt(el.getAttribute("data-swatch"))];
     });
   }
 

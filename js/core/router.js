@@ -1,9 +1,9 @@
-import "../components/loading-dialog.js";
-import "../components/app-controls.js";
-import "../components/drawing-toolbar.js";
+import "../components/loadingDialog.js";
+import "../components/appControls.js";
+import "../components/drawingToolbar.js";
 import { stopSoundtrack } from "../utils/audio.js";
 import { addInteractionHandlers } from "../utils/events.js";
-import { checkForUpdates } from "../utils/pwa-update.js";
+import { checkForUpdates } from "../utils/pwa.js";
 /**
  * Extracts the app name from URL query parameters
  * @returns {string|null} The 'app' query parameter value (e.g. `'touchscape'`), or null if not present
@@ -160,7 +160,7 @@ async function init() {
   appLinks.forEach((link) => {
     addInteractionHandlers(link, (e) => {
       e.preventDefault(); // we don't want a full page reload
-      const appName = link.dataset.app; // name of the app that the link goes to, e.g. 'touchscape'
+      const appName = link.getAttribute("data-app"); // name of the app that the link goes to, e.g. 'touchscape'
 
       // Update the URL with the app name as a parameter, without refreshing the page
       window.history.pushState({}, "", `?app=${appName}`);
