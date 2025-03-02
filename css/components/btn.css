@@ -148,6 +148,14 @@
   color: var(--color-white);
 }
 
+.btn--themed-outline {
+  border-color: var(--color-grey-90);
+
+  &:where(.active) {
+    border-color: var(--theme-button-border, var(--color-blue-70));
+  }
+}
+
 .btn--cool-stripes {
   background-image: repeating-linear-gradient(90deg,
       #002D65,

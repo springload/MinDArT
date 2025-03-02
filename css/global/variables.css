@@ -15,10 +15,14 @@
   /* oklch(66.76% 0.1914 44.76) */
   --color-orange-90: #f3cdb9;
   /* oklch(87.6% 0.051 49.4)*/
+  --color-yellow-70: #c89513;
+  /* oklch(70% 0.14 83.37) */
   --color-yellow-80: #f1b300;
   /* oklch(80.3% 0.1649 83.37) */
   --color-yellow-90: #ead39e;
   /* oklch(87.3% 0.0733 87.23) */
+  --color-green-70: #62b651;
+  /* oklch(70% 0.16 140.43) */
   --color-green-80: #7cce6c;
   /* oklch(77.6% 0.1554 140.43) */
   --color-green-90: #dbf9d4;
@@ -33,6 +37,8 @@
   /* oklch(90% 0.0535 238.1) */
   --color-slate-30: #1f2b45;
   /* oklch(29.15% 0.05 264.6) */
+  --color-slate-60: #627fbc;
+  /* oklch(60% 0.1 264.6) */
   --color-slate-80: #b8c3db;
   /* oklch(81.63% 0.036 266) */
 
