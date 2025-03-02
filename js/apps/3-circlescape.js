@@ -36,7 +36,7 @@ export function createCirclescape(p5) {
   const COLOR_PALETTES = [
     ["#345573", "#223240", "#F2913D", "#F24B0F"],
     ["#345573", "#F2913D", "#223240", "#F24B0F"],
-    ["#172426", "#455559", "#D9C3B0", "#F2DFCE"],
+    ["#1b3236", "#7b949b", "#D9C3B0", "#F2DFCE"],
     ["#F2BBBB", "#3C5E73", "#FFFFFF", "#F24444"],
     ["#6C2EF2", "#9726A6", "#8F49F2", "#F27ECA"],
     ["#BF4B8B", "#3981BF", "#1F628C", "#D92929"],
@@ -53,9 +53,7 @@ export function createCirclescape(p5) {
     // Drawing state
     selectedPalette: 0,
     colorIndex: 0,
-    drawingMode: "big", // "big", "small", or "erase"
-    drawMultiplier: 2,
-    eraserMode: false,
+    drawingMode: "erase", // "big", "small", or "erase"
 
     // Vector tracking
     vectorStore: [],
@@ -104,9 +102,7 @@ export function createCirclescape(p5) {
     // Cycle palette and reset drawing state
     state.selectedPalette = (state.selectedPalette + 1) % COLOR_PALETTES.length;
     state.colorIndex = 0;
-    state.drawingMode = "big";
-    state.drawMultiplier = 2;
-    state.eraserMode = false;
+    state.drawingMode = "erase";
 
     // Reset canvas
     state.drawLayer.clear();
@@ -159,10 +155,10 @@ export function createCirclescape(p5) {
   function handleMove(currentX, currentY, previousX, previousY, event) {
     updateDynamics(currentX, currentY, previousX, previousY);
 
-    if (!state.eraserMode) {
-      drawBrushStroke(currentX, currentY, previousX, previousY);
-    } else {
+    if (state.drawingMode === "erase") {
       eraseStroke(currentX, currentY, previousX, previousY);
+    } else {
+      drawBrushStroke(currentX, currentY, previousX, previousY);
     }
 
     render();
@@ -198,9 +194,12 @@ export function createCirclescape(p5) {
     p5.strokeCap(p5.SQUARE);
     p5.blendMode(p5.DIFFERENCE);
 
+    // Set brush size multiplier based on drawing mode
+    const drawMultiplier = state.drawingMode === "big" ? 2 : 0.5;
+
     const brushConfig = {
-      qtyOfLines: 24 * state.drawMultiplier,
-      brushWidth: 20 + state.velocity * 2 * state.drawMultiplier,
+      qtyOfLines: 24 * drawMultiplier,
+      brushWidth: 20 + state.velocity * 2 * drawMultiplier,
       opacity: 10,
       noiseScale: 0.001,
     };
@@ -287,27 +286,26 @@ export function createCirclescape(p5) {
       '[data-element="draw-big-button"]'
     );
 
-    if (!eraseButton | !drawSmallButton | !drawBigButton) {
+    if (!eraseButton || !drawSmallButton || !drawBigButton) {
       console.error("toolbar button not found");
+      return;
     }
 
     addInteractionHandlers(eraseButton, (event) => {
-      state.eraserMode = true;
+      state.drawingMode = "erase";
       state.drawLayer.strokeCap(p5.ROUND);
       state.drawLayer.blendMode(p5.BLEND);
     });
 
     addInteractionHandlers(drawSmallButton, (event) => {
-      state.eraserMode = false;
-      state.drawMultiplier = 0.5;
+      state.drawingMode = "small";
       state.drawLayer.strokeCap(p5.SQUARE);
       state.drawLayer.blendMode(p5.DIFFERENCE);
       state.vectorStore = state.vectorStore.map(() => null);
     });
 
     addInteractionHandlers(drawBigButton, (event) => {
-      state.eraserMode = false;
-      state.drawMultiplier = 2;
+      state.drawingMode = "big";
       state.drawLayer.strokeCap(p5.SQUARE);
       state.drawLayer.blendMode(p5.DIFFERENCE);
       state.vectorStore = state.vectorStore.map(() => null);
