@@ -26,6 +26,8 @@ import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
  */
 export function createTouchscape(p5) {
   const PEBBLE_COUNT = 7;
+  const PEBBLE_MIN_PX = 80;
+  const PEBBLE_MAX_PX = 120;
 
   const state = {
     // Interaction state
@@ -58,7 +60,7 @@ export function createTouchscape(p5) {
     pebbleLayer: null,
 
     // Pebble decoration state
-    pebbleScalars: [],
+    pebbleSizes: [],
     pebbleIds: [],
     pebbleX: [],
     pebbleY: [],
@@ -274,21 +276,17 @@ export function createTouchscape(p5) {
     // Add random pebbles
     const pebbleCount = p5.int(p5.random(0.7, 3));
     for (let k = 0; k < pebbleCount; k++) {
-      state.pebbleScalars[k] = p5.int(p5.random(120, 180));
+      state.pebbleSizes[k] = p5.int(p5.random(PEBBLE_MIN_PX, PEBBLE_MAX_PX));
       state.pebbleIds[k] = p5.int(p5.random(1, PEBBLE_COUNT));
-      state.pebbleX[k] = p5.int(
-        p5.random(0, p5.width - state.pebbleScalars[k])
-      );
-      state.pebbleY[k] = p5.int(
-        p5.random(0, p5.height - state.pebbleScalars[k])
-      );
+      state.pebbleX[k] = p5.int(p5.random(0, p5.width - state.pebbleSizes[k]));
+      state.pebbleY[k] = p5.int(p5.random(0, p5.height - state.pebbleSizes[k]));
 
       state.pebbleLayer.image(
         state.pebbles[state.pebbleIds[k]],
         state.pebbleX[k],
         state.pebbleY[k],
-        state.pebbleScalars[k],
-        state.pebbleScalars[k]
+        state.pebbleSizes[k],
+        state.pebbleSizes[k]
       );
     }
 
