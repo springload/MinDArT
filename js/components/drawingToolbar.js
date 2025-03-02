@@ -110,12 +110,12 @@ class DrawingToolbar extends HTMLElement {
               {
                 dataElement: "swatch",
                 dataSwatch: "0",
-                class: "btn--leftsplit active",
+                class: "btn--leftsplit btn--themed-outline",
               },
               {
                 dataElement: "swatch",
                 dataSwatch: "1",
-                class: "btn--rightsplit",
+                class: "btn--rightsplit btn--themed-outline",
               },
             ],
           },
@@ -161,12 +161,12 @@ class DrawingToolbar extends HTMLElement {
             type: "paint-group",
             buttons: [
               {
-                dataElement: "paint-warm-button",
-                class: "btn--leftsplit btn--warm-stripes",
+                dataElement: "paint-light-button",
+                class: "btn--leftsplit btn--light-gradient btn--themed-outline",
               },
               {
-                dataElement: "paint-cool-button",
-                class: "btn--rightsplit btn--cool-stripes",
+                dataElement: "paint-dark-button",
+                class: "btn--rightsplit btn--dark-gradient btn--themed-outline",
               },
             ],
           },
@@ -180,12 +180,7 @@ class DrawingToolbar extends HTMLElement {
       },
       dotscape: {
         items: [
-          {
-            type: "button",
-            text: "Restart",
-            dataElement: "restart-button",
-            class: "btn--white",
-          },
+          // no toolbar for dotscape
         ],
       },
       linkscape: {
@@ -197,13 +192,6 @@ class DrawingToolbar extends HTMLElement {
             icon: "plus",
             class: "btn--white",
           },
-          {
-            type: "button",
-            text: "Add a pin",
-            dataElement: "add-pin-button",
-            icon: "pin",
-            class: "btn--white",
-          },
         ],
       },
       rotationscape: {
@@ -213,32 +201,32 @@ class DrawingToolbar extends HTMLElement {
             swatches: [
               {
                 dataElement: "swatch",
-                class: "btn--square",
+                class: "btn--square btn--themed-outline",
                 dataBrush: "1",
               },
               {
                 dataElement: "swatch",
-                class: "btn--square",
+                class: "btn--square btn--themed-outline",
                 dataBrush: "2",
               },
               {
                 dataElement: "swatch",
-                class: "btn--square",
+                class: "btn--square btn--themed-outline",
                 dataBrush: "3",
               },
               {
                 dataElement: "swatch",
-                class: "btn--square",
+                class: "btn--square btn--themed-outline",
                 dataBrush: "4",
               },
             ],
-            wrapperClass: "btn-group--split",
+            wrapperClass: "btn-group--split btn-group--rotationscape",
             prefix: [
               {
                 type: "button",
                 text: "Erase",
                 dataBrush: "0",
-                class: "btn--leftsplit",
+                class: "btn--leftsplit btn--white btn--themed-outline",
               },
             ],
             suffix: [
@@ -246,20 +234,19 @@ class DrawingToolbar extends HTMLElement {
                 type: "button",
                 text: "Pick new centre",
                 dataElement: "new-center-button",
-                class: "btn--rightsplit",
+                class: "btn--rightsplit btn--white btn--themed-outline",
               },
             ],
           },
         ],
       },
-      // TODO: handle draw mode being clicked when already in draw mode
       symmetryscape: {
         items: [
           {
             type: "button",
             text: "Erase",
             dataBrush: "0",
-            class: "btn--white",
+            class: "btn--white btn--themed-outline",
           },
           {
             type: "swatch-group",
@@ -269,16 +256,16 @@ class DrawingToolbar extends HTMLElement {
                 type: "button",
                 text: "Draw",
                 dataElement: "draw-mode-button",
-                class: "btn--white",
+                class: "btn--white btn--themed-outline",
               },
             ],
             swatches: [
-              { dataBrush: "1" },
-              { dataBrush: "2" },
-              { dataBrush: "3" },
-              { dataBrush: "4" },
-              { dataBrush: "5" },
-              { dataBrush: "6" },
+              { dataBrush: "1", class: "btn--themed-outline" },
+              { dataBrush: "2", class: "btn--themed-outline" },
+              { dataBrush: "3", class: "btn--themed-outline" },
+              { dataBrush: "4", class: "btn--themed-outline" },
+              { dataBrush: "5", class: "btn--themed-outline" },
+              { dataBrush: "6", class: "btn--themed-outline" },
             ],
           },
         ],

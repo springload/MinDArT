@@ -20,23 +20,50 @@ import { hexToRgb } from "../utils/color.js";
  *     previousY: number
  *   ) => void,
  *   windowResized: () => void
- * }} An object containing sketch lifecycle and interaction methods:
- *   - preload: Loads background texture and brush images
- *   - setup: Initializes canvas, graphics layers, and UI handlers
- *   - reset: Cycles color palette and clears drawing layers
- *   - render: Renders all layers with appropriate blend modes
- *   - handlePointerStart: Initializes brush properties for new stroke
- *   - handleMove: Updates and renders brush strokes or eraser
- *   - windowResized: Handles canvas and layer resizing
+ * }} An object containing sketch lifecycle and interaction methods
  */
 export function createColourscape(p5) {
-  const colourSwatch = [
-    ["#F2A97E", "#F28D77", "#BF7E7E", "#7E708C", "#49538C"],
-    ["#F2A74B", "#F2995E", "#D95F43", "#734663", "#2A1A40"],
-    ["#F21905", "#A60303", "#027373", "#025159", "#025159"],
-    ["#CFCFCF", "#88898C", "#565759", "#0D0D0D", "#00010D"],
-    ["#91AA9D", "#D1DBBD", "#91AA9D", "#3E606F", "#193441"],
+  // Note: 5 colors per palette were specified in the original code but `light3` was never used, so I have left it unused
+  const colorPalettes = [
+    {
+      light1: "#F2A97E",
+      light2: "#F28D77",
+      light3: "#BF7E7E",
+      dark1: "#7E708C",
+      dark2: "#49538C",
+    },
+    {
+      light1: "#F2A74B",
+      light2: "#F2995E",
+      light3: "#D95F43",
+      dark1: "#734663",
+      dark2: "#2A1A40",
+    },
+    {
+      light1: "#F21905",
+      light2: "#A60303",
+      light3: "#027373",
+      dark1: "#025159",
+      dark2: "#025159",
+    },
+    {
+      light1: "#CFCFCF",
+      light2: "#88898C",
+      light3: "#565759",
+      dark1: "#0D0D0D",
+      dark2: "#00010D",
+    },
+    {
+      light1: "#91AA9D",
+      light2: "#D1DBBD",
+      light3: "#91AA9D",
+      dark1: "#3E606F",
+      dark2: "#193441",
+    },
   ];
+
+  const PENCIL_COLOR = [150, 150, 150, 0.9];
+  const ERASER_COLOR = [255, 255, 255, 0.5];
 
   const state = {
     // Assets
@@ -48,12 +75,13 @@ export function createColourscape(p5) {
     traceLayer: null,
 
     // Drawing state
-    bool: true,
+    isPaintMode: true,
     brushTemp: 0,
-    eraseState: 0,
-    eraserVersion: 0,
-    colourBool: false,
-    colourLevel: 0,
+    isEraserActive: false,
+    eraserVersion: "draw", // "draw" or "paint"
+    isDarkPalette: false,
+    paletteIndex: 0,
+    currentColor: null,
 
     // Brush mechanics
     angle1: 0,
@@ -100,29 +128,56 @@ export function createColourscape(p5) {
     setLayerProperties();
 
     // Initialize state and render initial view
-    state.colourLevel = 0;
+    state.paletteIndex = 0;
     calcViewportDimensions();
     drawErase();
     state.segLength = p5.windowWidth / 40;
     setProperties(0, 0);
 
+    // Set initial CSS custom properties for the toolbar
+    updateToolbarColors(state.paletteIndex);
+
     backdrop();
     render();
+  }
+
+  /**
+   * Updates the CSS custom properties on the toolbar element based on the current palette
+   * @param {number} paletteIndex - The index of the current color palette
+   */
+  function updateToolbarColors(paletteIndex) {
+    const toolbar = document.querySelector('[data-element="toolbar"]');
+    if (!toolbar) return;
+
+    const palette = colorPalettes[paletteIndex];
+
+    // Update CSS custom properties with current palette colors
+    toolbar.style.setProperty("--color-light-1", palette.light1);
+    toolbar.style.setProperty("--color-light-2", palette.light2);
+    toolbar.style.setProperty("--color-light-3", palette.light3);
+    toolbar.style.setProperty("--color-dark-1", palette.dark1);
+    toolbar.style.setProperty("--color-dark-2", palette.dark2);
   }
 
   function setLayerProperties() {
     p5.imageMode(p5.CENTER);
     p5.blendMode(p5.BLEND);
-    state.traceLayer.blendMode(p5.LIGHTEST);
+    state.traceLayer.blendMode(p5.BLEND);
+
     p5.colorMode(p5.RGB, 255, 255, 255, 1);
-    state.paintLayer.colorMode(p5.RGB, 255, 255, 255, 255);
-    state.traceLayer.colorMode(p5.HSB, 360, 100, 100, 1);
+    state.paintLayer.colorMode(p5.RGB, 255, 255, 255, 1);
+    state.traceLayer.colorMode(p5.RGB, 255, 255, 255, 1);
+
     state.traceLayer.strokeWeight(8);
-    state.traceLayer.stroke(255, 0, 255, 0.8);
+    state.traceLayer.stroke(...PENCIL_COLOR);
   }
 
   function reset() {
-    state.colourLevel = (state.colourLevel + 1) % 5;
+    state.paletteIndex = (state.paletteIndex + 1) % colorPalettes.length;
+
+    // Update the toolbar colors with the new palette
+    updateToolbarColors(state.paletteIndex);
+
     calcViewportDimensions();
     drawErase();
     clearActiveButtonState();
@@ -136,8 +191,8 @@ export function createColourscape(p5) {
   }
 
   function segment(rakeX, rakeY, a, rake, scalar) {
-    // Use the color selected in makeDrawing instead of hardcoded magenta
-    state.paintLayer.tint(state.currentColour);
+    const [r, g, b] = state.currentColor.levels;
+    state.paintLayer.tint(r, g, b, 127);
     state.paintLayer.push();
     state.paintLayer.imageMode(p5.CENTER);
     state.paintLayer.translate(
@@ -161,18 +216,24 @@ export function createColourscape(p5) {
 
   function makeDrawing(_x, _y, pX, pY) {
     state.milliCounter = p5.millis();
-    if (state.bool) {
+    if (state.isPaintMode) {
       if (state.milliCounter > state.milliTrack + MILLI_COMP) {
-        // Select color based on warm/cool selection
-        state.selectedNum = !state.colourBool
-          ? Math.floor(p5.random(0, 2)) // Warm colors (first 2)
-          : Math.floor(p5.random(3, 5)); // Cool colors (last 2)
+        const currentPalette = colorPalettes[state.paletteIndex];
+
+        let selectedColorKey;
+
+        if (!state.isDarkPalette) {
+          const lightColorKeys = ["light1", "light2"]; // excluding `light3` which was not used in the original code
+          selectedColorKey =
+            lightColorKeys[Math.floor(p5.random(0, lightColorKeys.length))];
+        } else {
+          const darkColorKeys = ["dark1", "dark2"];
+          selectedColorKey =
+            darkColorKeys[Math.floor(p5.random(0, darkColorKeys.length))];
+        }
 
         // Convert hex to RGB and store in state
-        state.currentColour = hexToRgb(
-          p5,
-          colourSwatch[state.colourLevel][state.selectedNum]
-        );
+        state.currentColor = hexToRgb(p5, currentPalette[selectedColorKey]);
 
         state.dx = _x - state.tempX;
         state.dy = _y - state.tempY;
@@ -197,27 +258,31 @@ export function createColourscape(p5) {
         state.milliTrack = state.milliCounter;
       }
     } else {
+      state.traceLayer.blendMode(p5.BLEND);
+      state.traceLayer.strokeWeight(8);
+      state.traceLayer.stroke(...PENCIL_COLOR);
       state.traceLayer.line(_x, _y, pX, pY);
     }
   }
 
   function drawErase() {
-    state.eraseState = 1;
-    state.eraserVersion = false;
+    state.isEraserActive = true;
+    state.eraserVersion = "draw";
   }
 
   function eraseDrawing() {
-    if (state.eraserVersion) {
+    if (state.eraserVersion === "paint") {
       state.paintLayer.noStroke();
       state.paintLayer.strokeWeight(45);
-      state.paintLayer.stroke(255, 255, 255, 125);
+      state.paintLayer.stroke(...ERASER_COLOR);
       state.paintLayer.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
     } else {
-      state.traceLayer.blendMode(p5.BLEND);
+      state.traceLayer.push();
+      state.traceLayer.blendMode(p5.OVERLAY);
       state.traceLayer.strokeWeight(45);
-      state.traceLayer.stroke(255, 0, 0, 0.4);
+      state.traceLayer.stroke(...ERASER_COLOR);
       state.traceLayer.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
-      state.traceLayer.blendMode(p5.LIGHTEST);
+      state.traceLayer.pop();
     }
   }
 
@@ -230,9 +295,11 @@ export function createColourscape(p5) {
   function render() {
     p5.blendMode(p5.BLEND);
     backdrop();
+
     p5.blendMode(p5.DARKEST);
     p5.image(state.paintLayer, p5.width / 2, p5.height / 2);
-    p5.blendMode(p5.LIGHTEST);
+
+    p5.blendMode(p5.MULTIPLY);
     p5.image(state.traceLayer, p5.width / 2, p5.height / 2);
   }
 
@@ -255,7 +322,7 @@ export function createColourscape(p5) {
   }
 
   function handleMove(currentX, currentY, previousX, previousY) {
-    if (state.eraseState === 0) {
+    if (!state.isEraserActive) {
       makeDrawing(currentX, currentY, previousX, previousY);
     } else {
       eraseDrawing();
@@ -278,11 +345,11 @@ export function createColourscape(p5) {
     const toolbar = document.querySelector('[data-element="toolbar"]');
     if (!toolbar) return;
 
-    const paintWarmButton = toolbar.querySelector(
-      '[data-element="paint-warm-button"]'
+    const paintLightButton = toolbar.querySelector(
+      '[data-element="paint-light-button"]'
     );
-    const paintCoolButton = toolbar.querySelector(
-      '[data-element="paint-cool-button"]'
+    const paintDarkButton = toolbar.querySelector(
+      '[data-element="paint-dark-button"]'
     );
     const drawButton = toolbar.querySelector('[data-element="draw-button"]');
     const erasePaintButton = toolbar.querySelector(
@@ -293,8 +360,8 @@ export function createColourscape(p5) {
     );
 
     if (
-      !paintWarmButton |
-      !paintCoolButton |
+      !paintLightButton |
+      !paintDarkButton |
       !drawButton |
       !erasePaintButton |
       !eraseDrawButton
@@ -303,36 +370,33 @@ export function createColourscape(p5) {
       return;
     }
 
-    addInteractionHandlers(paintWarmButton, (event) => {
-      state.eraseState = 0;
-      state.eraserVersion = 0;
-      state.colourBool = false;
-      state.bool = true;
+    addInteractionHandlers(paintLightButton, (event) => {
+      state.isEraserActive = false;
+      state.isDarkPalette = false;
+      state.isPaintMode = true;
     });
 
-    addInteractionHandlers(paintCoolButton, (event) => {
-      state.eraseState = 0;
-      state.eraserVersion = 0;
-      state.colourBool = true;
-      state.bool = true;
+    addInteractionHandlers(paintDarkButton, (event) => {
+      state.isEraserActive = false;
+      state.isDarkPalette = true;
+      state.isPaintMode = true;
     });
 
     addInteractionHandlers(drawButton, (event) => {
-      state.bool = false;
-      state.eraseState = 0;
-      state.eraserVersion = 0;
+      state.isPaintMode = false;
+      state.isEraserActive = false;
       state.traceLayer.strokeWeight(8);
-      state.traceLayer.stroke(255, 0, 255, 0.8);
+      state.traceLayer.stroke(...PENCIL_COLOR);
     });
 
     addInteractionHandlers(erasePaintButton, (event) => {
-      state.eraseState = 1;
-      state.eraserVersion = true;
+      state.isEraserActive = true;
+      state.eraserVersion = "paint";
     });
 
     addInteractionHandlers(eraseDrawButton, (event) => {
-      state.eraseState = 1;
-      state.eraserVersion = false;
+      state.isEraserActive = true;
+      state.eraserVersion = "draw";
     });
   }
 

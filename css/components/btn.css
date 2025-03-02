@@ -1,5 +1,11 @@
 .btn {
   --btn-border-width: 4px;
+  --btn-height: 50px;
+  --btn-min-width: 80px;
+  /* 14px */
+  --btn-font-size: 0.875rem;
+  --btn-inactive-outline-color: #cbd8e199;
+
   appearance: none;
   /* the .interface container has pointer-events: none */
   pointer-events: all;
@@ -10,8 +16,8 @@
   border-color: transparent;
   padding-inline: 12px;
 
-  height: 70px;
-  min-width: 120px;
+  height: var(--btn-height);
+  min-width: var(--btn-min-width);
 
   display: flex;
   align-items: center;
@@ -20,7 +26,7 @@
   text-align: center;
   font-family: var(--font-tahoma);
   font-weight: bold;
-  font-size: large;
+  font-size: var(--btn-font-size);
   text-decoration: none;
   cursor: pointer;
 
@@ -34,6 +40,23 @@
     width: 120px;
     padding-inline: 0;
   }
+
+  /* settings for viewports above 500px in em units */
+  @media (min-width: calc((500/16) * 1em)) {
+    /* 16px */
+    --btn-font-size: 1rem;
+    --btn-height: 60px;
+    --btn-min-width: 100px;
+  }
+
+  /* settings for viewports above 768px in em units */
+  @media (min-width: calc((768/16) * 1em)) {
+    /* 18px */
+    --btn-font-size: 1.125rem;
+    --btn-height: 70px;
+    --btn-min-width: 120px;
+  }
+
 
   :where(svg) {
     fill: none;
@@ -50,8 +73,21 @@
     }
   }
 
-  &:active,
-  &:hover {
+  :where(.rotationscape) & {
+    --btn-inactive-outline-color: #7e888fdd;
+  }
+
+  :where(.linescape) & {
+    --btn-inactive-outline-color: #ffffffdd;
+  }
+
+  :where(.symmetryscape) & {
+    --btn-inactive-outline-color: #cccccc;
+
+  }
+
+
+  &:where(:active, :hover, .active) {
     border-color: var(--color-white);
     background-color: var(--theme-bg, var(--color-blue-70));
     color: var(--color-white);
@@ -61,16 +97,10 @@
 .btn--white {
   background-color: var(--color-white);
   color: var(--color-grey-40);
-}
 
-.btn--teal {
-  background-color: var(--color-teal-70);
-  color: var(--color-grey-40);
-
-  &:active,
-  &:hover {
+  &:where(:active, :hover, .active) {
     border-color: var(--color-white);
-    background-color: var(--color-teal-70);
+    background-color: var(--theme-bg, var(--color-blue-70));
     color: var(--color-white);
   }
 }
@@ -81,8 +111,10 @@
 }
 
 /* 'split' buttons have rounded outer edges, and may or may not have square swatches inbetween them */
-/* the symmetryscape app has _slightly_ different spacing requirements */
 .btn-group--split {
+
+  --corner-radius: 4px;
+
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
@@ -90,10 +122,11 @@
 
 
   :where(.btn) {
+    --split-btn-width: calc(var(--btn-min-width) + 20px);
     border-color: var(--color-grey-40);
 
     /* square swatches: */
-    border-radius: 0;
+    border-radius: var(--corner-radius);
     min-width: unset;
     aspect-ratio: 1;
 
@@ -103,8 +136,8 @@
 
   /* first button is rounded on the left */
   :where(.btn:first-child) {
-    width: 140px;
-    border-radius: 40px 0px 0px 40px;
+    width: var(--split-btn-width);
+    border-radius: 40px var(--corner-radius) var(--corner-radius) 40px;
     padding-left: 16px;
 
   }
@@ -117,23 +150,15 @@
 
   /* last (visible) button is rounded on the right */
   :where(.btn:last-child, .btn:has(+ .u-hide)) {
-    width: 140px;
-    border-radius: 0px 40px 40px 0px;
+    width: var(--split-btn-width);
+    border-radius: var(--corner-radius) 40px 40px var(--corner-radius);
     padding-right: 16px;
   }
 }
 
 :where(.symmetryscape) .btn-group--split {
-  gap: 0;
-
-  :where(.btn) {
-    /* overlap borders */
-    margin-left: calc(-1 * var(--btn-border-width));
-
-    /* always show the full border of the active/hovered button, don't let it be overlapped */
-    &:where(.active, :hover, :active) {
-      isolation: isolate;
-    }
+  :where(.btn:first-child) {
+    width: var(--btn-min-width);
   }
 
   :where(.btn:last-child, .btn:has(+ .u-hide)) {
@@ -142,38 +167,25 @@
   }
 }
 
-.active {
-  border-color: var(--color-white);
-  background-color: var(--color-blue-70);
-  color: var(--color-white);
+.btn--themed-outline {
+  border-color: var(--btn-inactive-outline-color);
+
+  &:where(:hover, :active, .active) {
+    border-color: var(--theme-button-border, var(--color-blue-70));
+
+    &:where(.btn--white) {
+
+      border-color: var(--color-white);
+    }
+  }
 }
 
-.btn--cool-stripes {
-  background-image: repeating-linear-gradient(90deg,
-      #002D65,
-      #002D65 20px,
-      #0682D1 20px,
-      #0682D1 40px,
-      #04ABDA 40px,
-      #04ABDA 60px,
-      #38E3E5 60px,
-      #38E3E5 80px,
-      #27CB6F 80px,
-      #27CB6F 100px,
-      #05A664 100px,
-      #05A664);
+.btn--light-gradient {
+  background-image: linear-gradient(in oklab 90deg,
+      var(--color-light-1, #F2A97E), var(--color-light-2, #F28D77));
 }
 
-.btn--warm-stripes {
-  background-image: repeating-linear-gradient(90deg,
-      #E23A4C,
-      #E23A4C 20px,
-      #FF0000 20px,
-      #FF0000 40px,
-      #FE4201 40px,
-      #FE4201 60px,
-      #FEA701 60px,
-      #FEA701 80px,
-      #FED900 80px,
-      #FED900);
+.btn--dark-gradient {
+  background-image: linear-gradient(in oklab 90deg,
+      var(--color-dark-1, #7E708C), var(--color-dark-2, #49538C));
 }

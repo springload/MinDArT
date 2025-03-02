@@ -1,7 +1,21 @@
 import { addInteractionHandlers } from "../utils/events.js";
 import { colorAlpha } from "../utils/color.js";
-import { clearActiveButtonState, hasActiveClass } from "../utils/dom.js";
+import { clearActiveButtonState } from "../utils/dom.js";
 import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
+
+export const SymmetryMode = {
+  VERTICAL: "VERTICAL",
+  HORIZONTAL: "HORIZONTAL",
+  QUADRANT: "QUADRANT",
+  DIAGONAL: "DIAGONAL",
+};
+
+const SYMMETRY_MODES = [
+  SymmetryMode.VERTICAL,
+  SymmetryMode.HORIZONTAL,
+  SymmetryMode.QUADRANT,
+  SymmetryMode.DIAGONAL,
+];
 
 /**
  * Creates a fully encapsulated Symmetryscape sketch.
@@ -37,7 +51,6 @@ export function createSymmetryscape(p5) {
     ["#6D808C", "#FFFFFF", "#D9AA8F", "#F2CAB3"],
     ["#3C5E73", "#F2BBBB", "#FFFFFF", "#F24444"],
   ];
-  const SYMMETRY_MODES = 4;
   const BACKGROUND_IMAGE = `${
     import.meta.env.BASE_URL
   }images/8-symmetryscape_paper.webp`;
@@ -54,7 +67,8 @@ export function createSymmetryscape(p5) {
     lastDrawingBrush: 0,
 
     // Symmetry tracking
-    counter: -1,
+    currentSymmetryMode: null,
+    symmetryModeIndex: 0,
 
     // Viewport and dimension tracking
     width: 0,
@@ -62,7 +76,6 @@ export function createSymmetryscape(p5) {
     vMax: 0,
     longEdge: 0,
     shortEdge: 0,
-    circleRad: 0,
   };
 
   // Lifecycle methods
@@ -85,12 +98,13 @@ export function createSymmetryscape(p5) {
     state.vMax = calcViewportDimensions().vMax;
 
     setupToolbarActions();
-    setSwatchColors();
+    updateSwatchColors();
 
     // Initialize state and render initial view
-    state.counter = 0;
+    state.symmetryModeIndex = 0;
+    state.currentSymmetryMode = SYMMETRY_MODES[state.symmetryModeIndex];
     state.selectedPalette = 0;
-    initializeState();
+    resetState();
     render();
   }
 
@@ -98,101 +112,176 @@ export function createSymmetryscape(p5) {
     clearActiveButtonState();
 
     // Cycle through palettes and symmetry modes
-    state.counter = (state.counter + 1) % SYMMETRY_MODES;
+    state.symmetryModeIndex =
+      (state.symmetryModeIndex + 1) % SYMMETRY_MODES.length;
+    state.currentSymmetryMode = SYMMETRY_MODES[state.symmetryModeIndex];
     state.selectedPalette = (state.selectedPalette + 1) % PALETTES.length;
 
-    initializeState();
-    setSwatchColors();
+    resetState();
+    updateSwatchColors();
   }
 
-  function initializeState() {
+  function resetState() {
     state.drawLayer.clear();
     state.symmetryAxisLayer.clear();
 
-    // Dynamic symmetry line arrangement, based on counter
+    // Dynamic symmetry line arrangement, based on current symmetry mode
     state.symmetryAxisLayer.strokeWeight(1);
     state.symmetryAxisLayer.stroke(210);
 
-    const symmetryLines = [
-      () => {
+    const symmetryLines = {
+      [SymmetryMode.VERTICAL]: () => {
+        // Vertical line only
+        state.symmetryAxisLayer.line(p5.width / 2, 0, p5.width / 2, p5.height);
+      },
+      [SymmetryMode.HORIZONTAL]: () => {
+        // Horizontal line only
+        state.symmetryAxisLayer.line(0, p5.height / 2, p5.width, p5.height / 2);
+      },
+      [SymmetryMode.QUADRANT]: () => {
+        // Both vertical and horizontal lines
         state.symmetryAxisLayer.line(p5.width / 2, 0, p5.width / 2, p5.height);
         state.symmetryAxisLayer.line(0, p5.height / 2, p5.width, p5.height / 2);
       },
-      () => {
-        state.symmetryAxisLayer.line(0, p5.height / 2, p5.width, p5.height / 2);
-      },
-      () => {
-        state.symmetryAxisLayer.line(0, 0, p5.width, p5.height);
-        state.symmetryAxisLayer.line(p5.width, 0, 0, p5.height);
-      },
-    ];
+      [SymmetryMode.DIAGONAL]: () => {
+        // Diagonal X symmetry with fixed 45° angles through center
+        const centerX = p5.width / 2;
+        const centerY = p5.height / 2;
+        const halfShortEdge = Math.min(centerX, centerY);
 
-    // Draw symmetry lines if a mode exists
-    const currentSymmetryMode = symmetryLines[state.counter];
-    if (currentSymmetryMode) currentSymmetryMode();
+        // First diagonal (\) from top-left to bottom-right
+        state.symmetryAxisLayer.line(
+          centerX - halfShortEdge,
+          centerY - halfShortEdge,
+          centerX + halfShortEdge,
+          centerY + halfShortEdge
+        );
 
-    // Reset brush
-    changeBrush(1);
+        // Second diagonal (/) from top-right to bottom-left
+        state.symmetryAxisLayer.line(
+          centerX + halfShortEdge,
+          centerY - halfShortEdge,
+          centerX - halfShortEdge,
+          centerY + halfShortEdge
+        );
+      },
+    };
+
+    const drawSymmetryLines = symmetryLines[state.currentSymmetryMode];
+    if (drawSymmetryLines) drawSymmetryLines();
+
+    changeBrush(0);
+    clearActiveButtonState();
     render();
   }
 
   function handleMove(currentX, currentY, previousX, previousY, _event) {
-    const symmetryModes = [
-      () => {
-        brushIt(currentX, currentY, previousX, previousY);
-        brushIt(p5.width - currentX, currentY, p5.width - previousX, previousY);
+    const symmetryModes = {
+      [SymmetryMode.VERTICAL]: () => {
+        // Vertical symmetry (left and right sides)
+        applyBrushStroke(currentX, currentY, previousX, previousY);
+        applyBrushStroke(
+          p5.width - currentX,
+          currentY,
+          p5.width - previousX,
+          previousY
+        );
       },
-      () => {
-        brushIt(currentX, currentY, previousX, previousY);
-        brushIt(
+      [SymmetryMode.HORIZONTAL]: () => {
+        // Horizontal symmetry (top and bottom)
+        applyBrushStroke(currentX, currentY, previousX, previousY);
+        applyBrushStroke(
           currentX,
           p5.height - currentY,
           previousX,
           p5.height - previousY
         );
       },
-      () => {
-        [
-          [currentX, currentY],
-          [p5.width - currentX, currentY],
-          [currentX, p5.height - currentY],
-          [p5.width - currentX, p5.height - currentY],
-        ].forEach(([x, y]) => {
-          brushIt(
-            x,
-            y,
-            x === currentX ? previousX : p5.width - previousX,
-            y === currentY
-              ? previousY
-              : y > currentY
-              ? p5.height - previousY
-              : previousY
-          );
-        });
-      },
-      () => {
-        state.drawLayer.push();
-        [0, 0.5, 1, 1.5].forEach((angle) => {
-          state.drawLayer.translate(p5.width / 2, p5.height / 2);
-          state.drawLayer.rotate(p5.PI * angle);
-          state.drawLayer.translate(-p5.width / 2, -p5.height / 2);
-          brushIt(currentX, currentY, previousX, previousY);
-        });
-        state.drawLayer.pop();
-      },
-    ];
+      [SymmetryMode.QUADRANT]: () => {
+        // Both vertical and horizontal (quadrant symmetry)
+        // Original point
+        applyBrushStroke(currentX, currentY, previousX, previousY);
 
-    const currentSymmetryMode = symmetryModes[state.counter];
-    if (currentSymmetryMode) currentSymmetryMode();
+        // Reflect across vertical axis
+        applyBrushStroke(
+          p5.width - currentX,
+          currentY,
+          p5.width - previousX,
+          previousY
+        );
+
+        // Reflect across horizontal axis
+        applyBrushStroke(
+          currentX,
+          p5.height - currentY,
+          previousX,
+          p5.height - previousY
+        );
+
+        // Reflect across both axes
+        applyBrushStroke(
+          p5.width - currentX,
+          p5.height - currentY,
+          p5.width - previousX,
+          p5.height - previousY
+        );
+      },
+      [SymmetryMode.DIAGONAL]: () => {
+        // Diagonal X symmetry
+        const centerX = p5.width / 2;
+        const centerY = p5.height / 2;
+
+        // Calculate relative positions from center
+        const relCurrentX = currentX - centerX;
+        const relCurrentY = currentY - centerY;
+        const relPrevX = previousX - centerX;
+        const relPrevY = previousY - centerY;
+
+        // Original point
+        applyBrushStroke(currentX, currentY, previousX, previousY);
+
+        // Reflect across \ diagonal (swap x and y coordinates)
+        applyBrushStroke(
+          centerX + relCurrentY,
+          centerY + relCurrentX,
+          centerX + relPrevY,
+          centerY + relPrevX
+        );
+
+        // Reflect across / diagonal (negate and swap coordinates)
+        applyBrushStroke(
+          centerX - relCurrentY,
+          centerY - relCurrentX,
+          centerX - relPrevY,
+          centerY - relPrevX
+        );
+
+        // Reflect across both diagonals (negate both coordinates)
+        applyBrushStroke(
+          centerX - relCurrentX,
+          centerY - relCurrentY,
+          centerX - relPrevX,
+          centerY - relPrevY
+        );
+      },
+    };
+
+    const applySymmetry = symmetryModes[state.currentSymmetryMode];
+    if (applySymmetry) applySymmetry();
     render();
   }
 
-  function brushIt(_x, _y, pX, pY) {
+  function applyBrushStroke(currentX, currentY, previousX, previousY) {
     if (state.selectedBrush === 0) {
       // Eraser mode
       state.drawLayer.erase();
       state.drawLayer.noStroke();
-      state.drawLayer.ellipse(_x, _y, state.vMax * 4, state.vMax * 4);
+      state.drawLayer.ellipse(
+        currentX,
+        currentY,
+        state.vMax * 4,
+        state.vMax * 4
+      );
       state.drawLayer.noErase();
 
       return;
@@ -209,24 +298,36 @@ export function createSymmetryscape(p5) {
         // Thin line with dynamic weight
         // Changes line thickness based on movement speed/direction
         state.drawLayer.strokeWeight(
-          p5.constrain(p5.abs(_y + _x - (pX + pY)), 3, 5)
+          p5.constrain(
+            p5.abs(currentY + currentX - (previousX + previousY)),
+            3,
+            5
+          )
         );
         state.drawLayer.stroke(colorAlpha(p5, currentColor, 0.8));
-        state.drawLayer.line(pX, pY, _x, _y);
+        state.drawLayer.line(previousX, previousY, currentX, currentY);
       },
       () => {
         // Similar to first style, but with a broader stroke
         state.drawLayer.strokeWeight(
-          p5.constrain(p5.abs(_y + _x - (pX + pY)), 14, 15)
+          p5.constrain(
+            p5.abs(currentY + currentX - (previousX + previousY)),
+            14,
+            15
+          )
         );
         state.drawLayer.stroke(colorAlpha(p5, currentColor, 0.6));
-        state.drawLayer.line(pX, pY, _x, _y);
+        state.drawLayer.line(previousX, previousY, currentX, currentY);
       },
       () => {
         // Scattered line with Gaussian distribution
         // Creates a scattered, almost spray-paint like effect
         state.drawLayer.strokeWeight(
-          p5.constrain(p5.abs(_y + _x - (pX + pY)), 8, 10)
+          p5.constrain(
+            p5.abs(currentY + currentX - (previousX + previousY)),
+            8,
+            10
+          )
         );
         state.drawLayer.stroke(colorAlpha(p5, currentColor, 0.5));
 
@@ -234,7 +335,12 @@ export function createSymmetryscape(p5) {
         for (let i = 0; i < 10; i++) {
           let randX = p5.randomGaussian(-6, 6);
           let randY = p5.randomGaussian(-6, 6);
-          state.drawLayer.line(pX + randX, pY + randY, _x + randX, _y + randY);
+          state.drawLayer.line(
+            previousX + randX,
+            previousY + randY,
+            currentX + randX,
+            currentY + randY
+          );
         }
       },
       () => {
@@ -246,8 +352,8 @@ export function createSymmetryscape(p5) {
         // Draw 60 random points around the current drawing point
         for (let i = 0; i < 60; i++) {
           state.drawLayer.point(
-            _x + p5.randomGaussian(-10, 10),
-            _y + p5.randomGaussian(-10, 10)
+            currentX + p5.randomGaussian(-10, 10),
+            currentY + p5.randomGaussian(-10, 10)
           );
         }
       },
@@ -303,35 +409,37 @@ export function createSymmetryscape(p5) {
     }
   }
 
-  function switchToDrawMode(e) {
-    if (e) {
-      e.stopPropagation();
-    }
+  function updateActiveBrushUI() {
     clearActiveButtonState();
 
     const toolbar = document.querySelector('[data-element="toolbar"]');
-    const drawButton = toolbar.querySelector(
-      '[data-element="draw-mode-button"]'
-    );
-
-    if (state.selectedBrush === 0) {
-      state.selectedBrush = state.lastDrawingBrush || 1; // Default to brush 1 if no last brush
-
-      // Set active state on the restored brush button
-      const brushButton = toolbar?.querySelector(
+    if (toolbar) {
+      const currentBrushButton = toolbar.querySelector(
         `[data-brush="${state.selectedBrush}"]`
       );
 
-      if (brushButton) {
-        brushButton.classList.add("active");
-      }
-      if (hasActiveClass(drawButton)) {
-        drawButton?.classList.remove("active");
+      if (currentBrushButton) {
+        currentBrushButton.classList.add("active");
       }
     }
   }
 
-  function setSwatchColors() {
+  function switchToDrawMode(e) {
+    if (e) {
+      e.stopPropagation();
+    }
+
+    // We only want to make changes if we're coming from eraser mode
+    if (state.selectedBrush !== 0) return;
+
+    // Restore the last drawing brush or default to brush 1
+    state.selectedBrush = state.lastDrawingBrush || 1;
+
+    // Update the UI to reflect the current brush
+    updateActiveBrushUI();
+  }
+
+  function updateSwatchColors() {
     const { selectedPalette } = state;
     const allBrushes = Array.from(document.querySelectorAll("[data-brush]"));
     const swatchButtons = allBrushes.slice(1); // remove the eraser (brush 0) from the selection
@@ -347,21 +455,18 @@ export function createSymmetryscape(p5) {
     });
   }
 
-  function changeBrush(brushSel, event) {
+  function changeBrush(brushIndex, event) {
     if (event) event.stopPropagation();
 
-    state.selectedBrush = brushSel;
-    if (state.selectedBrush !== 0) {
-      state.lastDrawingBrush = state.selectedBrush;
+    state.selectedBrush = brushIndex;
+
+    // If this is a drawing brush (not eraser), remember it
+    if (brushIndex !== 0) {
+      state.lastDrawingBrush = brushIndex;
     }
 
-    clearActiveButtonState();
-
-    const toolbar = document.querySelector('[data-element="toolbar"]');
-    const selectedButton = toolbar?.querySelector(`[data-brush="${brushSel}"]`);
-    if (selectedButton) {
-      selectedButton.classList.add("active");
-    }
+    // Update the UI to reflect the current brush
+    updateActiveBrushUI();
   }
 
   return {
