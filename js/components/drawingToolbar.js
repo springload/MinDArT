@@ -110,7 +110,7 @@ class DrawingToolbar extends HTMLElement {
               {
                 dataElement: "swatch",
                 dataSwatch: "0",
-                class: "btn--leftsplit btn--themed-outline active",
+                class: "btn--leftsplit btn--themed-outline",
               },
               {
                 dataElement: "swatch",

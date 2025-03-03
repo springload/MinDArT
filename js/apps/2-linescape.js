@@ -1,6 +1,6 @@
 import { addInteractionHandlers } from "../utils/events.js";
 import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
-import { setFirstButtonAsActive } from "../utils/dom.js";
+import { clearActiveButtonState } from "../utils/dom.js";
 import { hexToRgb } from "../utils/color.js";
 
 /**
@@ -39,7 +39,7 @@ export function createLinescape(p5) {
     // Drawing configuration
     colorPairIndex: 0,
     currentRgbColor: null,
-    currentSwatch: 0,
+    currentSwatch: null,
     brushSizeBaseline: 60,
 
     // Grid state
@@ -158,6 +158,11 @@ export function createLinescape(p5) {
   }
 
   function handleMove(currentX, currentY, previousX, previousY) {
+    // If no swatch is selected, don't do anything
+    if (state.currentSwatch === null) {
+      return;
+    }
+
     state.store = [];
     // Calculate all points within distance and sort
     for (let x = 0; x < state.xCount; x++) {
@@ -208,6 +213,7 @@ export function createLinescape(p5) {
   }
 
   function reset() {
+    clearActiveButtonState();
     state.yCount = p5.int(state.yCount * 1.3);
     state.xCount = p5.int(state.xCount * 0.95);
     state.brushSizeBaseline *= 0.95;
@@ -218,14 +224,15 @@ export function createLinescape(p5) {
     }
 
     state.colorPairIndex = (state.colorPairIndex + 1) % COLOURS.length;
-    state.currentSwatch = 0;
+
+    // Set currentSwatch to null or a sentinel value that indicates no swatch is selected
+    state.currentSwatch = null;
+
     updateSwatchColors();
     setupArrays();
     p5.background(255, 255);
     p5.blendMode(p5.BLEND);
     render();
-
-    setFirstButtonAsActive();
   }
 
   function windowResized() {
