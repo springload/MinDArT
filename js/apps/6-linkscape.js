@@ -54,19 +54,21 @@ export function createLinkscape(p5) {
     y: [],
     segNum: 250,
     segLength: 4,
-    distGravity: 50,
 
     // Layers
     lineLayer: null,
     paintLayer: null,
+    shadowLayer: null,
     texture: null,
 
     // Interaction state
     isDragging: false,
     selected: [0, 0],
 
-    // Constraint parameters
-    dotsActive: true,
+    // Shadow trail states
+    shadowPositions: [],
+    shadowsActive: true,
+    shadowOpacity: 0.2,
 
     // Level tracking
     levelVersion: 0,
@@ -97,9 +99,12 @@ export function createLinkscape(p5) {
 
     state.lineLayer = p5.createGraphics(state.width, state.height);
     state.paintLayer = p5.createGraphics(state.width, state.height);
+    state.shadowLayer = p5.createGraphics(state.width, state.height);
 
     state.lineLayer.strokeWeight(1 * state.vMax);
     state.paintLayer.strokeWeight(1 * state.vMax);
+    state.shadowLayer.strokeWeight(0.5 * state.vMax);
+
     reset(true); // Pass flag indicating this is initial setup
   }
 
@@ -119,10 +124,10 @@ export function createLinkscape(p5) {
 
   function reset(isInitialSetup = false) {
     state.paintLayer.clear();
+    state.shadowLayer.clear();
     state.x = [];
     state.y = [];
-    state.vt = [];
-    state.vtCount = [];
+    state.shadowPositions = [];
 
     // For user-triggered reset, increment first so we render with new palette
     if (!isInitialSetup) {
@@ -140,6 +145,7 @@ export function createLinkscape(p5) {
   function initialiseLine(l) {
     state.x[l] = [];
     state.y[l] = [];
+    state.shadowPositions[l] = [];
 
     for (let i = 0; i < state.segNum; i++) {
       state.y[l][i] = p5.map(
@@ -156,6 +162,8 @@ export function createLinkscape(p5) {
         0,
         (state.width / 4) * (1 + l)
       );
+
+      state.shadowPositions[l][i] = [];
     }
   }
 
@@ -227,21 +235,45 @@ export function createLinkscape(p5) {
       event.preventDefault();
     }
 
-    state.vtStored = [];
-
-    if (state.dotsActive) {
-      for (let i = 0; i < state.vt.length; i++) {
-        state.vtCount[i] = 0;
-        state.vtStored[i] = [];
-      }
-    }
-
     if (state.isDragging) {
+      if (state.shadowsActive) {
+        captureCurrentPositions();
+      }
+
       dragCalc(state.selected, currentX, currentY);
     }
 
     render();
     return false;
+  }
+
+  function captureCurrentPositions() {
+    // Capture the entire current line shape for persistent shadow trails
+    for (let i = 0; i < state.x.length; i++) {
+      if (!state.shadowPositions[i]) {
+        state.shadowPositions[i] = [];
+      }
+
+      // Create a new shadow entry for the current line position
+      const lineShadow = {
+        points: [],
+        color:
+          PALETTES[state.levelVersion][i % PALETTES[state.levelVersion].length],
+      };
+
+      // Store all current segment positions
+      for (let j = 0; j < state.x[i].length; j++) {
+        lineShadow.points.push({
+          x: state.x[i][j],
+          y: state.y[i][j],
+        });
+      }
+
+      // Add this shadow to the collection
+      if (lineShadow.points.length > 0) {
+        state.shadowPositions[i].push(lineShadow);
+      }
+    }
   }
 
   function handlePointerEnd() {
@@ -271,35 +303,17 @@ export function createLinkscape(p5) {
 
     state.x[i][j] = xin - p5.cos(angle) * state.segLength;
     state.y[i][j] = yin - p5.sin(angle) * state.segLength;
-
-    if (state.dotsActive) {
-      for (let k = 0; k < state.vt.length; k++) {
-        let v1 = p5.createVector(state.x[i][j], state.y[i][j]);
-        let gate = true;
-
-        for (let elt of state.vtStored[k]) {
-          if (p5.abs(elt - j) < 20 && p5.abs(elt - j) > 6) {
-            gate = false;
-            break;
-          }
-        }
-
-        if (gate) {
-          let d = v1.dist(state.vt[k]);
-          if (d < state.distGravity) {
-            state.vtStored[k].push(j);
-            state.x[i][j] = state.vt[k].x;
-            state.y[i][j] = state.vt[k].y;
-            state.vtCount[k]++;
-          }
-        }
-      }
-    }
   }
 
   function render() {
     state.lineLayer.clear();
     state.paintLayer.clear();
+    state.shadowLayer.clear();
+
+    // Draw the shadow trails first (from previous positions)
+    if (state.shadowsActive) {
+      drawShadowTrails();
+    }
 
     for (let i = 0; i < state.x.length; i++) {
       const baseColor =
@@ -338,8 +352,38 @@ export function createLinkscape(p5) {
 
     // Render final composition
     p5.background(45);
+    p5.image(state.shadowLayer, 0, 0, state.width, state.height);
     p5.image(state.paintLayer, 0, 0, state.width, state.height);
     p5.image(state.lineLayer, 0, 0, state.width, state.height);
+  }
+
+  function drawShadowTrails() {
+    // Draw all accumulated shadow trails
+    for (let i = 0; i < state.shadowPositions.length; i++) {
+      if (!state.shadowPositions[i]) continue;
+
+      // Draw each shadow position for this line
+      for (let s = 0; s < state.shadowPositions[i].length; s++) {
+        const shadow = state.shadowPositions[i][s];
+        if (!shadow || !shadow.points || shadow.points.length === 0) continue;
+
+        // Calculate opacity based on how many shadows we have (more shadows = more transparent)
+        // This helps to prevent the screen from becoming too cluttered
+        const totalShadows = state.shadowPositions[i].length;
+        const shadowColor = colorAlpha(p5, shadow.color, state.shadowOpacity);
+
+        state.shadowLayer.stroke(shadowColor);
+        state.shadowLayer.strokeWeight(0.2 * state.vMax);
+        state.shadowLayer.noFill();
+
+        // Draw the shadow as a smooth curve
+        state.shadowLayer.beginShape();
+        for (let j = 0; j < shadow.points.length; j++) {
+          state.shadowLayer.curveVertex(shadow.points[j].x, shadow.points[j].y);
+        }
+        state.shadowLayer.endShape();
+      }
+    }
   }
 
   function windowResized() {
@@ -347,10 +391,16 @@ export function createLinkscape(p5) {
     const { dimensions, resizedLayers } = handleResize(p5, [
       state.lineLayer,
       state.paintLayer,
+      state.shadowLayer,
     ]);
-    [state.lineLayer, state.paintLayer] = resizedLayers;
+    [state.lineLayer, state.paintLayer, state.shadowLayer] = resizedLayers;
     Object.assign(state, dimensions);
     state.lineLayer.strokeWeight(2.2 * state.vMax);
+
+    // Redraw all shadows on the resized shadow layer
+    if (state.shadowsActive) {
+      drawShadowTrails();
+    }
   }
 
   return {
