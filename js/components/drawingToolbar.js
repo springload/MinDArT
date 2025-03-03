@@ -192,13 +192,6 @@ class DrawingToolbar extends HTMLElement {
             icon: "plus",
             class: "btn--white",
           },
-          {
-            type: "button",
-            text: "Add a pin",
-            dataElement: "add-pin-button",
-            icon: "pin",
-            class: "btn--white",
-          },
         ],
       },
       rotationscape: {

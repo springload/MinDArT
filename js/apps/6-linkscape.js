@@ -23,18 +23,16 @@ import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
  *     event: PointerEvent
  *   ) => boolean,
  *   addLine: () => void,
- *   addPin: () => void
  * }} An object containing sketch lifecycle and interaction methods:
- *   - preload: Loads texture and pin images
+ *   - preload: Loads texture images
  *   - setup: Initializes canvas, graphics layers, and string segments
  *   - reset: Resets string positions and changes color palette
- *   - render: Renders strings with shadow effects and pins
+ *   - render: Renders strings with shadow effects
  *   - windowResized: Handles canvas and layer resizing
- *   - handlePointerStart: Initializes string dragging or pin placement
+ *   - handlePointerStart: Initializes string dragging
  *   - handlePointerEnd: Ends string dragging interaction
  *   - handleMove: Updates string segment positions during drag
  *   - addLine: Adds a new string to the simulation
- *   - addPin: Activates pin placement mode
  */
 export function createLinkscape(p5) {
   const PALETTES = [
@@ -62,17 +60,12 @@ export function createLinkscape(p5) {
     lineLayer: null,
     paintLayer: null,
     texture: null,
-    pin: null,
 
     // Interaction state
     isDragging: false,
-    isAddingPin: false,
     selected: [0, 0],
 
     // Constraint parameters
-    vt: [], // Vector points for pin positions
-    vtCount: [], // Count of points affected by each pin
-    vtStored: [], // Store which segments are affected by pins
     dotsActive: true,
 
     // Level tracking
@@ -89,9 +82,6 @@ export function createLinkscape(p5) {
   function preload() {
     state.texture = p5.loadImage(
       `${import.meta.env.BASE_URL}images/6-linkscape_texture.webp`
-    );
-    state.pin = p5.loadImage(
-      `${import.meta.env.BASE_URL}images/6-linkscape_pin.webp`
     );
   }
 
@@ -123,15 +113,6 @@ export function createLinkscape(p5) {
     if (addStringButton) {
       addInteractionHandlers(addStringButton, (event) => {
         addLine();
-      });
-    }
-
-    const addPinButton = toolbar.querySelector(
-      '[data-element="add-pin-button"]'
-    );
-    if (addPinButton) {
-      addInteractionHandlers(addPinButton, (event) => {
-        addPin();
       });
     }
   }
@@ -192,11 +173,6 @@ export function createLinkscape(p5) {
     }
   }
 
-  function addPin() {
-    state.isAddingPin = true;
-    document.querySelector("canvas").classList.add("adding-pin");
-  }
-
   function handlePointerStart(event) {
     if (isClickOnButton(event)) return false;
 
@@ -206,16 +182,6 @@ export function createLinkscape(p5) {
     const eventY = event.type.startsWith("touch")
       ? event.touches[0].clientY - event.target.getBoundingClientRect().top
       : p5.winMouseY;
-
-    if (state.isAddingPin) {
-      state.vt.push(p5.createVector(eventX, eventY));
-      state.vtCount.push(0);
-      state.vtStored.push([]);
-      state.isAddingPin = false;
-      document.querySelector("canvas").classList.remove("adding-pin");
-      render();
-      return false;
-    }
 
     if (!state.isDragging) {
       for (let i = 0; i < state.x.length; i++) {
@@ -374,20 +340,6 @@ export function createLinkscape(p5) {
     p5.background(45);
     p5.image(state.paintLayer, 0, 0, state.width, state.height);
     p5.image(state.lineLayer, 0, 0, state.width, state.height);
-
-    // Draw pins if active
-    if (state.dotsActive) {
-      const pinSize = state.vMax * 8;
-      for (let i = 0; i < state.vt.length; i++) {
-        p5.image(
-          state.pin,
-          state.vt[i].x - pinSize / 2,
-          state.vt[i].y - pinSize / 1.8,
-          pinSize,
-          pinSize
-        );
-      }
-    }
   }
 
   function windowResized() {
@@ -411,6 +363,5 @@ export function createLinkscape(p5) {
     handlePointerEnd,
     handleMove,
     addLine,
-    addPin,
   };
 }
