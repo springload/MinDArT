@@ -161,12 +161,12 @@ class DrawingToolbar extends HTMLElement {
             type: "paint-group",
             buttons: [
               {
-                dataElement: "paint-warm-button",
-                class: "btn--leftsplit btn--warm-stripes",
+                dataElement: "paint-light-button",
+                class: "btn--leftsplit btn--light-gradient",
               },
               {
-                dataElement: "paint-cool-button",
-                class: "btn--rightsplit btn--cool-stripes",
+                dataElement: "paint-dark-button",
+                class: "btn--rightsplit btn--dark-gradient",
               },
             ],
           },

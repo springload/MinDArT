@@ -179,32 +179,12 @@
   }
 }
 
-.btn--cool-stripes {
-  background-image: repeating-linear-gradient(90deg,
-      #002D65,
-      #002D65 20px,
-      #0682D1 20px,
-      #0682D1 40px,
-      #04ABDA 40px,
-      #04ABDA 60px,
-      #38E3E5 60px,
-      #38E3E5 80px,
-      #27CB6F 80px,
-      #27CB6F 100px,
-      #05A664 100px,
-      #05A664);
+.btn--light-gradient {
+  background-image: linear-gradient(in oklab 90deg,
+      var(--color-light-1, #F2A97E), var(--color-light-2, #F28D77));
 }
 
-.btn--warm-stripes {
-  background-image: repeating-linear-gradient(90deg,
-      #E23A4C,
-      #E23A4C 20px,
-      #FF0000 20px,
-      #FF0000 40px,
-      #FE4201 40px,
-      #FE4201 60px,
-      #FEA701 60px,
-      #FEA701 80px,
-      #FED900 80px,
-      #FED900);
+.btn--dark-gradient {
+  background-image: linear-gradient(in oklab 90deg,
+      var(--color-dark-1, #7E708C), var(--color-dark-2, #49538C));
 }
