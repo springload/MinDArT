@@ -1,5 +1,10 @@
 .btn {
   --btn-border-width: 4px;
+  --btn-height: 50px;
+  --btn-min-width: 80px;
+  /* 14px */
+  --btn-font-size: 0.875rem;
+
   appearance: none;
   /* the .interface container has pointer-events: none */
   pointer-events: all;
@@ -10,8 +15,8 @@
   border-color: transparent;
   padding-inline: 12px;
 
-  height: 70px;
-  min-width: 120px;
+  height: var(--btn-height);
+  min-width: var(--btn-min-width);
 
   display: flex;
   align-items: center;
@@ -20,7 +25,7 @@
   text-align: center;
   font-family: var(--font-tahoma);
   font-weight: bold;
-  font-size: large;
+  font-size: var(--btn-font-size);
   text-decoration: none;
   cursor: pointer;
 
@@ -34,6 +39,23 @@
     width: 120px;
     padding-inline: 0;
   }
+
+  /* settings for viewports above 500px in em units */
+  @media (min-width: calc((500/16) * 1em)) {
+    /* 16px */
+    --btn-font-size: 1rem;
+    --btn-height: 60px;
+    --btn-min-width: 100px;
+  }
+
+  /* settings for viewports above 768px in em units */
+  @media (min-width: calc((768/16) * 1em)) {
+    /* 18px */
+    --btn-font-size: 1.125rem;
+    --btn-height: 70px;
+    --btn-min-width: 120px;
+  }
+
 
   :where(svg) {
     fill: none;
@@ -90,6 +112,7 @@
 
 
   :where(.btn) {
+    --split-btn-width: calc(var(--btn-min-width) + 20px);
     border-color: var(--color-grey-40);
 
     /* square swatches: */
@@ -103,7 +126,7 @@
 
   /* first button is rounded on the left */
   :where(.btn:first-child) {
-    width: 140px;
+    width: var(--split-btn-width);
     border-radius: 40px 0px 0px 40px;
     padding-left: 16px;
 
@@ -117,7 +140,7 @@
 
   /* last (visible) button is rounded on the right */
   :where(.btn:last-child, .btn:has(+ .u-hide)) {
-    width: 140px;
+    width: var(--split-btn-width);
     border-radius: 0px 40px 40px 0px;
     padding-right: 16px;
   }
@@ -146,6 +169,14 @@
   border-color: var(--color-white);
   background-color: var(--color-blue-70);
   color: var(--color-white);
+}
+
+.btn--themed-outline {
+  border-color: var(--color-grey-90);
+
+  &:where(.active) {
+    border-color: var(--theme-button-border, var(--color-blue-70));
+  }
 }
 
 .btn--cool-stripes {

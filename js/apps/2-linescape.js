@@ -39,7 +39,7 @@ export function createLinescape(p5) {
     // Drawing configuration
     colorPairIndex: 0,
     currentRgbColor: null,
-    currentSwatch: 0,
+    currentSwatch: null,
     brushSizeBaseline: 60,
 
     // Grid state
@@ -158,6 +158,11 @@ export function createLinescape(p5) {
   }
 
   function handleMove(currentX, currentY, previousX, previousY) {
+    // If no swatch is selected, don't do anything
+    if (state.currentSwatch === null) {
+      return;
+    }
+
     state.store = [];
     // Calculate all points within distance and sort
     for (let x = 0; x < state.xCount; x++) {
@@ -219,6 +224,10 @@ export function createLinescape(p5) {
     }
 
     state.colorPairIndex = (state.colorPairIndex + 1) % COLOURS.length;
+
+    // Set currentSwatch to null or a sentinel value that indicates no swatch is selected
+    state.currentSwatch = null;
+
     updateSwatchColors();
     setupArrays();
     p5.background(255, 255);

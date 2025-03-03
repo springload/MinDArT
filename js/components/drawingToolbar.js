@@ -110,12 +110,12 @@ class DrawingToolbar extends HTMLElement {
               {
                 dataElement: "swatch",
                 dataSwatch: "0",
-                class: "btn--leftsplit active",
+                class: "btn--leftsplit btn--themed-outline",
               },
               {
                 dataElement: "swatch",
                 dataSwatch: "1",
-                class: "btn--rightsplit",
+                class: "btn--rightsplit btn--themed-outline",
               },
             ],
           },
@@ -180,12 +180,7 @@ class DrawingToolbar extends HTMLElement {
       },
       dotscape: {
         items: [
-          {
-            type: "button",
-            text: "Restart",
-            dataElement: "restart-button",
-            class: "btn--white",
-          },
+          // no toolbar for dotscape
         ],
       },
       linkscape: {
@@ -195,13 +190,6 @@ class DrawingToolbar extends HTMLElement {
             text: "Add a string",
             dataElement: "add-string-button",
             icon: "plus",
-            class: "btn--white",
-          },
-          {
-            type: "button",
-            text: "Add a pin",
-            dataElement: "add-pin-button",
-            icon: "pin",
             class: "btn--white",
           },
         ],

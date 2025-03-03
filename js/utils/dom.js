@@ -54,6 +54,23 @@ export function clearActiveButtonState() {
 }
 
 /**
+ * Sets the first button within the toolbar as active.
+ * Used after resetting the state to ensure a default button is active.
+ *
+ * @returns {void}
+ */
+export function setFirstButtonAsActive() {
+  clearActiveButtonState();
+  const toolbar = document.querySelector('[data-element="toolbar"]');
+  if (!toolbar) return;
+
+  const firstButton = toolbar.querySelector(".btn");
+  if (firstButton) {
+    firstButton.classList.add("active");
+  }
+}
+
+/**
  * Checks if an element has the 'active' class.
  *
  * @param {HTMLElement|null} el - The element to check
