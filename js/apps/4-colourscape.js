@@ -38,6 +38,9 @@ export function createColourscape(p5) {
     ["#91AA9D", "#D1DBBD", "#91AA9D", "#3E606F", "#193441"],
   ];
 
+  const PENCIL_COLOR = [150, 150, 150, 0.9]; // Mid-dark grey pencil color (RGB)
+  const ERASER_COLOR = [255, 255, 255, 0.5]; // For paint layer eraser
+
   const state = {
     // Assets
     bg: null,
@@ -48,11 +51,11 @@ export function createColourscape(p5) {
     traceLayer: null,
 
     // Drawing state
-    bool: true,
+    isPaintMode: true,
     brushTemp: 0,
-    eraseState: 0,
-    eraserVersion: 0,
-    colourBool: false,
+    isEraserActive: false,
+    eraserVersion: "draw", // "draw" or "paint"
+    isCoolPalette: false,
     colourLevel: 0,
 
     // Brush mechanics
@@ -113,12 +116,14 @@ export function createColourscape(p5) {
   function setLayerProperties() {
     p5.imageMode(p5.CENTER);
     p5.blendMode(p5.BLEND);
-    state.traceLayer.blendMode(p5.LIGHTEST);
+    state.traceLayer.blendMode(p5.BLEND);
+
     p5.colorMode(p5.RGB, 255, 255, 255, 1);
-    state.paintLayer.colorMode(p5.RGB, 255, 255, 255, 255);
-    state.traceLayer.colorMode(p5.HSB, 360, 100, 100, 1);
+    state.paintLayer.colorMode(p5.RGB, 255, 255, 255, 1);
+    state.traceLayer.colorMode(p5.RGB, 255, 255, 255, 1);
+
     state.traceLayer.strokeWeight(8);
-    state.traceLayer.stroke(255, 0, 255, 0.8);
+    state.traceLayer.stroke(...PENCIL_COLOR);
   }
 
   function reset() {
@@ -161,10 +166,10 @@ export function createColourscape(p5) {
 
   function makeDrawing(_x, _y, pX, pY) {
     state.milliCounter = p5.millis();
-    if (state.bool) {
+    if (state.isPaintMode) {
       if (state.milliCounter > state.milliTrack + MILLI_COMP) {
         // Select color based on warm/cool selection
-        state.selectedNum = !state.colourBool
+        state.selectedNum = !state.isCoolPalette
           ? Math.floor(p5.random(0, 2)) // Warm colors (first 2)
           : Math.floor(p5.random(3, 5)); // Cool colors (last 2)
 
@@ -197,27 +202,31 @@ export function createColourscape(p5) {
         state.milliTrack = state.milliCounter;
       }
     } else {
+      state.traceLayer.blendMode(p5.BLEND);
+      state.traceLayer.strokeWeight(8);
+      state.traceLayer.stroke(...PENCIL_COLOR);
       state.traceLayer.line(_x, _y, pX, pY);
     }
   }
 
   function drawErase() {
-    state.eraseState = 1;
-    state.eraserVersion = false;
+    state.isEraserActive = true;
+    state.eraserVersion = "draw";
   }
 
   function eraseDrawing() {
-    if (state.eraserVersion) {
+    if (state.eraserVersion === "paint") {
       state.paintLayer.noStroke();
       state.paintLayer.strokeWeight(45);
-      state.paintLayer.stroke(255, 255, 255, 125);
+      state.paintLayer.stroke(...ERASER_COLOR);
       state.paintLayer.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
     } else {
-      state.traceLayer.blendMode(p5.BLEND);
+      state.traceLayer.push();
+      state.traceLayer.blendMode(p5.OVERLAY);
       state.traceLayer.strokeWeight(45);
-      state.traceLayer.stroke(255, 0, 0, 0.4);
+      state.traceLayer.stroke(...ERASER_COLOR);
       state.traceLayer.line(p5.mouseX, p5.mouseY, p5.pmouseX, p5.pmouseY);
-      state.traceLayer.blendMode(p5.LIGHTEST);
+      state.traceLayer.pop();
     }
   }
 
@@ -230,9 +239,11 @@ export function createColourscape(p5) {
   function render() {
     p5.blendMode(p5.BLEND);
     backdrop();
+
     p5.blendMode(p5.DARKEST);
     p5.image(state.paintLayer, p5.width / 2, p5.height / 2);
-    p5.blendMode(p5.LIGHTEST);
+
+    p5.blendMode(p5.MULTIPLY);
     p5.image(state.traceLayer, p5.width / 2, p5.height / 2);
   }
 
@@ -255,7 +266,7 @@ export function createColourscape(p5) {
   }
 
   function handleMove(currentX, currentY, previousX, previousY) {
-    if (state.eraseState === 0) {
+    if (!state.isEraserActive) {
       makeDrawing(currentX, currentY, previousX, previousY);
     } else {
       eraseDrawing();
@@ -304,35 +315,32 @@ export function createColourscape(p5) {
     }
 
     addInteractionHandlers(paintWarmButton, (event) => {
-      state.eraseState = 0;
-      state.eraserVersion = 0;
-      state.colourBool = false;
-      state.bool = true;
+      state.isEraserActive = false;
+      state.isCoolPalette = false;
+      state.isPaintMode = true;
     });
 
     addInteractionHandlers(paintCoolButton, (event) => {
-      state.eraseState = 0;
-      state.eraserVersion = 0;
-      state.colourBool = true;
-      state.bool = true;
+      state.isEraserActive = false;
+      state.isCoolPalette = true;
+      state.isPaintMode = true;
     });
 
     addInteractionHandlers(drawButton, (event) => {
-      state.bool = false;
-      state.eraseState = 0;
-      state.eraserVersion = 0;
+      state.isPaintMode = false;
+      state.isEraserActive = false;
       state.traceLayer.strokeWeight(8);
-      state.traceLayer.stroke(255, 0, 255, 0.8);
+      state.traceLayer.stroke(...PENCIL_COLOR);
     });
 
     addInteractionHandlers(erasePaintButton, (event) => {
-      state.eraseState = 1;
-      state.eraserVersion = true;
+      state.isEraserActive = true;
+      state.eraserVersion = "paint";
     });
 
     addInteractionHandlers(eraseDrawButton, (event) => {
-      state.eraseState = 1;
-      state.eraserVersion = false;
+      state.isEraserActive = true;
+      state.eraserVersion = "draw";
     });
   }
 
