@@ -180,12 +180,7 @@ class DrawingToolbar extends HTMLElement {
       },
       dotscape: {
         items: [
-          {
-            type: "button",
-            text: "Restart",
-            dataElement: "restart-button",
-            class: "btn--white",
-          },
+          // no toolbar for dotscape
         ],
       },
       linkscape: {

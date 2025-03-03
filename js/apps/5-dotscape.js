@@ -46,26 +46,27 @@ export function createDotscape(p5) {
     // Drawing state
     stage: 0,
     dots: [],
-    dotsCount: 0,
-    throughDotCount: 0,
+    totalDots: 0,
+    connectedDotsCount: 0,
     isMousedown: false,
 
     // Position tracking
-    tempwinMouseX: 0,
-    tempwinMouseY: 0,
-    tempwinMouseX2: 0,
-    tempwinMouseY2: 0,
-    verifyX: 0,
-    verifyY: 0,
+    currentDotX: 0,
+    currentDotY: 0,
+    previousDotX: 0,
+    previousDotY: 0,
+    lastClickedDotX: 0,
+    lastClickedDotY: 0,
 
     // Color state
-    colHue: 360,
-    colSat: 100,
-    colBri: 100,
+    currentHue: 360,
+    currentSaturation: 100,
+    currentBrightness: 100,
+    lastDotColor: 360,
 
     // Animation state
-    hitRad: 40,
-    tempOpacity: 20,
+    animationRadius: 40,
+    animationOpacity: 20,
 
     // Viewport dimensions
     width: 0,
@@ -82,63 +83,71 @@ export function createDotscape(p5) {
     constructor(x, y, r) {
       this.x = x;
       this.y = y;
-      this.r = r;
-      this.h = PRIMARY_COLORS[p5.int(p5.random(0, 3))];
-      this.s = 0;
-      this.b = p5.random(80, 255);
+      this.radius = r;
+      this.hue = PRIMARY_COLORS[p5.int(p5.random(0, 3))];
+      this.saturation = 0;
+      this.brightness = p5.random(80, 255);
     }
 
     show() {
       p5.noStroke();
-      p5.fill(this.h, this.s, this.b * 0.9, 100);
-      p5.ellipse(this.x, this.y, this.r * 3);
-      p5.fill(this.h, this.s, this.b * 0.65, 100);
-      p5.ellipse(this.x, this.y, this.r * 2.5);
-      p5.fill(this.h, this.s, this.b * 0.4, 100);
-      p5.ellipse(this.x, this.y, this.r * 2);
+      p5.fill(this.hue, this.saturation, this.brightness * 0.9, 100);
+      p5.ellipse(this.x, this.y, this.radius * 3);
+      p5.fill(this.hue, this.saturation, this.brightness * 0.65, 100);
+      p5.ellipse(this.x, this.y, this.radius * 2.5);
+      p5.fill(this.hue, this.saturation, this.brightness * 0.4, 100);
+      p5.ellipse(this.x, this.y, this.radius * 2);
     }
 
     getCol(x, y) {
       let d = p5.dist(x, y, this.x, this.y);
       if (
-        d < this.r * 4 &&
-        (this.x != state.verifyX || this.y != state.verifyY)
+        d < this.radius * 4 &&
+        (this.x != state.lastClickedDotX || this.y != state.lastClickedDotY)
       ) {
-        state.colHue = this.h;
-        this.s = 255;
+        state.currentHue = this.hue;
+        state.lastDotColor = this.hue;
+        this.saturation = 255;
       }
     }
 
     clicked(x, y) {
       let rMultiplier = 1.5;
       let d = p5.dist(x, y, this.x, this.y);
-      if (state.throughDotCount === 0) {
+      if (state.connectedDotsCount === 0) {
         rMultiplier = 1.2; // increase radius for first grab
       }
       if (
-        d < this.r * 2.05 * rMultiplier &&
-        (this.x != state.verifyX || this.y != state.verifyY)
+        d < this.radius * 2.05 * rMultiplier &&
+        (this.x != state.lastClickedDotX || this.y != state.lastClickedDotY)
       ) {
-        state.verifyX = this.x;
-        state.verifyY = this.y;
-        state.tempwinMouseX2 = state.tempwinMouseX;
-        state.tempwinMouseY2 = state.tempwinMouseY;
-        state.tempwinMouseX = this.x;
-        state.tempwinMouseY = this.y;
-        state.throughDotCount++;
-        state.tempOpacity = 20;
-        state.hitRad = 60;
+        // Update position tracking
+        state.lastClickedDotX = this.x;
+        state.lastClickedDotY = this.y;
+        state.previousDotX = state.currentDotX;
+        state.previousDotY = state.currentDotY;
+        state.currentDotX = this.x;
+        state.currentDotY = this.y;
+        state.connectedDotsCount++;
+        state.animationOpacity = 20;
+        state.animationRadius = 60;
 
-        if (state.colHue != this.h) {
-          if (p5.abs(state.colHue - this.h) > 280) {
-            this.h = ((this.h + state.colHue) / 2 - 180) % 360;
+        // Calculate blended color for this dot
+        if (state.currentHue != this.hue) {
+          if (p5.abs(state.currentHue - this.hue) > 280) {
+            this.hue = ((this.hue + state.currentHue) / 2 - 180) % 360;
           } else {
-            this.h = ((this.h + state.colHue) / 2) % 360;
+            this.hue = ((this.hue + state.currentHue) / 2) % 360;
           }
         }
-        state.colHue = this.h;
-        this.s = state.colSat;
-        this.b = state.colBri;
+
+        // Update the global color state and dot appearance
+        state.currentHue = this.hue;
+        this.saturation = state.currentSaturation;
+        this.brightness = state.currentBrightness;
+
+        // Set the lastDotColor to the blended color
+        state.lastDotColor = this.hue;
         copyLine();
       }
     }
@@ -149,7 +158,6 @@ export function createDotscape(p5) {
   }
 
   async function setup() {
-    setupToolbarActions();
     const canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
@@ -158,26 +166,17 @@ export function createDotscape(p5) {
     state.tintedBG = p5.createGraphics(p5.width, p5.height);
 
     p5.pixelDensity(1);
+
+    p5.blendMode(p5.BLEND);
+    state.lineLayer.blendMode(p5.BLEND);
+    state.permaLine.blendMode(p5.BLEND);
+
     p5.colorMode(p5.HSB, 360, 100, 100, 100);
     state.lineLayer.colorMode(p5.HSB, 360, 100, 100, 100);
     state.permaLine.colorMode(p5.HSB, 360, 100, 100, 100);
 
     windowResized();
     reset();
-  }
-
-  function setupToolbarActions() {
-    const toolbar = document.querySelector('[data-element="toolbar"]');
-    if (!toolbar) return;
-
-    const restartButton = toolbar.querySelector(
-      '[data-element="restart-button"]'
-    );
-    if (restartButton) {
-      addInteractionHandlers(restartButton, (event) => {
-        restart();
-      });
-    }
   }
 
   function reset() {
@@ -189,6 +188,8 @@ export function createDotscape(p5) {
 
     state.lineStore = [];
     state.pointStore = [];
+    state.lastDotColor = 360;
+    state.currentHue = 360;
 
     nextDrawing();
     render();
@@ -201,10 +202,13 @@ export function createDotscape(p5) {
   }
 
   function nextDrawing(advanceStage = true) {
-    state.throughDotCount = 0;
-    state.dotsCount = 0;
-    state.hitRad = 40;
-    state.tempOpacity = 0;
+    state.connectedDotsCount = 0;
+    state.totalDots = 0;
+    state.animationRadius = 40;
+    state.animationOpacity = 0;
+    // Reset to defaults
+    state.lastDotColor = 360;
+    state.currentHue = 360;
 
     // Clear all drawing layers
     state.permaLine.clear();
@@ -244,13 +248,17 @@ export function createDotscape(p5) {
   }
 
   function copyLine() {
-    state.permaLine.stroke(state.colHue, state.colSat, state.colBri, 80);
+    state.permaLine.colorMode(p5.HSB, 360, 100, 100, 100);
+    state.permaLine.blendMode(p5.BLEND);
+
+    state.permaLine.stroke(state.lastDotColor, 100, 100, 100);
     state.permaLine.strokeWeight(6);
-    if (state.throughDotCount > 1) {
-      const x1 = state.tempwinMouseX;
-      const y1 = state.tempwinMouseY;
-      const x2 = state.tempwinMouseX2;
-      const y2 = state.tempwinMouseY2;
+
+    if (state.connectedDotsCount > 1) {
+      const x1 = state.currentDotX;
+      const y1 = state.currentDotY;
+      const x2 = state.previousDotX;
+      const y2 = state.previousDotY;
       state.permaLine.line(x1, y1, x2, y2);
 
       state.lineStore.push({
@@ -271,9 +279,10 @@ export function createDotscape(p5) {
     if (event.target.closest(".btn")) return false;
 
     state.isMousedown = true;
-    state.throughDotCount = 0;
+    state.connectedDotsCount = 0;
+    state.lastDotColor = state.currentHue; // Initialize with current color
 
-    for (let i = 0; i < state.dotsCount; i++) {
+    for (let i = 0; i < state.totalDots; i++) {
       state.dots[i].getCol(p5.winMouseX, p5.winMouseY);
     }
 
@@ -282,7 +291,7 @@ export function createDotscape(p5) {
 
   function handlePointerEnd() {
     state.isMousedown = false;
-    state.throughDotCount = 1;
+    state.connectedDotsCount = 1;
     state.lineLayer.clear();
     render();
   }
@@ -294,19 +303,25 @@ export function createDotscape(p5) {
       event.preventDefault();
     }
 
-    for (let i = 0; i < state.dotsCount; i++) {
+    for (let i = 0; i < state.totalDots; i++) {
       state.dots[i].clicked(p5.winMouseX, p5.winMouseY);
     }
 
-    state.lineLayer.stroke(state.colHue, state.colSat, state.colBri, 80);
+    // Use the last dot's color for the temporary line
+    state.lineLayer.colorMode(p5.HSB, 360, 100, 100, 100);
+    state.lineLayer.blendMode(p5.BLEND);
+    state.lineLayer.stroke(state.lastDotColor, 100, 100, 100);
     state.lineLayer.strokeWeight(8);
     state.lineLayer.clear();
-    state.lineLayer.line(
-      state.tempwinMouseX,
-      state.tempwinMouseY,
-      p5.winMouseX,
-      p5.winMouseY
-    );
+
+    if (state.connectedDotsCount > 0) {
+      state.lineLayer.line(
+        state.currentDotX,
+        state.currentDotY,
+        p5.winMouseX,
+        p5.winMouseY
+      );
+    }
 
     const time = new Date().getTime();
     const pressure =
@@ -340,16 +355,18 @@ export function createDotscape(p5) {
   }
 
   function render() {
+    p5.noTint();
     p5.image(state.tintedBG, 0, 0, state.width, state.height);
     p5.image(state.lineLayer, 0, 0);
     p5.image(state.permaLine, 0, 0);
-    p5.fill(255, state.tempOpacity--);
 
-    if (state.hitRad < 200) {
-      p5.circle(state.tempwinMouseX, state.tempwinMouseY, state.hitRad++);
+    p5.fill(255, state.animationOpacity--);
+
+    if (state.animationRadius < 200) {
+      p5.circle(state.currentDotX, state.currentDotY, state.animationRadius++);
     }
 
-    for (let i = 0; i < state.dotsCount; i++) {
+    for (let i = 0; i < state.totalDots; i++) {
       state.dots[i].show();
     }
   }
@@ -371,7 +388,7 @@ export function createDotscape(p5) {
     const currentArray = manualArray[state.stage];
 
     for (let i = 0; i < currentArray.length; i += 2) {
-      state.dots[state.dotsCount++] = new Dot(
+      state.dots[state.totalDots++] = new Dot(
         currentArray[i] * w,
         currentArray[i + 1] * h,
         r
@@ -393,7 +410,7 @@ export function createDotscape(p5) {
 
         for (let i = 0; i < dotQtyX; i++) {
           for (let j = 0; j < dotQtyY; j++) {
-            state.dots[state.dotsCount++] = new Dot(
+            state.dots[state.totalDots++] = new Dot(
               (i + 1) * spaceX,
               (j + 1) * spaceY,
               r
@@ -412,22 +429,22 @@ export function createDotscape(p5) {
 
         for (let i = 0; i < dotQtyX; i++) {
           for (let j = 0; j < dotQtyY; j += 4) {
-            state.dots[state.dotsCount++] = new Dot(
+            state.dots[state.totalDots++] = new Dot(
               (i + 0.5) * spaceX - spaceX / 6,
               (j + 0.5) * spaceY,
               r
             );
-            state.dots[state.dotsCount++] = new Dot(
+            state.dots[state.totalDots++] = new Dot(
               (i + 0.5) * spaceX + spaceX / 6,
               (j + 0.5) * spaceY,
               r
             );
-            state.dots[state.dotsCount++] = new Dot(
+            state.dots[state.totalDots++] = new Dot(
               (i + 0.5) * spaceX - spaceX / 3,
               (j + 0.5) * spaceY + spaceY * 2,
               r
             );
-            state.dots[state.dotsCount++] = new Dot(
+            state.dots[state.totalDots++] = new Dot(
               (i + 0.5) * spaceX + (spaceX / 6) * 2,
               (j + 0.5) * spaceY + spaceY * 2,
               r
@@ -449,7 +466,7 @@ export function createDotscape(p5) {
         const tran = (state.circleRad / ringQty) * (i + 1);
         const tempX = tran * p5.cos(p5.radians(rotateVal)) + state.width / 2;
         const tempY = tran * p5.sin(p5.radians(rotateVal)) + state.height / 2;
-        state.dots[state.dotsCount++] = new Dot(tempX, tempY, r);
+        state.dots[state.totalDots++] = new Dot(tempX, tempY, r);
       }
     }
   }
@@ -466,7 +483,7 @@ export function createDotscape(p5) {
         const tempX = tran * p5.cos(p5.radians(rotateVal)) + state.width / 2;
         const tempY = tran * p5.sin(p5.radians(rotateVal)) + state.height / 2;
         r = r - r / 100;
-        state.dots[state.dotsCount++] = new Dot(tempX, tempY, r);
+        state.dots[state.totalDots++] = new Dot(tempX, tempY, r);
       }
     }
   }
@@ -483,7 +500,7 @@ export function createDotscape(p5) {
       const tempX = tran * p5.cos(p5.radians(rotateVal)) + state.width / 2;
       const tempY = tran * p5.sin(p5.radians(rotateVal)) + state.height / 2;
       r = r + (i / 40000) * state.vMax;
-      state.dots[state.dotsCount++] = new Dot(tempX, tempY, r);
+      state.dots[state.totalDots++] = new Dot(tempX, tempY, r);
     }
   }
 
@@ -514,7 +531,7 @@ export function createDotscape(p5) {
           state.vMax * (dotSize / 10) * 2
         );
 
-        state.dots[state.dotsCount++] = new Dot(
+        state.dots[state.totalDots++] = new Dot(
           noiseX + spaceX * 1.5 + spaceX * i,
           noiseY + spaceY * 1.5 + spaceY * j,
           r
