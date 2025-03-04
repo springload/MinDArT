@@ -39,13 +39,37 @@ const hideEl = (el) => {
 const updatePageAttributes = (appName) => {
   if (!appName) {
     document.body.removeAttribute("data-app-name");
+    clearAppClassNames();
     document.body.classList.add("home");
   } else {
     document.body.classList.remove("home");
+    document.body.classList.add(appName);
     document.body.setAttribute("data-app-name", appName);
   }
 };
 
+/**
+ * Removes all app-related class names from the document body
+ * @returns {void}
+ */
+const clearAppClassNames = () => {
+  const appNames = [
+    "touchscape",
+    "linescape",
+    "circlescape",
+    "colourscape",
+    "dotscape",
+    "linkscape",
+    "rotationscape",
+    "symmetryscape",
+  ];
+  const appClassNames = Array.from(document.body.classList).filter(
+    (className) => appNames.includes(className)
+  );
+  if (appClassNames.length) {
+    document.body.classList.remove(appClassNames);
+  }
+};
 /**
  * @param {string|undefined} themeClass Theme class  (e.g. `'u-theme-blue'`) to remove from the `body` element
  * @returns {void}
