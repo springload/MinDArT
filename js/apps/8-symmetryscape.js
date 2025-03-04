@@ -115,13 +115,20 @@ export function createSymmetryscape(p5) {
 
     const symmetryLines = [
       () => {
+        // Vertical line only
+        state.symmetryAxisLayer.line(p5.width / 2, 0, p5.width / 2, p5.height);
+      },
+      () => {
+        // Horizontal line only
+        state.symmetryAxisLayer.line(0, p5.height / 2, p5.width, p5.height / 2);
+      },
+      () => {
+        // Both vertical and horizontal lines
         state.symmetryAxisLayer.line(p5.width / 2, 0, p5.width / 2, p5.height);
         state.symmetryAxisLayer.line(0, p5.height / 2, p5.width, p5.height / 2);
       },
       () => {
-        state.symmetryAxisLayer.line(0, p5.height / 2, p5.width, p5.height / 2);
-      },
-      () => {
+        // Diagonal X
         state.symmetryAxisLayer.line(0, 0, p5.width, p5.height);
         state.symmetryAxisLayer.line(p5.width, 0, 0, p5.height);
       },
@@ -139,10 +146,12 @@ export function createSymmetryscape(p5) {
   function handleMove(currentX, currentY, previousX, previousY, _event) {
     const symmetryModes = [
       () => {
+        // Vertical symmetry (left and right sides)
         brushIt(currentX, currentY, previousX, previousY);
         brushIt(p5.width - currentX, currentY, p5.width - previousX, previousY);
       },
       () => {
+        // Horizontal symmetry (top and bottom)
         brushIt(currentX, currentY, previousX, previousY);
         brushIt(
           currentX,
@@ -152,33 +161,66 @@ export function createSymmetryscape(p5) {
         );
       },
       () => {
-        [
-          [currentX, currentY],
-          [p5.width - currentX, currentY],
-          [currentX, p5.height - currentY],
-          [p5.width - currentX, p5.height - currentY],
-        ].forEach(([x, y]) => {
-          brushIt(
-            x,
-            y,
-            x === currentX ? previousX : p5.width - previousX,
-            y === currentY
-              ? previousY
-              : y > currentY
-              ? p5.height - previousY
-              : previousY
-          );
-        });
+        // Both vertical and horizontal (quadrant symmetry)
+        // Original point
+        brushIt(currentX, currentY, previousX, previousY);
+
+        // Reflect across vertical axis
+        brushIt(p5.width - currentX, currentY, p5.width - previousX, previousY);
+
+        // Reflect across horizontal axis
+        brushIt(
+          currentX,
+          p5.height - currentY,
+          previousX,
+          p5.height - previousY
+        );
+
+        // Reflect across both axes
+        brushIt(
+          p5.width - currentX,
+          p5.height - currentY,
+          p5.width - previousX,
+          p5.height - previousY
+        );
       },
       () => {
-        state.drawLayer.push();
-        [0, 0.5, 1, 1.5].forEach((angle) => {
-          state.drawLayer.translate(p5.width / 2, p5.height / 2);
-          state.drawLayer.rotate(p5.PI * angle);
-          state.drawLayer.translate(-p5.width / 2, -p5.height / 2);
-          brushIt(currentX, currentY, previousX, previousY);
-        });
-        state.drawLayer.pop();
+        // Diagonal X symmetry
+        const centerX = p5.width / 2;
+        const centerY = p5.height / 2;
+
+        // Calculate relative positions from center
+        const relCurrentX = currentX - centerX;
+        const relCurrentY = currentY - centerY;
+        const relPrevX = previousX - centerX;
+        const relPrevY = previousY - centerY;
+
+        // Original point
+        brushIt(currentX, currentY, previousX, previousY);
+
+        // Reflect across \ diagonal (swap x and y coordinates)
+        brushIt(
+          centerX + relCurrentY,
+          centerY + relCurrentX,
+          centerX + relPrevY,
+          centerY + relPrevX
+        );
+
+        // Reflect across / diagonal (negate and swap coordinates)
+        brushIt(
+          centerX - relCurrentY,
+          centerY - relCurrentX,
+          centerX - relPrevY,
+          centerY - relPrevX
+        );
+
+        // Reflect across both diagonals (negate both coordinates)
+        brushIt(
+          centerX - relCurrentX,
+          centerY - relCurrentY,
+          centerX - relPrevX,
+          centerY - relPrevY
+        );
       },
     ];
 
@@ -323,7 +365,7 @@ export function createSymmetryscape(p5) {
       e.stopPropagation();
     }
 
-    // Early return if not in eraser mode
+    // We only want to make changes if we're coming from eraser mode
     if (state.selectedBrush !== 0) return;
 
     // Restore the last drawing brush or default to brush 1
