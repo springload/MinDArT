@@ -75,9 +75,9 @@ export function createRotationscape(p5) {
 
     // Animation and effects
     faderStart: 600,
-    brushBool: 0,
-    ellipseAnimated: 0,
-    justSetCenter: false,
+    isFaderIncreasing: false,
+    centerPointOpacity: 0,
+    centerWasJustSet: false,
 
     // Viewport dimensions
     longEdge: 0,
@@ -88,11 +88,11 @@ export function createRotationscape(p5) {
     // Center point tracking
     centerX: 0,
     centerY: 0,
-    centeringActive: false,
+    isCenteringMode: false,
 
     // Pattern configuration
     selectedPalette: 0,
-    counter: -1,
+    rotationModeIndex: -1,
   };
 
   // Lifecycle Methods
@@ -114,35 +114,34 @@ export function createRotationscape(p5) {
 
     state.vMax = calcViewportDimensions().vMax;
 
-    state.counter = -1;
+    state.rotationModeIndex = -1;
     reset();
   }
 
   function draw() {
-    if (state.ellipseAnimated > 5) {
+    if (state.centerPointOpacity > 5) {
       // Only draw if opacity is meaningful
       render();
-      state.ellipseAnimated -= 5;
-      p5.fill(255, state.ellipseAnimated);
+      state.centerPointOpacity -= 5;
+      p5.fill(255, state.centerPointOpacity);
       p5.noStroke();
       p5.ellipse(
         state.centerX,
         state.centerY,
-        (255 - state.ellipseAnimated) / 4,
-        (255 - state.ellipseAnimated) / 4
+        (255 - state.centerPointOpacity) / 4,
+        (255 - state.centerPointOpacity) / 4
       );
-    } else if (state.ellipseAnimated > 0) {
+    } else if (state.centerPointOpacity > 0) {
       // When we get below threshold, just set to 0 without drawing
-      state.ellipseAnimated = 0;
+      state.centerPointOpacity = 0;
       render(); // Final render without the circle
     }
   }
 
   function reset() {
-    clearActiveButtonState();
-
-    // Cycle through counters and palettes
-    state.counter = (state.counter + 1) % ROTATION_MODES.length;
+    // Cycle through rotationModeIndexs and palettes
+    state.rotationModeIndex =
+      (state.rotationModeIndex + 1) % ROTATION_MODES.length;
     state.selectedPalette = (state.selectedPalette + 1) % PALETTES.length;
 
     setSwatchColors();
@@ -150,15 +149,16 @@ export function createRotationscape(p5) {
     // Calculate dimensions
     const { vMax } = calcViewportDimensions();
     state.vMax = vMax;
-    rotationDimensionCalc();
+    calculateCanvasDimensions();
 
     // Reset drawing state
     state.drawLayer.clear();
-    changeBrush(1);
+    changeBrush(0);
+    clearActiveButtonState();
     render();
   }
 
-  function rotationDimensionCalc() {
+  function calculateCanvasDimensions() {
     if (p5.width > p5.height) {
       state.longEdge = p5.width;
       state.shortEdge = p5.height;
@@ -173,23 +173,23 @@ export function createRotationscape(p5) {
   }
 
   function makeDrawing(currentX, currentY, previousX, previousY) {
-    const qtyRot = ROTATION_MODES[state.counter];
+    const numberOfRotations = ROTATION_MODES[state.rotationModeIndex];
 
     if (state.selectedBrush > 0) {
-      for (let i = 0; i < qtyRot; i++) {
+      for (let i = 0; i < numberOfRotations; i++) {
         state.drawLayer.push();
         state.drawLayer.translate(state.centerX, state.centerY);
-        state.drawLayer.rotate((p5.TWO_PI / qtyRot) * i);
+        state.drawLayer.rotate((p5.TWO_PI / numberOfRotations) * i);
         state.drawLayer.translate(-state.centerX, -state.centerY);
-        brushIt(currentX, currentY, previousX, previousY);
+        applyBrush(currentX, currentY, previousX, previousY);
         state.drawLayer.pop();
       }
     } else {
-      brushIt(currentX, currentY, previousX, previousY);
+      applyBrush(currentX, currentY, previousX, previousY);
     }
   }
 
-  function brushIt(currentX, currentY, previousX, previousY) {
+  function applyBrush(currentX, currentY, previousX, previousY) {
     switch (state.selectedBrush) {
       case 0:
         handleEraser(currentX, currentY);
@@ -236,10 +236,10 @@ export function createRotationscape(p5) {
   }
 
   function handleFaderBrush(currentX, currentY, previousX, previousY) {
-    if (state.faderStart <= 0) state.brushBool = 0;
-    if (state.faderStart >= 1000) state.brushBool = 1;
+    if (state.faderStart <= 0) state.isFaderIncreasing = false;
+    if (state.faderStart >= 1000) state.isFaderIncreasing = true;
 
-    state.faderStart += state.brushBool === 0 ? 20 : -20;
+    state.faderStart += state.isFaderIncreasing === false ? 20 : -20;
 
     state.drawLayer.stroke(
       colorAlpha(
@@ -286,14 +286,14 @@ export function createRotationscape(p5) {
 
   function reCenter(e) {
     if (e) e.stopPropagation();
-    state.centeringActive = true;
+    state.isCenteringMode = true;
   }
 
-  function center() {
-    state.centeringActive = false;
+  function setNewCenterPoint() {
+    state.isCenteringMode = false;
     state.centerX = p5.mouseX;
     state.centerY = p5.mouseY;
-    state.ellipseAnimated = 255;
+    state.centerPointOpacity = 255;
     clearActiveButtonState();
     render();
   }
@@ -313,7 +313,7 @@ export function createRotationscape(p5) {
     [state.bg, state.drawLayer] = resizedLayers;
     state.vMax = dimensions.vMax;
 
-    rotationDimensionCalc();
+    calculateCanvasDimensions();
     state.drawLayer.strokeCap(p5.SQUARE);
     render();
   }
@@ -351,10 +351,10 @@ export function createRotationscape(p5) {
     if (e) e.stopPropagation();
 
     state.selectedBrush = brushSel;
-    strokeAssign();
+    configureBrushStyle();
   }
 
-  function strokeAssign() {
+  function configureBrushStyle() {
     const currentPalette = PALETTES[state.selectedPalette];
 
     switch (state.selectedBrush) {
@@ -396,9 +396,9 @@ export function createRotationscape(p5) {
 
     state.faderStart = 600;
 
-    if (state.centeringActive) {
-      center();
-      state.justSetCenter = true;
+    if (state.isCenteringMode) {
+      setNewCenterPoint();
+      state.centerWasJustSet = true;
       return false;
     }
 
@@ -406,8 +406,8 @@ export function createRotationscape(p5) {
   }
 
   function handlePointerEnd() {
-    if (state.justSetCenter) {
-      state.justSetCenter = false;
+    if (state.centerWasJustSet) {
+      state.centerWasJustSet = false;
       return false;
     }
   }
@@ -415,7 +415,7 @@ export function createRotationscape(p5) {
   function handleMove(currentX, currentY, previousX, previousY, event) {
     if (event && isClickOnButton(event)) return false;
 
-    if (state.centeringActive || state.justSetCenter) {
+    if (state.isCenteringMode || state.centerWasJustSet) {
       return false;
     }
 
