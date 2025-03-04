@@ -4,6 +4,7 @@
   --btn-min-width: 80px;
   /* 14px */
   --btn-font-size: 0.875rem;
+  --btn-inactive-outline-color: #cbd8e199;
 
   appearance: none;
   /* the .interface container has pointer-events: none */
@@ -72,8 +73,21 @@
     }
   }
 
-  &:active,
-  &:hover {
+  :where(.rotationscape) & {
+    --btn-inactive-outline-color: #7e888fdd;
+  }
+
+  :where(.linescape) & {
+    --btn-inactive-outline-color: #ffffffdd;
+  }
+
+  :where(.symmetryscape) & {
+    --btn-inactive-outline-color: #cccccc;
+
+  }
+
+
+  &:where(:active, :hover, .active) {
     border-color: var(--color-white);
     background-color: var(--theme-bg, var(--color-blue-70));
     color: var(--color-white);
@@ -83,16 +97,10 @@
 .btn--white {
   background-color: var(--color-white);
   color: var(--color-grey-40);
-}
 
-.btn--teal {
-  background-color: var(--color-teal-70);
-  color: var(--color-grey-40);
-
-  &:active,
-  &:hover {
+  &:where(:active, :hover, .active) {
     border-color: var(--color-white);
-    background-color: var(--color-teal-70);
+    background-color: var(--theme-bg, var(--color-blue-70));
     color: var(--color-white);
   }
 }
@@ -103,8 +111,10 @@
 }
 
 /* 'split' buttons have rounded outer edges, and may or may not have square swatches inbetween them */
-/* the symmetryscape app has _slightly_ different spacing requirements */
 .btn-group--split {
+
+  --corner-radius: 4px;
+
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
@@ -116,7 +126,7 @@
     border-color: var(--color-grey-40);
 
     /* square swatches: */
-    border-radius: 0;
+    border-radius: var(--corner-radius);
     min-width: unset;
     aspect-ratio: 1;
 
@@ -127,7 +137,7 @@
   /* first button is rounded on the left */
   :where(.btn:first-child) {
     width: var(--split-btn-width);
-    border-radius: 40px 0px 0px 40px;
+    border-radius: 40px var(--corner-radius) var(--corner-radius) 40px;
     padding-left: 16px;
 
   }
@@ -141,22 +151,14 @@
   /* last (visible) button is rounded on the right */
   :where(.btn:last-child, .btn:has(+ .u-hide)) {
     width: var(--split-btn-width);
-    border-radius: 0px 40px 40px 0px;
+    border-radius: var(--corner-radius) 40px 40px var(--corner-radius);
     padding-right: 16px;
   }
 }
 
 :where(.symmetryscape) .btn-group--split {
-  gap: 0;
-
-  :where(.btn) {
-    /* overlap borders */
-    margin-left: calc(-1 * var(--btn-border-width));
-
-    /* always show the full border of the active/hovered button, don't let it be overlapped */
-    &:where(.active, :hover, :active) {
-      isolation: isolate;
-    }
+  :where(.btn:first-child) {
+    width: var(--btn-min-width);
   }
 
   :where(.btn:last-child, .btn:has(+ .u-hide)) {
@@ -165,17 +167,16 @@
   }
 }
 
-.active {
-  border-color: var(--color-white);
-  background-color: var(--color-blue-70);
-  color: var(--color-white);
-}
-
 .btn--themed-outline {
-  border-color: var(--color-grey-90);
+  border-color: var(--btn-inactive-outline-color);
 
-  &:where(.active) {
+  &:where(:hover, :active, .active) {
     border-color: var(--theme-button-border, var(--color-blue-70));
+
+    &:where(.btn--white) {
+
+      border-color: var(--color-white);
+    }
   }
 }
 

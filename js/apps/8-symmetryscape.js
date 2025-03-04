@@ -303,32 +303,34 @@ export function createSymmetryscape(p5) {
     }
   }
 
+  function updateActiveBrushUI() {
+    clearActiveButtonState();
+
+    const toolbar = document.querySelector('[data-element="toolbar"]');
+    if (toolbar) {
+      const currentBrushButton = toolbar.querySelector(
+        `[data-brush="${state.selectedBrush}"]`
+      );
+
+      if (currentBrushButton) {
+        currentBrushButton.classList.add("active");
+      }
+    }
+  }
+
   function switchToDrawMode(e) {
     if (e) {
       e.stopPropagation();
     }
-    clearActiveButtonState();
 
-    const toolbar = document.querySelector('[data-element="toolbar"]');
-    const drawButton = toolbar.querySelector(
-      '[data-element="draw-mode-button"]'
-    );
+    // Early return if not in eraser mode
+    if (state.selectedBrush !== 0) return;
 
-    if (state.selectedBrush === 0) {
-      state.selectedBrush = state.lastDrawingBrush || 1; // Default to brush 1 if no last brush
+    // Restore the last drawing brush or default to brush 1
+    state.selectedBrush = state.lastDrawingBrush || 1;
 
-      // Set active state on the restored brush button
-      const brushButton = toolbar?.querySelector(
-        `[data-brush="${state.selectedBrush}"]`
-      );
-
-      if (brushButton) {
-        brushButton.classList.add("active");
-      }
-      if (hasActiveClass(drawButton)) {
-        drawButton?.classList.remove("active");
-      }
-    }
+    // Update the UI to reflect the current brush
+    updateActiveBrushUI();
   }
 
   function setSwatchColors() {
@@ -351,17 +353,14 @@ export function createSymmetryscape(p5) {
     if (event) event.stopPropagation();
 
     state.selectedBrush = brushSel;
-    if (state.selectedBrush !== 0) {
-      state.lastDrawingBrush = state.selectedBrush;
+
+    // If this is a drawing brush (not eraser), remember it
+    if (brushSel !== 0) {
+      state.lastDrawingBrush = brushSel;
     }
 
-    clearActiveButtonState();
-
-    const toolbar = document.querySelector('[data-element="toolbar"]');
-    const selectedButton = toolbar?.querySelector(`[data-brush="${brushSel}"]`);
-    if (selectedButton) {
-      selectedButton.classList.add("active");
-    }
+    // Update the UI to reflect the current brush
+    updateActiveBrushUI();
   }
 
   return {
