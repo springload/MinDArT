@@ -45,12 +45,15 @@ const SYMMETRY_MODES = [
  *   - changeBrush: Changes active brush type and color
  */
 export function createSymmetryscape(p5) {
-  const PALETTES = [
-    ["#000000", "#444444", "#888888", "#a1a1a1", "#c2c2c2", "#ffffff"],
-    ["#F2F2F2", "#F2913D", "#223240", "#F24B0F"],
-    ["#6D808C", "#FFFFFF", "#D9AA8F", "#F2CAB3"],
-    ["#3C5E73", "#F2BBBB", "#FFFFFF", "#F24444"],
+  const PALETTE = [
+    "#000000",
+    "#444444",
+    "#888888",
+    "#a1a1a1",
+    "#c2c2c2",
+    "#ffffff",
   ];
+
   const BACKGROUND_IMAGE = `${
     import.meta.env.BASE_URL
   }images/8-symmetryscape_paper.webp`;
@@ -62,7 +65,6 @@ export function createSymmetryscape(p5) {
     symmetryAxisLayer: null,
 
     // Drawing configuration
-    selectedPalette: 0,
     selectedBrush: 0,
     lastDrawingBrush: 0,
 
@@ -103,7 +105,6 @@ export function createSymmetryscape(p5) {
     // Initialize state and render initial view
     state.symmetryModeIndex = 0;
     state.currentSymmetryMode = SYMMETRY_MODES[state.symmetryModeIndex];
-    state.selectedPalette = 0;
     resetState();
     render();
   }
@@ -111,14 +112,12 @@ export function createSymmetryscape(p5) {
   function reset() {
     clearActiveButtonState();
 
-    // Cycle through palettes and symmetry modes
+    // Cycle through symmetry modes
     state.symmetryModeIndex =
       (state.symmetryModeIndex + 1) % SYMMETRY_MODES.length;
     state.currentSymmetryMode = SYMMETRY_MODES[state.symmetryModeIndex];
-    state.selectedPalette = (state.selectedPalette + 1) % PALETTES.length;
 
     resetState();
-    updateSwatchColors();
   }
 
   function resetState() {
@@ -287,11 +286,8 @@ export function createSymmetryscape(p5) {
       return;
     }
 
-    const colorIndex = Math.min(
-      state.selectedBrush - 1,
-      PALETTES[state.selectedPalette].length - 1
-    );
-    const currentColor = PALETTES[state.selectedPalette][colorIndex];
+    const colorIndex = Math.min(state.selectedBrush - 1, PALETTE.length - 1);
+    const currentColor = PALETTE[colorIndex];
 
     const brushStyles = [
       () => {
@@ -440,14 +436,12 @@ export function createSymmetryscape(p5) {
   }
 
   function updateSwatchColors() {
-    const { selectedPalette } = state;
     const allBrushes = Array.from(document.querySelectorAll("[data-brush]"));
     const swatchButtons = allBrushes.slice(1); // remove the eraser (brush 0) from the selection
-    const currentPaletteLength = PALETTES[selectedPalette].length;
 
     swatchButtons.forEach((swatch, index) => {
-      if (index < currentPaletteLength) {
-        swatch.style.backgroundColor = PALETTES[selectedPalette][index];
+      if (index < PALETTE.length) {
+        swatch.style.backgroundColor = PALETTE[index];
         swatch.classList.remove("u-hide"); // Show button if it's within palette length
       } else {
         swatch.classList.add("u-hide"); // Hide button if it's beyond palette length
