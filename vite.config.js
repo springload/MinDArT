@@ -9,14 +9,14 @@ function htmlUrlPlugin() {
     transformIndexHtml(html) {
       return html.replace(
         /(src|href)="\.?\/(images|sound)\//g,
-        `$1="/MinDArT/$2/`
+        `$1="/DevMinDArT/$2/`
       );
     },
   };
 }
 
 export default defineConfig({
-  base: "/MinDArT/",
+  base: "/DevMinDArT/",
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 1200,
@@ -44,8 +44,8 @@ export default defineConfig({
         theme_color: "#ffffff",
         background_color: "#ffffff",
         display: "standalone",
-        scope: "/MinDArT/",
-        start_url: "/MinDArT/",
+        scope: "/DevMinDArT/",
+        start_url: "/DevMinDArT/",
         orientation: "any",
         icons: [
           {
