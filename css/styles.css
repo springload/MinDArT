@@ -1,43 +1,7 @@
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  background: white;
-}
-.grid > div {
-  background: white ;
-  padding: 1rem;
-}
-
-@font-face {
-  font-family: AvenirNext;
-  src: url("../css/Fonts/AvenirNextLTPro-Regular.otf");
-}
-
-body {
-  margin: 1rem;
-  text-align: center;
-  font-size: 1vmax;
-  font-family: "AvenirNext";
-  letter-spacing: 1px;
-  font-weight: 900;
-}
-
-.session{
-  background: white;
-  width:70%;
-  padding: 5% 5%;
-}
-
-.grid-Dormant{
-    opacity: 20%
-}
-
-.main{
-  width:30%;
-}
-
-p, p:visited, p:link{
-  margin: 0.25rem 0;
-  color: darkgrey;
-  text-decoration: none!important;
-}
+@import url('./global/reset.css');
+@import url('./fonts/fonts.css');
+@import url('./global/variables.css');
+@import url('./global/page.css');
+@import url('./components/btn.css');
+@import url('./components/loading-dialog.css');
+@import url('./global/utilities.css');
