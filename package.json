@@ -4,6 +4,7 @@
   "description": "mind art progressive web app",
   "scripts": {
     "dev": "vite",
+    "host": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },

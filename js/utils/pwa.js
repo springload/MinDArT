@@ -1,12 +1,47 @@
+import { registerSW } from "virtual:pwa-register";
+
 // Tracking this prevents an infinite refresh loop when a new service worker takes control.
 let refreshing = false;
+let updateSWFunction = null;
+
+/**
+ * Registers the service worker manually.
+ * This replaces the automatic registration that would normally happen.
+ *
+ * @returns {function|null} Returns the update function if registration was successful
+ */
+export function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) return null;
+
+  console.log("Attempting to register service worker");
+
+  try {
+    // The registerSW function directly returns the update function, not a promise
+    updateSWFunction = registerSW({
+      onNeedRefresh() {
+        console.log("New content available, ready to refresh");
+      },
+      onOfflineReady() {
+        console.log("App ready to work offline");
+      },
+      onRegistered(registration) {
+        console.log("SW registered with scope:", registration?.scope);
+      },
+      onRegisterError(error) {
+        console.error("SW registration error:", error);
+      },
+    });
+
+    return updateSWFunction;
+  } catch (error) {
+    console.error("Error registering service worker:", error);
+    return null;
+  }
+}
 
 /**
  * Check for updates to the PWA's service worker.
- *
- * 1. Checks if we're online and have service worker support
- * 2. Finds the current service worker registration
- * 3. Asks it to check for updates from the server
+ * Only call this when it's safe to refresh the page (e.g., on the home screen)
  *
  * @returns {Promise<boolean>} Returns true if an update check was performed
  */
@@ -15,13 +50,18 @@ export async function checkForUpdates() {
   if (!("serviceWorker" in navigator) || !navigator.onLine) return false;
 
   try {
-    const registration = await navigator.serviceWorker.getRegistration();
-    if (!registration) return false;
+    if (!updateSWFunction) {
+      // If no update function exists yet, try to register first
+      updateSWFunction = registerServiceWorker();
+    }
 
-    // Download a new service worker, if an update exists.
-    // The new service worker will take over when the page next reloads.
-    await registration.update();
-    return true;
+    if (updateSWFunction) {
+      // Call the update function - this may trigger a refresh
+      updateSWFunction(true); // Force check for updates
+      return true;
+    }
+
+    return false;
   } catch (error) {
     console.error("Error checking for updates:", error);
     return false;
@@ -30,16 +70,7 @@ export async function checkForUpdates() {
 
 /**
  * Initialize the PWA update system.
- *
- * Update flow:
- * 1. User navigates back to home view
- * 2. checkForUpdates() is called and finds an update
- * 3. New service worker is downloaded and installed in the background
- * 4. When the new service worker takes control ('controllerchange' event),
- *    we reload the page once to ensure the new version is running completely
- *
- * This function only sets up the controllerchange handler - the actual update
- * checks happen in the router when returning to the home view.
+ * This now uses the manual registration approach.
  */
 export function initPWAUpdater() {
   if (!("serviceWorker" in navigator)) return;
@@ -52,4 +83,9 @@ export function initPWAUpdater() {
       window.location.reload();
     }
   });
+
+  // Register service worker on home screen only
+  if (!new URLSearchParams(window.location.search).get("app")) {
+    registerServiceWorker();
+  }
 }

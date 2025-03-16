@@ -29,8 +29,8 @@ export default defineConfig({
   plugins: [
     htmlUrlPlugin(),
     VitePWA({
-      registerType: "autoUpdate",
-      injectRegister: "auto",
+      registerType: "autoUpdate", // Controls update behavior
+      injectRegister: null, // Prevents automatic registration
       workbox: {
         globPatterns: ["**/*.{js,css,html,woff2,ico,png,svg,webp,mp3}"],
         cleanupOutdatedCaches: true,

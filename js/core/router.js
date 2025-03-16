@@ -151,6 +151,7 @@ async function updateView() {
   const themeClass = getCurrentTheme();
 
   if (!appName) {
+    // We're eturning to the home view
     stopSoundtrack();
     showEl(homeView);
     hideEl(appView);
@@ -158,7 +159,11 @@ async function updateView() {
     removeTheme(themeClass);
 
     if (navigator.onLine) {
-      checkForUpdates();
+      // Check for updates on home screen only
+      const updateAvailable = await checkForUpdates();
+      if (updateAvailable) {
+        console.log("Update available - page will refresh soon");
+      }
     }
     return;
   }
