@@ -2,7 +2,7 @@ import { registerSW } from "virtual:pwa-register";
 
 // Tracking this prevents an infinite refresh loop when a new service worker takes control.
 let refreshing = false;
-let updateSWFunction = null;
+let checkSWUpdate = null;
 
 /**
  * Registers the service worker manually.
@@ -16,8 +16,8 @@ export function registerServiceWorker() {
   console.log("Attempting to register service worker");
 
   try {
-    // The registerSW function directly returns the update function, not a promise
-    updateSWFunction = registerSW({
+    // The registerSW function returns a reload prompt function
+    checkSWUpdate = registerSW({
       onNeedRefresh() {
         console.log("New content available, ready to refresh");
       },
@@ -32,7 +32,7 @@ export function registerServiceWorker() {
       },
     });
 
-    return updateSWFunction;
+    return checkSWUpdate;
   } catch (error) {
     console.error("Error registering service worker:", error);
     return null;
@@ -43,22 +43,20 @@ export function registerServiceWorker() {
  * Check for updates to the PWA's service worker.
  * Only call this when it's safe to refresh the page (e.g., on the home screen)
  *
- * @returns {Promise<boolean>} Returns true if an update check was performed
+ * @returns {Promise<boolean>} Returns true if an update check was performed and found updates
  */
 export async function checkForUpdates() {
   // Only check if browser supports service workers and we're online
   if (!("serviceWorker" in navigator) || !navigator.onLine) return false;
 
   try {
-    if (!updateSWFunction) {
+    if (!checkSWUpdate) {
       // If no update function exists yet, try to register first
-      updateSWFunction = registerServiceWorker();
+      checkSWUpdate = registerServiceWorker();
     }
 
-    if (updateSWFunction) {
-      // Call the update function - this may trigger a refresh
-      updateSWFunction(true); // Force check for updates
-      return true;
+    if (checkSWUpdate) {
+      return await checkSWUpdate(true); // Force check for updates
     }
 
     return false;
