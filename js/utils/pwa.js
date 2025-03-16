@@ -3,6 +3,7 @@ import { registerSW } from "virtual:pwa-register";
 // Tracking this prevents an infinite refresh loop when a new service worker takes control.
 let refreshing = false;
 let checkSWUpdate = null;
+let updatePending = false;
 
 /**
  * Registers the service worker manually.
@@ -19,7 +20,9 @@ export function registerServiceWorker() {
     // The registerSW function returns a reload prompt function
     checkSWUpdate = registerSW({
       onNeedRefresh() {
-        console.log("New content available, ready to refresh");
+        console.log("New content available, refresh waiting for home screen");
+        updatePending = true;
+        // Don't call the reload immediately
       },
       onOfflineReady() {
         console.log("App ready to work offline");
@@ -56,6 +59,7 @@ export async function checkForUpdates() {
     }
 
     if (checkSWUpdate) {
+      // We only trigger the update check here, but won't apply it yet
       return await checkSWUpdate(true); // Force check for updates
     }
 
@@ -67,18 +71,55 @@ export async function checkForUpdates() {
 }
 
 /**
+ * Apply any pending updates if we're on the home screen.
+ * Call this periodically to check if we can refresh.
+ */
+export function applyUpdatesIfOnHomeScreen() {
+  // Only proceed if there's an update waiting to be applied
+  if (!updatePending) return;
+
+  // Check if we're on the home screen by looking for the 'app' query parameter
+  const isOnHomeScreen = !new URLSearchParams(window.location.search).get(
+    "app"
+  );
+
+  if (isOnHomeScreen) {
+    console.log("On home screen with pending update - refreshing page");
+    updatePending = false;
+    window.location.reload();
+  } else {
+    console.log("Update pending but not on home screen - waiting");
+  }
+}
+
+/**
  * Initialize the PWA update system.
  * This now uses the manual registration approach.
  */
 export function initPWAUpdater() {
   if (!("serviceWorker" in navigator)) return;
 
-  // When a new service worker takes control, reload the page once.
-  // This ensures we're running the latest version of the code.
+  // When a new service worker takes control, reload the page once,
+  // but ONLY if we're on the home screen
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (!refreshing) {
       refreshing = true;
-      window.location.reload();
+
+      // Check if we're on the home screen
+      const isOnHomeScreen = !new URLSearchParams(window.location.search).get(
+        "app"
+      );
+
+      if (isOnHomeScreen) {
+        console.log("Service worker changed - refreshing on home screen");
+        window.location.reload();
+      } else {
+        console.log(
+          "Service worker changed but not refreshing - not on home screen"
+        );
+        // Mark update as pending so we can apply it later
+        updatePending = true;
+      }
     }
   });
 
@@ -86,4 +127,7 @@ export function initPWAUpdater() {
   if (!new URLSearchParams(window.location.search).get("app")) {
     registerServiceWorker();
   }
+
+  // Check periodically if we can apply updates
+  setInterval(applyUpdatesIfOnHomeScreen, 5000);
 }
