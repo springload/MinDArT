@@ -50,7 +50,7 @@ export function createSymmetryscape(p5) {
     "#444444",
     "#888888",
     "#a1a1a1",
-    "#c2c2c2",
+    "#dfdfdf",
     "#ffffff",
   ];
 
