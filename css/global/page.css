@@ -14,10 +14,6 @@ body {
   }
 }
 
-.main {
-  padding: 1rem;
-}
-
 .logo {
   margin-inline: auto;
   margin-block: 1rem;
@@ -29,6 +25,7 @@ body {
   --gutter: 1rem;
   margin-inline: auto;
   padding-inline: var(--gutter);
+  padding-block-end: 4rem;
   /* keep it to max 4 columns */
   max-width: 1120px;
   display: grid;
@@ -43,6 +40,7 @@ body {
   @media screen and (min-width: 1024px) {
     --min-link-width: 200px;
     --gutter: 4rem;
+    padding-block-end: 6rem;
   }
 
   :where(a) {
