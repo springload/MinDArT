@@ -32,10 +32,6 @@
 
   transition: 100ms linear color, 100ms linear background-color, 100ms linear border-color;
 
-  &:where([disabled]) {
-    opacity: 0.2;
-  }
-
   &:where(:has(svg.brush)) {
     width: 120px;
     padding-inline: 0;
@@ -92,6 +88,12 @@
     background-color: var(--theme-bg, var(--color-blue-70));
     color: var(--color-white);
   }
+}
+
+/* Pulling this rule out of the modern nesting approach above, to ensure that disabling works on older iOS devices.  */
+.btn[disabled] {
+  opacity: 0.2;
+  pointer-events: none;
 }
 
 .btn--white {
