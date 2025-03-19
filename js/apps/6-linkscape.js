@@ -396,9 +396,10 @@ export function createLinkscape(p5) {
   }
 
   function updateStringSegments(selectedPoint, mouseX, mouseY) {
-    dragSegment(selectedPoint, mouseX, mouseY);
-
     const [stringIdx, pointIdx] = selectedPoint;
+
+    // Update the dragged point directly
+    dragSegment(selectedPoint, mouseX, mouseY);
 
     // Update following segments (ripple forward)
     for (let i = pointIdx; i < state.stringPointsX[stringIdx].length - 1; i++) {
@@ -427,13 +428,13 @@ export function createLinkscape(p5) {
     const deltaY = targetY - state.stringPointsY[stringIdx][pointIdx];
 
     // Get the angle of the direction vector
-    const angle = p5.atan2(deltaY, deltaX);
+    const angle = Math.atan2(deltaY, deltaX);
 
     // Position this segment at the correct distance from the target point
     state.stringPointsX[stringIdx][pointIdx] =
-      targetX - p5.cos(angle) * state.segmentLength;
+      targetX - Math.cos(angle) * state.segmentLength;
     state.stringPointsY[stringIdx][pointIdx] =
-      targetY - p5.sin(angle) * state.segmentLength;
+      targetY - Math.sin(angle) * state.segmentLength;
   }
 
   function render() {
