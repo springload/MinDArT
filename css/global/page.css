@@ -14,6 +14,32 @@ body {
   }
 }
 
+/* fallback background colors, should not be visible generally */
+
+.touchscape {
+  background-color: #dbbe94;
+}
+
+.colourscape {
+  background-color: #d9d9d9;
+}
+
+.dotscape {
+  background-color: #91a3aa;
+}
+
+.linkscape {
+  background-color: #2d2d2d;
+}
+
+.rotationscape {
+  background-color: #505050;
+}
+
+.symmetryscape {
+  background-color: #c1c1c1;
+}
+
 .logo {
   margin-inline: auto;
   margin-block: 1rem;

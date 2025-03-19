@@ -32,10 +32,9 @@ import { calcViewportDimensions, handleResize } from "../utils/viewport.js";
  *   - handlePointerStart: Initializes string dragging
  *   - handlePointerEnd: Ends string dragging interaction
  *   - handleMove: Updates string segment positions during drag
- *   - addLine: Adds a new string to the simulation
  */
 export function createLinkscape(p5) {
-  const PALETTES = [
+  const COLOR_PALETTES = [
     ["#D97398", "#A65398", "#5679A6"],
     ["#F2913D", "#F24B0F", "#5679A6"],
     ["#a4fba6", "#4ae54a", "#0f9200"],
@@ -49,13 +48,13 @@ export function createLinkscape(p5) {
   ];
 
   const state = {
-    // Line segments
-    x: [],
-    y: [],
-    segNum: 250,
-    segLength: 4,
+    // String segments
+    stringPointsX: [],
+    stringPointsY: [],
+    segmentCount: 250,
+    segmentLength: 4,
 
-    // Layers
+    // Graphics layers
     lineLayer: null,
     paintLayer: null,
     shadowLayer: null,
@@ -63,20 +62,20 @@ export function createLinkscape(p5) {
 
     // Interaction state
     isDragging: false,
-    selected: [0, 0],
+    selectedPoint: [0, 0], // [stringIndex, pointIndex]
 
     // Shadow trail states
-    shadowPositions: [],
+    stringHistory: [],
     shadowsActive: true,
     shadowOpacity: 0.2,
 
-    // Level tracking
-    levelVersion: 0,
-    levelMax: 9,
+    // Palette selection
+    currentPaletteIndex: 0,
+    paletteCount: 9,
 
     // Viewport dimensions
-    width: 0,
-    height: 0,
+    canvasWidth: 0,
+    canvasHeight: 0,
     vMin: 0,
     vMax: 0,
   };
@@ -92,14 +91,20 @@ export function createLinkscape(p5) {
 
     // Initialize dimensions
     const dimensions = calcViewportDimensions();
-    Object.assign(state, dimensions);
+    state.canvasWidth = dimensions.width;
+    state.canvasHeight = dimensions.height;
+    state.vMin = dimensions.vMin;
+    state.vMax = dimensions.vMax;
 
-    const canvas = p5.createCanvas(state.width, state.height);
+    const canvas = p5.createCanvas(state.canvasWidth, state.canvasHeight);
     canvas.parent(document.querySelector('[data-element="canvas-container"]'));
 
-    state.lineLayer = p5.createGraphics(state.width, state.height);
-    state.paintLayer = p5.createGraphics(state.width, state.height);
-    state.shadowLayer = p5.createGraphics(state.width, state.height);
+    state.lineLayer = p5.createGraphics(state.canvasWidth, state.canvasHeight);
+    state.paintLayer = p5.createGraphics(state.canvasWidth, state.canvasHeight);
+    state.shadowLayer = p5.createGraphics(
+      state.canvasWidth,
+      state.canvasHeight
+    );
 
     state.lineLayer.strokeWeight(1 * state.vMax);
     state.paintLayer.strokeWeight(1 * state.vMax);
@@ -117,7 +122,7 @@ export function createLinkscape(p5) {
     );
     if (addStringButton) {
       addInteractionHandlers(addStringButton, (event) => {
-        addLine();
+        addString();
       });
     }
   }
@@ -125,13 +130,14 @@ export function createLinkscape(p5) {
   function reset(isInitialSetup = false) {
     state.paintLayer.clear();
     state.shadowLayer.clear();
-    state.x = [];
-    state.y = [];
-    state.shadowPositions = [];
+    state.stringPointsX = [];
+    state.stringPointsY = [];
+    state.stringHistory = [];
 
     // For user-triggered reset, increment first so we render with new palette
     if (!isInitialSetup) {
-      state.levelVersion = (state.levelVersion + 1) % PALETTES.length;
+      state.currentPaletteIndex =
+        (state.currentPaletteIndex + 1) % COLOR_PALETTES.length;
     }
 
     initialiseLine(0);
@@ -142,38 +148,38 @@ export function createLinkscape(p5) {
     if (button) button.removeAttribute("disabled");
   }
 
-  function initialiseLine(l) {
-    state.x[l] = [];
-    state.y[l] = [];
-    state.shadowPositions[l] = [];
+  function initialiseLine(stringIndex) {
+    state.stringPointsX[stringIndex] = [];
+    state.stringPointsY[stringIndex] = [];
+    state.stringHistory[stringIndex] = [];
 
-    for (let i = 0; i < state.segNum; i++) {
-      state.y[l][i] = p5.map(
+    for (let i = 0; i < state.segmentCount; i++) {
+      state.stringPointsY[stringIndex][i] = p5.map(
         i,
         0,
-        state.segNum,
-        -state.height,
-        state.height / 6
+        state.segmentCount,
+        -state.canvasHeight,
+        state.canvasHeight / 6
       );
-      state.x[l][i] = p5.map(
+      state.stringPointsX[stringIndex][i] = p5.map(
         i,
         0,
-        state.segNum,
+        state.segmentCount,
         0,
-        (state.width / 4) * (1 + l)
+        (state.canvasWidth / 4) * (1 + stringIndex)
       );
 
-      state.shadowPositions[l][i] = [];
+      state.stringHistory[stringIndex][i] = [];
     }
   }
 
-  function addLine() {
-    if (state.x.length < 3) {
-      initialiseLine(state.x.length);
+  function addString() {
+    if (state.stringPointsX.length < 3) {
+      initialiseLine(state.stringPointsX.length);
       render();
     }
 
-    if (state.x.length >= 3) {
+    if (state.stringPointsX.length >= 3) {
       const button = document.querySelector(
         '[data-element="add-string-button"]'
       );
@@ -192,33 +198,70 @@ export function createLinkscape(p5) {
       : p5.winMouseY;
 
     if (!state.isDragging) {
-      for (let i = 0; i < state.x.length; i++) {
-        if (p5.dist(eventX, eventY, state.x[i][0], state.y[i][0]) < 45) {
-          state.selected = [i, 0];
-          state.isDragging = true;
-          break;
-        } else if (
+      for (
+        let stringIdx = 0;
+        stringIdx < state.stringPointsX.length;
+        stringIdx++
+      ) {
+        const SELECTION_RADIUS = 45;
+        const lastPointIndex = state.segmentCount - 1;
+
+        // Check if the user clicked on the first point
+        if (
           p5.dist(
             eventX,
             eventY,
-            state.x[i][state.segNum - 1],
-            state.y[i][state.segNum - 1]
-          ) < 45
+            state.stringPointsX[stringIdx][0],
+            state.stringPointsY[stringIdx][0]
+          ) < SELECTION_RADIUS
         ) {
-          state.selected = [i, state.segNum - 1];
+          state.selectedPoint = [stringIdx, 0];
           state.isDragging = true;
           break;
-        } else {
-          for (let j = 0; j < state.x[i].length; j++) {
-            if (p5.dist(eventX, eventY, state.x[i][j], state.y[i][j]) < 45) {
-              state.selected = [i, j];
-              if (j < 30) {
-                state.selected[1] = 1;
-              } else if (j > state.x[i].length - 30) {
-                state.selected[1] = state.segNum - 1;
+        }
+        // Check if the user clicked on the last point
+        else if (
+          p5.dist(
+            eventX,
+            eventY,
+            state.stringPointsX[stringIdx][lastPointIndex],
+            state.stringPointsY[stringIdx][lastPointIndex]
+          ) < SELECTION_RADIUS
+        ) {
+          state.selectedPoint = [stringIdx, lastPointIndex];
+          state.isDragging = true;
+          break;
+        }
+        // Check if the user clicked on any point in between
+        else {
+          for (
+            let pointIdx = 0;
+            pointIdx < state.stringPointsX[stringIdx].length;
+            pointIdx++
+          ) {
+            if (
+              p5.dist(
+                eventX,
+                eventY,
+                state.stringPointsX[stringIdx][pointIdx],
+                state.stringPointsY[stringIdx][pointIdx]
+              ) < SELECTION_RADIUS
+            ) {
+              state.selectedPoint = [stringIdx, pointIdx];
+
+              // Adjust the selection point to be either near the start or end
+              // to make dragging more intuitive
+              if (pointIdx < 30) {
+                state.selectedPoint[1] = 1;
+              } else if (
+                pointIdx >
+                state.stringPointsX[stringIdx].length - 30
+              ) {
+                state.selectedPoint[1] = state.segmentCount - 1;
               } else {
-                state.selected[1] = j;
+                state.selectedPoint[1] = pointIdx;
               }
+
               state.isDragging = true;
               break;
             }
@@ -240,7 +283,7 @@ export function createLinkscape(p5) {
         captureCurrentPositions();
       }
 
-      dragCalc(state.selected, currentX, currentY);
+      updateStringSegments(state.selectedPoint, currentX, currentY);
     }
 
     render();
@@ -248,61 +291,88 @@ export function createLinkscape(p5) {
   }
 
   function captureCurrentPositions() {
-    // Capture the entire current line shape for persistent shadow trails
-    for (let i = 0; i < state.x.length; i++) {
-      if (!state.shadowPositions[i]) {
-        state.shadowPositions[i] = [];
+    // Capture the entire current string shape for persistent shadow trails
+    for (
+      let stringIdx = 0;
+      stringIdx < state.stringPointsX.length;
+      stringIdx++
+    ) {
+      if (!state.stringHistory[stringIdx]) {
+        state.stringHistory[stringIdx] = [];
       }
 
-      // Create a new shadow entry for the current line position
-      const lineShadow = {
+      // Create a new shadow entry for the current string position
+      const stringShadow = {
         points: [],
         color:
-          PALETTES[state.levelVersion][i % PALETTES[state.levelVersion].length],
+          COLOR_PALETTES[state.currentPaletteIndex][
+            stringIdx % COLOR_PALETTES[state.currentPaletteIndex].length
+          ],
       };
 
       // Store all current segment positions
-      for (let j = 0; j < state.x[i].length; j++) {
-        lineShadow.points.push({
-          x: state.x[i][j],
-          y: state.y[i][j],
+      for (
+        let pointIdx = 0;
+        pointIdx < state.stringPointsX[stringIdx].length;
+        pointIdx++
+      ) {
+        stringShadow.points.push({
+          x: state.stringPointsX[stringIdx][pointIdx],
+          y: state.stringPointsY[stringIdx][pointIdx],
         });
       }
 
       // Add this shadow to the collection
-      if (lineShadow.points.length > 0) {
-        state.shadowPositions[i].push(lineShadow);
+      if (stringShadow.points.length > 0) {
+        state.stringHistory[stringIdx].push(stringShadow);
       }
     }
   }
 
   function handlePointerEnd() {
     state.isDragging = false;
-    state.selected = [0, 0];
+    state.selectedPoint = [0, 0];
   }
 
-  function dragCalc(sel, mouseX, mouseY) {
-    dragSegment(sel, mouseX, mouseY);
+  function updateStringSegments(selectedPoint, mouseX, mouseY) {
+    dragSegment(selectedPoint, mouseX, mouseY);
 
-    let [i, j] = sel;
-    // Update following segments
-    for (let k = j; k < state.x[i].length - 1; k++) {
-      dragSegment([i, k + 1], state.x[i][k], state.y[i][k]);
+    const [stringIdx, pointIdx] = selectedPoint;
+
+    // Update following segments (ripple forward)
+    for (let i = pointIdx; i < state.stringPointsX[stringIdx].length - 1; i++) {
+      dragSegment(
+        [stringIdx, i + 1],
+        state.stringPointsX[stringIdx][i],
+        state.stringPointsY[stringIdx][i]
+      );
     }
-    // Update preceding segments
-    for (let k = j; k > 0; k--) {
-      dragSegment([i, k - 1], state.x[i][k], state.y[i][k]);
+
+    // Update preceding segments (ripple backward)
+    for (let i = pointIdx; i > 0; i--) {
+      dragSegment(
+        [stringIdx, i - 1],
+        state.stringPointsX[stringIdx][i],
+        state.stringPointsY[stringIdx][i]
+      );
     }
   }
 
-  function dragSegment(sel, xin, yin) {
-    const [i, j] = sel;
-    const dx = xin - state.x[i][j];
-    const dy = yin - state.y[i][j];
-    const angle = p5.atan2(dy, dx);
+  function dragSegment(pointCoords, targetX, targetY) {
+    const [stringIdx, pointIdx] = pointCoords;
 
-    state.x[i][j] = xin - p5.cos(angle) * state.segLength;
-    state.y[i][j] = yin - p5.sin(angle) * state.segLength;
+    // Calculate the direction vector from our segment to the target
+    const deltaX = targetX - state.stringPointsX[stringIdx][pointIdx];
+    const deltaY = targetY - state.stringPointsY[stringIdx][pointIdx];
+
+    // Get the angle of the direction vector
+    const angle = p5.atan2(deltaY, deltaX);
+
+    // Position this segment at the correct distance from the target point
+    state.stringPointsX[stringIdx][pointIdx] =
+      targetX - p5.cos(angle) * state.segmentLength;
+    state.stringPointsY[stringIdx][pointIdx] =
+      targetY - p5.sin(angle) * state.segmentLength;
   }
 
   function render() {
@@ -315,9 +385,13 @@ export function createLinkscape(p5) {
       drawShadowTrails();
     }
 
-    for (let i = 0; i < state.x.length; i++) {
-      const baseColor =
-        PALETTES[state.levelVersion][i % PALETTES[state.levelVersion].length];
+    for (
+      let stringIdx = 0;
+      stringIdx < state.stringPointsX.length;
+      stringIdx++
+    ) {
+      const currentPalette = COLOR_PALETTES[state.currentPaletteIndex];
+      const baseColor = currentPalette[stringIdx % currentPalette.length];
       const mainColor = colorAlpha(p5, baseColor, 0.9);
       const shadowColor = colorAlpha(p5, baseColor, 0.3);
 
@@ -326,17 +400,29 @@ export function createLinkscape(p5) {
       state.lineLayer.stroke(mainColor);
       state.lineLayer.noFill();
       state.lineLayer.beginShape();
-      for (let j = 0; j < state.x[i].length; j++) {
-        state.lineLayer.curveVertex(state.x[i][j], state.y[i][j]);
+      for (
+        let pointIdx = 0;
+        pointIdx < state.stringPointsX[stringIdx].length;
+        pointIdx++
+      ) {
+        state.lineLayer.curveVertex(
+          state.stringPointsX[stringIdx][pointIdx],
+          state.stringPointsY[stringIdx][pointIdx]
+        );
       }
       state.lineLayer.endShape();
 
       // Draw endpoints
       state.lineLayer.strokeWeight(1.2 * state.vMax);
-      state.lineLayer.point(state.x[i][0], state.y[i][0]);
       state.lineLayer.point(
-        state.x[i][state.x[i].length - 1],
-        state.y[i][state.x[i].length - 1]
+        state.stringPointsX[stringIdx][0],
+        state.stringPointsY[stringIdx][0]
+      );
+
+      const lastPointIndex = state.stringPointsX[stringIdx].length - 1;
+      state.lineLayer.point(
+        state.stringPointsX[stringIdx][lastPointIndex],
+        state.stringPointsY[stringIdx][lastPointIndex]
       );
 
       // Draw shadow effect
@@ -344,32 +430,40 @@ export function createLinkscape(p5) {
       state.paintLayer.stroke(shadowColor);
       state.paintLayer.noFill();
       state.paintLayer.beginShape();
-      for (let j = 0; j < state.x[i].length; j++) {
-        state.paintLayer.curveVertex(state.x[i][j], state.y[i][j]);
+      for (
+        let pointIdx = 0;
+        pointIdx < state.stringPointsX[stringIdx].length;
+        pointIdx++
+      ) {
+        state.paintLayer.curveVertex(
+          state.stringPointsX[stringIdx][pointIdx],
+          state.stringPointsY[stringIdx][pointIdx]
+        );
       }
       state.paintLayer.endShape();
     }
 
     // Render final composition
     p5.background(45);
-    p5.image(state.shadowLayer, 0, 0, state.width, state.height);
-    p5.image(state.paintLayer, 0, 0, state.width, state.height);
-    p5.image(state.lineLayer, 0, 0, state.width, state.height);
+    p5.image(state.shadowLayer, 0, 0, state.canvasWidth, state.canvasHeight);
+    p5.image(state.paintLayer, 0, 0, state.canvasWidth, state.canvasHeight);
+    p5.image(state.lineLayer, 0, 0, state.canvasWidth, state.canvasHeight);
   }
 
   function drawShadowTrails() {
     // Draw all accumulated shadow trails
-    for (let i = 0; i < state.shadowPositions.length; i++) {
-      if (!state.shadowPositions[i]) continue;
+    for (let i = 0; i < state.stringHistory.length; i++) {
+      if (!state.stringHistory[i]) continue;
 
       // Draw each shadow position for this line
-      for (let s = 0; s < state.shadowPositions[i].length; s++) {
-        const shadow = state.shadowPositions[i][s];
+      for (let s = 0; s < state.stringHistory[i].length; s++) {
+        const shadow = state.stringHistory[i][s];
         if (!shadow || !shadow.points || shadow.points.length === 0) continue;
 
-        // Calculate opacity based on how many shadows we have (more shadows = more transparent)
+        // TODO: Calculate opacity based on how many shadows we have (more shadows = more transparent)
         // This helps to prevent the screen from becoming too cluttered
-        const totalShadows = state.shadowPositions[i].length;
+        // const totalShadows = state.stringHistory[i].length;
+
         const shadowColor = colorAlpha(p5, shadow.color, state.shadowOpacity);
 
         state.shadowLayer.stroke(shadowColor);
@@ -412,6 +506,5 @@ export function createLinkscape(p5) {
     handlePointerStart,
     handlePointerEnd,
     handleMove,
-    addLine,
   };
 }
