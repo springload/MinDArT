@@ -327,14 +327,24 @@ export function createLinkscape(p5) {
     }
 
     if (state.isDragging) {
+      // For better touch responsiveness, update the initial drag point directly
+      const [stringIdx, pointIdx] = state.selectedPoint;
+
+      // Direct update of the selected point for immediate feedback
+      state.stringPointsX[stringIdx][pointIdx] = currentX;
+      state.stringPointsY[stringIdx][pointIdx] = currentY;
+
+      // Then calculate all the segment updates
+      updateStringSegments(state.selectedPoint, currentX, currentY);
+
+      // Capture shadows
       if (state.shadowsActive) {
         captureCurrentPositions();
       }
 
-      updateStringSegments(state.selectedPoint, currentX, currentY);
+      render();
     }
 
-    render();
     return false;
   }
 
