@@ -79,6 +79,9 @@ export function createLinkscape(p5) {
     vMin: 0,
     vMax: 0,
 
+    lastShadowCaptureTime: 0,
+    shadowCaptureInterval: 50,
+
     showDebugInfo: true,
     frameRateHistory: [],
     frameRateHistoryMaxLength: 60,
@@ -336,6 +339,19 @@ export function createLinkscape(p5) {
   }
 
   function captureCurrentPositions() {
+    const currentTime = Date.now();
+
+    // Only capture shadows at the specified interval
+    if (
+      currentTime - state.lastShadowCaptureTime <
+      state.shadowCaptureInterval
+    ) {
+      return;
+    }
+
+    // Update the last capture time
+    state.lastShadowCaptureTime = currentTime;
+
     // Capture the entire current string shape for persistent shadow trails
     for (
       let stringIdx = 0;
