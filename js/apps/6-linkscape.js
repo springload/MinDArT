@@ -78,7 +78,52 @@ export function createLinkscape(p5) {
     canvasHeight: 0,
     vMin: 0,
     vMax: 0,
+
+    showDebugInfo: true,
+    frameRateHistory: [],
+    frameRateHistoryMaxLength: 60,
   };
+
+  function displayDebugInfo() {
+    if (!state.showDebugInfo) return;
+
+    // Calculate current framerate
+    const currentFrameRate = p5.frameRate();
+
+    // Add to history
+    state.frameRateHistory.push(currentFrameRate);
+    if (state.frameRateHistory.length > state.frameRateHistoryMaxLength) {
+      state.frameRateHistory.shift();
+    }
+
+    // Calculate average framerate
+    const avgFrameRate =
+      state.frameRateHistory.reduce((sum, rate) => sum + rate, 0) /
+      state.frameRateHistory.length;
+
+    // Display debug info
+    p5.push();
+    p5.noStroke();
+    p5.fill(255);
+    p5.textSize(16);
+    p5.textAlign(p5.LEFT, p5.TOP);
+
+    // Create background for text
+    p5.fill(0, 150);
+    p5.rect(10, 10, 180, 60);
+
+    // Display text
+    p5.fill(255);
+    p5.text(`Current FPS: ${currentFrameRate.toFixed(1)}`, 20, 20);
+    p5.text(
+      `Avg FPS (${
+        state.frameRateHistory.length
+      } frames): ${avgFrameRate.toFixed(1)}`,
+      20,
+      45
+    );
+    p5.pop();
+  }
 
   function preload() {
     state.texture = p5.loadImage(
@@ -448,6 +493,9 @@ export function createLinkscape(p5) {
     p5.image(state.shadowLayer, 0, 0, state.canvasWidth, state.canvasHeight);
     p5.image(state.paintLayer, 0, 0, state.canvasWidth, state.canvasHeight);
     p5.image(state.lineLayer, 0, 0, state.canvasWidth, state.canvasHeight);
+
+    // Display debug info
+    displayDebugInfo();
   }
 
   function drawShadowTrails() {
