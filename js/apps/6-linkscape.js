@@ -81,10 +81,18 @@ export function createLinkscape(p5) {
 
     lastShadowCaptureTime: 0,
     shadowCaptureInterval: 50,
+    needsFullRedraw: true,
+    lastMoveHandleTime: 0,
+    moveThrottleInterval: 17,
 
     showDebugInfo: true,
     frameRateHistory: [],
     frameRateHistoryMaxLength: 60,
+    totalFrames: 0,
+    fullRedrawFrames: 0,
+    partialRedrawFrames: 0,
+    lastStatsResetTime: Date.now(),
+    statsResetInterval: 5000, // Reset stats every 5 seconds
   };
 
   function displayDebugInfo() {
@@ -104,27 +112,52 @@ export function createLinkscape(p5) {
       state.frameRateHistory.reduce((sum, rate) => sum + rate, 0) /
       state.frameRateHistory.length;
 
+    // Calculate redraw percentages
+    const totalFramesSinceReset =
+      state.fullRedrawFrames + state.partialRedrawFrames;
+    const fullRedrawPercentage =
+      totalFramesSinceReset > 0
+        ? Math.round((state.fullRedrawFrames / totalFramesSinceReset) * 100)
+        : 0;
+
+    const partialRedrawPercentage =
+      totalFramesSinceReset > 0
+        ? Math.round((state.partialRedrawFrames / totalFramesSinceReset) * 100)
+        : 0;
+
+    // Reset stats periodically to get recent percentages
+    const currentTime = Date.now();
+    if (currentTime - state.lastStatsResetTime > state.statsResetInterval) {
+      state.fullRedrawFrames = 0;
+      state.partialRedrawFrames = 0;
+      state.lastStatsResetTime = currentTime;
+    }
+
+    // Position info in the top-right corner
+    const margin = 10;
+    const debugWidth = 200;
+    const debugHeight = 100;
+    const xPos = state.canvasWidth - debugWidth - margin;
+    const yPos = margin;
+
     // Display debug info
     p5.push();
     p5.noStroke();
-    p5.fill(255);
-    p5.textSize(16);
-    p5.textAlign(p5.LEFT, p5.TOP);
 
     // Create background for text
     p5.fill(0, 150);
-    p5.rect(10, 10, 180, 60);
+    p5.rect(xPos, yPos, debugWidth, debugHeight);
 
     // Display text
     p5.fill(255);
-    p5.text(`Current FPS: ${currentFrameRate.toFixed(1)}`, 20, 20);
-    p5.text(
-      `Avg FPS (${
-        state.frameRateHistory.length
-      } frames): ${avgFrameRate.toFixed(1)}`,
-      20,
-      45
-    );
+    p5.textSize(14);
+    p5.textAlign(p5.LEFT, p5.TOP);
+
+    p5.text(`FPS: ${currentFrameRate.toFixed(1)}`, xPos + 10, yPos + 10);
+    p5.text(`Avg: ${avgFrameRate.toFixed(1)}`, xPos + 10, yPos + 30);
+    p5.text(`Full: ${fullRedrawPercentage}%`, xPos + 10, yPos + 50);
+    p5.text(`Partial: ${partialRedrawPercentage}%`, xPos + 10, yPos + 70);
+
     p5.pop();
   }
 
@@ -265,6 +298,7 @@ export function createLinkscape(p5) {
         ) {
           state.selectedPoint = [stringIdx, 0];
           state.isDragging = true;
+          state.needsFullRedraw = true; // Force full redraw when starting drag
           break;
         }
         // Check if the user clicked on the last point
@@ -278,6 +312,7 @@ export function createLinkscape(p5) {
         ) {
           state.selectedPoint = [stringIdx, lastPointIndex];
           state.isDragging = true;
+          state.needsFullRedraw = true; // Force full redraw when starting drag
           break;
         }
         // Check if the user clicked on any point in between
@@ -311,6 +346,7 @@ export function createLinkscape(p5) {
               }
 
               state.isDragging = true;
+              state.needsFullRedraw = true; // Force full redraw when starting drag
               break;
             }
           }
@@ -327,17 +363,28 @@ export function createLinkscape(p5) {
     }
 
     if (state.isDragging) {
-      // For better touch responsiveness, update the initial drag point directly
+      const currentTime = Date.now();
+
+      // Always update the visual position for immediate feedback
       const [stringIdx, pointIdx] = state.selectedPoint;
 
-      // Direct update of the selected point for immediate feedback
+      // Direct update of the selected point for immediate visual feedback
       state.stringPointsX[stringIdx][pointIdx] = currentX;
       state.stringPointsY[stringIdx][pointIdx] = currentY;
 
-      // Then calculate all the segment updates
+      // Throttle the expensive physics calculations
+      if (currentTime - state.lastMoveHandleTime < state.moveThrottleInterval) {
+        // Just render the current frame with the updated point position
+        // but skip the expensive physics calculations
+        render();
+        return false;
+      }
+
+      state.lastMoveHandleTime = currentTime;
+
+      // Do full update including physics and shadow capture
       updateStringSegments(state.selectedPoint, currentX, currentY);
 
-      // Capture shadows
       if (state.shadowsActive) {
         captureCurrentPositions();
       }
@@ -397,12 +444,14 @@ export function createLinkscape(p5) {
       if (stringShadow.points.length > 0) {
         state.stringHistory[stringIdx].push(stringShadow);
       }
+      state.needsFullRedraw = true;
     }
   }
 
   function handlePointerEnd() {
     state.isDragging = false;
     state.selectedPoint = [0, 0];
+    state.needsFullRedraw = true;
   }
 
   function updateStringSegments(selectedPoint, mouseX, mouseY) {
@@ -448,15 +497,29 @@ export function createLinkscape(p5) {
   }
 
   function render() {
-    state.lineLayer.clear();
-    state.paintLayer.clear();
-    state.shadowLayer.clear();
+    // Increment total frame counter
+    state.totalFrames++;
 
-    // Draw the shadow trails first (from previous positions)
-    if (state.shadowsActive) {
-      drawShadowTrails();
+    // Always clear the line layer for current string positions
+    state.lineLayer.clear();
+
+    // Track which type of render this is
+    if (state.needsFullRedraw) {
+      state.fullRedrawFrames++;
+
+      // Only clear the paint and shadow layers if we're doing a full redraw
+      state.paintLayer.clear();
+      state.shadowLayer.clear();
+
+      // Draw the shadow trails (only when doing a full redraw)
+      if (state.shadowsActive) {
+        drawShadowTrails();
+      }
+    } else {
+      state.partialRedrawFrames++;
     }
 
+    // Always draw current strings on the line layer
     for (
       let stringIdx = 0;
       stringIdx < state.stringPointsX.length;
@@ -497,22 +560,29 @@ export function createLinkscape(p5) {
         state.stringPointsY[stringIdx][lastPointIndex]
       );
 
-      // Draw shadow effect
-      state.paintLayer.strokeWeight(0.1 * state.vMax);
-      state.paintLayer.stroke(shadowColor);
-      state.paintLayer.noFill();
-      state.paintLayer.beginShape();
-      for (
-        let pointIdx = 0;
-        pointIdx < state.stringPointsX[stringIdx].length;
-        pointIdx++
-      ) {
-        state.paintLayer.curveVertex(
-          state.stringPointsX[stringIdx][pointIdx],
-          state.stringPointsY[stringIdx][pointIdx]
-        );
+      // Draw shadow effect on paint layer ONLY during full redraw
+      if (state.needsFullRedraw) {
+        state.paintLayer.strokeWeight(0.1 * state.vMax);
+        state.paintLayer.stroke(shadowColor);
+        state.paintLayer.noFill();
+        state.paintLayer.beginShape();
+        for (
+          let pointIdx = 0;
+          pointIdx < state.stringPointsX[stringIdx].length;
+          pointIdx++
+        ) {
+          state.paintLayer.curveVertex(
+            state.stringPointsX[stringIdx][pointIdx],
+            state.stringPointsY[stringIdx][pointIdx]
+          );
+        }
+        state.paintLayer.endShape();
       }
-      state.paintLayer.endShape();
+    }
+
+    // Reset the full redraw flag AFTER we've done all the drawing
+    if (state.needsFullRedraw) {
+      state.needsFullRedraw = false;
     }
 
     // Render final composition
@@ -521,8 +591,10 @@ export function createLinkscape(p5) {
     p5.image(state.paintLayer, 0, 0, state.canvasWidth, state.canvasHeight);
     p5.image(state.lineLayer, 0, 0, state.canvasWidth, state.canvasHeight);
 
-    // Display debug info
-    displayDebugInfo();
+    // Display debug info if enabled
+    if (state.showDebugInfo) {
+      displayDebugInfo();
+    }
   }
 
   function drawShadowTrails() {
