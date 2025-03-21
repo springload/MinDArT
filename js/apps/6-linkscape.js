@@ -80,7 +80,7 @@ export function createLinkscape(p5) {
     vMax: 0,
 
     lastShadowCaptureTime: 0,
-    shadowCaptureInterval: 50,
+    shadowCaptureInterval: 67,
     needsFullRedraw: true,
     lastMoveHandleTime: 0,
     moveThrottleInterval: 17,
@@ -365,12 +365,46 @@ export function createLinkscape(p5) {
     if (state.isDragging) {
       const currentTime = Date.now();
 
-      // Always update the visual position for immediate feedback
+      // Get dragged point info
       const [stringIdx, pointIdx] = state.selectedPoint;
 
       // Direct update of the selected point for immediate visual feedback
       state.stringPointsX[stringIdx][pointIdx] = currentX;
       state.stringPointsY[stringIdx][pointIdx] = currentY;
+
+      // Connect the nearest segment to the dragged point to avoid disconnection
+      if (pointIdx === 0 && state.stringPointsX[stringIdx].length > 1) {
+        // If dragging first point, update the second point to maintain connection
+        const dx = currentX - state.stringPointsX[stringIdx][1];
+        const dy = currentY - state.stringPointsY[stringIdx][1];
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > state.segmentLength * 1.5) {
+          // If too far, move the connecting point closer
+          const angle = Math.atan2(dy, dx);
+          state.stringPointsX[stringIdx][1] =
+            currentX - Math.cos(angle) * state.segmentLength;
+          state.stringPointsY[stringIdx][1] =
+            currentY - Math.sin(angle) * state.segmentLength;
+        }
+      } else if (
+        pointIdx === state.stringPointsX[stringIdx].length - 1 &&
+        pointIdx > 0
+      ) {
+        // If dragging last point, update the second-to-last point
+        const dx = currentX - state.stringPointsX[stringIdx][pointIdx - 1];
+        const dy = currentY - state.stringPointsY[stringIdx][pointIdx - 1];
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > state.segmentLength * 1.5) {
+          // If too far, move the connecting point closer
+          const angle = Math.atan2(dy, dx);
+          state.stringPointsX[stringIdx][pointIdx - 1] =
+            currentX - Math.cos(angle) * state.segmentLength;
+          state.stringPointsY[stringIdx][pointIdx - 1] =
+            currentY - Math.sin(angle) * state.segmentLength;
+        }
+      }
 
       // Throttle the expensive physics calculations
       if (currentTime - state.lastMoveHandleTime < state.moveThrottleInterval) {
@@ -530,11 +564,23 @@ export function createLinkscape(p5) {
       const mainColor = colorAlpha(p5, baseColor, 0.9);
       const shadowColor = colorAlpha(p5, baseColor, 0.3);
 
+      // Ensure the very end points of the string are exactly at the dot centers
+      const firstPointIdx = 0;
+      const lastPointIdx = state.stringPointsX[stringIdx].length - 1;
+
+      // Store original endpoint positions for drawing the dots
+      const firstPointX = state.stringPointsX[stringIdx][firstPointIdx];
+      const firstPointY = state.stringPointsY[stringIdx][firstPointIdx];
+      const lastPointX = state.stringPointsX[stringIdx][lastPointIdx];
+      const lastPointY = state.stringPointsY[stringIdx][lastPointIdx];
+
       // Draw main string
       state.lineLayer.strokeWeight(0.6 * state.vMax);
       state.lineLayer.stroke(mainColor);
       state.lineLayer.noFill();
       state.lineLayer.beginShape();
+
+      // Draw the string with special handling of endpoints
       for (
         let pointIdx = 0;
         pointIdx < state.stringPointsX[stringIdx].length;
@@ -547,18 +593,10 @@ export function createLinkscape(p5) {
       }
       state.lineLayer.endShape();
 
-      // Draw endpoints
+      // Draw endpoints at the exact positions of the first and last points
       state.lineLayer.strokeWeight(1.2 * state.vMax);
-      state.lineLayer.point(
-        state.stringPointsX[stringIdx][0],
-        state.stringPointsY[stringIdx][0]
-      );
-
-      const lastPointIndex = state.stringPointsX[stringIdx].length - 1;
-      state.lineLayer.point(
-        state.stringPointsX[stringIdx][lastPointIndex],
-        state.stringPointsY[stringIdx][lastPointIndex]
-      );
+      state.lineLayer.point(firstPointX, firstPointY);
+      state.lineLayer.point(lastPointX, lastPointY);
 
       // Draw shadow effect on paint layer ONLY during full redraw
       if (state.needsFullRedraw) {
