@@ -12,6 +12,9 @@
     + [WebP images](#webp-images)
     + [SVG graphics](#svg-graphics)
     + [WOFF2 fonts](#woff2-fonts)
+* [Debug Features](#debug-features)
+    + [PWA Debugging](#pwa-debugging)
+    + [Performance Monitoring](#performance-monitoring)
 
 
 
@@ -191,3 +194,49 @@ For the MinDArT logo, and the symbolic icons for each drawing app, I'm currently
 [All modern browsers support woff2](https://caniuse.com/woff2), which is far more efficient than older font formats (otf, ttf, woff). 
 Support is so good (and failure is so benign) that there's no need to provide any other format as a fallback.
 If your chosen typeface doesn't come as a woff2 font, you can convert it, either with an [online service](https://cloudconvert.com/woff2-converter) or using [fontTools](https://fonttools.readthedocs.io/en/latest/ttLib/woff2.html).
+
+## Debug features
+We've added debugging features to assist with development and troubleshooting.
+These display technical information overlaid on the screen, so you can test functionality on a tablet (where you may not have access to the browser console).
+
+### PWA debugging
+The `debug-panel` web component lets you monitor and troubleshoot service worker behavior and updates. It displays over the entire application, as you navigate between apps and the home screen.
+
+```js
+// Only import the debug module if debugging is enabled
+if (DEBUG_ENABLED) {
+  import("./utils/pwa-monitor.js").catch(console.error);
+}
+```
+
+The debug panel is controlled by a configuration flag in `debug-config.js`:
+
+```js
+export const DEBUG_ENABLED = false; // Set to true during development
+```
+
+When enabled, the debug panel displays console messages, provides Service Worker monitoring, navigation monitoring, Online/Offline status, and has buttons to force update checks and activation of the Service Worker.
+  
+### FPS Performance monitoring
+
+For performance monitoring, the Linkscape drawing app includes a built-in FPS (frames per second) counter that can be enabled for debugging. 
+```js
+const state = {
+  // Other state properties...
+  showDebugInfo: false,
+  frameRateHistory: [],
+  frameRateHistoryMaxLength: 60,
+};
+```
+
+It's enabled by setting `state.showDebugInfo = true`, and will display real-time performance metrics in the corner of the screen:
+
+```js
+// On-screen FPS debugging can be enabled by setting state.showDebugInfo to true
+function displayDebugInfo() {
+  if (!state.showDebugInfo) return;
+```
+
+it uses `p5.frameRate();` to show a current and average Frames Per Second value, which is useful for checking performance overall and across devices (e.g. an old low-end tablet will not be quite as performant as a new high-end laptop).
+
+This is (so far) the only app where FPS performance is really an issue, due to the number of trails being drawn and the constant movement of the strings. The same approach could easily be adapted to other drawing apps, however, it should be a matter of copying the `displayDebugInfo` function and calls to it, and adding the `showDebugInfo` boolean to the state of the drawing app.

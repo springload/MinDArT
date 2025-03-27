@@ -183,11 +183,14 @@
 }
 
 .btn--light-gradient {
+  background-color: var(--color-light-1, #F2A97E);
+  /* fallback for older iOS */
   background-image: linear-gradient(in oklab 90deg,
       var(--color-light-1, #F2A97E), var(--color-light-2, #F28D77));
 }
 
 .btn--dark-gradient {
+  background-color: var(--color-dark-1, #7E708C);
   background-image: linear-gradient(in oklab 90deg,
       var(--color-dark-1, #7E708C), var(--color-dark-2, #49538C));
 }
