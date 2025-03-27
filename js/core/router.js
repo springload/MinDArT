@@ -3,7 +3,8 @@ import "../components/appControls.js";
 import "../components/drawingToolbar.js";
 import { stopSoundtrack } from "../utils/audio.js";
 import { addInteractionHandlers } from "../utils/events.js";
-import { checkForUpdates } from "../utils/pwa.js";
+import { startUpdateChecks, stopUpdateChecks } from "../utils/pwa.js";
+
 /**
  * Extracts the app name from URL query parameters
  * @returns {string|null} The 'app' query parameter value (e.g. `'touchscape'`), or null if not present
@@ -151,22 +152,23 @@ async function updateView() {
   const themeClass = getCurrentTheme();
 
   if (!appName) {
-    // We're eturning to the home view
+    // We're returning to the home view
     stopSoundtrack();
     showEl(homeView);
     hideEl(appView);
     updatePageAttributes();
     removeTheme(themeClass);
 
+    // Start checking for updates when on home screen
     if (navigator.onLine) {
-      // Check for updates on home screen only
-      const updateAvailable = await checkForUpdates();
-      if (updateAvailable) {
-        console.log("Update available - page will refresh soon");
-      }
+      startUpdateChecks();
     }
     return;
   }
+
+  // We're navigating to an app
+  // Stop update checks (we'll resume when returning to home)
+  stopUpdateChecks();
 
   hideEl(homeView);
   showEl(appView);
